@@ -1,6 +1,7 @@
 package nextstep.controller;
 
 import java.net.URI;
+import java.sql.SQLException;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,9 @@ public class ReservationController {
     }
 
     @PostMapping(value = "/reservations")
-    public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
-        Integer roomId = reservationService.createReservation(reservationRequestDTO);
+    public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO)
+            throws SQLException {
+        Long roomId = reservationService.createReservation(reservationRequestDTO);
         return ResponseEntity.created(URI.create(String.format("/reservations/%d", roomId))).build();
     }
 }

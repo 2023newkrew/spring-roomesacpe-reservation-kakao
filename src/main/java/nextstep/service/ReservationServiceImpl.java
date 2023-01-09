@@ -1,22 +1,24 @@
 package nextstep.service;
 
+import java.sql.SQLException;
 import nextstep.dto.ReservationRequestDTO;
+import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ReservationServiceImpl(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationServiceImpl(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
-    public Integer createReservation(ReservationRequestDTO reservationRequestDTO) {
+    public Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
 
-        return reservationService.createReservation(reservationRequestDTO);
+        return reservationRepository.save(reservationRequestDTO);
     }
 }

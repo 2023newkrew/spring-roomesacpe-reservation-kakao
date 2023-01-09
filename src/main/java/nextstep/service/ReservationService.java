@@ -1,8 +1,9 @@
 package nextstep.service;
 
+import java.sql.SQLException;
 import nextstep.dto.ReservationRequestDTO;
 
 public interface ReservationService {
 
-    Integer createReservation(ReservationRequestDTO reservationRequestDTO);
+    Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException;
 }
