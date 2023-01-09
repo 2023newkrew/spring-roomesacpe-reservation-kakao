@@ -16,11 +16,14 @@ import java.util.Objects;
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+//    private final ReservationRepository reservationRepository;
     private final ReservationJDBCRepository reservationJDBCRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationJDBCRepository reservationJDBCRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationService(
+//            ReservationRepository reservationRepository,
+            ReservationJDBCRepository reservationJDBCRepository
+    ) {
+//        this.reservationRepository = reservationRepository;
         this.reservationJDBCRepository = reservationJDBCRepository;
     }
 
