@@ -101,7 +101,7 @@ public class ReservationAcceptanceTest {
         // given
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
         ExtractableResponse<Response> response = createReservation(createReservationRequest);
-        
+
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
 
