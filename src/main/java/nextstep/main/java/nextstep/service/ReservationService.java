@@ -6,6 +6,8 @@ import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ReservationService {
     private final ReservationRepository repository;
@@ -17,6 +19,10 @@ public class ReservationService {
 
     public void save(ReservationCreateRequestDto request) {
         Reservation reservation = new Reservation(count++, request.getDate(), request.getTime(), request.getName(), null);
+        Optional<Reservation> duplicateReservation = repository.findByDateAndTime(reservation.getDate(), reservation.getTime());
+        if(duplicateReservation.isPresent()){
+            throw new RuntimeException();
+        }
         repository.save(reservation);
     }
 

@@ -4,8 +4,11 @@ import nextstep.main.java.nextstep.domain.Reservation;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
@@ -24,5 +27,12 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public void deleteOne(Long id) {
         reservationMap.remove(id);
+    }
+
+    @Override
+    public Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
+        return reservationMap.values().stream()
+                .filter(x -> x.getDate().equals(date) && x.getTime().equals(time))
+                .findAny();
     }
 }

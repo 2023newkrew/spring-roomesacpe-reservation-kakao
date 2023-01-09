@@ -94,4 +94,31 @@ public class ReservationTest {
         reservation = reservationService.findOneById(1L);
     }
 
+    @DisplayName("같은 날짜와 시간 갖는 예약을 생성 테스트")
+    @Test
+    void createDuplicateReservationTest(){
+        ReservationRepository repository = new MemoryReservationRepository();
+        ReservationService reservationService = new ReservationService(repository);
+
+        ReservationCreateRequestDto request = new ReservationCreateRequestDto(
+                LocalDate.of(2023, 1, 9),
+                LocalTime.of(1, 30),
+                "name"
+        );
+
+        ReservationCreateRequestDto request2 = new ReservationCreateRequestDto(
+                LocalDate.of(2023, 1, 9),
+                LocalTime.of(1, 30),
+                "name"
+        );
+
+        reservationService.save(request);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request2)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
 }
