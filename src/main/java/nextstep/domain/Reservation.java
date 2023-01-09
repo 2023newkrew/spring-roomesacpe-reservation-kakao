@@ -1,4 +1,6 @@
-package nextstep;
+package nextstep.domain;
+
+import nextstep.utils.AutoIncrementGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +11,10 @@ public class Reservation {
     private LocalTime time;
     private String name;
     private Theme theme;
+
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this(AutoIncrementGenerator.getId(Reservation.class), date, time, name, theme);
+    }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;

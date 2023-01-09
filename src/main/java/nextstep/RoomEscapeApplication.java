@@ -1,5 +1,8 @@
 package nextstep;
 
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
