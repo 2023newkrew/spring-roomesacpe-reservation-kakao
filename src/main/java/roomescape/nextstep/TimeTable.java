@@ -1,4 +1,4 @@
-package nextstep;
+package roomescape.nextstep;
 
 import java.time.LocalTime;
 
@@ -12,7 +12,7 @@ public enum TimeTable {
     G(LocalTime.of(20, 30)),
     H(LocalTime.of(22, 00));
 
-    private LocalTime time;
+    private final LocalTime time;
 
     TimeTable(LocalTime time) {
         this.time = time;
