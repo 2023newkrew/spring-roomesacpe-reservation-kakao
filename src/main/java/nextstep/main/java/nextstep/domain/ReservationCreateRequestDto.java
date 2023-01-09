@@ -8,6 +8,9 @@ public class ReservationCreateRequestDto {
     LocalTime time;
     String name;
 
+    public ReservationCreateRequestDto() {
+
+    }
     public LocalDate getDate() {
         return date;
     }
