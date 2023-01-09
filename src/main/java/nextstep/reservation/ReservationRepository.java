@@ -31,4 +31,17 @@ public class ReservationRepository {
                 .stream()
                 .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));
     }
+
+    public Boolean delete(long id) {
+        if (reservationList.containsKey(id)) {
+            reservationList.remove(id);
+            return true;
+        }
+        return false;
+    }
+
+    public void clear(){
+        reservationList.clear();
+        reservationCount.set(1L);
+    }
 }

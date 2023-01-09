@@ -6,15 +6,22 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ReservationRepositoryTest {
-    private static ReservationRepository reservationRepository;
-    private static Theme theme;
-    @BeforeAll
-    static void beforeAll() {
+    private ReservationRepository reservationRepository;
+    private Theme theme;
+
+    @BeforeEach
+    void setUp() {
         reservationRepository = new ReservationRepository();
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
+    }
+
+    @AfterEach
+    void tearDown() {
+        reservationRepository.clear();
     }
 
     @Test
@@ -34,19 +41,27 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    void findByDateTimeTest(){
+    void findByDateTimeTest() {
         Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"));
         assertEquals(result, true);
     }
 
     @Test
-    void findByDateTimeEmptyTest(){
-        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"));
+    void findByDateTimeEmptyTest() {
+        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
         assertEquals(result, false);
     }
 
     @Test
     void duplicateTimeReservationThrowException() {
-        Assertions.assertThrows(RuntimeException.class, () ->  reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
+        Assertions.assertThrows(RuntimeException.class, () -> reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
+    }
+
+    @Test
+    void deleteReservation() {
+        long id = 1L;
+        Boolean result = reservationRepository.delete(id);
+        assertEquals(result,true);
+        assertNull(reservationRepository.findById(id));
     }
 }
