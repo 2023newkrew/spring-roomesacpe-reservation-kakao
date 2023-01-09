@@ -63,4 +63,15 @@ public class ReservationsTest {
         // then
         assertThat(findById).isEqualTo(Optional.empty());
     }
+
+    @Test
+    void 날짜와_시간이_같은_예약을_조회한다() {
+        // given
+        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", THEME);
+        reservations.save(reservation);
+
+        // when, then
+        assertThat(reservations.existsByDateAndTime(reservation.getDate(), reservation.getTime())).isTrue();
+    }
+
 }
