@@ -1,6 +1,7 @@
 package nextstep.main.java.nextstep.service;
 
 import nextstep.main.java.nextstep.domain.Reservation;
+import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
@@ -30,7 +31,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("예약 단건 조회 테스트")
-    void findOneByIdTest(){
+    void findOneByIdTest() {
         Reservation reservation = MemoryReservationRepository.reservationMap.get(1L);
         assertThat(service.findOneById(1L)).isEqualTo(reservation);
     }
@@ -42,6 +43,13 @@ public class ReservationServiceTest {
 
         service.deleteOneById(1L);
         assertThatThrownBy(() -> service.findOneById(1L)).isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    @DisplayName("예약 중복 등록 테스트")
+    void createDuplicateTest(){
+        ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name");
+            assertThatThrownBy(() -> service.save(requestDto)).isInstanceOf(RuntimeException.class);
     }
 
 }
