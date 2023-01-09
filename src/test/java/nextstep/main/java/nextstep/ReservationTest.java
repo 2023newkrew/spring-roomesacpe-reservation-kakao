@@ -71,5 +71,27 @@ public class ReservationTest {
                 .body("id",Matchers.equalTo(1));
     }
 
-    
+    @DisplayName("예약 삭제 테스트")
+    @Test
+    void deleteOneReservationTest() {
+        ReservationRepository repository = new MemoryReservationRepository();
+        ReservationService reservationService = new ReservationService(repository);
+        ReservationCreateRequestDto request = new ReservationCreateRequestDto(
+                LocalDate.of(2023, 1, 9),
+                LocalTime.of(1, 30),
+                "name"
+        );
+
+        reservationService.save(request);
+        Reservation reservation = reservationService.findOneById(1L);
+        System.out.println("reservation = " + reservation.toString());
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        reservation = reservationService.findOneById(1L);
+    }
+
 }
