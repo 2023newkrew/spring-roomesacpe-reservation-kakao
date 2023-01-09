@@ -75,4 +75,10 @@ public class ReservationJDBCRepository {
 
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
     }
+
+    public int delete(Long id) {
+        String DELETE_SQL = "delete from reservation where id=?";
+
+        return jdbcTemplate.update(DELETE_SQL, id);
+    }
 }

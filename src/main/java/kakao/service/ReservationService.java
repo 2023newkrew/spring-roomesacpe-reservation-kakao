@@ -42,6 +42,9 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        reservationRepository.delete(id);
+        int deletedCount = reservationJDBCRepository.delete(id);
+        if (deletedCount == 0) {
+            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
     }
 }
