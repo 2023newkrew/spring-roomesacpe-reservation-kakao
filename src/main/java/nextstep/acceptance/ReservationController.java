@@ -1,11 +1,10 @@
 package nextstep.acceptance;
 
 import nextstep.dto.CreateReservationRequest;
+import nextstep.dto.FindReservationResponse;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -25,6 +24,13 @@ public class ReservationController {
 
         return ResponseEntity.created(URI.create("/reservations/" + reservationId))
                 .build();
+    }
+
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<FindReservationResponse> findReservationById(@PathVariable Long reservationId) {
+        FindReservationResponse findReservationResponse = reservationService.findReservationById(reservationId);
+
+        return ResponseEntity.ok(findReservationResponse);
     }
 
 }

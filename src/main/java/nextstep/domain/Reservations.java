@@ -4,6 +4,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class Reservations {
@@ -19,4 +21,9 @@ public class Reservations {
         return reservation;
     }
 
+    public Optional<Reservation> findById(Long reservationId) {
+        return reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.getId(), reservationId))
+                .findAny();
+    }
 }

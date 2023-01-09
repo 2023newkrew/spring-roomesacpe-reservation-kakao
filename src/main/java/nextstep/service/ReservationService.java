@@ -4,6 +4,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Reservations;
 import nextstep.domain.Theme;
 import nextstep.dto.CreateReservationRequest;
+import nextstep.dto.FindReservationResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,4 +30,10 @@ public class ReservationService {
         return savedReservation.getId();
     }
 
+    public FindReservationResponse findReservationById(Long reservationId) {
+        Reservation reservation = reservations.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 id의 예약 입니다."));
+
+        return FindReservationResponse.from(reservation);
+    }
 }
