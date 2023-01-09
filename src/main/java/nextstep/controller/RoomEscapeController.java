@@ -32,4 +32,13 @@ public class RoomEscapeController {
         return ResponseEntity
                 .ok(roomEscapeService.get(id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        roomEscapeService.delete(id);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }

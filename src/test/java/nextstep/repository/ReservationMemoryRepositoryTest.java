@@ -13,14 +13,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReservationMemoryRepositoryTest {
 
     private final ReservationMemoryRepository repository = new ReservationMemoryRepository();
-    @Test
-    public void should_createAndIncreaseIndex_when_addRequestGiven() {
-        Reservation reservation = new Reservation(
+
+    private Reservation getReservationToAdd() {
+        return new Reservation(
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
                 RoomEscapeService.DEFAULT_THEME
         );
+    }
+
+    @Test
+    public void should_createAndIncreaseIndex_when_addRequestGiven() {
+        Reservation reservation = getReservationToAdd();
 
         Reservation addedReservation = repository.add(reservation);
 
@@ -36,13 +41,7 @@ class ReservationMemoryRepositoryTest {
 
     @Test
     public void should_findRightReservation_when_findRequestGiven() {
-        Reservation reservation = new Reservation(
-                LocalDate.parse("2022-08-11"),
-                LocalTime.parse("13:00:00"),
-                "jin",
-                RoomEscapeService.DEFAULT_THEME
-        );
-        repository.add(reservation);
+        repository.add(getReservationToAdd());
 
         Reservation addedReservation = repository.get(0L);
 
@@ -54,5 +53,14 @@ class ReservationMemoryRepositoryTest {
                 RoomEscapeService.DEFAULT_THEME
         );
         assertThat(addedReservation).isEqualTo(expected);
+    }
+
+    @Test
+    public void should_deleteReservation_when_deleteRequestGiven() {
+        repository.add(getReservationToAdd());
+
+        repository.delete(0L);
+
+        assertThat(repository.get(0L)).isNull();
     }
 }

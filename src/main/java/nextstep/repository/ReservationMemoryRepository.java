@@ -27,6 +27,6 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public void delete(Long id) {
-
+        reservations.remove(id);
     }
 }

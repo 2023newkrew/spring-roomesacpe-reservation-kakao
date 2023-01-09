@@ -35,4 +35,8 @@ public class RoomEscapeService {
     public Reservation get(Long id) {
         return reservationRepository.get(id);
     }
+
+    public void delete(Long id) {
+        reservationRepository.delete(id);
+    }
 }
