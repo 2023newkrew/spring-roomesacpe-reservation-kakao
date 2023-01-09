@@ -62,4 +62,19 @@ public class ReservationTest {
                 .get(location).then().log().all().statusCode(HttpStatus.OK.value())
                 .body("name", is(name)).body("date", is(date)).body("time", is(time + ":00"));
     }
+
+    @DisplayName("예약 취소")
+    @ParameterizedTest
+    @MethodSource("getCreateReservationData")
+    void deleteReservation(String date, String time, String name) {
+        LocalDate localDate = LocalDate.parse(date);
+        LocalTime localTime = LocalTime.parse(time + ":00");
+        Reservation reservation = new Reservation(null, localDate, localTime, name, null);
+
+        String location = RestAssured.given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation).post("/reservations").thenReturn().header("Location");
+
+        RestAssured.given().log().all().accept(MediaType.APPLICATION_JSON_VALUE).when()
+                .delete(location).then().log().all().statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }

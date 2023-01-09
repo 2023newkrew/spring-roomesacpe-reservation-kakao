@@ -7,6 +7,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class ReservationController {
     private Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     @PostMapping("")
-    public ResponseEntity<Objects> requestParam(@RequestBody Reservation reservation) {
+    public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
         reservations.add(
                 new Reservation(++reservationIdIndex, reservation.getDate(), reservation.getTime(),
                         reservation.getName(), theme));
@@ -40,5 +41,14 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(reservation);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
+        if (reservations.stream().noneMatch(v -> Objects.equals(v.getId(), id))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        reservations.removeIf(reservation -> Objects.equals(reservation.getId(), id));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
