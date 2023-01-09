@@ -39,10 +39,6 @@ public class ReservationJDBCRepository {
     public long save(Reservation reservation) {
         String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        System.out.println(reservation.getTheme().getName());
-        System.out.println(reservation.getTheme().getDesc());
-        System.out.println(reservation.getTheme().getPrice());
-
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(INSERT_SQL, new String[]{"ID"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
@@ -51,7 +47,6 @@ public class ReservationJDBCRepository {
             ps.setString(4, reservation.getTheme().getName());
             ps.setString(5, reservation.getTheme().getDesc());
             ps.setInt(6, reservation.getTheme().getPrice());
-
             return ps;
         }, keyHolder);
 
@@ -72,13 +67,11 @@ public class ReservationJDBCRepository {
 
     public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
         String SELECT_SQL = "select * from reservation where date=? and time=?";
-
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
     }
 
     public int delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
-
         return jdbcTemplate.update(DELETE_SQL, id);
     }
 }
