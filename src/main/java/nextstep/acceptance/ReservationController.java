@@ -1,4 +1,4 @@
-package nextstep.presentation;
+package nextstep.acceptance;
 
 import nextstep.dto.CreateReservationRequest;
 import nextstep.service.ReservationService;
