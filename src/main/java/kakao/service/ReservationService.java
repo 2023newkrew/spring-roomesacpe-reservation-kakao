@@ -6,6 +6,7 @@ import kakao.dto.response.ReservationResponse;
 import kakao.error.ErrorCode;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.RecordNotFoundException;
+import kakao.repository.ReservationJDBCRepository;
 import kakao.repository.ReservationRepository;
 import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,20 @@ import java.util.Objects;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationJDBCRepository reservationJDBCRepository;
 
-    private final ThemeRepository themeRepository;
-
-    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationJDBCRepository reservationJDBCRepository) {
         this.reservationRepository = reservationRepository;
-        this.themeRepository = themeRepository;
+        this.reservationJDBCRepository = reservationJDBCRepository;
     }
 
-    public void createReservation(CreateReservationRequest request) {
+    public long createReservation(CreateReservationRequest request) {
         boolean isDuplicate = reservationRepository.findByDateAndTime(request.date, request.time).size() > 0;
         if (isDuplicate) {
             throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
-        Reservation reservation = new Reservation(request.date, request.time, request.name, themeRepository.theme);
-        reservationRepository.save(reservation);
+        Reservation reservation = new Reservation(request.date, request.time, request.name, ThemeRepository.theme);
+        return reservationJDBCRepository.save(reservation);
     }
 
     public ReservationResponse getReservation(Long id) {

@@ -19,9 +19,9 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> createReservation(@RequestBody CreateReservationRequest request) {
-        reservationService.createReservation(request);
-        return ResponseEntity.created(URI.create("")).build();
+    public ResponseEntity<Long> createReservation(@RequestBody CreateReservationRequest request) {
+        long generatedId = reservationService.createReservation(request);
+        return ResponseEntity.created(URI.create("")).body(generatedId);
     }
 
     @GetMapping("/{id}")
