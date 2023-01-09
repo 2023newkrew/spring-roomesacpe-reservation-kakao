@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reservation.domain.Reservation;
+import reservation.domain.dto.ReservationDto;
 import reservation.service.ReservationService;
 import java.net.URI;
 
@@ -18,7 +19,7 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity postReservation(@RequestBody Reservation reservation) {
+    public ResponseEntity postReservation(@RequestBody ReservationDto reservation) {
         reservationService.createReservation(reservation);
         return ResponseEntity.created(URI.create("/users/" + reservation.getId())).build();
     }

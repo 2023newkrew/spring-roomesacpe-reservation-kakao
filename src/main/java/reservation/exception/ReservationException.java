@@ -1,4 +1,4 @@
 package reservation.exception;
 
-public class ReservationException {
+public class ReservationException extends RuntimeException{
 }
