@@ -38,4 +38,7 @@ public class Reservations {
         reservations.clear();
     }
 
+    public void deleteById(Long reservationId) {
+        reservations.removeIf(reservation -> reservation.isSameId(reservationId));
+    }
 }

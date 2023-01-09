@@ -42,4 +42,7 @@ public class ReservationService {
         return FindReservationResponse.from(reservation);
     }
 
+    public void deleteReservationById(Long reservationId) {
+        reservations.deleteById(reservationId);
+    }
 }
