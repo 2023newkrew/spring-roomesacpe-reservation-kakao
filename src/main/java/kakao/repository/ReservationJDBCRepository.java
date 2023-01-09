@@ -39,10 +39,7 @@ public class ReservationJDBCRepository {
     public long save(Reservation reservation) {
         String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        System.out.println(reservation.getTheme().getName());
-        System.out.println(reservation.getTheme().getDesc());
-        System.out.println(reservation.getTheme().getPrice());
-
+        
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(INSERT_SQL, new String[]{"ID"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
