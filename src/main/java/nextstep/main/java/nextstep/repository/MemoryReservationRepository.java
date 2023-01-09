@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
-    static Map<Long, Reservation> reservationMap = new HashMap<>();
+    public static Map<Long, Reservation> reservationMap = new HashMap<>();
 
     @Override
     public void save(Reservation reservation) {
