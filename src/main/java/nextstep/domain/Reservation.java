@@ -4,6 +4,7 @@ import nextstep.utils.AutoIncrementGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
     private Long id;
@@ -28,6 +29,10 @@ public class Reservation {
         return this.date.equals(date) && this.time.equals(time);
     }
 
+    public boolean isSameId(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public Long getId() {
         return id;
     }
@@ -47,4 +52,5 @@ public class Reservation {
     public Theme getTheme() {
         return theme;
     }
+
 }
