@@ -1,12 +1,10 @@
 package kakao.controller;
 
 import kakao.dto.request.CreateReservationRequest;
+import kakao.dto.response.ReservationResponse;
 import kakao.service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -24,5 +22,10 @@ public class ReservationController {
     public ResponseEntity<Void> createReservation(@RequestBody CreateReservationRequest request) {
         reservationService.createReservation(request);
         return ResponseEntity.created(URI.create("")).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id) {
+        return ResponseEntity.ok(reservationService.getReservation(id));
     }
 }

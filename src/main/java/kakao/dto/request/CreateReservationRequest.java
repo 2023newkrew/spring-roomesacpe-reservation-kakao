@@ -10,12 +10,18 @@ public class CreateReservationRequest {
 
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    public LocalDate date;
+    public final LocalDate date;
 
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    public LocalTime time;
+    public final LocalTime time;
 
     @NonNull
-    public String name;
+    public final String name;
+
+    public CreateReservationRequest(LocalDate date, LocalTime time, String name) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+    }
 }

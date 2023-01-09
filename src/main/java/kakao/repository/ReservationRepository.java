@@ -3,20 +3,24 @@ package kakao.repository;
 import kakao.domain.Reservation;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
 @Repository
 public class ReservationRepository {
-    private final Set<Reservation> reservations = new TreeSet<>();
+    private final Map<Long, Reservation> reservations = new TreeMap();
 
-    private Long reservationCount = 0L;
+    private Long reservationCount = 1L;
 
     public void save(Reservation reservation) {
         if (Objects.isNull(reservation.getId())) {
-            reservation.setId(reservationCount++);
+            reservation.setId(reservationCount);
         }
-        reservations.add(reservation);
+        reservations.put(reservationCount++, reservation);
+    }
+
+    public Reservation findById(Long id) {
+        return reservations.getOrDefault(id, null);
     }
 }
