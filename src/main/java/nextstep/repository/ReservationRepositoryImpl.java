@@ -10,20 +10,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.util.HashMap;
-import java.util.Map;
 import javax.sql.DataSource;
-import nextstep.domain.ThemeConstants;
+import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequestDTO;
+import nextstep.dto.ReservationResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class ReservationRepositoryImpl implements ReservationRepository {
-
 
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
@@ -32,7 +31,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public ReservationRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.dataSource = dataSource;
-
     }
 
     @Override
@@ -46,19 +44,20 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         ps.setString(4, THEME_NAME);
         ps.setString(5, THEME_DESC);
         ps.setInt(6, THEME_PRICE);
-        ResultSet resultSet = ps.executeQuery(sql);
+        ps.executeUpdate();
+        ResultSet resultSet = ps.getGeneratedKeys();
         Long id = null;
-
         if (resultSet.next()) {
             id = resultSet.getLong(1);
         }
+
 
         try {
             if (resultSet != null) {
                 resultSet.close();
             }
         } catch (SQLException e) {
-            System.err.println("rs 오류:" + e.getMessage());
+            System.err.println("resultSet 오류:" + e.getMessage());
         }
         try {
             if (ps != null) {
@@ -67,8 +66,36 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         } catch (SQLException e) {
             System.err.println("ps 오류:" + e.getMessage());
         }
+
         DataSourceUtils.releaseConnection(connection, dataSource);
         return id;
-
     }
+
+    @Override
+    public ReservationResponseDTO findById(Long id) {
+        String sql = "SELECT * from reservation WHERE id = ?";
+        ReservationResponseDTO reservationResponseDTO = jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                new ReservationResponseDTO(rs.getLong("id"), rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime(), rs.getString("name"), new Theme(rs.getString("theme_name"),
+                        rs.getString("theme_desc"), rs.getInt("theme_price"))), id);
+        return reservationResponseDTO;
+    }
+
+    @Override
+    public void deleteById(Long id) throws SQLException {
+        Connection connection = DataSourceUtils.getConnection(dataSource);
+        PreparedStatement ps = connection.prepareStatement("DELETE FROM RESERVATION WHERE id = ?");
+        ps.setLong(1, id);
+        ps.executeUpdate();
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (SQLException e) {
+            System.err.println("ps 오류:" + e.getMessage());
+        }
+        DataSourceUtils.releaseConnection(connection, dataSource);
+    }
+
+
 }
