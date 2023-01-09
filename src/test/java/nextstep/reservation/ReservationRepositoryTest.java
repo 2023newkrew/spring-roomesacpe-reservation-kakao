@@ -1,8 +1,6 @@
 package nextstep.reservation;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,31 +8,45 @@ import java.time.LocalTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReservationRepositoryTest {
-    private ReservationRepository reservationRepository;
-
-    @BeforeEach
-    void setUp() {
-        this.reservationRepository = new ReservationRepository();
+    private static ReservationRepository reservationRepository;
+    private static Theme theme;
+    @BeforeAll
+    static void beforeAll() {
+        reservationRepository = new ReservationRepository();
+        theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
     }
 
     @Test
     @DisplayName("예약 삽입")
     void createReservationTest() {
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        reservationRepository.create("2022-08-11", "13:00", "name", theme);
-
-        assertEquals(reservationRepository.getReservationList().size(), 1);
-
+        reservationRepository.create(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
+        assertEquals(reservationRepository.getReservationList().size(), 2);
     }
 
     @Test
+    @DisplayName("예약 ID로 조회")
     void findByIdTest() {
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Reservation reservation = new Reservation(1L, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
-        reservationRepository.create("2022-08-11", "13:00", "name", theme);
 
         Reservation result = reservationRepository.findById(1L);
         assertEquals(result, reservation);
+    }
 
+    @Test
+    void findByDateTimeTest(){
+        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"));
+        assertEquals(result, true);
+    }
+
+    @Test
+    void findByDateTimeEmptyTest(){
+        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"));
+        assertEquals(result, false);
+    }
+
+    @Test
+    void duplicateTimeReservationThrowException() {
+        Assertions.assertThrows(RuntimeException.class, () ->  reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
     }
 }
