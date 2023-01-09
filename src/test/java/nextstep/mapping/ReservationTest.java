@@ -11,10 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -40,12 +39,10 @@ public class ReservationTest {
 
     @DisplayName("예약 하기")
     @Order(1)
-    @ParameterizedTest
-    @MethodSource("getCreateReservationData")
-    void createReservation(String date, String time, String name) {
-        LocalDate localDate = LocalDate.parse(date);
-        LocalTime localTime = LocalTime.parse(time + ":00");
-        Reservation reservation = new Reservation(null, localDate, localTime, name, null);
+    @Test
+    void createReservation() {
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-11"),
+                LocalTime.parse("13:00:00"), "name", null);
 
         RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation).when().post("/reservations").then().log().all()
@@ -54,29 +51,26 @@ public class ReservationTest {
 
     @DisplayName("예약 조회")
     @Order(2)
-    @ParameterizedTest
-    @MethodSource("getCreateReservationData")
-    void showReservation(String date, String time, String name) {
-        LocalDate localDate = LocalDate.parse(date);
-        LocalTime localTime = LocalTime.parse(time + ":00");
-        Reservation reservation = new Reservation(null, localDate, localTime, name, null);
+    @Test
+    void showReservation() {
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"),
+                LocalTime.parse("13:00:00"), "name", null);
 
         String location = RestAssured.given().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation).post("/reservations").thenReturn().header("Location");
 
         RestAssured.given().log().all().accept(MediaType.APPLICATION_JSON_VALUE).when()
                 .get(location).then().log().all().statusCode(HttpStatus.OK.value())
-                .body("name", is(name)).body("date", is(date)).body("time", is(time + ":00"));
+                .body("name", is("name")).body("date", is("2022-08-12"))
+                .body("time", is("13:00:00"));
     }
 
     @DisplayName("예약 취소")
     @Order(3)
-    @ParameterizedTest
-    @MethodSource({"getCreateReservationData"})
-    void deleteReservation(String date, String time, String name) {
-        LocalDate localDate = LocalDate.parse(date);
-        LocalTime localTime = LocalTime.parse(time + ":00");
-        Reservation reservation = new Reservation(null, localDate, localTime, name, null);
+    @Test
+    void deleteReservation() {
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-13"),
+                LocalTime.parse("13:00:00"), "name", null);
 
         String location = RestAssured.given().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation).post("/reservations").thenReturn().header("Location");
