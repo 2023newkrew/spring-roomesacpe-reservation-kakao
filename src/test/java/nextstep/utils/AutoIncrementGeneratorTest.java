@@ -2,11 +2,17 @@ package nextstep.utils;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AutoIncrementGeneratorTest {
+
+    @BeforeEach
+    void setUp() {
+        AutoIncrementGenerator.removeClass(Reservation.class);
+    }
 
     @Test
     void 도메인_별로_자동_증가하는_id값을_생성한다() {

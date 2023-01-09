@@ -16,4 +16,8 @@ public class AutoIncrementGenerator {
         return autoIncrementMap.get(classType).getAndAdd(1L);
     }
 
+    public static void removeClass(Class<?> classType) {
+        autoIncrementMap.remove(classType);
+    }
+
 }
