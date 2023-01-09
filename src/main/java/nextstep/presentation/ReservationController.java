@@ -3,6 +3,7 @@ package nextstep.presentation;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
 import nextstep.service.ReservationService;
+import nextstep.utils.ReservationRequestValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +14,16 @@ import java.net.URI;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ReservationRequestValidator reservationRequestValidator;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ReservationRequestValidator reservationRequestValidator) {
         this.reservationService = reservationService;
+        this.reservationRequestValidator = reservationRequestValidator;
     }
 
     @PostMapping
     public ResponseEntity<Void> createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
+        reservationRequestValidator.validateCreateRequest(createReservationRequest);
         Long reservationId = reservationService.createReservation(createReservationRequest);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservationId))
