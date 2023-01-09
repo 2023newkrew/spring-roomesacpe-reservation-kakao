@@ -23,4 +23,8 @@ public class ReservationService {
     public Reservation findById(long id) {
         return reservationRepository.findById(id);
     }
+
+    public Boolean delete(long id) {
+        return reservationRepository.delete(id);
+    }
 }
