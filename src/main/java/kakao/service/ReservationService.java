@@ -25,7 +25,7 @@ public class ReservationService {
     }
 
     public long createReservation(CreateReservationRequest request) {
-        boolean isDuplicate = reservationRepository.findByDateAndTime(request.date, request.time).size() > 0;
+        boolean isDuplicate = reservationJDBCRepository.findByDateAndTime(request.date, request.time).size() > 0;
         if (isDuplicate) {
             throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
@@ -34,7 +34,7 @@ public class ReservationService {
     }
 
     public ReservationResponse getReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id);
+        Reservation reservation = reservationJDBCRepository.findById(id);
         if (Objects.isNull(reservation)) {
             throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
         }
