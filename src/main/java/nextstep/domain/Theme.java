@@ -1,7 +1,5 @@
 package nextstep.domain;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-
 public class Theme {
     private String name;
     private String desc;
@@ -16,9 +14,11 @@ public class Theme {
     public String getName() {
         return name;
     }
+
     public String getDesc() {
         return desc;
     }
+
     public Integer getPrice() {
         return price;
     }

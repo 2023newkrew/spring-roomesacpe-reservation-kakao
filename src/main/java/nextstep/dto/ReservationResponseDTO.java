@@ -1,11 +1,6 @@
 package nextstep.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.domain.Theme;
@@ -20,12 +15,21 @@ public class ReservationResponseDTO {
 
     private final String name;
 
+    @JsonUnwrapped(prefix = "theme")
     private final Theme theme;
 
 //    private final String themeName;
 //    private final String themeDesc;
 //    private final String theme;
 
+
+    public ReservationResponseDTO(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
 
     public Long getId() {
         return id;
@@ -45,13 +49,5 @@ public class ReservationResponseDTO {
 
     public Theme getTheme() {
         return theme;
-    }
-
-    public ReservationResponseDTO(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
     }
 }

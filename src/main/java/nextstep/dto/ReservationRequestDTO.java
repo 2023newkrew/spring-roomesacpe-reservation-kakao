@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationRequestDTO {
+
     private final LocalDate date;
 
     private final LocalTime time;

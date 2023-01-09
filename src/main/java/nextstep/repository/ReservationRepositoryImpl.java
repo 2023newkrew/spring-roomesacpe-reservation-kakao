@@ -51,7 +51,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             id = resultSet.getLong(1);
         }
 
-
         try {
             if (resultSet != null) {
                 resultSet.close();
@@ -74,11 +73,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public ReservationResponseDTO findById(Long id) {
         String sql = "SELECT * from reservation WHERE id = ?";
-        ReservationResponseDTO reservationResponseDTO = jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
                 new ReservationResponseDTO(rs.getLong("id"), rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(), rs.getString("name"), new Theme(rs.getString("theme_name"),
                         rs.getString("theme_desc"), rs.getInt("theme_price"))), id);
-        return reservationResponseDTO;
     }
 
     @Override
