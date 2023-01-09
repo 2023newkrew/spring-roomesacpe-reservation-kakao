@@ -96,6 +96,24 @@ public class ReservationAcceptanceTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
+    @Test
+    void id에_해당하는_예약을_삭제한다() {
+        // given
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
+        ExtractableResponse<Response> response = createReservation(createReservationRequest);
+        
+        given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+
+                // when
+        .when()
+                .delete(response.header("Location"))
+
+                // then
+        .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
     private ExtractableResponse<Response> createReservation(CreateReservationRequest createReservationRequest) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -74,4 +74,16 @@ public class ReservationsTest {
         assertThat(reservations.existsByDateAndTime(reservation.getDate(), reservation.getTime())).isTrue();
     }
 
+    @Test
+    void id에_해당하는_예약을_삭제한다() {
+        // given
+        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", THEME);
+        Long reservationId = reservations.save(reservation).getId();
+
+        // when
+        reservations.deleteById(reservationId);
+
+        // then
+        assertThat(reservations.findById(reservationId)).isEqualTo(Optional.empty());
+    }
 }
