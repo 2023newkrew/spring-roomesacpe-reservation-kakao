@@ -27,8 +27,9 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약 삽입")
     void createReservationTest() {
-        reservationRepository.create(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
-        assertEquals(reservationRepository.getReservationList().size(), 2);
+        Reservation reservation = new Reservation(2L, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
+        Reservation result = reservationRepository.create(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
+        assertEquals(result, reservation);
     }
 
     @Test
@@ -41,23 +42,27 @@ class ReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약 날짜/시간 조회")
     void findByDateTimeTest() {
         Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"));
         assertEquals(result, true);
     }
 
     @Test
+    @DisplayName("없는 예약 날짜/시간 조회")
     void findByDateTimeEmptyTest() {
         Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
         assertEquals(result, false);
     }
 
     @Test
+    @DisplayName("중복 시간에 예약시 예외 발생")
     void duplicateTimeReservationThrowException() {
         Assertions.assertThrows(RuntimeException.class, () -> reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
     }
 
     @Test
+    @DisplayName("예약 삭제")
     void deleteReservation() {
         long id = 1L;
         Boolean result = reservationRepository.delete(id);
