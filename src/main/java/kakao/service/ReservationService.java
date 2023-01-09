@@ -7,7 +7,6 @@ import kakao.error.ErrorCode;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.RecordNotFoundException;
 import kakao.repository.ReservationJDBCRepository;
-import kakao.repository.ReservationRepository;
 import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,9 @@ import java.util.Objects;
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
     private final ReservationJDBCRepository reservationJDBCRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationJDBCRepository reservationJDBCRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationService(ReservationJDBCRepository reservationJDBCRepository) {
         this.reservationJDBCRepository = reservationJDBCRepository;
     }
 

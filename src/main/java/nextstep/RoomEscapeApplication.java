@@ -13,7 +13,6 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-//        List<Reservation> reservations = new ArrayList<>();
         ReservationDAO reservationDAO = new ReservationDAO();
         Long reservationIdIndex = 0L;
 
@@ -42,8 +41,7 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
-
-//                reservations.add(reservation);
+                
                 long reservationId = reservationDAO.addReservation(reservation);
                 if (reservationId >= 0) {
                     System.out.println("예약이 등록되었습니다.");
