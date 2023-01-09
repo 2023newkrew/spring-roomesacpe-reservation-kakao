@@ -27,4 +27,8 @@ public class ReservationService {
     public ReservationResponse getReservation(Long id) {
         return new ReservationResponse(reservationRepository.findById(id));
     }
+
+    public void deleteReservation(Long id) {
+        reservationRepository.delete(id);
+    }
 }
