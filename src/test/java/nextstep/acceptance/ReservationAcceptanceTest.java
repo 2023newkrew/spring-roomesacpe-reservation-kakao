@@ -8,6 +8,8 @@ import nextstep.domain.Reservations;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.utils.AutoIncrementGenerator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -112,6 +114,63 @@ public class ReservationAcceptanceTest {
                 // then
         .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Nested
+    @DisplayName("예약 생성 예외 테스트")
+    class InvalidCreateReservationTest {
+
+        @Test
+        void 예약_시_날짜가_기재되지_않으면_예약을_생성할_수_없다() {
+            // given
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .formParam("time", "13:00")
+                    .formParam("name", "eddie-davi")
+
+            // when
+            .when()
+                    .post("/reservations")
+
+            // then
+            .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @Test
+        void 예약_시_시간이_기재되지_않으면_예약을_생성할_수_없다() {
+            // given
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .formParam("date", "2023-01-09")
+                    .formParam("name", "eddie-davi")
+
+                    // when
+                    .when()
+                    .post("/reservations")
+
+                    // then
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @Test
+        void 예약_시_이름이_기재되지_않으면_예약을_생성할_수_없다() {
+            // given
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .formParam("date", "2023-01-09")
+                    .formParam("time", "13:00")
+
+                    // when
+                    .when()
+                    .post("/reservations")
+
+                    // then
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
     }
 
     private ExtractableResponse<Response> createReservation(CreateReservationRequest createReservationRequest) {
