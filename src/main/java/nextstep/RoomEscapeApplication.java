@@ -44,13 +44,14 @@ public class RoomEscapeApplication {
                 );
 
 //                reservations.add(reservation);
-                reservationDAO.addReservation(reservation);
-
-                System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
+                long reservationId = reservationDAO.addReservation(reservation);
+                if (reservationId >= 0) {
+                    System.out.println("예약이 등록되었습니다.");
+                    System.out.println("예약 번호: " + reservationId);
+                    System.out.println("예약 날짜: " + reservation.getDate());
+                    System.out.println("예약 시간: " + reservation.getTime());
+                    System.out.println("예약자 이름: " + reservation.getName());
+                }
             }
 
             if (input.startsWith(FIND)) {

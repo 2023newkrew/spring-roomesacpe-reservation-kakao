@@ -3,21 +3,13 @@ package nextstep;
 import java.sql.*;
 
 public class ReservationDAO {
-    public void addReservation(Reservation reservation) {
-        Connection con = null;
-
+    public long addReservation(Reservation reservation) {
+        String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+        try (
+                Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+                PreparedStatement ps = con.prepareStatement(INSERT_SQL, new String[]{"id"});
+        ) {
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -25,16 +17,20 @@ public class ReservationDAO {
             ps.setString(5, reservation.getTheme().getDesc());
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (!rs.next()) {
+                    return -1;
+                }
+                return rs.getLong(1);
+            } catch (SQLException e) {
+                System.err.println("반환 오류:" + e.getMessage());
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
         }
-
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        return -1;
     }
 
     public Reservation findById(Long id) {
