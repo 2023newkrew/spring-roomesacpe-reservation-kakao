@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 
 public class RoomEscapeApplication {
     private static final String ADD = "add";
