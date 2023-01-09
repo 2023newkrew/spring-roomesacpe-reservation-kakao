@@ -2,6 +2,7 @@ package nextstep.presentation;
 
 import nextstep.dto.ErrorResponse;
 import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.InvalidCreateReservationRequestException;
 import nextstep.exception.ReservationNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateReservationException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateReservationException(DuplicateReservationException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidCreateReservationRequestException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCreateReservationRequestException(InvalidCreateReservationRequestException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
