@@ -24,7 +24,7 @@ public class ReservationController {
     private Long reservationIdIndex = 0L;
     private Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
-    @PostMapping("")
+    @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
         reservations.add(
                 new Reservation(++reservationIdIndex, reservation.getDate(), reservation.getTime(),
@@ -33,7 +33,7 @@ public class ReservationController {
                 .header("Location", String.format("/reservations/%d", reservationIdIndex)).build();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
         Reservation reservation = reservations.stream().filter(it -> Objects.equals(it.getId(), id))
                 .findFirst().orElse(null);
@@ -43,7 +43,7 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(reservation);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
         if (reservations.stream().noneMatch(v -> Objects.equals(v.getId(), id))) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
