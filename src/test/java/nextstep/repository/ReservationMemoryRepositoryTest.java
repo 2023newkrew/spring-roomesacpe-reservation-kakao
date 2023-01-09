@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.Reservation;
+import nextstep.exception.DuplicateReservationException;
 import nextstep.service.RoomEscapeService;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class ReservationMemoryRepositoryTest {
@@ -53,6 +55,14 @@ class ReservationMemoryRepositoryTest {
                 RoomEscapeService.DEFAULT_THEME
         );
         assertThat(addedReservation).isEqualTo(expected);
+    }
+
+    @Test
+    public void should_throwDuplicateDateTimeException_when_duplicateDateTimeReservationGiven() {
+        repository.add(getReservationToAdd());
+
+        assertThatThrownBy(() -> repository.add(getReservationToAdd()))
+                .isInstanceOf(DuplicateReservationException.class);
     }
 
     @Test
