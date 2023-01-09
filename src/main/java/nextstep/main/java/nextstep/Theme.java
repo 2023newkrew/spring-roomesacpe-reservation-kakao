@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.main.java.nextstep;
 
 public class Theme {
     private String name;

@@ -1,4 +1,6 @@
-package nextstep;
+package nextstep.main.java.nextstep.domain;
+
+import nextstep.main.java.nextstep.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,6 +18,10 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.theme = theme;
+    }
+
+    public Reservation() {
+
     }
 
     public Long getId() {
@@ -36,5 +42,16 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", date=" + date +
+                ", time=" + time +
+                ", name='" + name + '\'' +
+                ", theme=" + theme +
+                '}';
     }
 }
