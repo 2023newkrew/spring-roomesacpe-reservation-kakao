@@ -11,7 +11,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-
     private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
@@ -19,20 +18,20 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity postReservation(@RequestBody ReservationDto reservation) {
-        reservationService.createReservation(reservation);
-        return ResponseEntity.created(URI.create("/users/" + reservation.getId())).build();
+    public ResponseEntity<?> postReservation(@RequestBody ReservationDto reservationDto) {
+        Long id = reservationService.createReservation(reservationDto);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
-    @GetMapping("/{reservation_id}")
-    public ResponseEntity<Reservation> getReservation(@PathVariable Long reservation_id) {
-        Reservation reservation = reservationService.getReservation(reservation_id);
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<Reservation> getReservation(@PathVariable Long reservationId) {
+        Reservation reservation = reservationService.getReservation(reservationId);
         return ResponseEntity.ok().body(reservation);
     }
 
-    @DeleteMapping("/{reservation_id}")
-    public ResponseEntity deleteReservation(@PathVariable Long reservation_id) {
-        reservationService.deleteReservation(reservation_id);
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
+        reservationService.deleteReservation(reservationId);
         return ResponseEntity.ok().build();
     }
 }
