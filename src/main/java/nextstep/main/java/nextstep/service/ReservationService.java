@@ -12,11 +12,19 @@ public class ReservationService {
     private static long count = 1;
 
     public ReservationService(ReservationRepository repository) {
-        this.repository = new MemoryReservationRepository();
+        this.repository = repository;
     }
 
     public void save(ReservationCreateRequestDto request) {
         Reservation reservation = new Reservation(count++, request.getDate(), request.getTime(), request.getName(), null);
         repository.save(reservation);
+    }
+
+    public Reservation findOneById(Long id) {
+        return repository.findOne(id);
+    }
+
+    public void deleteOneById(Long id) {
+        repository.deleteOne(id);
     }
 }
