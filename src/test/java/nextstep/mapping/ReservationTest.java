@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 import nextstep.domain.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,6 +23,7 @@ import org.springframework.http.MediaType;
 
 @DisplayName("웹 요청 / 응답 처리로 입출력 추가")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReservationTest {
 
     @LocalServerPort
@@ -35,6 +39,7 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 하기")
+    @Order(1)
     @ParameterizedTest
     @MethodSource("getCreateReservationData")
     void createReservation(String date, String time, String name) {
@@ -48,6 +53,7 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 조회")
+    @Order(2)
     @ParameterizedTest
     @MethodSource("getCreateReservationData")
     void showReservation(String date, String time, String name) {
@@ -64,8 +70,9 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 취소")
+    @Order(3)
     @ParameterizedTest
-    @MethodSource("getCreateReservationData")
+    @MethodSource({"getCreateReservationData"})
     void deleteReservation(String date, String time, String name) {
         LocalDate localDate = LocalDate.parse(date);
         LocalTime localTime = LocalTime.parse(time + ":00");

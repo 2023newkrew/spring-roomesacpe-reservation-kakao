@@ -33,7 +33,7 @@ public class ReservationController {
                 .header("Location", String.format("/reservations/%d", reservationIdIndex)).build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
         Reservation reservation = reservations.stream().filter(it -> Objects.equals(it.getId(), id))
                 .findFirst().orElse(null);
