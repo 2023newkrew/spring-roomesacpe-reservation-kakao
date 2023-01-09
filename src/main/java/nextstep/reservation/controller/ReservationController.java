@@ -1,6 +1,7 @@
 package nextstep.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nextstep.reservation.dto.ReservationRequestDto;
 import nextstep.reservation.dto.ReservationResponseDto;
 import nextstep.reservation.service.ReservationService;
@@ -17,7 +18,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<Object> addReservation(@ModelAttribute ReservationRequestDto requestDto) {
+    public ResponseEntity<Object> addReservation(@RequestBody ReservationRequestDto requestDto) {
         reservationService.addReservation(requestDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/reservations/1");
@@ -31,4 +32,9 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservationService.getReservation(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> cancelReservation(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
+    }
 }
