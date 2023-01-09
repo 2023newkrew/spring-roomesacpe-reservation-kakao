@@ -34,4 +34,8 @@ public class Reservations {
                 .anyMatch(reservation -> reservation.isSameDateAndTime(date, time));
     }
 
+    public void deleteAll() {
+        reservations.clear();
+    }
+
 }
