@@ -18,6 +18,13 @@ public class Reservation {
         this.theme = theme;
     }
 
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
+
     public Long getId() {
         return id;
     }
@@ -36,5 +43,9 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
