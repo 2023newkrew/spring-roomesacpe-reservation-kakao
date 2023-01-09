@@ -1,12 +1,12 @@
-package roomescape.service;
+package nextstep.web.service;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
+import nextstep.web.dto.ReservationRequestDto;
+import nextstep.web.dto.ReservationResponseDto;
+import nextstep.web.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.repository.ReservationRepository;
 
 @Service
 @RequiredArgsConstructor

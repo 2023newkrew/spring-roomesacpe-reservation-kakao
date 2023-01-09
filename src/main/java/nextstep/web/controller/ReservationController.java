@@ -1,11 +1,11 @@
-package roomescape.controller;
+package nextstep.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.web.dto.ReservationRequestDto;
+import nextstep.web.dto.ReservationResponseDto;
+import nextstep.web.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.service.ReservationService;
 
 import java.net.URI;
 

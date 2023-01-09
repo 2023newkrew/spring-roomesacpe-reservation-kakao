@@ -1,4 +1,4 @@
-package roomescape.dto;
+package nextstep.web.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

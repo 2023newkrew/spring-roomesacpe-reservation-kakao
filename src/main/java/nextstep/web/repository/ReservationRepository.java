@@ -1,6 +1,6 @@
-package roomescape.repository;
+package nextstep.web.repository;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 
 public interface ReservationRepository {
 

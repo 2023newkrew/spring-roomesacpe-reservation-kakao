@@ -1,8 +1,8 @@
-package roomescape.repository;
+package nextstep.web.repository;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
