@@ -50,4 +50,11 @@ public class Reservation implements Comparable<Reservation> {
     public int compareTo(Reservation reservation) {
         return Long.compare(this.id, reservation.id);
     }
+
+    public boolean isDuplicate(LocalDate date, LocalTime time) {
+        if (this.date.equals(date) && this.time.equals(time)) {
+            return true;
+        }
+        return false;
+    }
 }
