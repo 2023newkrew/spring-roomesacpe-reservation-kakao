@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.reservation.entity;
 
 public class Theme {
     private String name;

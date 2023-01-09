@@ -1,7 +1,6 @@
-package nextstep.reservation.dto;
+package nextstep.reservation.entity;
 
-import lombok.Builder;
-import nextstep.Theme;
+import nextstep.reservation.dto.ReservationRequestDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
