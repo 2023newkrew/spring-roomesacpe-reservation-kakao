@@ -2,11 +2,16 @@ package nextstep.main.java.nextstep.service;
 
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.exception.NoSuchReservationException;
+import nextstep.main.java.nextstep.message.ExceptionMessage;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static nextstep.main.java.nextstep.message.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 
 @Service
 public class ReservationService {
@@ -21,13 +26,13 @@ public class ReservationService {
         Reservation reservation = new Reservation(count++, request.getDate(), request.getTime(), request.getName(), null);
         Optional<Reservation> duplicateReservation = repository.findByDateAndTime(reservation.getDate(), reservation.getTime());
         if(duplicateReservation.isPresent()){
-            throw new RuntimeException();
+            throw new DuplicateReservationException();
         }
         repository.save(reservation);
     }
 
     public Reservation findOneById(Long id) {
-        return repository.findOne(id).orElseThrow(RuntimeException::new);
+        return repository.findOne(id).orElseThrow(NoSuchReservationException::new);
     }
 
     public void deleteOneById(Long id) {

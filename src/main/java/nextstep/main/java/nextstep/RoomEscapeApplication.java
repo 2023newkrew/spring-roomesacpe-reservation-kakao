@@ -1,6 +1,7 @@
 package nextstep.main.java.nextstep;
 
 import nextstep.main.java.nextstep.domain.Reservation;
+import nextstep.main.java.nextstep.exception.NoSuchReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -63,7 +64,7 @@ public class RoomEscapeApplication {
                 Reservation reservation = reservations.stream()
                         .filter(it -> Objects.equals(it.getId(), id))
                         .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                        .orElseThrow(NoSuchReservationException::new);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
