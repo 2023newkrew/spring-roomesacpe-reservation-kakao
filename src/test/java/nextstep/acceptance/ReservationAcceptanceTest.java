@@ -1,6 +1,8 @@
 package nextstep.acceptance;
 
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import nextstep.dto.CreateReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationAcceptanceTest {
@@ -27,17 +31,48 @@ public class ReservationAcceptanceTest {
         // given
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
 
+        // when
+        ExtractableResponse<Response> response = createReservation(createReservationRequest);
+        
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+
+    @Test
+    void id로_예약을_조회한다() {
+        // given
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "davi-eddie");
+        ExtractableResponse<Response> response = createReservation(createReservationRequest);
         given()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(createReservationRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
 
         // when
-        .when()
-                .post("/reservations")
+        .when().get(response.header("Location"))
 
         // then
         .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(1))
+                .body("date", equalTo(createReservationRequest.getDate()))
+                .body("time", equalTo(createReservationRequest.getTime()))
+                .body("name", equalTo(createReservationRequest.getName()));
+    }
+
+    @Test
+    void 존재하지_않는_예약을_조회하면_예외가_발생한다() {
+        
+    }
+
+    private ExtractableResponse<Response> createReservation(CreateReservationRequest createReservationRequest) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(createReservationRequest)
+        .when()
+                .post("/reservations")
+        .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
     }
 
 }
