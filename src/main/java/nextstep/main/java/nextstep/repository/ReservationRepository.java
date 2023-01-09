@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ReservationRepository {
     void save(Reservation reservation);
 
-    Reservation findOne(Long id);
+    Optional<Reservation> findOne(Long id);
 
     void deleteOne(Long id);
 

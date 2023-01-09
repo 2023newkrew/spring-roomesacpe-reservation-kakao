@@ -4,13 +4,12 @@ import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import static org.assertj.core.api.Assertions.*;
 
 public class ReservationServiceTest {
 
@@ -30,8 +29,19 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void findByOneIdTest(){
+    @DisplayName("예약 단건 조회 테스트")
+    void findOneByIdTest(){
         Reservation reservation = MemoryReservationRepository.reservationMap.get(1L);
-        Assertions.assertThat(service.findOneById(1L)).isEqualTo(reservation);
+        assertThat(service.findOneById(1L)).isEqualTo(reservation);
     }
+
+    @Test
+    @DisplayName("예약 단건 삭제 테스트")
+    void deleteOneByIdTest() {
+        assertThatCode(() -> service.findOneById(1L)).doesNotThrowAnyException();
+
+        service.deleteOneById(1L);
+        assertThatThrownBy(() -> service.findOneById(1L)).isInstanceOf(RuntimeException.class);
+    }
+
 }

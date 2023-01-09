@@ -20,8 +20,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findOne(Long id) {
-        return reservationMap.get(id);
+    public Optional<Reservation> findOne(Long id) {
+        return Optional.ofNullable(reservationMap.get(id));
     }
 
     @Override
