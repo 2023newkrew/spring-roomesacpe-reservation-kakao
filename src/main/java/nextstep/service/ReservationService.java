@@ -5,6 +5,8 @@ import nextstep.domain.Reservations;
 import nextstep.domain.Theme;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
+import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.ReservationNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,15 +27,19 @@ public class ReservationService {
         LocalDate date = LocalDate.parse(createReservationRequest.getDate());
         LocalTime time = LocalTime.parse(createReservationRequest.getTime());
 
-        Reservation savedReservation = reservations.save(new Reservation(date, time, createReservationRequest.getName(), THEME));
+        if (reservations.existsByDateAndTime(date, time)) {
+            throw new DuplicateReservationException();
+        }
 
+        Reservation savedReservation = reservations.save(new Reservation(date, time, createReservationRequest.getName(), THEME));
         return savedReservation.getId();
     }
 
     public FindReservationResponse findReservationById(Long reservationId) {
         Reservation reservation = reservations.findById(reservationId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 id의 예약 입니다."));
+                .orElseThrow(ReservationNotFoundException::new);
 
         return FindReservationResponse.from(reservation);
     }
+
 }

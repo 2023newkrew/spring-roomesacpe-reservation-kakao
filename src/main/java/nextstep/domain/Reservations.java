@@ -2,6 +2,8 @@ package nextstep.domain;
 
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,4 +28,10 @@ public class Reservations {
                 .filter(reservation -> Objects.equals(reservation.getId(), reservationId))
                 .findAny();
     }
+
+    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+        return reservations.stream()
+                .anyMatch(reservation -> reservation.isSameDateAndTime(date, time));
+    }
+
 }
