@@ -10,6 +10,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
 public class RoomEscapeApplication {
+
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
@@ -38,13 +39,8 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
+                Reservation reservation = new Reservation(++reservationIdIndex,
+                        LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
 
                 reservations.add(reservation);
 
@@ -61,8 +57,7 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
+                        .filter(it -> Objects.equals(it.getId(), id)).findFirst()
                         .orElseThrow(RuntimeException::new);
 
                 System.out.println("예약 번호: " + reservation.getId());
