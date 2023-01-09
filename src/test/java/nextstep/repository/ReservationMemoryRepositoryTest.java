@@ -33,4 +33,26 @@ class ReservationMemoryRepositoryTest {
         );
         assertThat(addedReservation).isEqualTo(expected);
     }
+
+    @Test
+    public void should_findRightReservation_when_findRequestGiven() {
+        Reservation reservation = new Reservation(
+                LocalDate.parse("2022-08-11"),
+                LocalTime.parse("13:00:00"),
+                "jin",
+                RoomEscapeService.DEFAULT_THEME
+        );
+        repository.add(reservation);
+
+        Reservation addedReservation = repository.get(0L);
+
+        Reservation expected = new Reservation(
+                0L,
+                LocalDate.parse("2022-08-11"),
+                LocalTime.parse("13:00:00"),
+                "jin",
+                RoomEscapeService.DEFAULT_THEME
+        );
+        assertThat(addedReservation).isEqualTo(expected);
+    }
 }

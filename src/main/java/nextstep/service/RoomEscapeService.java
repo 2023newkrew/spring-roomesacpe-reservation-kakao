@@ -31,4 +31,8 @@ public class RoomEscapeService {
         );
         return reservationRepository.add(reservation);
     }
+
+    public Reservation get(Long id) {
+        return reservationRepository.get(id);
+    }
 }

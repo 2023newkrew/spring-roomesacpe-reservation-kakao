@@ -6,9 +6,7 @@ import nextstep.service.RoomEscapeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController("/reservations")
 public class RoomEscapeController {
@@ -27,5 +25,11 @@ public class RoomEscapeController {
                 .status(HttpStatus.CREATED)
                 .header("Location", "/reservations/" + reservation.getId())
                 .body(reservation);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> findReservation(@PathVariable Long id) {
+        return ResponseEntity
+                .ok(roomEscapeService.get(id));
     }
 }

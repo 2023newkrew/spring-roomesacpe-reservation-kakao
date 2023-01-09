@@ -11,6 +11,8 @@ public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
     private Long reservationIdIndex = 0L;
 
+
+
     @Override
     public Reservation add(Reservation reservation) {
         reservation.setId(reservationIdIndex++);
@@ -20,7 +22,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public Reservation get(Long id) {
-        return null;
+        return reservations.get(id);
     }
 
     @Override
