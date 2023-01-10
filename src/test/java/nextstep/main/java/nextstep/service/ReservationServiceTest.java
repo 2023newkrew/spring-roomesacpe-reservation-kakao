@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ReservationServiceTest {
 
-
     private static final ReservationService service = new ReservationService(new MemoryReservationRepository());
     @BeforeEach
     void setUp(){

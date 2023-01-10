@@ -20,10 +20,6 @@ public class Reservation {
         this.theme = theme;
     }
 
-    public Reservation() {
-
-    }
-
     public Long getId() {
         return id;
     }
