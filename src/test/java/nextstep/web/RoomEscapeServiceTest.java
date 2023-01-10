@@ -3,6 +3,7 @@ package nextstep.web;
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.web.dto.ReservationRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,30 +17,36 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class RoomEscapeServiceTest {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private ReservationRepository reservationRepository;
+
+    private RoomEscapeService roomEscapeService;
+
+    @BeforeEach
+    void setUp() {
+        reservationRepository = new ReservationRepository(jdbcTemplate);
+        roomEscapeService = new RoomEscapeService(reservationRepository);
+    }
 
     @DisplayName("존재하지 않는 예약을 조회할 경우 예외가 발생한다")
     @Test
     void getNotFoundReservation() {
-        ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
-        RoomEscapeService service = new RoomEscapeService(reservationRepository);
-
-        assertThatThrownBy(() -> service.getReservation(1L))
+        assertThatThrownBy(() -> roomEscapeService.getReservation(1L))
                 .isInstanceOf(ReservationNotFoundException.class);
     }
 
     @DisplayName("예약 생성시 같은 날짜와 시간의 예약이 존재할 경우 예외가 발생한다")
     @Test
     void createDuplicateReservation() {
-        ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
-        RoomEscapeService service = new RoomEscapeService(reservationRepository);
+        String name = "겹치는 예약";
+        LocalDate date = LocalDate.of(2022, 11, 11);
+        LocalTime time = LocalTime.of(19, 00);
+        ReservationRequest request = new ReservationRequest(name, date, time);
+        roomEscapeService.createReservation(request);
 
-        ReservationRequest request = new ReservationRequest("name", LocalDate.of(2022, 11, 11), LocalTime.of(10, 10));
-        service.createReservation(request);
-
-        assertThatThrownBy(() -> service.createReservation(request))
+        assertThatThrownBy(() -> roomEscapeService.createReservation(request))
                 .isInstanceOf(ReservationDuplicateException.class);
     }
 }
