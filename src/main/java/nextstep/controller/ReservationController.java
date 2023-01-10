@@ -3,6 +3,7 @@ package nextstep.controller;
 import nextstep.Reservation;
 import nextstep.Theme;
 import nextstep.dto.CreateReservationRequest;
+import nextstep.dto.FindReservation;
 import nextstep.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +31,10 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public Reservation findReservationById(@PathVariable Long id) {
+    public FindReservation findReservationById(@PathVariable Long id) {
 
         Reservation reservation = reservationService.findById(id);
-        return reservation;
+        return FindReservation.from(reservation);
     }
 
     @DeleteMapping("/{id}")
