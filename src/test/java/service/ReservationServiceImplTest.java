@@ -4,6 +4,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.repository.ReservationMemoryRepository;
 import nextstep.service.ReservationService;
+import nextstep.service.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ReservationServiceTest {
+class ReservationServiceImplTest {
 
     ReservationService reservationService;
     Theme testTheme;
@@ -22,7 +23,7 @@ class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         testTheme = new Theme("Theme", "Theme desc", 10_000);
-        reservationService = new ReservationService(new ReservationMemoryRepository());
+        reservationService = new ReservationServiceImpl(new ReservationMemoryRepository());
     }
 
     private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
