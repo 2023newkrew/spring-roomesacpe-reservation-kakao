@@ -18,5 +18,6 @@ public class ReservationRequestDto {
 
     @JsonFormat(pattern = "HH:mm")
     LocalTime time;
+
     String name;
 }

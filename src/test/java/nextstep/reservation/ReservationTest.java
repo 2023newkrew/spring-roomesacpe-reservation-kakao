@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -28,19 +30,40 @@ public class ReservationTest {
     @Autowired
     ReservationRepository reservationRepository;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+
+        String sql = "CREATE TABLE RESERVATION" +
+                "("+
+                "id          bigint not null auto_increment,"+
+                "date        date," +
+                "time        time," +
+                "name        varchar(20)," +
+                "theme_name  varchar(20)," +
+                "theme_desc  varchar(255)," +
+                "theme_price int," +
+                "primary key (id)," +
+                "unique (date, time)"+
+                ");";
+        jdbcTemplate.execute(sql);
+
+//        try {
         reservationRepository.add(
-                1L,
-                new Reservation(
-                        1L,
-                        LocalDate.of(1982, 2, 19),
-                        LocalTime.of(2, 2),
-                        "name",
-                        new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000)
-                )
+                Reservation.builder()
+                        .date(LocalDate.of(1982,2,19))
+                        .time(LocalTime.of(2, 2))
+                        .name("name")
+                        .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+                        .build()
         );
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     @Test
@@ -98,5 +121,4 @@ public class ReservationTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("해당 시간에 중복된 예약이 있습니다."));
     }
-
 }

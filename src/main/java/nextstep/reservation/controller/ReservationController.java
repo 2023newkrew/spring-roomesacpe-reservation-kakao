@@ -1,11 +1,9 @@
 package nextstep.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nextstep.reservation.dto.ReservationRequestDto;
 import nextstep.reservation.dto.ReservationResponseDto;
 import nextstep.reservation.service.ReservationService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
