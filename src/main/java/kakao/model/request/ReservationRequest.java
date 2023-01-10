@@ -1,11 +1,15 @@
 package kakao.model.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Getter
+@Setter
 public class ReservationRequest {
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -17,22 +21,4 @@ public class ReservationRequest {
 
     @NonNull
     private String name;
-
-    public ReservationRequest(@NonNull LocalDate date, @NonNull LocalTime time, @NonNull String name) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

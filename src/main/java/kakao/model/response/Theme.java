@@ -1,6 +1,8 @@
 package kakao.model.response;
 
+import lombok.Getter;
 
+@Getter
 public class Theme {
     private final String name;
     private final String desc;
@@ -10,17 +12,5 @@ public class Theme {
         this.name = name;
         this.desc = desc;
         this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
     }
 }
