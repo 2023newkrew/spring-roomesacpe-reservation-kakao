@@ -1,5 +1,6 @@
 package reservation.respository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -44,15 +45,19 @@ public class ReservationRepository {
 
     public Reservation getReservation(Long reservationId) {
         String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime(),
-                rs.getString("name"),
-                new Theme(rs.getString("theme_name"),
-                    rs.getString("theme_desc"),
-                    rs.getInt("theme_price"))
-        ), reservationId);
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
+                    rs.getLong("id"),
+                    rs.getDate("date").toLocalDate(),
+                    rs.getTime("time").toLocalTime(),
+                    rs.getString("name"),
+                    new Theme(rs.getString("theme_name"),
+                            rs.getString("theme_desc"),
+                            rs.getInt("theme_price"))
+            ), reservationId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public int deleteReservation(Long reservationId) {
