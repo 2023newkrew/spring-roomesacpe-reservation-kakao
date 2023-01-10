@@ -41,14 +41,17 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = reservationService.createReservation(LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"), name, theme);
-
-                System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
+                try {
+                    Reservation reservation = reservationService.createReservation(LocalDate.parse(date),
+                            LocalTime.parse(time + ":00"), name, theme);
+                    System.out.println("예약이 등록되었습니다.");
+                    System.out.println("예약 번호: " + reservation.getId());
+                    System.out.println("예약 날짜: " + reservation.getDate());
+                    System.out.println("예약 시간: " + reservation.getTime());
+                    System.out.println("예약자 이름: " + reservation.getName());
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
             if (input.startsWith(FIND)) {
