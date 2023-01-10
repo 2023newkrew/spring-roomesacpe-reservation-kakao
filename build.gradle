@@ -18,6 +18,7 @@ dependencies {
     implementation 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.7.7'
+    annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
 }
 
