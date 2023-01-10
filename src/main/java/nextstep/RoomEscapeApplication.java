@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+
 public class RoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
@@ -22,6 +23,7 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         SpringApplication.run(RoomEscapeApplication.class, args);
         Scanner scanner = new Scanner(System.in);
+
         Long reservationIdIndex = 0L;
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -44,6 +46,7 @@ public class RoomEscapeApplication {
                 Reservation reservation = reservationDAO.addReservation(
                         new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name));
 
+
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -56,6 +59,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
                 Reservation reservation = reservationDAO.findById(id);
+
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
@@ -75,6 +79,7 @@ public class RoomEscapeApplication {
 
             if (input.equals(QUIT)) {
                 reservationDAO.releaseConnection();
+
                 break;
             }
         }
