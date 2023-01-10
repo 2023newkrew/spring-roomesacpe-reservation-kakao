@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import nextstep.Reservation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +28,11 @@ public class ReservationController {
     public ResponseEntity createReservation(@RequestBody ReservationRequestDto dto) {
         Long reservationId = reservationService.createReservation(dto);
         return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity cancelReservation(@PathVariable("id") Long reservationId) {
+        reservationService.deleteReservation(reservationId);
+        return ResponseEntity.noContent().build();
     }
 }

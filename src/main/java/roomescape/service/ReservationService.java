@@ -30,4 +30,8 @@ public class ReservationService {
                 .orElseThrow(() -> {throw new NoSuchElementException("No Reservation by that Id");});
         return new ReservationResponseDto(reservation);
     }
+
+    public void deleteReservation(Long reservationId) {
+        reservationRepository.delete(reservationId);
+    }
 }
