@@ -70,4 +70,18 @@ public class ReservationDAOTest {
         assertThat(reservation.getTheme().getDesc()).isEqualTo("병맛 어드벤처 회사 코믹물");
         assertThat(reservation.getTheme().getPrice()).isEqualTo(29000);
     }
+
+    @DisplayName("예약 삭제")
+    @Test
+    void deleteReservation() throws SQLException {
+        ReservationDAO reservationDAO = new ReservationDAO(URL, USER, PASSWORD);
+        con.createStatement().executeUpdate("INSERT INTO RESERVATION"
+                + "(id, name, date, time, theme_name, theme_desc, theme_price) "
+                + "VALUES (1, 'test', '2022-08-22', '13:00', '워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
+        reservationDAO.deleteReservation(1);
+        ResultSet resultSet = con.createStatement()
+                .executeQuery("SELECT count(*) FROM RESERVATION");
+        assertThat(resultSet.next()).isTrue();
+        assertThat(resultSet.getInt(1)).isEqualTo(0);
+    }
 }

@@ -14,6 +14,7 @@ public class ReservationDAO {
 
     private static final String ADD_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String FIND_SQL = "SELECT * FROM reservation WHERE id = ?;";
+    private static final String DELETE_SQL = "DELETE FROM reservation WHERE id = ?;";
 
     private final String url;
     private final String user;
@@ -46,6 +47,16 @@ public class ReservationDAO {
         }
     }
 
+    private void executeDeleteConnection(Connection con, int id) {
+        try {
+            PreparedStatement ps = con.prepareStatement(DELETE_SQL, new String[]{"id"});
+            setDeletePreparedStatement(ps, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void setAddPreparedStatment(PreparedStatement ps, Reservation reservation)
             throws SQLException {
         ps.setDate(1, Date.valueOf(reservation.getDate()));
@@ -59,6 +70,11 @@ public class ReservationDAO {
     private void setFindPreparedStatement(PreparedStatement ps, int id) throws SQLException {
         ps.setInt(1, id);
     }
+
+    private void setDeletePreparedStatement(PreparedStatement ps, int id) throws SQLException {
+        ps.setInt(1, id);
+    }
+
 
     private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
         validateResultSet(resultSet);
@@ -115,5 +131,11 @@ public class ReservationDAO {
         Reservation reservation = executeFindConnection(con, id);
         closeConnection(con);
         return reservation;
+    }
+
+    public void deleteReservation(int id) {
+        Connection con = openConnection();
+        executeDeleteConnection(con, id);
+        closeConnection(con);
     }
 }
