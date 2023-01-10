@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 import nextstep.dao.ReservationDAO;
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.entity.Reservation;
+import nextstep.entity.Theme;
 import nextstep.dto.ReservationRequestDTO;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -71,12 +71,10 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
                 reservationDAO.deleteById(id);
 
-//                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-//                    System.out.println("예약이 취소되었습니다.");
-//                }
             }
 
             if (input.equals(QUIT)) {
+                reservationDAO.releaseConnection();
                 break;
             }
         }

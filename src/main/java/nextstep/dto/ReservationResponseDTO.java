@@ -3,7 +3,7 @@ package nextstep.dto;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import nextstep.domain.Theme;
+import nextstep.entity.Theme;
 
 public class ReservationResponseDTO {
 
