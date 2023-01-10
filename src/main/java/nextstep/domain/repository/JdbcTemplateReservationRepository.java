@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
+import static nextstep.domain.repository.QuerySetting.Reservation.*;
+
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
 
@@ -22,8 +24,8 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("RESERVATION")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(PK_NAME);
     }
 
     @Override
@@ -36,7 +38,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Optional<Reservation> findById(Long reservationId) {
-        Reservation reservation = jdbcTemplate.queryForObject(Queries.Reservation.SELECT_BY_ID, new Object[] {reservationId},(rs, rowNum) -> new Reservation(
+        Reservation reservation = jdbcTemplate.queryForObject(SELECT_BY_ID, new Object[] {reservationId},(rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
@@ -53,16 +55,16 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.queryForObject(Queries.Reservation.SELECT_COUNT_BY_DATE_AND_TIME, new Object[] {Date.valueOf(date), Time.valueOf(time)}, Integer.class) > 0;
+        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_DATE_AND_TIME, new Object[] {Date.valueOf(date), Time.valueOf(time)}, Integer.class) > 0;
     }
 
     @Override
     public boolean deleteById(Long reservationId) {
-        return jdbcTemplate.update(Queries.Reservation.DELETE_BY_ID, new Object[] {reservationId}) == 1;
+        return jdbcTemplate.update(DELETE_BY_ID, new Object[] {reservationId}) == 1;
     }
 
     @Override
     public void deleteAll() {
-        jdbcTemplate.update(Queries.Reservation.DELETE_ALL);
+        jdbcTemplate.update(DELETE_ALL);
     }
 }

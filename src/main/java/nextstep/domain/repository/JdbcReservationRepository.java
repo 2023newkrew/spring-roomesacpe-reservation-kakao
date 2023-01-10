@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static nextstep.domain.repository.Queries.Reservation.*;
+import static nextstep.domain.repository.QuerySetting.Reservation.*;
 
 public class JdbcReservationRepository implements ReservationRepository {
 
