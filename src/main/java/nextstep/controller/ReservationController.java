@@ -2,33 +2,42 @@ package nextstep.controller;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import nextstep.dto.ReservationRequest;
+import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
 
-    @PostMapping
-    public ResponseEntity<?> createReservation() {
+    private static final String RESERVATION_PATH = "/reservations";
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    private final ReservationService service;
+
+    @PostMapping
+    public ResponseEntity<?> createReservation(@RequestBody ReservationRequest request) {
+        Reservation created = service.create(request);
+        URI location = URI.create(RESERVATION_PATH + "/" + created.getId());
+
+        return ResponseEntity.created(location)
+                .build();
     }
 
     @GetMapping("/{reservation_id}")
     public ResponseEntity<?> getReservation(@PathVariable("reservation_id") Long reservationId) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(service.getById(reservationId));
     }
 
     @DeleteMapping("/{reservation_id}")
     public ResponseEntity<?> deleteReservation(@PathVariable("reservation_id") Long reservationId) {
+        service.deleteById(reservationId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent()
+                .build();
     }
 }
