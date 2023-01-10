@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -23,6 +24,18 @@ public class Reservation {
     }
     public String getName() {
         return name;
+    }
+
+    public LocalDate getDate(){
+        return date;
+    }
+
+    public LocalTime getTime(){
+        return time;
+    }
+
+    public Theme getTheme() {
+        return theme;
     }
 
 }

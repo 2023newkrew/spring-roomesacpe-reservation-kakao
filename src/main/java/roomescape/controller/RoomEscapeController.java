@@ -18,11 +18,16 @@ public class RoomEscapeController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation){
         // TODO: check duplicated time
+
         reservationList.add(reservation);
-
-
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
-//        return new ResponseEntity<Reservation>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/reservations/{id}")
+    public ResponseEntity<Reservation> lookUpReservation(@PathVariable("id") String id) {
+        Reservation reservation = reservationList.stream().filter(reserve -> reserve.getId() == Long.parseLong(id))
+                .findAny().orElse(null);
+
+        return ResponseEntity.ok().body(reservation);
+    }
 }

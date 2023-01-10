@@ -35,7 +35,11 @@ public class RoomEscapeControllerTest {
     @DisplayName("Http Method - POST")
     @Test
     void createUser() {
-        Reservation reservation = new Reservation(1L, LocalDate.of(2022,8,11), LocalTime.of(13,0,0), "name", new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
+        Reservation reservation = new Reservation(1L,
+                LocalDate.of(2022,8,11),
+                LocalTime.of(13,0,0),
+                "name22",
+                new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -52,11 +56,12 @@ public class RoomEscapeControllerTest {
     @DisplayName("Http Method - GET")
     @Test
     void showUser() {
+        createUser();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/http-method/users")
+                .when().get("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .body("id", is(1));
     }
 }
