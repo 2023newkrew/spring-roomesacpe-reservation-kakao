@@ -32,4 +32,15 @@ public class ReservationController {
         reservations.add(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + reservationIdIndex)).build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationResponseDTO> retrieveReservation(@PathVariable Long id) {
+        final ReservationResponseDTO reservationResponseDTO = new ReservationResponseDTO(1L, "2022-08-11", "13:00",
+                "name",
+                "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+
+        return ResponseEntity.ok()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationResponseDTO);
+    }
 }
