@@ -6,20 +6,16 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.Theme;
-
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Optional;
 
-
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
-
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert insertActor;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
 
     public ReservationJdbcRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;

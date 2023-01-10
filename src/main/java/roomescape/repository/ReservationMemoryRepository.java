@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public class ReservationMemoryRepository implements ReservationRepository{
-    private static Map<Long, Reservation> reservations = new HashMap<>();
+    private final static Map<Long, Reservation> reservations = new HashMap<>();
     private static Long reservationIdIndex = 0L;
 
     @Override

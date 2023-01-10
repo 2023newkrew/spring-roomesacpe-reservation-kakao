@@ -6,13 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
-
 import java.net.URI;
 
 @Controller
 public class ReservationController {
-
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;

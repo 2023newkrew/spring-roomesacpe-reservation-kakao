@@ -6,14 +6,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationResponseDto {
-    private Long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private String themeName;
-    private String themeDesc;
-    private Integer themePrice;
-
+    private final Long id;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final String themeName;
+    private final String themeDesc;
+    private final Integer themePrice;
 
     public ReservationResponseDto(Reservation reservation) {
         this.id = reservation.getId();
