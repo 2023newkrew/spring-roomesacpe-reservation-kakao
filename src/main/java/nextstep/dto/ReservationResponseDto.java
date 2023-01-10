@@ -3,7 +3,7 @@ package nextstep.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDto {
+public class ReservationResponseDto {
     private Long id;
     private LocalDate date;
     private LocalTime time;
@@ -11,6 +11,16 @@ public class ReservationDto {
     private String themeName;
     private String themeDesc;
     private Integer themePrice;
+
+    public ReservationResponseDto(Long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc, Integer themePrice) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.themeName = themeName;
+        this.themeDesc = themeDesc;
+        this.themePrice = themePrice;
+    }
 
     public Long getId() {
         return id;
@@ -38,16 +48,5 @@ public class ReservationDto {
 
     public Integer getThemePrice() {
         return themePrice;
-    }
-
-    public ReservationDto(Long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc, Integer themePrice) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.themeName = themeName;
-        this.themeDesc = themeDesc;
-        this.themePrice = themePrice;
-
     }
 }

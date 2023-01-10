@@ -2,9 +2,14 @@ package nextstep.service;
 
 import nextstep.Reservation;
 import nextstep.Theme;
-import nextstep.dto.ReservationDto;
+import nextstep.dto.ReservationRequestDto;
+import nextstep.dto.ReservationResponseDto;
+import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
 import nextstep.repository.ReservationDao;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class ReservationService {
@@ -15,17 +20,22 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public Long reserve(Reservation reservation) {
+    public Long reserve(ReservationRequestDto reservationRequestDto) {
+        LocalDate date = LocalDate.parse(reservationRequestDto.getDate());
+        LocalTime time = LocalTime.parse(reservationRequestDto.getTime());
+        if (reservationDao.findByDateAndTime(date, time) != null) {
+            throw new DuplicatedDateAndTimeException();
+        }
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-        reservation.setTheme(theme);
-        reservationDao.save(reservation);
+        Reservation newReservation = new Reservation(date, time, reservationRequestDto.getName(), theme);
+        reservationDao.save(newReservation);
 
-        return reservation.getId();
+        return newReservation.getId();
     }
 
-    public ReservationDto retrieve(Long id) {
+    public ReservationResponseDto retrieve(Long id) {
         Reservation reservation = reservationDao.findById(id);
-        return new ReservationDto(
+        return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getDate(),
                 reservation.getTime(),
@@ -34,5 +44,9 @@ public class ReservationService {
                 reservation.getTheme().getDesc(),
                 reservation.getTheme().getPrice()
         );
+    }
+
+    public void delete(Long id) {
+        reservationDao.delete(id);
     }
 }

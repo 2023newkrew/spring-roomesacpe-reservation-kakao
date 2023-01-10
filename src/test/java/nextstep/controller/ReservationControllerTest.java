@@ -1,19 +1,15 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.Reservation;
+import nextstep.dto.ReservationRequestDto;
+import nextstep.repository.ReservationDao;
 import nextstep.service.ReservationService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
@@ -27,44 +23,64 @@ public class ReservationControllerTest {
 
     @Autowired
     ReservationService reservationService;
+    @Autowired
+    ReservationDao reservationDao;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        ReservationRequestDto requestDto = new ReservationRequestDto(
+                "2023-01-10",
+                "13:00:00",
+                "jay"
+        );
+        reservationService.reserve(requestDto);
+    }
+
+    @AfterEach
+    void afterEach() {
+        reservationDao.clear();
     }
 
     @DisplayName("Reservation - 예약하기")
     @Test
     void reserve() {
-        Reservation reservation = new Reservation(
-                null,
-                LocalDate.parse("2023-01-10"),
-                LocalTime.parse("13:00:00"),
-                "jay",
-                null
+        ReservationRequestDto requestDto = new ReservationRequestDto(
+                "2023-01-11",
+                "13:00:00",
+                "jay"
         );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(requestDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .header("Location", "/reservations/2");
+    }
+
+    @DisplayName("Reservation - 예약하기(예외)")
+    @Test
+    void reserveException() {
+        ReservationRequestDto requestDto = new ReservationRequestDto(
+                "2023-01-10",
+                "13:00:00",
+                "jay"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestDto)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("이미 예약된 날짜와 시간입니다."));
     }
 
     @DisplayName("Reservation - 조회하기")
     @Test
     void show() {
-        Reservation reservation = new Reservation(
-                null,
-                LocalDate.parse("2023-01-10"),
-                LocalTime.parse("13:00:00"),
-                "jay",
-                null
-        );
-        reservationService.reserve(reservation);
-
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
@@ -77,5 +93,15 @@ public class ReservationControllerTest {
                 .body("themeName", is("워너고홈"))
                 .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
                 .body("themePrice", is(29000));
+    }
+
+    @DisplayName("Reservation - 취소하기")
+    @Test
+    void delete() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

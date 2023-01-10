@@ -10,6 +10,10 @@ public class Reservation {
     private String name;
     private Theme theme;
 
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this(null, date, time, name, theme);
+    }
+
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
@@ -40,9 +44,5 @@ public class Reservation {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setTheme(Theme theme) {
-        this.theme = theme;
     }
 }
