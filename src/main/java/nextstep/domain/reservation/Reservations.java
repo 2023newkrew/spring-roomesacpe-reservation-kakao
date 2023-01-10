@@ -1,12 +1,15 @@
 package nextstep.domain.reservation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class Reservations {
-    public final static List<Reservation> reservations = new ArrayList<>();
+    public final static HashMap<Long, Reservation> reservations = new HashMap<>();
 
     public static void add(Reservation reservation) {
-        reservations.add(reservation);
+        reservations.put(reservation.getId(), reservation);
+    }
+
+    public static Reservation get(Long id) {
+        return reservations.get(id);
     }
 }

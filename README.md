@@ -16,9 +16,9 @@
   - [x] 201 리스폰스
 
 - 예약 조회 API
-  - [ ] `/reservations/{id}`에 get mapping
-  - [ ] id가 일치하는 Reservation을 리스폰스에 담기
-  - [ ] 200 리스폰스
+  - [x] `/reservations/{id}`에 get mapping
+  - [x] id가 일치하는 Reservation을 리스폰스에 담기
+  - [x] 200 리스폰스
 
 - 예약 삭제 API
   - [ ] `reservations/{id}`에 delete mapping

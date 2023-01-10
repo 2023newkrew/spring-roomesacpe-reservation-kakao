@@ -12,21 +12,22 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private Theme theme;
+    private final Theme theme;
 
     public static Long maxId = 1L;
 
-    public Reservation(String date, String time, String name) {
+    public Reservation(String date, String time, String name, Theme theme) {
         this.id = maxId++;
         DateTimeFormatter localDateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter localTimeformatter = DateTimeFormatter.ofPattern("HH:mm");
         this.date = LocalDate.parse(date, localDateformatter);
         this.time = LocalTime.parse(time, localTimeformatter);
         this.name = name;
+        this.theme = theme;
     }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
+        this.id = maxId++;
         this.date = date;
         this.time = time;
         this.name = name;
