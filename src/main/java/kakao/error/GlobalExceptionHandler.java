@@ -15,6 +15,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Library / Framework
+
     // 담당 컨트롤러조차 발견하지 못했을 경우 발생
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
@@ -63,6 +65,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRecordNotFoundException(RecordNotFoundException e) {
         return handlerException(e.getErrorCode());
+    }
+
+    // Others
+
+    // 별도 예외 처리 되지 않은 예외들
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleOtherExceptions(Exception e) {
+        return handlerException(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 
     private ResponseEntity<ErrorResponse> handlerException(ErrorCode errorCode) {

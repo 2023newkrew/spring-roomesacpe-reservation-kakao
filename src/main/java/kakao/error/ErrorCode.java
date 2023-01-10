@@ -2,6 +2,7 @@ package kakao.error;
 
 public enum ErrorCode {
     // 공통 에러
+    INTERNAL_SERVER_ERROR(500, "서버 내부 에러입니다. 관리자에게 문의해 주세요."),
     API_NOT_FOUND(404, "잘못된 API 요청입니다."),
     INVALID_BODY_FIELD(400, "바디의 필드가 잘못된 형식이거나 누락되었습니다."),
     INVALID_PATH_VAR_OR_QUERY_PARAMETER(400, "경로 변수나 쿼리 파라미터가 잘못된 형식이거나 누락되었습니다."),
