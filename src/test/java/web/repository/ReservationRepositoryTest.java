@@ -66,7 +66,7 @@ public class ReservationRepositoryTest {
     class Find {
 
         @Test
-        void should_successfully_when_validReservationId() {
+        void should_successfully_when_existReservation() {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
@@ -91,7 +91,7 @@ public class ReservationRepositoryTest {
     class Cancel {
 
         @Test
-        void should_successfully_when_validReservationId() {
+        void should_successfully_when_existReservation() {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
@@ -104,7 +104,7 @@ public class ReservationRepositoryTest {
         }
 
         @Test
-        void should_throwException_when_notExistReservation() {
+        void should_return0_when_notExistReservation() {
             assertThat(reservationRepository.delete(-1)).isEqualTo(0L);
         }
     }

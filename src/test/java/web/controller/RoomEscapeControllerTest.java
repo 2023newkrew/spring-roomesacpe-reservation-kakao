@@ -189,7 +189,7 @@ public class RoomEscapeControllerTest {
         }
 
         @Test
-        void should_status404_when_notExistId() throws Exception {
+        void should_responseNotFound_when_notExistId() throws Exception {
             when(roomEscapeService.findReservationById(anyLong())).thenThrow(ReservationNotFoundException.class);
             mockMvc.perform(get("/reservations/-1")
                             .contentType(MediaType.APPLICATION_JSON))
@@ -201,14 +201,14 @@ public class RoomEscapeControllerTest {
     @Nested
     class CancelReservation {
         @Test
-        void shoud_succefully_when_validRequest() throws Exception {
+        void should_successfully_when_validRequest() throws Exception {
             doNothing().when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/1"))
                     .andExpect(status().isNoContent());
         }
 
         @Test
-        void shoud_status404_then_notExistId() throws Exception {
+        void shoud_responseNotFound_then_notExistId() throws Exception {
             doThrow(ReservationNotFoundException.class).when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
                     .andExpect(status().isNotFound());
