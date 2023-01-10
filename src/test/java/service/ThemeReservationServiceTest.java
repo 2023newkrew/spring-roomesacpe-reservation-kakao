@@ -1,0 +1,106 @@
+package service;
+
+import nextstep.RoomEscapeWebApplication;
+import nextstep.domain.Reservations;
+import nextstep.domain.Themes;
+import nextstep.dto.ReservationDetail;
+import nextstep.dto.ReservationDto;
+import nextstep.service.ThemeReservationService;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@SpringBootTest(classes = RoomEscapeWebApplication.class)
+public class ThemeReservationServiceTest {
+
+    private final static Long EXIST_THEME_ID = 1L;
+    private final static Long NOT_EXIST_THEME_ID = 1000L;
+
+    @Autowired
+    private ThemeReservationService themeReservationService;
+
+    @Test
+    @DisplayName("방탈출 예약하기")
+    void test1(){
+        ReservationDto reservationDto = makeRandomReservationDto("2022-08-23", "13:01", EXIST_THEME_ID);
+
+        Long reservationId = themeReservationService.reserve(reservationDto);
+        assertThat(reservationId).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
+    void test2(){
+        ReservationDto reservationDto = makeRandomReservationDto("2022-08-23", "13:02", EXIST_THEME_ID);
+        Long reservationId = themeReservationService.reserve(reservationDto);
+
+        System.out.println("reservationId = " + reservationId);
+        themeReservationService.cancelById(reservationId);
+        assertThat(themeReservationService.findById(reservationId)).isNull();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
+    void test3(){
+        assertThatThrownBy(() -> themeReservationService.cancelById(1000L))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("예약된 방을 조회한다.")
+    void test4() {
+        ReservationDto randomReservation = makeRandomReservationDto("2022-08-23", "13:04", EXIST_THEME_ID);
+        Long reservationId = themeReservationService.reserve(randomReservation);
+        System.out.println(Reservations.getInstance().findAll());
+        System.out.println(reservationId);
+        ReservationDetail reservationDetail = themeReservationService.findById(reservationId);
+
+        assertThat(reservationDetail.getName()).isEqualTo(randomReservation.getName());
+    }
+
+    @Test
+    @DisplayName("예약되지 않은 방을 조회한다.")
+    void test5() {
+        ReservationDetail findReservation = themeReservationService.findById(100L);
+
+        assertThat(findReservation).isNull();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 테마는 생성할 수 없다.")
+    void test6(){
+        ReservationDto reservation = makeRandomReservationDto("2022-08-23", "13:06", NOT_EXIST_THEME_ID);
+
+        assertThatThrownBy(() -> themeReservationService.reserve(reservation))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+
+    @Test
+    @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
+    void test7() {
+        ReservationDto reservation1 = makeRandomReservationDto("2022-08-23", "13:07", EXIST_THEME_ID);
+        ReservationDto reservation2 = makeRandomReservationDto("2022-08-23", "13:07", EXIST_THEME_ID);
+
+        themeReservationService.reserve(reservation1);
+        Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    ReservationDto makeRandomReservationDto(String date, String time, Long themeId){
+        List<String> names = List.of("omin", "ethan", "java");
+
+        int index = ThreadLocalRandom.current().nextInt(3);
+
+        return new ReservationDto(date, time, names.get(index), themeId);
+    }
+
+}
