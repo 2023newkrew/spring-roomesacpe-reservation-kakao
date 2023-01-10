@@ -21,7 +21,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(repository.get(id));
     }
 
     @Override
