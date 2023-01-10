@@ -1,11 +1,17 @@
 package kakao.repository;
 
+import javax.sql.DataSource;
 import kakao.domain.Reservation;
 import kakao.domain.Theme;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -23,8 +29,13 @@ import java.util.Objects;
 public class ReservationJDBCRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationJDBCRepository(JdbcTemplate jdbcTemplate) {
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public ReservationJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("RESERVATION")
+                .usingGeneratedKeyColumns("id");
     }
 
     private static final RowMapper<Reservation> customerRowMapper = (resultSet, rowNum) -> {
@@ -39,23 +50,20 @@ public class ReservationJDBCRepository implements ReservationRepository {
     };
 
     public long save(Reservation reservation) {
-        String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(INSERT_SQL, new String[]{"ID"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
-            return ps;
-        }, keyHolder);
+        try {
+            // TODO : Theme 이 별도의 table 로 분리되면 BeanPropertySqlParameterSource 적용하기
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("date", reservation.getDate())
+                    .addValue("time", reservation.getTime())
+                    .addValue("name", reservation.getName())
+                    .addValue("theme_name", reservation.getTheme().getName())
+                    .addValue("theme_desc", reservation.getTheme().getDesc())
+                    .addValue("theme_price", reservation.getTheme().getPrice());
 
-        if (Objects.isNull(keyHolder.getKey())) {
-            return -1;
+            return jdbcInsert.executeAndReturnKey(params).longValue();
+        } catch (DuplicateKeyException e) {
+            return 0;
         }
-        return keyHolder.getKey().longValue();
     }
 
     public Reservation findById(Long id) {
