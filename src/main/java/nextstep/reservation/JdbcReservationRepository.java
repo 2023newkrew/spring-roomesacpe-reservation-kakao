@@ -4,11 +4,13 @@ import nextstep.reservation.exception.CreateReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,13 +26,25 @@ public class JdbcReservationRepository implements ReservationRepository{
 
     @Override
     public Reservation create(Reservation reservation) {
-        SimpleJdbcInsert insertActor = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation").usingGeneratedKeyColumns("id");
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
-        if (findByDateTime(reservation.getDate(), reservation.getTime())){
+        Theme theme = reservation.getTheme();
+        if (findByDateTime(reservation.getDate(), reservation.getTime())) {
             throw new CreateReservationException();
         }
-        Long id = insertActor.executeAndReturnKey(parameters).longValue();
-        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName() ,reservation.getTheme());
+        String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) values(?,?,?,?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setString(4, theme.getName());
+            ps.setString(5, theme.getDesc());
+            ps.setInt(6, theme.getPrice());
+
+            return ps;
+        }, keyHolder);
+
+        return new Reservation(keyHolder.getKey().longValue(), reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
     }
 
     @Override
@@ -66,7 +80,8 @@ public class JdbcReservationRepository implements ReservationRepository{
 
     @Override
     public void clear() {
-
+        String sql = "delete from reservation";
+        jdbcTemplate.update(sql);
     }
 
 }
