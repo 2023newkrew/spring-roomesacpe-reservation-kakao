@@ -60,6 +60,21 @@ class ReservationControllerTest {
     }
 
     @Order(3)
+    @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
+    @Test
+    void reservationException() {
+        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("CustomException"));
+    }
+
+    @Order(4)
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {

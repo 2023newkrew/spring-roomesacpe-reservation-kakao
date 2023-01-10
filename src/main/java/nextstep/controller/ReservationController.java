@@ -3,6 +3,7 @@ package nextstep.controller;
 import nextstep.Reservation;
 import nextstep.ReservationInfo;
 import nextstep.Theme;
+import nextstep.exceptions.CustomException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,14 @@ public class ReservationController {
     public ResponseEntity createReservation(@RequestBody Reservation reservation) {
         long id = counter.incrementAndGet();
         Reservation newReservation = new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
+
+        boolean existsReservation = reservations.stream()
+                .anyMatch(r -> r.getDate().equals(reservation.getDate())
+                        && r.getTime().equals(reservation.getTime()));
+        if (existsReservation) {
+            throw new CustomException();
+        }
+
         reservations.add(newReservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
