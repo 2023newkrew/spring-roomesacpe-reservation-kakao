@@ -4,16 +4,7 @@ import java.sql.*;
 
 public class ReservationJdbcRepository {
     public Long save(Reservation reservation) {
-        Connection con = null;
-        try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
+        try (Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "")) {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
@@ -29,17 +20,7 @@ public class ReservationJdbcRepository {
     }
 
     public Reservation findOneById(Long reservationId) {
-        Connection con = null;
-
-        try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
+        try (Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "")) {
             String sql = "SELECT * FROM reservation WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, reservationId);
@@ -58,17 +39,7 @@ public class ReservationJdbcRepository {
     }
 
     public int delete(Long reservationId) {
-        Connection con = null;
-
-        try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
+        try (Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "")) {
             String sql = "DELETE FROM reservation WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, reservationId);
