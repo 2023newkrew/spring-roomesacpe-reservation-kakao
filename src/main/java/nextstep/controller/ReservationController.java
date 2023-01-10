@@ -26,9 +26,9 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity createReservation(@RequestBody Reservation reservation) {
-        List<Reservation> reservationsByDateAndTime = reservationQueryingDAO.findReservationByDateAndTime(reservation.getDate(), reservation.getTime());
+        List<Reservation> reservationsByDateAndTime = reservationQueryingDAO.findReservationsByDateAndTime(reservation.getDate(), reservation.getTime());
         if (reservationsByDateAndTime.size() > 0) {
-            throw new CustomException();
+            throw new CustomException("동일한 시간대에 예약이 이미 존재합니다.");
         }
 
         Reservation newReservation = new Reservation(reservation.getDate(), reservation.getTime(), reservation.getName(), theme);

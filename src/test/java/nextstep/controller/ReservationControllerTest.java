@@ -13,7 +13,6 @@ import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
-@DisplayName("Reservation Controller")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class ReservationControllerTest {
@@ -41,6 +40,21 @@ class ReservationControllerTest {
     }
 
     @Order(2)
+    @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
+    @Test
+    void reservationException() {
+        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .body(is("동일한 시간대에 예약이 이미 존재합니다."));
+    }
+
+    @Order(3)
     @DisplayName("예약 조회")
     @Test
     void lookupReservation() {
@@ -56,22 +70,6 @@ class ReservationControllerTest {
                 .body("themeName", is("워너고홈"))
                 .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
                 .body("themePrice", is(29000));
-
-    }
-
-    @Order(3)
-    @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
-    @Test
-    void reservationException() {
-        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
-
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("CustomException"));
     }
 
     @Order(4)

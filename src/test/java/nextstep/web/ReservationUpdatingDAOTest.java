@@ -3,6 +3,7 @@ package nextstep.web;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,14 +28,15 @@ public class ReservationUpdatingDAOTest {
 
     @BeforeEach
     void setUp() {
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         List<Object[]> reservations = List.of(
                 new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("13:00:00"), "name", "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000},
                 new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("14:00:00"), "name2", "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000}
         );
-
-        jdbcTemplate.batchUpdate("INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);", reservations);
+        jdbcTemplate.batchUpdate(sql, reservations);
     }
 
+    @DisplayName("예약 생성")
     @Test
     void insertWithKeyHolder() {
         Reservation reservation = new Reservation(
@@ -56,6 +58,7 @@ public class ReservationUpdatingDAOTest {
         assertThat(reservationById.getName()).isEqualTo("name3");
     }
 
+    @DisplayName("예약 삭제")
     @Test
     void delete() {
         int rowNum = reservationUpdatingDAO.delete(1L);

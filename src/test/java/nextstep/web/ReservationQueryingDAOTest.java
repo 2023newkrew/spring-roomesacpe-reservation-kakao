@@ -2,6 +2,7 @@ package nextstep.web;
 
 import nextstep.domain.Reservation;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -18,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JdbcTest
 class ReservationQueryingDAOTest {
     private ReservationQueryingDAO reservationQueryingDAO;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -26,14 +26,15 @@ class ReservationQueryingDAOTest {
     void setUp() {
         reservationQueryingDAO = new ReservationQueryingDAO(jdbcTemplate);
 
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         List<Object[]> reservations = List.of(
                 new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("13:00:00"), "name", "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000},
                 new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("14:00:00"), "name2", "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000}
         );
-
-        jdbcTemplate.batchUpdate("INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);", reservations);
+        jdbcTemplate.batchUpdate(sql, reservations);
     }
 
+    @DisplayName("id로 예약 조회")
     @Test
     void findReservationById() {
         Reservation reservation = reservationQueryingDAO.findReservationById(1L);
@@ -42,9 +43,10 @@ class ReservationQueryingDAOTest {
         assertThat(reservation.getName()).isEqualTo("name");
     }
 
+    @DisplayName("날짜 및 시간으로 예약 조회")
     @Test
     void findReservationByDateAndTime() {
-        List<Reservation> reservations = reservationQueryingDAO.findReservationByDateAndTime(
+        List<Reservation> reservations = reservationQueryingDAO.findReservationsByDateAndTime(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0)
         );

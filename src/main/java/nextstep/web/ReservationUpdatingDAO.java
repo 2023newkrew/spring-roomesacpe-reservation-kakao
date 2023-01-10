@@ -12,7 +12,7 @@ import java.sql.Time;
 
 @Repository
 public class ReservationUpdatingDAO {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationUpdatingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -38,6 +38,6 @@ public class ReservationUpdatingDAO {
 
     public int delete(Long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, Long.valueOf(id));
+        return jdbcTemplate.update(sql, id);
     }
 }
