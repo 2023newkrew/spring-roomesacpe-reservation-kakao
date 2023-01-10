@@ -13,8 +13,8 @@ import roomescape.dto.Theme;
 public class ReservationDAO {
 
     private static final String ADD_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-    private static final String FIND_SQL = "SELECT * FROM reservation WHERE id = ?;";
-    private static final String DELETE_SQL = "DELETE FROM reservation WHERE id = ?;";
+    private static final String FIND_SQL = "SELECT * FROM reservation WHERE id=?;";
+    private static final String DELETE_SQL = "DELETE FROM reservation WHERE id=?;";
 
     private final String url;
     private final String user;
@@ -28,8 +28,8 @@ public class ReservationDAO {
 
     private void executeAddConnection(Connection con, Reservation reservation) {
         try {
-            PreparedStatement ps = con.prepareStatement(ADD_SQL, new String[]{"id"});
-            setAddPreparedStatment(ps, reservation);
+            PreparedStatement ps = con.prepareStatement(ADD_SQL);
+            setReservationStatement(ps, reservation);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -38,8 +38,8 @@ public class ReservationDAO {
 
     private Reservation executeFindConnection(Connection con, Long id) {
         try {
-            PreparedStatement ps = con.prepareStatement(FIND_SQL, new String[]{"id"});
-            setFindPreparedStatement(ps, id);
+            PreparedStatement ps = con.prepareStatement(FIND_SQL);
+            setIdStatement(ps, id);
             ResultSet resultSet = ps.executeQuery();
             return parseFindResultSet(resultSet);
         } catch (SQLException e) {
@@ -49,15 +49,15 @@ public class ReservationDAO {
 
     private void executeDeleteConnection(Connection con, Long id) {
         try {
-            PreparedStatement ps = con.prepareStatement(DELETE_SQL, new String[]{"id"});
-            setDeletePreparedStatement(ps, id);
+            PreparedStatement ps = con.prepareStatement(DELETE_SQL);
+            setIdStatement(ps, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void setAddPreparedStatment(PreparedStatement ps, Reservation reservation)
+    private void setReservationStatement(PreparedStatement ps, Reservation reservation)
             throws SQLException {
         ps.setDate(1, Date.valueOf(reservation.getDate()));
         ps.setTime(2, Time.valueOf(reservation.getTime()));
@@ -67,14 +67,9 @@ public class ReservationDAO {
         ps.setInt(6, reservation.getTheme().getPrice());
     }
 
-    private void setFindPreparedStatement(PreparedStatement ps, Long id) throws SQLException {
+    private void setIdStatement(PreparedStatement ps, Long id) throws SQLException {
         ps.setLong(1, id);
     }
-
-    private void setDeletePreparedStatement(PreparedStatement ps, Long id) throws SQLException {
-        ps.setLong(1, id);
-    }
-
 
     private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
         validateResultSet(resultSet);
@@ -93,12 +88,6 @@ public class ReservationDAO {
         if (!resultSet.next()) {
             throw new SQLException();
         }
-    }
-
-    public void addReservation(Reservation reservation) {
-        Connection con = openConnection();
-        executeAddConnection(con, reservation);
-        closeConnection(con);
     }
 
     private Connection openConnection() {
@@ -122,8 +111,14 @@ public class ReservationDAO {
                 con.close();
             }
         } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
+            System.err.println("연결 오류:" + e.getMessage());
         }
+    }
+
+    public void addReservation(Reservation reservation) {
+        Connection con = openConnection();
+        executeAddConnection(con, reservation);
+        closeConnection(con);
     }
 
     public Reservation findReservation(Long id) {

@@ -12,6 +12,7 @@ public class RoomEscapeApplication {
     private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER = "";
     private static final String PASSWORD = "";
+
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";

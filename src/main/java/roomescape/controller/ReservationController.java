@@ -26,19 +26,20 @@ public class ReservationController {
         if (!reservation.isValid()) {
             throw new BadRequestException();
         }
+        if (reservationDAO.findCountReservationByDateTime(reservation.getDate(),
+                reservation.getTime()) == 1) {
+            throw new BadRequestException();
+        }
     }
 
     @PostMapping(value = "", produces = "application/json; charset=utf-8")
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
         validateReservation(reservation);
-        if (reservationDAO.findCountReservationByDateTime(reservation.getDate(),
-                reservation.getTime()) == 1) {
-            throw new BadRequestException();
-        }
-
         long id = reservationDAO.addReservation(reservation);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Location", String.format("/reservations/%d", id)).build();
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header("Location", String.format("/reservations/%d", id))
+                .build();
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
