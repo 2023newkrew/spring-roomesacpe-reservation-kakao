@@ -96,7 +96,22 @@ public class ReservationJdbcRepository implements ReservationRepository{
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setLong(1, id);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e){
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, ps, null);
+        }
     }
 
     private Connection getConnection() throws SQLException{
