@@ -5,6 +5,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.web.dto.ReservationRequest;
+import nextstep.web.dto.ReservationResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

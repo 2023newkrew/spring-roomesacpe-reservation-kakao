@@ -1,6 +1,5 @@
-package nextstep.web;
+package nextstep.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import nextstep.model.Reservation;
 
 import java.time.LocalDate;
