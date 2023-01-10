@@ -1,7 +1,6 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
