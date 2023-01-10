@@ -2,6 +2,7 @@ package roomescape.service;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.Themes;
 import roomescape.dto.ReservationRequest;
@@ -21,12 +22,14 @@ public class ReservationService {
         this.reservationWebRepository = reservationWebRepository;
     }
 
+    @Transactional
     public void createReservation(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
         Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
 
         checkTimeDuplication(date, time);
+
         reservationWebRepository.insertReservation(reservation);
     }
 
@@ -37,6 +40,7 @@ public class ReservationService {
                 });
     }
 
+    @Transactional
     public ReservationResponse getReservation(Long reservationId) {
         return ReservationResponse.fromEntity(
                 reservationWebRepository.getReservation(reservationId)
@@ -44,6 +48,7 @@ public class ReservationService {
         );
     }
 
+    @Transactional
     public void deleteReservation(Long reservationId) {
         reservationWebRepository.deleteReservation(reservationId);
     }

@@ -18,20 +18,17 @@ public class ReservationWebRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
-        );
-        return reservation;
-    };
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("id"),
+            resultSet.getDate("date").toLocalDate(),
+            resultSet.getTime("time").toLocalTime(),
+            resultSet.getString("name"),
+            new Theme(
+                    resultSet.getString("theme_name"),
+                    resultSet.getString("theme_desc"),
+                    resultSet.getInt("theme_price")
+            )
+    );
 
     @Override
     public void insertReservation(Reservation reservation) {
