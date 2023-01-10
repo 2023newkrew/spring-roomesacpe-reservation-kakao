@@ -1,5 +1,6 @@
 package nextstep.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,7 +15,9 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class ReservationDetail {
     private Long id;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate date;
+    @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul")
     private LocalTime time;
     private String name;
 
