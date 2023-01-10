@@ -2,26 +2,17 @@ package nextstep.main.java.nextstep.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
-import nextstep.main.java.nextstep.repository.ReservationRepository;
 import nextstep.main.java.nextstep.service.ReservationService;
-import org.apache.catalina.core.ApplicationContext;
-import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -88,7 +78,7 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThatThrownBy(() -> reservationService.findOneById(1L)).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThatThrownBy(() -> reservationService.findOneById(1L)).isInstanceOf(NoSuchReservationException.class);
     }
 
 }

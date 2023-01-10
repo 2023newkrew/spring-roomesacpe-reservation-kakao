@@ -4,13 +4,12 @@ import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
@@ -65,7 +64,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                     ),
                     id
             ));
-        } catch (NoSuchReservationException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new NoSuchReservationException();
         }
     }
