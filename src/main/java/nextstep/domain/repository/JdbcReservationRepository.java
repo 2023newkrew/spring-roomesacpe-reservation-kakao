@@ -2,41 +2,44 @@ package nextstep.domain.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import nextstep.domain.repository.executor.PrepareStatementExecutor;
+import nextstep.domain.repository.executor.PrepareStatementResultSetExecutor;
+import nextstep.exception.JdbcException;
+import nextstep.utils.JdbcUtils;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-@Repository
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static nextstep.domain.repository.Queries.Reservation.*;
+
 public class JdbcReservationRepository implements ReservationRepository {
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("RESERVATION")
-                .usingGeneratedKeyColumns("id");
-    }
 
     @Override
     public Reservation save(Reservation reservation) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservation);
-        Long reservationId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        return execute(INSERT, pstmt -> {
+            pstmt.setDate(1, Date.valueOf(reservation.getDate()));
+            pstmt.setTime(2, Time.valueOf(reservation.getTime()));
+            pstmt.setString(3, reservation.getName());
+            pstmt.setString(4, reservation.getTheme().getName());
+            pstmt.setString(5, reservation.getTheme().getDesc());
+            pstmt.setInt(6, reservation.getTheme().getPrice());
+            pstmt.executeUpdate();
 
-        return new Reservation(reservationId, reservation);
+            return new Reservation(getGeneratedKey(pstmt), reservation);
+        });
     }
 
     @Override
     public Optional<Reservation> findById(Long reservationId) {
-        Reservation reservation = jdbcTemplate.queryForObject(Queries.Reservation.SELECT_BY_ID_SQL, new Object[] {reservationId},(rs, rowNum) -> new Reservation(
+        return execute(SELECT_BY_ID, (pstmt, rs) -> {
+            pstmt.setLong(1, reservationId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(new Reservation(
                         rs.getLong("id"),
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
@@ -46,23 +49,68 @@ public class JdbcReservationRepository implements ReservationRepository {
                                 rs.getString("theme_desc"),
                                 rs.getInt("theme_price")
                         )
-                )
-        );
-        return Optional.ofNullable(reservation);
+                ));
+            }
+
+            return Optional.empty();
+        });
     }
 
     @Override
     public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.queryForObject(Queries.Reservation.SELECT_COUNT_BY_DATE_AND_TIME_SQL, new Object[] {Date.valueOf(date), Time.valueOf(time)}, Integer.class) > 0;
+        return execute(SELECT_COUNT_BY_DATE_AND_TIME, (pstmt, rs) -> {
+            pstmt.setDate(1, Date.valueOf(date));
+            pstmt.setTime(2, Time.valueOf(time));
+            rs = pstmt.executeQuery();
+
+            rs.next();
+            return rs.getInt(1) > 0;
+        });
     }
 
     @Override
     public boolean deleteById(Long reservationId) {
-        return jdbcTemplate.update(Queries.Reservation.DELETE_BY_ID_SQL, new Object[] {reservationId}) == 1;
+        return execute(DELETE_BY_ID, pstmt -> {
+            pstmt.setLong(1, reservationId);
+
+            return pstmt.executeUpdate() > 0;
+        });
     }
 
     @Override
     public void deleteAll() {
-        jdbcTemplate.update(Queries.Reservation.DELETE_ALL_SQL);
+        execute(DELETE_ALL, pstmt -> pstmt.executeUpdate());
     }
+
+    private <T> T execute(String query, PrepareStatementExecutor<T> executor) {
+        try (Connection conn = JdbcUtils.getConnection();
+            PreparedStatement pstmt = query.equals(INSERT) ? conn.prepareStatement(query, RETURN_GENERATED_KEYS) : conn.prepareStatement(query)) {
+            return executor.execute(pstmt);
+        } catch (SQLException e) {
+            throw new JdbcException(e.getMessage());
+        }
+    }
+
+    private <T> T execute(String query, PrepareStatementResultSetExecutor<T> executor) {
+        ResultSet rs = null;
+
+        try (Connection conn = JdbcUtils.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+            return executor.execute(pstmt, rs);
+        } catch (SQLException e) {
+            throw new JdbcException(e.getMessage());
+        } finally {
+            JdbcUtils.close(rs);
+        }
+    }
+
+    private Long getGeneratedKey(PreparedStatement pstmt) throws SQLException {
+        ResultSet generatedKeys = pstmt.getGeneratedKeys();
+        if (!generatedKeys.next()) {
+            throw new JdbcException("id 값이 존재하지 않습니다.");
+        }
+
+        return generatedKeys.getLong(1);
+    }
+
 }

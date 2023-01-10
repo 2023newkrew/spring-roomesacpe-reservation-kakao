@@ -14,25 +14,10 @@ public class JdbcUtils {
         return null;
     }
 
-    public static void close(PreparedStatement pstmt, Connection conn) {
-        try {
-            if(pstmt != null && !pstmt.isClosed()) {
-                pstmt.close();
-            }
-            if(conn != null && !conn.isClosed()) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void close(ResultSet rs, PreparedStatement pstmt, Connection conn) {
-        close(pstmt, conn);
-
+    public static void close(ResultSet rs) {
         try {
             if(rs != null && !rs.isClosed()) {
-                pstmt.close();
+                rs.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -2,7 +2,7 @@ package nextstep;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.domain.repository.ConsoleReservationRepository;
+import nextstep.domain.repository.JdbcReservationRepository;
 import nextstep.domain.repository.ReservationRepository;
 import nextstep.exception.ReservationNotFoundException;
 
@@ -18,7 +18,7 @@ public class ConsoleRoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationRepository reservationRepository = new ConsoleReservationRepository();
+        ReservationRepository reservationRepository = new JdbcReservationRepository();
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
