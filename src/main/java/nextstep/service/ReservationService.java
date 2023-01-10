@@ -1,8 +1,8 @@
 package nextstep.service;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Reservations;
 import nextstep.domain.Theme;
+import nextstep.domain.repository.ReservationRepository;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
 import nextstep.exception.DuplicateReservationException;
@@ -17,32 +17,32 @@ public class ReservationService {
 
     private static final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
-    private final Reservations reservations;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     public Long createReservation(CreateReservationRequest createReservationRequest) {
         LocalDate date = LocalDate.parse(createReservationRequest.getDate());
         LocalTime time = LocalTime.parse(createReservationRequest.getTime());
 
-        if (reservations.existsByDateAndTime(date, time)) {
+        if (reservationRepository.existsByDateAndTime(date, time)) {
             throw new DuplicateReservationException();
         }
 
-        Reservation savedReservation = reservations.save(new Reservation(date, time, createReservationRequest.getName(), THEME));
+        Reservation savedReservation = reservationRepository.save(new Reservation(date, time, createReservationRequest.getName(), THEME));
         return savedReservation.getId();
     }
 
     public FindReservationResponse findReservationById(Long reservationId) {
-        Reservation reservation = reservations.findById(reservationId)
+        Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationNotFoundException::new);
 
         return FindReservationResponse.from(reservation);
     }
 
     public void deleteReservationById(Long reservationId) {
-        reservations.deleteById(reservationId);
+        reservationRepository.deleteById(reservationId);
     }
 }
