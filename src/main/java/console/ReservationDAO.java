@@ -82,4 +82,31 @@ public class ReservationDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean deleteById(Long reservationId) {
+        Connection con = null;
+
+        // 드라이버 연결
+        try {
+            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "DELETE FROM reservation WHERE id=?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, reservationId);
+
+            int rowNum = ps.executeUpdate();
+            con.close();
+
+            return rowNum > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

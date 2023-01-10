@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 import web.domain.Reservation;
 import web.domain.Theme;
@@ -80,8 +79,13 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
+                boolean isDeleted = reservationDAO.deleteById(id);
+                if (isDeleted) {
+                    System.out.println("정상적으로 삭제되었습니다.");
+                }
+
+                if (!isDeleted) {
+                    System.out.println("존재하지 않는 예약입니다.");
                 }
             }
 
