@@ -125,4 +125,26 @@ class ReservationJdbcTemplateRepositoryTest {
         List<Reservation> result = repository.findAll();
         assertThat(result).isEmpty();
     }
+
+    @DisplayName("예약을 삭제한다 - 삭제 성공")
+    @Test
+    void delete_success() {
+        repository.save(inputReservation1);
+        repository.save(inputReservation2);
+        repository.save(inputReservation3);
+
+        Long id = 1L;
+
+        boolean result = repository.delete(id);
+
+        assertThat(result).isTrue();
+        assertThat(repository.findById(id)).isEmpty();
+    }
+
+    @DisplayName("예약을 삭제한다 - 삭제할 대상 없음")
+    @Test
+    void delete_fail() {
+        boolean result = repository.delete(1L);
+        assertThat(result).isFalse();
+    }
 }
