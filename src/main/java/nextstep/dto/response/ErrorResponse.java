@@ -8,7 +8,7 @@ public class ErrorResponse {
     private String message;
 
     public ErrorResponse(ErrorType error) {
-        this.status = error.getStatus();
+        this.status = error.getHttpStatus();
         this.message = error.getMessage();
     }
 

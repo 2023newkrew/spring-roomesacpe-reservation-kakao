@@ -83,7 +83,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             PreparedStatement pstmt = query.equals(INSERT) ? conn.prepareStatement(query, RETURN_GENERATED_KEYS) : conn.prepareStatement(query)) {
             return executor.execute(pstmt);
         } catch (SQLException e) {
-            throw new ApplicationException(INTERNAL_SERVER_ERROR);
+            throw new ApplicationException(INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             PreparedStatement pstmt = conn.prepareStatement(query)) {
             return executor.execute(pstmt, rs);
         } catch (SQLException e) {
-            throw new ApplicationException(INTERNAL_SERVER_ERROR);
+            throw new ApplicationException(INTERNAL_SERVER_ERROR, e.getMessage());
         } finally {
             JdbcUtils.close(rs);
         }
@@ -103,7 +103,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     private Long getGeneratedKey(PreparedStatement pstmt) throws SQLException {
         ResultSet generatedKeys = pstmt.getGeneratedKeys();
         if (!generatedKeys.next()) {
-            throw new ApplicationException(INTERNAL_SERVER_ERROR);
+            throw new ApplicationException(INTERNAL_SERVER_ERROR, "id 값을 생성하는 데 실패하였습니다.");
         }
 
         return generatedKeys.getLong(1);

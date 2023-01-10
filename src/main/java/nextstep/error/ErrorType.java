@@ -10,20 +10,24 @@ public enum ErrorType {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "예기치 못한 오류로 해당 요청을 처리하지 못하였습니다."),
     ;
 
-    private int status;
+    private int httpStatus;
     private String message;
 
-    ErrorType(int status, String message) {
-        this.status = status;
+    ErrorType(int httpStatus, String message) {
+        this.httpStatus = httpStatus;
         this.message = message;
     }
 
-    public int getStatus() {
-        return status;
+    public int getHttpStatus() {
+        return httpStatus;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public String getName() {
+        return this.name();
     }
 
 }
