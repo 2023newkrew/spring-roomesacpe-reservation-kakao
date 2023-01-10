@@ -2,6 +2,7 @@ package nextstep.domain.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.exception.JdbcException;
 import nextstep.utils.JdbcUtils;
 
 import java.sql.*;
@@ -30,7 +31,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
             return new Reservation(getGeneratedKey(pstmt), reservation);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new JdbcException(e.getMessage());
         } finally {
             JdbcUtils.close(pstmt, conn);
         }
@@ -62,7 +63,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
                 return Optional.of(reservation);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         } finally {
             JdbcUtils.close(rs, pstmt, conn);
         }
@@ -85,7 +86,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
             return rs.getInt(1) > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new JdbcException(e.getMessage());
         } finally {
             JdbcUtils.close(rs, pstmt, conn);
         }
@@ -103,7 +104,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
             return pstmt.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new JdbcException(e.getMessage());
         } finally {
             JdbcUtils.close(pstmt, conn);
         }
@@ -119,7 +120,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
             pstmt = conn.prepareStatement(Queries.Reservation.DELETE_ALL_SQL);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new JdbcException(e.getMessage());
         } finally {
             JdbcUtils.close(pstmt, conn);
         }
@@ -128,7 +129,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
     private Long getGeneratedKey(PreparedStatement pstmt) throws SQLException {
         ResultSet generatedKeys = pstmt.getGeneratedKeys();
         if (!generatedKeys.next()) {
-            throw new SQLException("예약 생성에 실패하였습니다.");
+            throw new JdbcException("id 값이 존재하지 않습니다.");
         }
 
         return generatedKeys.getLong(1);
