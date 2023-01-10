@@ -3,7 +3,8 @@ package nextstep.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.domain.repository.ReservationRepository;
+import nextstep.common.DatabaseExecutor;
+import nextstep.domain.repository.QuerySetting.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,15 +27,16 @@ public class ReservationAcceptanceTest {
     private int port;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private DatabaseExecutor databaseExecutor;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        databaseExecutor.clearTable(Reservation.TABLE_NAME);
     }
 
     @Test
-    void 예약_생성_요청에_성공한다() {
+    void 예약_생성에_성공한다() {
         // given
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
 
@@ -59,11 +61,10 @@ public class ReservationAcceptanceTest {
     }
 
     @Test
-    void id로_예약을_조회한다() {
+    void 예약_아이디로_예약을_조회한다() {
         // given
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "davi-eddie");
         ExtractableResponse<Response> response = createReservation(createReservationRequest);
-        String expected = response.header("Location").split("/")[2];
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -75,14 +76,14 @@ public class ReservationAcceptanceTest {
         // then
         .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("id", equalTo(Integer.valueOf(expected)))
+                .body("id", equalTo(1))
                 .body("date", equalTo(createReservationRequest.getDate()))
                 .body("time", equalTo(createReservationRequest.getTime()))
                 .body("name", equalTo(createReservationRequest.getName()));
     }
 
     @Test
-    void 존재하지_않는_예약을_조회하면_예외가_발생한다() {
+    void 존재하지_않는_예약을_조회할_수_없다() {
         // given
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +98,7 @@ public class ReservationAcceptanceTest {
     }
 
     @Test
-    void id에_해당하는_예약을_삭제한다() {
+    void 예약_아이디에_해당하는_예약을_삭제한다() {
         // given
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
         ExtractableResponse<Response> response = createReservation(createReservationRequest);
@@ -105,11 +106,11 @@ public class ReservationAcceptanceTest {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
 
-                // when
+        // when
         .when()
                 .delete(response.header("Location"))
 
-                // then
+        // then
         .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -143,12 +144,12 @@ public class ReservationAcceptanceTest {
                     .formParam("date", "2023-01-09")
                     .formParam("name", "eddie-davi")
 
-                    // when
-                    .when()
+            // when
+            .when()
                     .post("/reservations")
 
-                    // then
-                    .then()
+            // then
+            .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
@@ -160,12 +161,12 @@ public class ReservationAcceptanceTest {
                     .formParam("date", "2023-01-09")
                     .formParam("time", "13:00")
 
-                    // when
-                    .when()
+            // when
+            .when()
                     .post("/reservations")
 
-                    // then
-                    .then()
+            // then
+            .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
