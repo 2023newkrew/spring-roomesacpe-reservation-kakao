@@ -31,7 +31,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> findOne(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-        return Optional.of(jdbcTemplate.queryForObject(
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
                 sql,
                 (rs, count) -> new Reservation(rs.getLong("id"),
                         rs.getDate("date").toLocalDate(),
@@ -48,7 +48,8 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteOne(Long id) {
-
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
