@@ -1,5 +1,9 @@
 package nextstep.reservation;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -12,7 +16,8 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationService reservationService = new ReservationService(new MemoryReservationRepository());
+        ReservationService reservationService = new ReservationService(new JdbcReservationRepository(new JdbcTemplate(dataSource())));
+
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -76,5 +81,14 @@ public class RoomEscapeApplication {
                 break;
             }
         }
+    }
+
+    public static DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:~/test");
+        return dataSource;
     }
 }
