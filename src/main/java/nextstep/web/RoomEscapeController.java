@@ -4,13 +4,12 @@ import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @RestController
 public class RoomEscapeController {
@@ -29,4 +28,16 @@ public class RoomEscapeController {
         return ResponseEntity.created(URI.create("/reservations/1")).build();
     }
 
+    @GetMapping("/reservations/{id}")
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id) {
+        Optional<Reservation> optional = reservationRepository.findById(id);
+        Reservation reservation = optional.get();
+        return ResponseEntity.ok(new ReservationResponse(reservation));
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        reservationRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

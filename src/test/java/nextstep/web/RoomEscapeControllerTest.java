@@ -5,6 +5,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,18 +34,15 @@ public class RoomEscapeControllerTest {
         RestAssured.port = port;
     }
 
+    @AfterEach
+    void tearDown() {
+        reservationRepository.deleteAll();
+    }
+
     @DisplayName("예약을 생성한다")
     @Test
     void createReservation() {
-        ReservationRequest request = new ReservationRequest("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 00));
-
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().log().all()
-                .post("/reservations")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = 예약_생성("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 0));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -56,4 +54,57 @@ public class RoomEscapeControllerTest {
         assertThat(reservation.getTheme()).isEqualTo(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
     }
 
+    @DisplayName("예약을 조회한다")
+    @Test
+    void getReservation() {
+        Long id = 1L;
+        예약_생성("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 0));
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().log().all()
+                .get("/reservations/" + id)
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        ReservationResponse reservation = response.as(ReservationResponse.class);
+        assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2022, 11, 11));
+        assertThat(reservation.getTime()).isEqualTo(LocalTime.of(13, 0));
+        assertThat(reservation.getName()).isEqualTo("name");
+        assertThat(reservation.getId()).isEqualTo(1L);
+        assertThat(reservation.getThemeName()).isEqualTo("워너고홈");
+        assertThat(reservation.getThemeDesc()).isEqualTo("병맛 어드벤처 회사 코믹물");
+        assertThat(reservation.getThemePrice()).isEqualTo(29_000);
+    }
+
+    @DisplayName("에약을 삭제한다")
+    @Test
+    void deleteReservation() {
+        Long id = 1L;
+        예약_생성("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 0));
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().log().all()
+                .delete("/reservations/" + id)
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(reservationRepository.findById(id)).isEmpty();
+    }
+
+    private static ExtractableResponse<Response> 예약_생성(String name, LocalDate date, LocalTime time) {
+        ReservationRequest request = new ReservationRequest(name, date, time);
+
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .extract();
+    }
 }
