@@ -19,6 +19,8 @@ import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.core.Is.is;
 
+import static org.assertj.core.api.Assertions.*;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationTest {
     @LocalServerPort
@@ -29,6 +31,7 @@ public class ReservationTest {
         RestAssured.port = port;
         DateTimeFormatter localDateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter localTimeformatter = DateTimeFormatter.ofPattern("HH:mm");
+        Reservations.removeAll();
         Reservations.add(new Reservation(
                 1L,
                 LocalDate.parse("2022-08-11", localDateformatter),
@@ -69,5 +72,15 @@ public class ReservationTest {
                 .body("themeName", is("워너고홈"))
                 .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
                 .body("themePrice", is(29_000));
+    }
+
+    @DisplayName("delete reservation test")
+    @Test
+    void deleteReservation() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+        assertThat(Reservations.get(1L)).isNull();
     }
 }

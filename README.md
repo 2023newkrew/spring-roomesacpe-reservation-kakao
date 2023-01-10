@@ -21,6 +21,6 @@
   - [x] 200 리스폰스
 
 - 예약 삭제 API
-  - [ ] `reservations/{id}`에 delete mapping
-  - [ ] id가 일치하는 Reservation을 제거
-  - [ ] 204 리스폰스
+  - [x] `reservations/{id}`에 delete mapping
+  - [x] id가 일치하는 Reservation을 제거
+  - [x] 204 리스폰스

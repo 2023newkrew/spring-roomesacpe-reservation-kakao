@@ -12,4 +12,12 @@ public class Reservations {
     public static Reservation get(Long id) {
         return reservations.get(id);
     }
+
+    public static void delete(Long id) {
+        reservations.put(id, null);
+    }
+
+    public static void removeAll() {
+        reservations.clear();
+    }
 }

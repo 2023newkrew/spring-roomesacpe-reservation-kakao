@@ -14,10 +14,8 @@ public class Reservation {
     private final String name;
     private final Theme theme;
 
-    public static Long maxId = 1L;
-
-    public Reservation(String date, String time, String name, Theme theme) {
-        this.id = maxId++;
+    public Reservation(Long id, String date, String time, String name, Theme theme) {
+        this.id = id;
         DateTimeFormatter localDateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter localTimeformatter = DateTimeFormatter.ofPattern("HH:mm");
         this.date = LocalDate.parse(date, localDateformatter);
@@ -27,7 +25,7 @@ public class Reservation {
     }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = maxId++;
+        this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;

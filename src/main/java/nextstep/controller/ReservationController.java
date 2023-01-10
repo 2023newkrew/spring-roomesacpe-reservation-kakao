@@ -18,6 +18,7 @@ public class ReservationController {
     @PostMapping()
     public ResponseEntity createReservation(@RequestBody CreateReservationDTO reservationDto) {
         Reservation reservation = new Reservation(
+                Reservations.reservations.size()+1L,
                 reservationDto.getLocalDate(),
                 reservationDto.getLocalTime(),
                 reservationDto.getName(),
@@ -32,6 +33,12 @@ public class ReservationController {
         Reservation reservation = Reservations.get(id);
         GetReservationDTO getReservationDTO = new GetReservationDTO(reservation);
         return ResponseEntity.ok().body(getReservationDTO);
+    }
+
+    @DeleteMapping( "/{id}")
+    public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
+        Reservations.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
