@@ -3,8 +3,12 @@ package nextstep;
 import java.sql.*;
 
 public class ReservationJdbcRepository {
+    private static final String DB_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
+    private static final String DB_USER_NAME = "sa";
+    private static final String DB_PASSWORD = "";
+
     public Long save(Reservation reservation) {
-        try (Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "")) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
@@ -20,7 +24,7 @@ public class ReservationJdbcRepository {
     }
 
     public Reservation findOneById(Long reservationId) {
-        try (Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "")) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
             String sql = "SELECT * FROM reservation WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, reservationId);
@@ -39,7 +43,7 @@ public class ReservationJdbcRepository {
     }
 
     public int delete(Long reservationId) {
-        try (Connection con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "")) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
             String sql = "DELETE FROM reservation WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, reservationId);
