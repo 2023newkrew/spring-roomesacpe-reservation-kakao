@@ -23,8 +23,8 @@ public class Reservation {
         this(null, date, time, name, theme);
     }
 
-    public boolean hasSameDateTime(Reservation other) {
-        return Objects.equals(date, other.date) && Objects.equals(time, other.time);
+    public boolean isAtDateTime(LocalDate date, LocalTime time) {
+        return Objects.equals(this.date, date) && Objects.equals(this.time, time);
     }
 
     public Long getId() {

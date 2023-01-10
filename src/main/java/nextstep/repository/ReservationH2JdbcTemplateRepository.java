@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Repository
-public class ReservationH2JdbcTemplateRepository implements ReservationRepository{
+public class ReservationH2JdbcTemplateRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -64,7 +64,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
                         ),
                     id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ReservationNotFoundException(e.getMessage());
+            throw new ReservationNotFoundException();
         }
     }
 
@@ -72,5 +72,12 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     public void delete(Long id) {
         String sql = "DELETE FROM reservation where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public boolean hasReservationAt(LocalDate date, LocalTime time) {
+        String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND time = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, Date.valueOf(date), Time.valueOf(time));
+        return count >= 1;
     }
 }

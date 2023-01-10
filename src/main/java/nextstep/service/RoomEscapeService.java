@@ -3,6 +3,7 @@ package nextstep.service;
 import nextstep.Reservation;
 import nextstep.Theme;
 import nextstep.dto.CreateReservationRequest;
+import nextstep.exception.DuplicateReservationException;
 import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,16 @@ public class RoomEscapeService {
     }
 
     public Reservation add(CreateReservationRequest request) {
+
+        LocalDate date = LocalDate.parse(request.getDate());
+        LocalTime time = LocalTime.parse(request.getTime() + ":00");
+        if (reservationRepository.hasReservationAt(date, time)) {
+            throw new DuplicateReservationException();
+        }
+
         Reservation reservation = new Reservation(
-                LocalDate.parse(request.getDate()),
-                LocalTime.parse(request.getTime() + ":00"),
+                date,
+                time,
                 request.getName(),
                 DEFAULT_THEME
         );
