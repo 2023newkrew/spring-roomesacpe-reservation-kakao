@@ -1,14 +1,12 @@
 package web.repository;
 
-import org.springframework.stereotype.Repository;
 import web.entity.Reservation;
 import web.exception.ReservationDuplicateException;
 
 import java.util.HashMap;
 import java.util.Optional;
 
-@Repository
-public class MemoryReservationRepository implements ReservationRepository{
+public class MemoryReservationRepository implements ReservationRepository {
 
     static final HashMap<Long, Reservation> reservations = new HashMap<>();
     private static long createdId = 0L;
@@ -36,5 +34,10 @@ public class MemoryReservationRepository implements ReservationRepository{
     @Override
     public Long delete(long reservationId) {
         return reservations.remove(reservationId) == null ? 0L : 1L;
+    }
+
+    @Override
+    public void clearAll() {
+        reservations.clear();
     }
 }
