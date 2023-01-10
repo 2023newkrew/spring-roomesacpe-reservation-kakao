@@ -1,5 +1,6 @@
-import nextstep.Reservation;
-import nextstep.repository.ReservationRepository;
+package nextstep.repository;
+
+import nextstep.domain.Reservation;
 
 import java.util.*;
 
