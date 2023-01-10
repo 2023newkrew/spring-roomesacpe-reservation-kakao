@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
@@ -27,7 +28,12 @@ public class RoomEscapeController {
     public ResponseEntity<Reservation> lookUpReservation(@PathVariable("id") String id) {
         Reservation reservation = reservationList.stream().filter(reserve -> reserve.getId() == Long.parseLong(id))
                 .findAny().orElse(null);
-
         return ResponseEntity.ok().body(reservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<String> deleteReservation(@PathVariable("id") String id) {
+        reservationList.removeIf(reserve -> reserve.getId() == Long.parseLong(id));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

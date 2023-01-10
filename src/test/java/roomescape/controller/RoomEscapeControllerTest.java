@@ -34,7 +34,7 @@ public class RoomEscapeControllerTest {
      */
     @DisplayName("Http Method - POST")
     @Test
-    void createUser() {
+    void createReservation() {
         Reservation reservation = new Reservation(1L,
                 LocalDate.of(2022,8,11),
                 LocalTime.of(13,0,0),
@@ -51,17 +51,31 @@ public class RoomEscapeControllerTest {
     }
 
     /**
-     * HttpMethodController > showUser 메서드
+     * RoomEscapeController > showReservation 메서드
      */
     @DisplayName("Http Method - GET")
     @Test
-    void showUser() {
-        createUser();
+    void showReservation() {
+        createReservation();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(1));
+    }
+
+    /**
+     * RoomEscapeController > deleteReservation 메서드
+     */
+    @DisplayName("Http Method - DELETE")
+    @Test
+    void deleteReservation() {
+        createReservation();
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
