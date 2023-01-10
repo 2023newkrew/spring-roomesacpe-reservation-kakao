@@ -3,10 +3,8 @@ package nextstep.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.domain.Reservation;
 import nextstep.domain.Reservations;
 import nextstep.dto.CreateReservationRequest;
-import nextstep.utils.AutoIncrementGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +32,6 @@ public class ReservationAcceptanceTest {
     void setUp() {
         RestAssured.port = port;
         reservations.deleteAll();
-        AutoIncrementGenerator.removeClass(Reservation.class);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package nextstep.domain;
 
-import nextstep.utils.AutoIncrementGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,6 @@ public class ReservationsTest {
     @BeforeEach
     void setUp() {
         reservations = new Reservations();
-        AutoIncrementGenerator.removeClass(Reservation.class);
     }
 
     @Test
