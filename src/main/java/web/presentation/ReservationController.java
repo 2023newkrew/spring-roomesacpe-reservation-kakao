@@ -17,6 +17,7 @@ import web.domain.Reservation;
 import web.domain.Theme;
 import web.dto.request.ReservationRequestDTO;
 import web.dto.response.ReservationResponseDTO;
+import web.exception.NoSuchReservationException;
 
 @RestController
 @RequestMapping("/reservations")
@@ -49,7 +50,12 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        boolean removed = reservations.removeIf(item -> Objects.equals(item.getId(), id));
+        if (!removed) {
+            throw new NoSuchReservationException();
+        }
+
         return ResponseEntity.noContent().build();
     }
 }

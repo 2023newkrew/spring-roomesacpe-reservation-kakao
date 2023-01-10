@@ -5,7 +5,10 @@ import static org.hamcrest.core.Is.is;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.http.MediaType;
 import web.dto.request.ReservationRequestDTO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReservationControllerTest {
 
     @LocalServerPort
@@ -25,6 +29,7 @@ public class ReservationControllerTest {
 
     @DisplayName("Reservation 생성")
     @Test
+    @Order(1)
     void createReservation() {
         ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
 
@@ -52,6 +57,7 @@ public class ReservationControllerTest {
 
     @DisplayName("Reservation 조회")
     @Test
+    @Order(2)
     void retrieveReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -70,11 +76,22 @@ public class ReservationControllerTest {
 
     @DisplayName("Reservation 취소")
     @Test
+    @Order(3)
     void deleteReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("없는 예약을 취소하면 404를 반환한다.")
+    @Test
+    void deleteNotExistingReservation() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/15")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

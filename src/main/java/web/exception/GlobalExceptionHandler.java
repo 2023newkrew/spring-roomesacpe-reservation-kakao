@@ -12,4 +12,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleDateTimeException() {
         return ResponseEntity.badRequest().build();
     }
+
+    @ExceptionHandler(NoSuchReservationException.class)
+    public ResponseEntity<Void> handleNoSucReservationException() {
+        return ResponseEntity.notFound().build();
+    }
 }
