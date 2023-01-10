@@ -11,7 +11,6 @@ import reservation.domain.Theme;
 import reservation.domain.dto.ReservationDto;
 import reservation.respository.ReservationRepository;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.*;
@@ -68,7 +67,7 @@ public class RepositoryTest {
     @DisplayName("시간과 날짜가 중복되는 예약은 불가능하다.")
     void duplicate(){
         Long id = reservationRepository.createReservation(reservationDto, theme);
-        assertThat(reservationRepository.existReservation(reservationDto.getDate(), reservationDto.getTime()))
+        assertThat(reservationRepository.existByDateTime(reservationDto.getDate(), reservationDto.getTime()))
                 .isTrue();
     }
 }

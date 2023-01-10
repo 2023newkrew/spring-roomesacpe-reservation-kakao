@@ -46,7 +46,7 @@ public class ReservationRepository {
     public Reservation getReservation(Long reservationId) {
         String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
+            return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
                     rs.getLong("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getTime("time").toLocalTime(),
@@ -62,12 +62,18 @@ public class ReservationRepository {
 
     public int deleteReservation(Long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        return jdbcTemplate.update(sql, reservationId);
+        return this.jdbcTemplate.update(sql, reservationId);
     }
 
     // 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
-    public boolean existReservation(LocalDate date, LocalTime time) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, date, time));
+    public boolean existByDateTime(LocalDate date, LocalTime time) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time = ?)";
+        return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, date, time));
+    }
+
+    // 해당 id를 갖는 예약이 있는지 확인
+    public boolean existById(Long id){
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
+        return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }
