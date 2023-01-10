@@ -1,5 +1,9 @@
-package nextstep.reservation;
+package nextstep;
 
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.ReservationRepositoryJdbcImpl;
+import nextstep.reservation.ReservationServiceImpl;
+import nextstep.reservation.domain.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -16,7 +20,7 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationService reservationService = new ReservationService(new JdbcReservationRepository(new JdbcTemplate(dataSource())));
+        ReservationServiceImpl reservationServiceImpl = new ReservationServiceImpl(new ReservationRepositoryJdbcImpl(new JdbcTemplate(dataSource())));
 
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -44,7 +48,7 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
-                Reservation createReservation = reservationService.create(reservation);
+                Reservation createReservation = reservationServiceImpl.create(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + createReservation.getId());
@@ -56,7 +60,7 @@ public class RoomEscapeApplication {
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = reservationService.findById(id);
+                Reservation reservation = reservationServiceImpl.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -72,7 +76,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationService.delete(id)) {
+                if (reservationServiceImpl.delete(id)) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

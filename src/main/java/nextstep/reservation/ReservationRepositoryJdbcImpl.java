@@ -1,5 +1,7 @@
 package nextstep.reservation;
 
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.domain.Theme;
 import nextstep.reservation.exception.CreateReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -16,11 +18,11 @@ import java.time.LocalTime;
 
 @Repository
 @Primary
-public class JdbcReservationRepository implements ReservationRepository{
+public class ReservationRepositoryJdbcImpl implements ReservationRepository{
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationRepositoryJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

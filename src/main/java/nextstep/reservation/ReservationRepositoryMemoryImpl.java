@@ -1,7 +1,7 @@
 package nextstep.reservation;
 
+import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.exception.CreateReservationException;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class MemoryReservationRepository implements ReservationRepository{
+public class ReservationRepositoryMemoryImpl implements ReservationRepository{
     private static final Map<Long, Reservation> reservationList = new HashMap<>();
     private static final AtomicLong reservationCount = new AtomicLong(1);
     @Override

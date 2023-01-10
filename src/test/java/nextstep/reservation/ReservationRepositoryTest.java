@@ -1,5 +1,7 @@
 package nextstep.reservation;
 
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.domain.Theme;
 import nextstep.reservation.exception.CreateReservationException;
 import org.junit.jupiter.api.*;
 
@@ -15,7 +17,7 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new MemoryReservationRepository();
+        reservationRepository = new ReservationRepositoryMemoryImpl();
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         reservationRepository.create(new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
     }

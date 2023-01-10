@@ -1,27 +1,11 @@
 package nextstep.reservation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import nextstep.reservation.domain.Reservation;
 
-@Service
-public class ReservationService {
+public interface ReservationService {
+    Reservation create(Reservation reservation);
 
-    private final ReservationRepository reservationRepository;
+    Reservation findById(long id);
 
-    @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
-    public Reservation create(Reservation reservation) {
-        return reservationRepository.create(reservation);
-    }
-
-    public Reservation findById(long id) {
-        return reservationRepository.findById(id);
-    }
-
-    public Boolean delete(long id) {
-        return reservationRepository.delete(id);
-    }
+    Boolean delete(long id);
 }

@@ -1,5 +1,6 @@
 package nextstep.reservation;
 
+import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.exception.CreateReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
