@@ -1,6 +1,7 @@
 package nextstep.domain.repository;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -36,7 +37,19 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long reservationId) {
-        return Optional.empty();
+        Reservation reservation = jdbcTemplate.queryForObject(Queries.Reservation.SELECT_BY_ID_SQL, new Object[] {reservationId},(rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        LocalDate.parse(rs.getString("date")),
+                        LocalTime.parse(rs.getString("time")),
+                        rs.getString("name"),
+                        new Theme(
+                                rs.getString("theme_name"),
+                                rs.getString("theme_desc"),
+                                rs.getInt("theme_price")
+                        )
+                )
+        );
+        return Optional.ofNullable(reservation);
     }
 
     @Override
@@ -51,6 +64,6 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteAll() {
-
+        jdbcTemplate.update(Queries.Reservation.DELETE_ALL_SQL);
     }
 }
