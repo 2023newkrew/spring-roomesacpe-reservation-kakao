@@ -1,6 +1,7 @@
 package nextstep.domain.repository;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.utils.JdbcUtils;
 
 import java.sql.*;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class ConsoleReservationRepository implements ReservationRepository {
 
     private static final String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String SELECT_BY_ID_SQL = "SELECT * FROM reservation WHERE id = ?";
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -39,6 +41,32 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long reservationId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try{
+            conn = JdbcUtils.getConnection();
+            pstmt = conn.prepareStatement(SELECT_BY_ID_SQL);
+            pstmt.setLong(1, reservationId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Reservation reservation = new Reservation(
+                        rs.getLong("id"),
+                        LocalDate.parse(rs.getString("date")),
+                        LocalTime.parse(rs.getString("time")),
+                        rs.getString("name"),
+                        new Theme(
+                                rs.getString("theme_name"),
+                                rs.getString("theme_desc"),
+                                rs.getInt("theme_price")
+                        )
+                );
+                return Optional.of(reservation);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return Optional.empty();
     }
 
