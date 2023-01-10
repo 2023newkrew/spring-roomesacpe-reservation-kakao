@@ -26,7 +26,7 @@ public class ReservationControllerTest {
     @DisplayName("Reservation 생성")
     @Test
     void createReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "");
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class ReservationControllerTest {
     @DisplayName("유효하지 않은 Reservation 생성은 400을 반환한다.")
     @Test
     void invalidReservationCreation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "");
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,6 +53,8 @@ public class ReservationControllerTest {
     @DisplayName("Reservation 조회")
     @Test
     void retrieveReservation() {
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")

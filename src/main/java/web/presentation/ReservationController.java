@@ -1,12 +1,11 @@
 package web.presentation;
 
 import java.net.URI;
-import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +29,18 @@ public class ReservationController {
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
         Reservation reservation = reservationRequestDTO.toEntity(++reservationIdIndex, theme);
         reservations.add(reservation);
+
         return ResponseEntity.created(URI.create("/reservations/" + reservationIdIndex)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> retrieveReservation(@PathVariable Long id) {
-        final ReservationResponseDTO reservationResponseDTO = new ReservationResponseDTO(1L, "2022-08-11", "13:00",
-                "name",
-                "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Reservation reservation = reservations.stream()
+                .filter(item -> Objects.equals(item.getId(), id))
+                .findAny()
+                .orElseThrow(RuntimeException::new);
+
+        final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservation);
 
         return ResponseEntity.ok()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
