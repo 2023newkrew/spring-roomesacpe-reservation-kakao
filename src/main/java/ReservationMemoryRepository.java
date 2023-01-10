@@ -1,10 +1,7 @@
 import nextstep.Reservation;
 import nextstep.repository.ReservationRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ReservationMemoryRepository implements ReservationRepository {
 
@@ -26,7 +23,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return null;
+        return new ArrayList<>(repository.values());
     }
 
     @Override

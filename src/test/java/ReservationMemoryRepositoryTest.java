@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -88,6 +89,25 @@ class ReservationMemoryRepositoryTest {
     @Test
     void find_fail() {
         Optional<Reservation> result = repository.findById(1L);
+        assertThat(result).isEmpty();
+    }
+
+    @DisplayName("모든 예약을 조회한다")
+    @Test
+    void findAll() {
+        repository.save(inputReservation1);
+        repository.save(inputReservation2);
+        repository.save(inputReservation3);
+
+        List<Reservation> result = repository.findAll();
+
+        assertThat(result).contains(expectedReservation1, expectedReservation2, expectedReservation3);
+    }
+
+    @DisplayName("모든 예약을 조회한다 - 예약이 존재하지 않을 경우")
+    @Test
+    void findAll_empty() {
+        List<Reservation> result = repository.findAll();
         assertThat(result).isEmpty();
     }
 
