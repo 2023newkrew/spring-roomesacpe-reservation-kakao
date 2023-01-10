@@ -19,9 +19,9 @@ public class ReservationResponseDto {
         this.date = reservation.getDate();
         this.time = reservation.getTime();
         this.name = reservation.getName();
-        this.themeName = "워너고홈";
-        this.themeDesc = "병맛 어드벤처 회사 코믹물";
-        this.themePrice = 29000;
+        this.themeName = reservation.getTheme().getName();
+        this.themeDesc = reservation.getTheme().getDesc();
+        this.themePrice = reservation.getTheme().getPrice();
     }
 
     public Long getId() {
