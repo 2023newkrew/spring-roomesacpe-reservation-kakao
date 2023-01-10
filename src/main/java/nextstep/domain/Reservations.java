@@ -25,7 +25,7 @@ public class Reservations {
     }
 
     public Long add(ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.toReservation();
+        Reservation reservation = ReservationDto.from(reservationDto);
         reservation.setId(getAutoIncrementId());
 
         reservations.add(reservation);
