@@ -26,7 +26,6 @@ public class ReservationRepository {
     }
 
     public Long add(Reservation reservation) {
-
         String sql = "INSERT INTO reservation SET date = ?, time = ?, name = ?, theme_name = ?, theme_desc = ?, theme_price = ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
