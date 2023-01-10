@@ -67,4 +67,14 @@ public class ReservationControllerTest {
                 .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
                 .body("themePrice", is(29000));
     }
+
+    @DisplayName("Reservation 취소")
+    @Test
+    void deleteReservation() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }
