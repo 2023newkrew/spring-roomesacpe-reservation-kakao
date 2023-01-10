@@ -12,14 +12,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ReservationRepository {
     private static final Map<Long, Reservation> reservationList = new HashMap<>();
     private static final AtomicLong reservationCount = new AtomicLong(1);
-    public Reservation create(LocalDate date, LocalTime time, String name, Theme theme) {
-        if (findByDateTime(date, time)){
+
+    public Reservation create(Reservation reservation) {
+        if (findByDateTime(reservation.getDate(), reservation.getTime())) {
             throw new RuntimeException("이미 예약이 만료된 날짜/시간 입니다.");
         }
         Long id = reservationCount.getAndIncrement();
-        Reservation reservation = new Reservation(id, date, time, name, theme);
-        reservationList.put(id, reservation);
-        return reservation;
+        Reservation creatteReservation = new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        reservationList.put(id, creatteReservation);
+        return creatteReservation;
     }
 
 

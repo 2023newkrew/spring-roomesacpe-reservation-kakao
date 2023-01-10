@@ -3,9 +3,6 @@ package nextstep.reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Service
 public class ReservationService {
 
@@ -16,8 +13,8 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation create(LocalDate date, LocalTime time, String name, Theme theme) {
-        return reservationRepository.create(date, time, name, theme);
+    public Reservation create(Reservation reservation) {
+        return reservationRepository.create(reservation);
     }
 
     public Reservation findById(long id) {

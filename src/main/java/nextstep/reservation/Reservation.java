@@ -1,10 +1,13 @@
 package nextstep.reservation;
 
+import org.springframework.lang.Nullable;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
+    @Nullable
     private final Long id;
     private final LocalDate date;
     private final LocalTime time;
@@ -44,7 +47,7 @@ public class Reservation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(theme, that.theme);
+        return Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(theme, that.theme);
     }
 
     @Override

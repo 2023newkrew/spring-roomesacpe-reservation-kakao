@@ -16,7 +16,7 @@ class ReservationRepositoryTest {
     void setUp() {
         reservationRepository = new ReservationRepository();
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
+        reservationRepository.create(new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
     }
 
     @AfterEach
@@ -27,8 +27,8 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약 삽입")
     void createReservationTest() {
-        Reservation reservation = new Reservation(2L, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
-        Reservation result = reservationRepository.create(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
+        Reservation result = reservationRepository.create(reservation);
         assertEquals(result, reservation);
     }
 
@@ -58,7 +58,10 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("중복 시간에 예약시 예외 발생")
     void duplicateTimeReservationThrowException() {
-        Assertions.assertThrows(RuntimeException.class, () -> reservationRepository.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
+        Assertions.assertThrows(RuntimeException.class,
+                () -> reservationRepository.create(
+                        new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme)
+                ));
     }
 
     @Test

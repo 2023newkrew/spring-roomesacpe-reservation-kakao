@@ -24,7 +24,7 @@ public class ReservationServiceTest {
     @DisplayName("예약 생성")
     void createReservationTest() {
         Reservation reservation = new Reservation(1L, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
-        Reservation result = reservationService.create(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
+        Reservation result = reservationService.create(reservation);
         assertEquals(result, reservation);
     }
 }
