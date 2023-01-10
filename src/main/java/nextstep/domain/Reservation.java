@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -42,7 +42,4 @@ public class Reservation {
         return theme;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

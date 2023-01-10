@@ -1,6 +1,11 @@
 package nextstep;
 
-import nextstep.repository.ReservationDao;
+import nextstep.domain.Theme;
+import nextstep.dto.ReservationRequestDto;
+import nextstep.dto.ReservationResponseDto;
+import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.repository.ReservationJdbcDao;
+import nextstep.service.ReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,12 +17,10 @@ public class ReservationConsole {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static final ReservationDao reservationDao = new ReservationDao();
 
     public static void main(String[] args) {
+        final ReservationService reservationService = new ReservationService(new ReservationJdbcDao());
         Scanner scanner = new Scanner(System.in);
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();
@@ -34,37 +37,39 @@ public class ReservationConsole {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
+                ReservationRequestDto reservationRequestDto = new ReservationRequestDto(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
-                        name,
-                        theme
+                        name
                 );
 
-                Long id = reservationDao.addReservationForConsole(reservation);
-                if (id != null) {
+                try {
+                    Long id = reservationService.reserve(reservationRequestDto);
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + id);
-                    System.out.println("예약 날짜: " + reservation.getDate());
-                    System.out.println("예약 시간: " + reservation.getTime());
-                    System.out.println("예약자 이름: " + reservation.getName());
+                    System.out.println("예약 날짜: " + reservationRequestDto.getDate());
+                    System.out.println("예약 시간: " + reservationRequestDto.getTime());
+                    System.out.println("예약자 이름: " + reservationRequestDto.getName());
+                } catch (DuplicatedDateAndTimeException e) {
+                    System.out.println("이미 예약된 날짜와 시간입니다.");
                 }
             }
+
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDao.findReservationForConsole(id);
-                if (reservation != null) {
-                    System.out.println("예약 번호: " + reservation.getId());
-                    System.out.println("예약 날짜: " + reservation.getDate());
-                    System.out.println("예약 시간: " + reservation.getTime());
-                    System.out.println("예약자 이름: " + reservation.getName());
-                    System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                    System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                    System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                ReservationResponseDto reservationDto = reservationService.retrieve(id);
+                if (reservationDto != null) {
+                    System.out.println("예약 번호: " + reservationDto.getId());
+                    System.out.println("예약 날짜: " + reservationDto.getDate());
+                    System.out.println("예약 시간: " + reservationDto.getTime());
+                    System.out.println("예약자 이름: " + reservationDto.getName());
+                    System.out.println("예약 테마 이름: " + reservationDto.getThemeName());
+                    System.out.println("예약 테마 설명: " + reservationDto.getThemeDesc());
+                    System.out.println("예약 테마 가격: " + reservationDto.getThemePrice());
                 }
             }
 
@@ -73,7 +78,7 @@ public class ReservationConsole {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                reservationDao.deleteReservationForConsole(id);
+                reservationService.delete(id);
                 System.out.println("예약이 취소되었습니다.");
             }
 
