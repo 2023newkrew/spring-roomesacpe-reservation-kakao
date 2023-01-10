@@ -2,6 +2,7 @@ package service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.exception.DuplicateReservationException;
 import nextstep.repository.ReservationMemoryRepository;
 import nextstep.service.ReservationService;
 import nextstep.service.ReservationServiceImpl;
@@ -47,7 +48,7 @@ class ReservationServiceImplTest {
         assertThatNoException()
                 .isThrownBy(() -> reservationService.reserve(reservation1));
         assertThatThrownBy(() -> reservationService.reserve(reservation2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(DuplicateReservationException.class);
     }
 
     @DisplayName("예약 시 날짜와 시간이 동일한 예약이 없는 경우 예약 성공")
