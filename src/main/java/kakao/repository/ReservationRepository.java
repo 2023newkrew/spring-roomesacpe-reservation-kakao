@@ -7,7 +7,7 @@ import kakao.domain.Reservation;
 
 public interface ReservationRepository {
 
-    public long save(Reservation reservation);
+    public Reservation save(Reservation reservation);
 
     public Reservation findById(Long id);
 

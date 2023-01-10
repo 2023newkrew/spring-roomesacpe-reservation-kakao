@@ -24,7 +24,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public long createReservation(CreateReservationRequest request) {
+    public Reservation createReservation(CreateReservationRequest request) {
         boolean isDuplicate = reservationRepository.findByDateAndTime(request.date, request.time).size() > 0;
         if (isDuplicate) {
             throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
@@ -41,10 +41,7 @@ public class ReservationService {
         return new ReservationResponse(reservation);
     }
 
-    public void deleteReservation(Long id) {
-        int deletedCount = reservationRepository.delete(id);
-        if (deletedCount == 0) {
-            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
+    public int deleteReservation(Long id) {
+        return reservationRepository.delete(id);
     }
 }

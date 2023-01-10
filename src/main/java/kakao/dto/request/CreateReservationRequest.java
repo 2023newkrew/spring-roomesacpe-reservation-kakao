@@ -3,11 +3,13 @@ package kakao.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@AllArgsConstructor
 public class CreateReservationRequest {
 
     @NotNull
@@ -20,10 +22,4 @@ public class CreateReservationRequest {
 
     @NotBlank
     public final String name;
-
-    public CreateReservationRequest(LocalDate date, LocalTime time, String name) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
-    }
 }

@@ -49,7 +49,7 @@ public class ReservationJDBCRepository implements ReservationRepository {
         return new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice));
     };
 
-    public long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         try {
             // TODO : Theme 이 별도의 table 로 분리되면 BeanPropertySqlParameterSource 적용하기
             SqlParameterSource params = new MapSqlParameterSource()
@@ -59,10 +59,10 @@ public class ReservationJDBCRepository implements ReservationRepository {
                     .addValue("theme_name", reservation.getTheme().getName())
                     .addValue("theme_desc", reservation.getTheme().getDesc())
                     .addValue("theme_price", reservation.getTheme().getPrice());
-
-            return jdbcInsert.executeAndReturnKey(params).longValue();
+            reservation.setId(jdbcInsert.executeAndReturnKey(params).longValue());
+            return reservation;
         } catch (DuplicateKeyException e) {
-            return 0;
+            return null;
         }
     }
 

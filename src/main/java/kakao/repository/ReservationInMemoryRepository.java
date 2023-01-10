@@ -19,12 +19,13 @@ public class ReservationInMemoryRepository implements ReservationRepository {
 
     private Long reservationCount = 1L;
 
-    public long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         if (Objects.isNull(reservation.getId())) {
             reservation.setId(reservationCount);
         }
         reservations.put(reservationCount, reservation);
-        return reservationCount++;
+        reservation.setId(reservationCount++);
+        return reservation;
     }
 
     public Reservation findById(Long id) {
