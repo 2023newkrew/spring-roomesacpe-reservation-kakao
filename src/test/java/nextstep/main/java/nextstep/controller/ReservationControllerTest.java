@@ -56,7 +56,8 @@ public class ReservationControllerTest {
                 .body(request)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location","/reservations/1");
     }
 
     @DisplayName("예약 조회 테스트")
