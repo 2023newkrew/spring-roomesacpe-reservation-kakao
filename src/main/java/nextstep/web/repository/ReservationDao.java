@@ -31,18 +31,6 @@ public class ReservationDao implements ReservationRepository {
         return key.longValue();
     }
 
-    private static Map<String, Object> prepareParams(Reservation reservation) {
-        Theme theme = reservation.getTheme();
-        Map<String, Object> params = new HashMap<>();
-
-        params.put("date", reservation.getDate());
-        params.put("time", reservation.getTime());
-        params.put("name", reservation.getName());
-        params.put("theme_name", theme.getName());
-        params.put("theme_desc", theme.getDesc());
-        params.put("theme_price", theme.getPrice());
-        return params;
-    }
 
     public Reservation findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE ID = ?;";
@@ -59,5 +47,18 @@ public class ReservationDao implements ReservationRepository {
         if (jdbcTemplate.update(sql, id) == 0) {
             throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
         }
+    }
+
+    private static Map<String, Object> prepareParams(Reservation reservation) {
+        Theme theme = reservation.getTheme();
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("date", reservation.getDate());
+        params.put("time", reservation.getTime());
+        params.put("name", reservation.getName());
+        params.put("theme_name", theme.getName());
+        params.put("theme_desc", theme.getDesc());
+        params.put("theme_price", theme.getPrice());
+        return params;
     }
 }
