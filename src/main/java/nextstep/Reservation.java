@@ -10,6 +10,15 @@ public class Reservation {
     private String name;
     private Theme theme;
 
+    public Reservation() {
+    }
+
+    public Reservation(LocalDate date, LocalTime time, String name) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+    }
+
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
