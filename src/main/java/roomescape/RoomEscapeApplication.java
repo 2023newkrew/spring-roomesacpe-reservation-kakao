@@ -98,7 +98,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if(reservationConsoleRepository.getReservation(id).isPresent()) {
+                if (reservationConsoleRepository.getReservation(id).isPresent()) {
                     reservationConsoleRepository.deleteReservation(id);
                     System.out.println("예약이 취소되었습니다.");
                 }
