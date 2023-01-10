@@ -1,18 +1,14 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
 import nextstep.MemoryDbSingleton;
+import nextstep.Reservation;
 import nextstep.Theme;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Repository
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final MemoryDbSingleton memoryDbSingleton = MemoryDbSingleton.getMemoryDbSingleton();
