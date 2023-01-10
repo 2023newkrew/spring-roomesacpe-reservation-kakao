@@ -1,12 +1,13 @@
 package nextstep.entity;
 
-import nextstep.dto.ReservationDto;
-
+import lombok.Getter;
+import lombok.ToString;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+@ToString
+@Getter
 public class Reservation {
     private Long id;
     private LocalDate date;
@@ -26,12 +27,6 @@ public class Reservation {
         this.themeId = themeId;
     }
 
-    public static Reservation from(ReservationDto reservationDto) {
-        LocalDate date = LocalDate.parse(reservationDto.getDate(), DateTimeFormatter.ISO_DATE);
-        LocalTime time = LocalTime.parse(reservationDto.getTime(), DateTimeFormatter.ISO_LOCAL_TIME);
-        return new Reservation(date, time, reservationDto.getName(), reservationDto.getThemeId());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,26 +38,6 @@ public class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getThemeId() {
-        return themeId;
     }
 
     public void setId(Long id) {

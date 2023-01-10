@@ -1,7 +1,11 @@
 package nextstep.entity;
 
+import lombok.Getter;
+import lombok.ToString;
 import nextstep.dto.ThemeDto;
 
+@ToString
+@Getter
 public class Theme {
     private Long id;
     private String name;
@@ -20,24 +24,9 @@ public class Theme {
     }
 
     public Theme(ThemeDto themeDto){
+        this.id = themeDto.getId();
         this.name = themeDto.getName();
         this.desc = themeDto.getDesc();
         this.price = themeDto.getPrice();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
     }
 }
