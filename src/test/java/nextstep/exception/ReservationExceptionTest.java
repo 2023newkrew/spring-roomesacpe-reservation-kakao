@@ -79,4 +79,12 @@ public class ReservationExceptionTest {
         RestAssured.given().log().all().when().get("/reservations/-1").then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @DisplayName("예약 조회) ID가 잘못된 경우 (float, string)")
+    @ParameterizedTest
+    @ValueSource(strings = {"/reservations/test", "/reservations/1.1"})
+    void failToGetWithInvalidId(String path) {
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
+                .get(path).then().log().all().statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
