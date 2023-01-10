@@ -16,7 +16,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(classes = RoomEscapeWebApplication.class)
-public class ThemeReservationDaoTest {
+class ThemeReservationDaoTest {
+
+    private final static Long EXIST_THEME_ID = 1L;
+    private final static Long NOT_EXIST_THEME_ID = 1000L;
+    public static final String RESERVATION_DATE = "2022-12-12";
 
     @Autowired
     private ThemeReservationDao themeReservationDao;
@@ -24,16 +28,17 @@ public class ThemeReservationDaoTest {
     @Test
     @DisplayName("방탈출 예약하기")
     void test1(){
-        Reservation reservation = makeRandomReservation("2022-08-23", "13:01", 1L);
+        Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:01", EXIST_THEME_ID);
 
         Long reservationId = themeReservationDao.createReservation(reservation);
-        assertThat(reservationId).isEqualTo(1);
+        Reservation findReservation = themeReservationDao.findById(reservationId);
+        assertThat(findReservation).isNotNull();
     }
 
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
     void test2(){
-        Reservation reservation = makeRandomReservation("2022-08-23", "13:02", 1L);
+        Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
         Long reservationId = themeReservationDao.createReservation(reservation);
 
         themeReservationDao.deleteReservation(reservationId);
@@ -50,7 +55,7 @@ public class ThemeReservationDaoTest {
     @Test
     @DisplayName("예약된 방을 조회한다.")
     void test4() {
-        Reservation randomReservation = makeRandomReservation("2022-08-23", "13:02", 1L);
+        Reservation randomReservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
         long reservationId = themeReservationDao.createReservation(randomReservation);
         Reservation findReservation = themeReservationDao.findById(reservationId);
 
@@ -68,7 +73,7 @@ public class ThemeReservationDaoTest {
     @Test
     @DisplayName("존재하지 않는 테마는 생성할 수 없다.")
     void test6(){
-        Reservation reservation = makeRandomReservation("2022-08-23", "13:06", 100L);
+        Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:06", NOT_EXIST_THEME_ID);
 
         assertThatThrownBy(() -> themeReservationDao.createReservation(reservation))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -78,8 +83,8 @@ public class ThemeReservationDaoTest {
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
     void test7() {
-        Reservation reservation1 = makeRandomReservation("2022-08-23", "13:07", 1L);
-        Reservation reservation2 = makeRandomReservation("2022-08-23", "13:07", 1L);
+        Reservation reservation1 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
+        Reservation reservation2 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
 
         themeReservationDao.createReservation(reservation1);
         Assertions.assertThatThrownBy(() -> themeReservationDao.createReservation(reservation2))
