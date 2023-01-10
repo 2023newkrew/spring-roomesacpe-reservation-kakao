@@ -7,8 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -16,20 +19,22 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @PostMapping("/reservations")
+    @PostMapping()
     public ResponseEntity<?> create(@RequestBody ReservationCreateRequestDto request) {
-        reservationService.save(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Reservation createdReservation = reservationService.save(request);
+        return ResponseEntity.created(URI.create("/reservations/" + createdReservation.getId())).build();
     }
 
-    @GetMapping("/reservations/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Reservation> findOne(@PathVariable Long id) {
-        return new ResponseEntity<>(reservationService.findOneById(id), HttpStatus.OK);
+        System.out.println("id = " + id);
+        System.out.println("id = " + id);
+        return ResponseEntity.ok(reservationService.findOneById(id));
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         reservationService.deleteOneById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

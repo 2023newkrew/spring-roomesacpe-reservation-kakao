@@ -1,15 +1,14 @@
 package nextstep.main.java.nextstep.repository;
 
-import nextstep.main.java.nextstep.Theme;
+import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.Reservation;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -17,6 +16,7 @@ import java.util.Optional;
 @Repository
 @Primary
 public class JdbcReservationRepository implements ReservationRepository {
+    private static final int EMPTY_SIZE = 0;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,9 +25,20 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-        jdbcTemplate.update(sql, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme().getName(), reservation.getTheme().getDesc(), reservation.getTheme().getPrice());
+        jdbcTemplate.update((connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
+            preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
+            preparedStatement.setString(3, reservation.getName());
+            preparedStatement.setString(4, reservation.getTheme().getName());
+            preparedStatement.setString(5, reservation.getTheme().getDesc());
+            preparedStatement.setInt(6, reservation.getTheme().getPrice());
+            return preparedStatement;
+        }, keyHolder);
+        return new Reservation(keyHolder.getKey().longValue(), reservation);
     }
 
     @Override
@@ -35,7 +46,8 @@ public class JdbcReservationRepository implements ReservationRepository {
         String sql = "SELECT * FROM reservation WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(
                 sql,
-                (rs, count) -> new Reservation(rs.getLong("id"),
+                (rs, count) -> new Reservation(
+                        rs.getLong("id"),
                         rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(),
                         rs.getString("name"),
@@ -43,7 +55,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                                 rs.getString("theme_name"),
                                 rs.getString("theme_desc"),
                                 rs.getInt("theme_price")
-                        )),
+                        )
+                ),
                 id
         ));
     }
@@ -57,6 +70,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT count(*) FROM reservation WHERE date = ? AND time = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[] {Date.valueOf(date), Time.valueOf(time)}, Integer.class) > 0;
+        return EMPTY_SIZE != jdbcTemplate.queryForObject(sql, new Object[]{Date.valueOf(date), Time.valueOf(time)}, Integer.class);
     }
 }

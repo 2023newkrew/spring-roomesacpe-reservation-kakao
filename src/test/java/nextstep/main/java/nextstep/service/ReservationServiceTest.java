@@ -2,12 +2,11 @@ package nextstep.main.java.nextstep.service;
 
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.exception.DuplicateReservationException;
-import nextstep.main.java.nextstep.exception.NoSuchReservationException;
+import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
-import nextstep.main.java.nextstep.repository.ReservationRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

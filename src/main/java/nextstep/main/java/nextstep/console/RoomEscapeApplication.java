@@ -1,7 +1,8 @@
-package nextstep.main.java.nextstep;
+package nextstep.main.java.nextstep.console;
 
+import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,18 +18,12 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Long reservationIdIndex = 0L;
-
+        ConsoleView consoleView = new ConsoleView();
+        ReservationDAO reservationDAO = new ReservationDAO();
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
-        ReservationDAO reservationDAO = new ReservationDAO();
         while (true) {
-            System.out.println();
-            System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
-            System.out.println("- 예약조회: find {id} ex) find 1");
-            System.out.println("- 예약취소: delete {id} ex) delete 1");
-            System.out.println("- 종료: quit");
+            consoleView.printCommand();
 
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
@@ -39,7 +34,6 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
@@ -50,38 +44,25 @@ public class RoomEscapeApplication {
                     throw new DuplicateReservationException(DUPLICATE_RESERVATION_MESSAGE);
                 }
 
-                reservationDAO.save(reservation);
-
-                System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
+                consoleView.printRegisteredReservationInfo(reservationDAO.save(reservation));
             }
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 Reservation reservation = reservationDAO.findOne(id).get();
 
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                consoleView.printReservationInfo(reservation);
             }
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 reservationDAO.deleteOne(id);
-                System.out.println("예약이 취소되었습니다.");
+
+                consoleView.printCancelReservation();
             }
 
             if (input.equals(QUIT)) {

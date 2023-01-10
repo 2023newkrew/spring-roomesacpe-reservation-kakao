@@ -1,19 +1,28 @@
 package nextstep.main.java.nextstep.domain;
 
-import nextstep.main.java.nextstep.Theme;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
     private Long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private Theme theme;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final Theme theme;
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+    }
+
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.date = date;
         this.time = time;
         this.name = name;

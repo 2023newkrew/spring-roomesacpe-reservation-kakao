@@ -14,10 +14,12 @@ import java.util.Optional;
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
     public static Map<Long, Reservation> reservationMap = new HashMap<>();
+    private static Long count = 1L;
 
     @Override
-    public void save(Reservation reservation) {
-        reservationMap.put(reservation.getId(), reservation);
+    public Reservation save(Reservation reservation) {
+        reservationMap.put(count, reservation);
+        return new Reservation(count++, reservation);
     }
 
     @Override

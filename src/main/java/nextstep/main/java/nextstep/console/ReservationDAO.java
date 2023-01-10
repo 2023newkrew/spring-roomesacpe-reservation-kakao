@@ -1,5 +1,6 @@
-package nextstep.main.java.nextstep;
+package nextstep.main.java.nextstep.console;
 
+import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 
@@ -12,36 +13,46 @@ public class ReservationDAO implements ReservationRepository {
     Connection con = null;
 
     @Override
-    public void save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         connect();
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
-            ps.executeUpdate();
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
+            preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
+            preparedStatement.setString(3, reservation.getName());
+            preparedStatement.setString(4, reservation.getTheme().getName());
+            preparedStatement.setString(5, reservation.getTheme().getDesc());
+            preparedStatement.setInt(6, reservation.getTheme().getPrice());
+
+            preparedStatement.executeUpdate();
+            return new Reservation(getGeneratedKeys(preparedStatement), reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
-        closeConnection();
+    }
+
+    private Long  getGeneratedKeys(PreparedStatement ps) throws SQLException {
+        ResultSet generatedKeys = ps.getGeneratedKeys();
+        generatedKeys.next();
+        return generatedKeys.getLong(1);
     }
 
     @Override
     public Optional<Reservation> findOne(Long id) {
         connect();
-        Reservation reservation = null;
-        ResultSet rs = null;
+        ResultSet rs;
         String sql = "SELECT * FROM reservation WHERE id = ?";
+
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
             rs.first();
-            return Optional.of(new Reservation(rs.getLong("id"),
+            return Optional.of(
+                    new Reservation(rs.getLong("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getTime("time").toLocalTime(),
                     rs.getString("name"),
@@ -49,7 +60,8 @@ public class ReservationDAO implements ReservationRepository {
                             rs.getString("theme_name"),
                             rs.getString("theme_desc"),
                             rs.getInt("theme_price")
-                    )));
+                    ))
+            );
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -67,6 +79,8 @@ public class ReservationDAO implements ReservationRepository {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
     }
 

@@ -1,11 +1,14 @@
 package nextstep.main.java.nextstep.exception;
 
-import nextstep.main.java.nextstep.message.ExceptionMessage;
+import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static nextstep.main.java.nextstep.exception.ErrorCode.DUPLICATE_RESERVATION_ERROR;
+import static nextstep.main.java.nextstep.exception.ErrorCode.NO_SUCH_RESERVATION_ERROR;
 import static nextstep.main.java.nextstep.message.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 import static nextstep.main.java.nextstep.message.ExceptionMessage.NO_SUCH_RESERVATION_MESSAGE;
 
@@ -13,11 +16,11 @@ import static nextstep.main.java.nextstep.message.ExceptionMessage.NO_SUCH_RESER
 public class ReservationAdvice {
     @ExceptionHandler(DuplicateReservationException.class)
     public ResponseEntity<?> handleDuplicate(){
-        return new ResponseEntity<>(DUPLICATE_RESERVATION_MESSAGE, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(DUPLICATE_RESERVATION_ERROR.getErrorMessage(), DUPLICATE_RESERVATION_ERROR.getErrorCode());
     }
 
     @ExceptionHandler(NoSuchReservationException.class)
     public ResponseEntity<?> handleNotExists(){
-        return new ResponseEntity<>(NO_SUCH_RESERVATION_MESSAGE, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(NO_SUCH_RESERVATION_ERROR.getErrorMessage(), NO_SUCH_RESERVATION_ERROR.getErrorCode());
     }
 }
