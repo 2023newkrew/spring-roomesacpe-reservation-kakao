@@ -3,15 +3,17 @@ package nextstep.service;
 import nextstep.domain.Reservation;
 import nextstep.domain.repository.ReservationRepository;
 import nextstep.domain.repository.ThemeRepository;
-import nextstep.dto.CreateReservationRequest;
-import nextstep.dto.FindReservationResponse;
-import nextstep.exception.DuplicateReservationException;
-import nextstep.exception.ReservationNotFoundException;
+import nextstep.dto.request.CreateReservationRequest;
+import nextstep.dto.response.FindReservationResponse;
+import nextstep.error.ApplicationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import static nextstep.error.ErrorType.DUPLICATE_RESERVATION;
+import static nextstep.error.ErrorType.RESERVATION_NOT_FOUND;
 
 @Service
 public class ReservationService {
@@ -28,7 +30,7 @@ public class ReservationService {
         LocalTime time = LocalTime.parse(createReservationRequest.getTime());
 
         if (reservationRepository.existsByDateAndTime(date, time)) {
-            throw new DuplicateReservationException();
+            throw new ApplicationException(DUPLICATE_RESERVATION);
         }
 
         Reservation savedReservation = reservationRepository.save(new Reservation(date, time, createReservationRequest.getName(), ThemeRepository.getDefaultTheme()));
@@ -38,7 +40,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public FindReservationResponse findReservationById(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(ReservationNotFoundException::new);
+                .orElseThrow(() -> new ApplicationException(RESERVATION_NOT_FOUND));
 
         return FindReservationResponse.from(reservation);
     }

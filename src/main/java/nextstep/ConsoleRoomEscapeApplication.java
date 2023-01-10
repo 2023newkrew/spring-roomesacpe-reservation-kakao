@@ -4,11 +4,13 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.domain.repository.JdbcReservationRepository;
 import nextstep.domain.repository.ReservationRepository;
-import nextstep.exception.ReservationNotFoundException;
+import nextstep.error.ApplicationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+
+import static nextstep.error.ErrorType.RESERVATION_NOT_FOUND;
 
 public class ConsoleRoomEscapeApplication {
     private static final String ADD = "add";
@@ -60,7 +62,7 @@ public class ConsoleRoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 Reservation reservation = reservationRepository.findById(id)
-                        .orElseThrow(ReservationNotFoundException::new);
+                        .orElseThrow(() -> new ApplicationException(RESERVATION_NOT_FOUND));
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());

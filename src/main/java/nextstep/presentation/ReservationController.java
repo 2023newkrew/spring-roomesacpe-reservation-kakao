@@ -1,7 +1,7 @@
 package nextstep.presentation;
 
-import nextstep.dto.CreateReservationRequest;
-import nextstep.dto.FindReservationResponse;
+import nextstep.dto.request.CreateReservationRequest;
+import nextstep.dto.response.FindReservationResponse;
 import nextstep.service.ReservationService;
 import nextstep.utils.ReservationRequestValidator;
 import org.springframework.http.ResponseEntity;
