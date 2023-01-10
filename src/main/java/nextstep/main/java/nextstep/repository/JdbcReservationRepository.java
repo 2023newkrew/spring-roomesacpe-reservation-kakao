@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -54,6 +56,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return true;
+        String sql = "SELECT count(*) FROM reservation WHERE date = ? AND time = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[] {Date.valueOf(date), Time.valueOf(time)}, Integer.class) > 0;
     }
 }
