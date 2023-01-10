@@ -1,4 +1,6 @@
-package nextstep;
+package roomservice.domain;
+
+import roomservice.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

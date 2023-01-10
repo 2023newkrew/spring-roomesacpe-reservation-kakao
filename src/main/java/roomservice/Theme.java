@@ -1,4 +1,4 @@
-package nextstep;
+package roomservice;
 
 public class Theme {
     private String name;

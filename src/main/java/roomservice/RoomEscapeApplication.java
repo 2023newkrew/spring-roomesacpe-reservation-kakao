@@ -1,4 +1,6 @@
-package nextstep;
+package roomservice;
+
+import roomservice.domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
