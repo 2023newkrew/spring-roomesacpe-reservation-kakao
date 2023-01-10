@@ -1,7 +1,6 @@
 package nextstep.repository;
 
 import nextstep.Reservation;
-import nextstep.Theme;
 import nextstep.exception.ReservationNotFoundException;
 
 import java.sql.*;
@@ -51,16 +50,7 @@ public class ReservationH2Repository implements ReservationRepository{
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Long reservationId = rs.getLong("id");
-                LocalDate reservationDate = rs.getDate(2).toLocalDate();
-                LocalTime reservationTime = rs.getTime(3).toLocalTime();
-                String reservationName = rs.getString(4);
-                String themeName = rs.getString(5);
-                String themeDesc = rs.getString(6);
-                Integer themePrice = rs.getInt(7);
-                Theme reservationTheme = new Theme(themeName, themeDesc, themePrice);
-
-                result = new Reservation(reservationId, reservationDate, reservationTime, reservationName, reservationTheme);
+                result = Reservation.fromResultSet(rs);
             } else {
                 throw new ReservationNotFoundException();
             }

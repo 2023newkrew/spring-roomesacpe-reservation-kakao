@@ -15,7 +15,7 @@ class ReservationMemoryRepositoryTest {
     private final ReservationMemoryRepository repository = new ReservationMemoryRepository();
 
     private Reservation getReservationToAdd() {
-        return new Reservation(
+        return Reservation.of(
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
@@ -29,7 +29,7 @@ class ReservationMemoryRepositoryTest {
 
         Reservation addedReservation = repository.add(reservation);
 
-        Reservation expected = new Reservation(
+        Reservation expected = Reservation.of(
                 0L,
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
@@ -45,7 +45,7 @@ class ReservationMemoryRepositoryTest {
 
         Reservation addedReservation = repository.get(0L);
 
-        Reservation expected = new Reservation(
+        Reservation expected = Reservation.of(
                 0L,
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),

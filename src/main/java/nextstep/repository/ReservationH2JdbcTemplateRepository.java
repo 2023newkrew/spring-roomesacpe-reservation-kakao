@@ -1,7 +1,6 @@
 package nextstep.repository;
 
 import nextstep.Reservation;
-import nextstep.Theme;
 import nextstep.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -51,17 +50,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
         try {
             return jdbcTemplate.queryForObject(
                     sql,
-                    (resultSet, rowNum) -> new Reservation(
-                                resultSet.getLong("id"),
-                                resultSet.getDate(2).toLocalDate(),
-                                resultSet.getTime(3).toLocalTime(),
-                                resultSet.getString(4),
-                                new Theme(
-                                        resultSet.getString(5),
-                                        resultSet.getString(6),
-                                        resultSet.getInt(7)
-                                )
-                        ),
+                    (resultSet, rowNum) -> Reservation.fromResultSet(resultSet),
                     id);
         } catch (EmptyResultDataAccessException e) {
             throw new ReservationNotFoundException();

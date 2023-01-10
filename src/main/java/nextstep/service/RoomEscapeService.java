@@ -13,7 +13,7 @@ import java.time.LocalTime;
 
 @Service
 public class RoomEscapeService {
-    public static final Theme DEFAULT_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    public static final Theme DEFAULT_THEME = Theme.of("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     private final ReservationRepository reservationRepository;
 
@@ -31,7 +31,7 @@ public class RoomEscapeService {
             throw new DuplicateReservationException();
         }
 
-        Reservation reservation = new Reservation(
+        Reservation reservation = Reservation.of(
                 date,
                 time,
                 request.getName(),
