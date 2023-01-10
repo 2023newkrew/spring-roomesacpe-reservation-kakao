@@ -1,9 +1,6 @@
 package nextstep.utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class JdbcUtils {
 
@@ -24,6 +21,18 @@ public class JdbcUtils {
             }
             if(conn != null && !conn.isClosed()) {
                 conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void close(ResultSet rs, PreparedStatement pstmt, Connection conn) {
+        close(pstmt, conn);
+
+        try {
+            if(rs != null && !rs.isClosed()) {
+                pstmt.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();

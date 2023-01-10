@@ -44,12 +44,13 @@ public class ConsoleReservationRepository implements ReservationRepository {
     public Optional<Reservation> findById(Long reservationId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try{
             conn = JdbcUtils.getConnection();
             pstmt = conn.prepareStatement(SELECT_BY_ID_SQL);
             pstmt.setLong(1, reservationId);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             if (rs.next()) {
                 Reservation reservation = new Reservation(
                         rs.getLong("id"),
@@ -66,6 +67,8 @@ public class ConsoleReservationRepository implements ReservationRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            JdbcUtils.close(rs, pstmt, conn);
         }
 
         return Optional.empty();
@@ -75,17 +78,20 @@ public class ConsoleReservationRepository implements ReservationRepository {
     public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try {
             conn = JdbcUtils.getConnection();
             pstmt = conn.prepareStatement(SELECT_COUNT_BY_DATE_AND_TIME);
             pstmt.setDate(1, Date.valueOf(date));
             pstmt.setTime(2, Time.valueOf(time));
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
-            return rs.getInt(1) > 0;   
+            return rs.getInt(1) > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            JdbcUtils.close(rs, pstmt, conn);
         }
     }
 
