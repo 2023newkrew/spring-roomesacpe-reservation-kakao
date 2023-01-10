@@ -10,10 +10,10 @@ import java.util.Objects;
 @Getter
 public class Reservation {
     private Long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private Long themeId;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final Long themeId;
 
     public Reservation(LocalDate date, LocalTime time, String name, Long themeId) {
         this(0L, date, time, name, themeId);
@@ -42,16 +42,5 @@ public class Reservation {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", date=" + date +
-                ", time=" + time +
-                ", name='" + name + '\'' +
-                ", theme=" + themeId +
-                '}';
     }
 }
