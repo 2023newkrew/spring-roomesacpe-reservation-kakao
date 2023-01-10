@@ -47,8 +47,8 @@ public class ReservationControllerTest {
     @DisplayName("예약 생성 예외처리")
     @Test
     void createReservationDuplicate() {
-        Reservation reservation = createRequest(LocalDate.parse("2022-08-12"));
-        createReservation(createRequest(LocalDate.parse("2022-08-12")));
+        Reservation reservation = createRequest(LocalDate.parse("2022-08-13"));
+        createReservation(createRequest(LocalDate.parse("2022-08-13")));
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
@@ -65,14 +65,14 @@ public class ReservationControllerTest {
     @Test
     void showReservation() {
 
-        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2022-08-13")));
+        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2022-08-20")));
         String id = reservation.response().getHeader("Location").split("/")[2];
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("date", is("2022-08-13"))
+                .body("date", is("2022-08-20"))
                 .body("time", is("13:00:00"));
     }
 

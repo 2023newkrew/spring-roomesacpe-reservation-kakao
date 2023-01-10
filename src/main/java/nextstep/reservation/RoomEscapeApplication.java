@@ -12,7 +12,7 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationService reservationService = new ReservationService(new ReservationRepository());
+        ReservationService reservationService = new ReservationService(new MemoryReservationRepository());
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 

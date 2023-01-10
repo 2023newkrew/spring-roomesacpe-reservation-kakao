@@ -1,5 +1,6 @@
 package nextstep.reservation;
 
+import nextstep.reservation.exception.CreateReservationException;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationRepository();
+        reservationRepository = new MemoryReservationRepository();
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         reservationRepository.create(new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
     }
@@ -58,7 +59,7 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("중복 시간에 예약시 예외 발생")
     void duplicateTimeReservationThrowException() {
-        Assertions.assertThrows(RuntimeException.class,
+        Assertions.assertThrows(CreateReservationException.class,
                 () -> reservationRepository.create(
                         new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme)
                 ));

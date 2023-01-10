@@ -17,7 +17,7 @@ public class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         this.theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        this.reservationService = new ReservationService(new ReservationRepository());
+        this.reservationService = new ReservationService(new MemoryReservationRepository());
     }
 
     @Test

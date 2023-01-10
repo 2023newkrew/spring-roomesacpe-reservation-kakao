@@ -24,7 +24,7 @@ public class ReservationController {
         Reservation createReservation;
         try {
             createReservation = reservationService.create(reservation);
-        } catch (Exception e) {
+        } catch (CreateReservationException e) {
             throw new CreateReservationException();
         }
         return ResponseEntity.created(URI.create("/reservations/" + createReservation.getId())).build();
