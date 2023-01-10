@@ -45,7 +45,7 @@ public class ReservationControllerTest {
         reservationJdbcTemplateDao.clear();
     }
 
-    @DisplayName("Reservation - 예약하기")
+    @DisplayName("중복이 없는 데이터로 예약 요청시 예약이 성공되어야 함")
     @Test
     void reserve() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
@@ -63,7 +63,7 @@ public class ReservationControllerTest {
                 .header("Location", "/reservations/2");
     }
 
-    @DisplayName("Reservation - 예약하기(예외)")
+    @DisplayName("중복된 날짜와 시간으로 예약시 예외처리 되어야 함")
     @Test
     void reserveException() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
@@ -81,7 +81,7 @@ public class ReservationControllerTest {
                 .body(is("이미 예약된 날짜와 시간입니다."));
     }
 
-    @DisplayName("Reservation - 조회하기")
+    @DisplayName("등록된 id 로 예약 조회시 조회 되어야 함")
     @Test
     void show() {
         RestAssured.given().log().all()
@@ -98,7 +98,7 @@ public class ReservationControllerTest {
                 .body("themePrice", is(29000));
     }
 
-    @DisplayName("Reservation - 취소하기")
+    @DisplayName("예약 취소가 정상적으로 이루어져야 함")
     @Test
     void delete() {
         RestAssured.given().log().all()

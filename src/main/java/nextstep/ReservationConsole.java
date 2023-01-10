@@ -1,6 +1,5 @@
 package nextstep;
 
-import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequestDto;
 import nextstep.dto.ReservationResponseDto;
 import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
@@ -33,6 +32,7 @@ public class ReservationConsole {
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
+
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
@@ -55,7 +55,6 @@ public class ReservationConsole {
                 }
             }
 
-
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
 
@@ -70,7 +69,9 @@ public class ReservationConsole {
                     System.out.println("예약 테마 이름: " + reservationDto.getThemeName());
                     System.out.println("예약 테마 설명: " + reservationDto.getThemeDesc());
                     System.out.println("예약 테마 가격: " + reservationDto.getThemePrice());
+                    continue;
                 }
+                System.out.println("예약 정보가 없습니다.");
             }
 
             if (input.startsWith(DELETE)) {

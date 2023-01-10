@@ -11,7 +11,7 @@ import java.time.LocalTime;
 
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
-    
+
     public Long save(Reservation reservation) {
         Connection con = null;
 
@@ -25,17 +25,8 @@ public class ReservationJdbcDao implements ReservationDao {
         }
         Long id = null;
         try {
-            String sql = "SELECT * FROM reservation WHERE date = ? and time = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                throw new DuplicatedDateAndTimeException();
-            }
-
-            sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            ps = con.prepareStatement(sql, new String[]{"id"});
+            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -44,10 +35,9 @@ public class ReservationJdbcDao implements ReservationDao {
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
 
-            rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                id = rs.getLong(1);
-            }
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            id = rs.getLong(1);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -85,9 +75,9 @@ public class ReservationJdbcDao implements ReservationDao {
             ps.setTime(2, Time.valueOf(time));
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
+            rs.next();
+            count = rs.getInt(1);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -137,12 +127,11 @@ public class ReservationJdbcDao implements ReservationDao {
     }
 
     private static Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
-        Reservation reservation;
         if (!rs.next()) {
             System.out.println("해당 예약은 존재하지 않습니다.");
             return null;
         }
-        reservation = new Reservation(
+        return new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
@@ -151,8 +140,6 @@ public class ReservationJdbcDao implements ReservationDao {
                         rs.getString("theme_desc"),
                         rs.getInt("theme_price"))
         );
-
-        return reservation;
     }
 
     public void delete(Long id) {
