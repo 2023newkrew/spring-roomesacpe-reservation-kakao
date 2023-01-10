@@ -6,22 +6,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import reservation.domain.Reservation;
 import reservation.domain.Theme;
 import reservation.domain.dto.ReservationDto;
 import reservation.respository.ReservationRepository;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 public class RepositoryTest {
-
     private ReservationRepository reservationRepository;
-    private Theme theme;
-    private ReservationDto reservationDto;
+    private final Theme theme;
+    private final ReservationDto reservationDto;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -44,8 +44,8 @@ public class RepositoryTest {
     @Test
     @DisplayName("예약 생성이 되어야 한다.")
     void save() {
-         Long id = reservationRepository.createReservation(reservationDto, theme);
-         assertThat(id).isGreaterThan(0);
+        Long id = reservationRepository.createReservation(reservationDto, theme);
+        assertThat(id).isGreaterThan(0);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class RepositoryTest {
 
     @Test
     @DisplayName("시간과 날짜가 중복되는 예약은 불가능하다.")
-    void duplicate(){
+    void duplicate() {
         Long id = reservationRepository.createReservation(reservationDto, theme);
         assertThat(reservationRepository.existReservation(reservationDto.getDate(), reservationDto.getTime()))
                 .isTrue();

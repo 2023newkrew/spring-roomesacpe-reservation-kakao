@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -76,7 +75,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if(consoleRepository.deleteReservation(id) > 0) {
+                if (consoleRepository.deleteReservation(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

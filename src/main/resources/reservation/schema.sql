@@ -1,3 +1,5 @@
+DROP TABLE RESERVATION IF EXISTS;
+
 CREATE TABLE RESERVATION
 (
     id          bigint not null auto_increment,
