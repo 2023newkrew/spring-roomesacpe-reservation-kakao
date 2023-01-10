@@ -17,6 +17,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.11.0'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.11.0'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
 
     runtimeOnly 'com.h2database:h2'
 
