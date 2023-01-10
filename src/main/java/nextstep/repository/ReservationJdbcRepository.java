@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 
 import java.sql.*;
 import java.util.List;
@@ -48,7 +49,27 @@ public class ReservationJdbcRepository implements ReservationRepository{
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setLong(1, id);
+
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(extractReservation(resultSet));
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, ps, resultSet);
+        }
     }
 
     @Override
@@ -87,5 +108,20 @@ public class ReservationJdbcRepository implements ReservationRepository{
                 throw new IllegalStateException(e);
             }
         }
+    }
+
+    private Reservation extractReservation(ResultSet resultSet) throws SQLException {
+        Theme theme = new Theme(
+                resultSet.getString("theme_name"),
+                resultSet.getString("theme_desc"),
+                resultSet.getInt("theme_price")
+        );
+        return new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getTime("time").toLocalTime(),
+                resultSet.getString("name"),
+                theme
+        );
     }
 }
