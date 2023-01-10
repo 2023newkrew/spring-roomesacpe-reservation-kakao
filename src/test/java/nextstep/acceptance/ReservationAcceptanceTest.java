@@ -4,7 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.common.DatabaseExecutor;
-import nextstep.domain.repository.QuerySetting.Reservation;
+import nextstep.domain.QuerySetting.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

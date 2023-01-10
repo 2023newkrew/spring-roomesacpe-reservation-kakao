@@ -1,6 +1,6 @@
-package nextstep.domain.repository;
+package nextstep.domain.reservation.repository;
 
-import nextstep.domain.Reservation;
+import nextstep.domain.reservation.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

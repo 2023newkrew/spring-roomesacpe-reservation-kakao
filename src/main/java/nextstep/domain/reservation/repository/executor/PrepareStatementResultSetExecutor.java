@@ -1,4 +1,4 @@
-package nextstep.domain.repository.executor;
+package nextstep.domain.reservation.repository.executor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

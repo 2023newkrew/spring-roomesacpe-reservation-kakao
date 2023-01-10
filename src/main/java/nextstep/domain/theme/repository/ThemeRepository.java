@@ -1,6 +1,6 @@
-package nextstep.domain.repository;
+package nextstep.domain.theme.repository;
 
-import nextstep.domain.Theme;
+import nextstep.domain.theme.Theme;
 
 public interface ThemeRepository {
 

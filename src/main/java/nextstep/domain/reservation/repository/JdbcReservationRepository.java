@@ -1,9 +1,9 @@
-package nextstep.domain.repository;
+package nextstep.domain.reservation.repository;
 
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
-import nextstep.domain.repository.executor.PrepareStatementExecutor;
-import nextstep.domain.repository.executor.PrepareStatementResultSetExecutor;
+import nextstep.domain.reservation.Reservation;
+import nextstep.domain.theme.Theme;
+import nextstep.domain.reservation.repository.executor.PrepareStatementExecutor;
+import nextstep.domain.reservation.repository.executor.PrepareStatementResultSetExecutor;
 import nextstep.error.ApplicationException;
 import nextstep.utils.JdbcUtils;
 
@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static nextstep.domain.repository.QuerySetting.Reservation.*;
+import static nextstep.domain.QuerySetting.Reservation.*;
 import static nextstep.error.ErrorType.INTERNAL_SERVER_ERROR;
 
 public class JdbcReservationRepository implements ReservationRepository {

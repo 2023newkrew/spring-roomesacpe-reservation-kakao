@@ -1,9 +1,8 @@
-package nextstep.domain.repository;
+package nextstep.domain.reservation.repository;
 
 import nextstep.common.DatabaseExecutor;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.theme.Theme;
-import nextstep.domain.reservation.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

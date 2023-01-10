@@ -1,8 +1,8 @@
 package nextstep.service;
 
-import nextstep.domain.Reservation;
-import nextstep.domain.repository.ReservationRepository;
-import nextstep.domain.repository.ThemeRepository;
+import nextstep.domain.reservation.Reservation;
+import nextstep.domain.reservation.repository.ReservationRepository;
+import nextstep.domain.theme.repository.ThemeRepository;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.response.FindReservationResponse;
 import nextstep.error.ApplicationException;

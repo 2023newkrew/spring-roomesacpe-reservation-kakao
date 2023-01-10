@@ -1,7 +1,7 @@
-package nextstep.domain.repository;
+package nextstep.domain.reservation.repository;
 
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.reservation.Reservation;
+import nextstep.domain.theme.Theme;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static nextstep.domain.repository.QuerySetting.Reservation.*;
+import static nextstep.domain.QuerySetting.Reservation.*;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {

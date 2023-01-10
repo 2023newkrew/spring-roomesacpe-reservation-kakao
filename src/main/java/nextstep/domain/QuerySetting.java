@@ -1,4 +1,4 @@
-package nextstep.domain.repository;
+package nextstep.domain;
 
 public class QuerySetting {
 
