@@ -3,6 +3,10 @@ package nextstep.repository;
 import nextstep.Reservation;
 import nextstep.Theme;
 import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -15,10 +19,36 @@ import java.util.stream.Collectors;
 @Repository
 public class ReservationDao {
     private List<Reservation> reservations = new ArrayList<>();
+    private JdbcTemplate jdbcTemplate;
 
-    public void save(Reservation reservation) {
-        reservation.setId((long) (reservations.size() + 1));
-        reservations.add(reservation);
+    public ReservationDao() {
+    }
+
+    @Autowired
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Long save(Reservation reservation) {
+        String selectSql = "SELECT count(*) FROM reservation WHERE date = ? and time = ?";
+        if (jdbcTemplate.queryForObject(selectSql, Integer.class, reservation.getDate(), reservation.getTime()) > 0) {
+            throw new DuplicatedDateAndTimeException();
+        }
+
+        final String insertSql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertSql, new String[] {"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setString(4, reservation.getTheme().getName());
+            ps.setString(5, reservation.getTheme().getDesc());
+            ps.setInt(6, reservation.getTheme().getPrice());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public Reservation findById(Long id) {
