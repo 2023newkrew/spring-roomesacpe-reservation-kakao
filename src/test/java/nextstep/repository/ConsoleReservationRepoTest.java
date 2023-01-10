@@ -1,5 +1,6 @@
 package nextstep.repository;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import nextstep.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,8 @@ public class ConsoleReservationRepoTest {
     @DisplayName("reservation test")
     @Test
     void consoleReservationRepo() {
+        consoleReservationRepo.reset();
+
         Reservation newReservation = new Reservation(
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00"),
@@ -28,6 +31,11 @@ public class ConsoleReservationRepoTest {
         Reservation reservation = consoleReservationRepo.findById(id);
 
         assertThat(reservation).isEqualTo(newReservation);
+
+        int countSameDateAndTime = consoleReservationRepo.countByDateAndTime(
+                Date.valueOf(reservation.getDate()),
+                Time.valueOf(reservation.getTime()));
+        assertThat(countSameDateAndTime > 0).isTrue();
 
         consoleReservationRepo.delete(id);
 

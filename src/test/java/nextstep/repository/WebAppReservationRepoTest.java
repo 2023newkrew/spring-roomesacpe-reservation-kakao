@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -20,6 +22,8 @@ public class WebAppReservationRepoTest {
     @DisplayName("reservation test")
     @Test
     void webAppReservationRepo() {
+        webAppReservationRepo.reset();
+
         Reservation newReservation = new Reservation(
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00"),
@@ -29,8 +33,12 @@ public class WebAppReservationRepoTest {
 
         long id = webAppReservationRepo.add(newReservation);
         Reservation reservation = webAppReservationRepo.findById(id);
-
         assertThat(reservation).isEqualTo(newReservation);
+
+        int countSameDateAndTime = webAppReservationRepo.countByDateAndTime(
+                Date.valueOf(reservation.getDate()),
+                Time.valueOf(reservation.getTime()));
+        assertThat(countSameDateAndTime > 0).isTrue();
 
         webAppReservationRepo.delete(id);
 

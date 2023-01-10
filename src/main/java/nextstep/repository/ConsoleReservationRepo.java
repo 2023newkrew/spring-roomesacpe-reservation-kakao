@@ -140,4 +140,80 @@ public class ConsoleReservationRepo implements ReservationRepo {
 
         return result;
     }
+
+    public int countByDateAndTime(Date date, Time time) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int result = 0;
+
+        // 드라이버 연결
+        try {
+            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+            ps = con.prepareStatement(sql);
+            ps.setDate(1, date);
+            ps.setTime(2, time);
+            rs = ps.executeQuery();
+
+            if(rs.next()) {
+                result = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            if (ps != null)
+                ps.close();
+            if (con != null)
+                con.close();
+        } catch (SQLException e) {
+            System.err.println("con 오류:" + e.getMessage());
+        }
+
+        return result;
+    }
+
+    public int reset() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        // 드라이버 연결
+        try {
+            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "TRUNCATE TABLE reservation;";
+            ps = con.prepareStatement(sql);
+            result = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            if (ps != null)
+                ps.close();
+            if (con != null)
+                con.close();
+        } catch (SQLException e) {
+            System.err.println("con 오류:" + e.getMessage());
+        }
+
+        return result;
+    }
 }

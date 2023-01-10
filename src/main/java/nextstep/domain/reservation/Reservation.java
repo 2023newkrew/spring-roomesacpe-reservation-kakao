@@ -16,10 +16,8 @@ public class Reservation {
 
     public Reservation(Long id, String date, String time, String name, Theme theme) {
         this.id = id;
-        DateTimeFormatter localDateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter localTimeformatter = DateTimeFormatter.ofPattern("HH:mm");
-        this.date = LocalDate.parse(date, localDateformatter);
-        this.time = LocalTime.parse(time, localTimeformatter);
+        this.date = LocalDate.parse(date);
+        this.time = LocalTime.parse(time);
         this.name = name;
         this.theme = theme;
     }

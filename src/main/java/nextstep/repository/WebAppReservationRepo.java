@@ -63,4 +63,14 @@ public class WebAppReservationRepo implements ReservationRepo{
         String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    public int countByDateAndTime(Date date, Time time) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
+    }
+
+    public int reset() {
+        String sql = "TRUNCATE TABLE reservation";
+        return jdbcTemplate.update(sql);
+    }
 }

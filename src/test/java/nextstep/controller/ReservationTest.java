@@ -3,19 +3,14 @@ package nextstep.controller;
 import io.restassured.RestAssured;
 import nextstep.Theme;
 import nextstep.domain.dto.CreateReservationDTO;
-import nextstep.domain.reservation.Reservation;
-import nextstep.domain.reservation.Reservations;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.Is.is;
 
@@ -23,28 +18,21 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationTest {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        DateTimeFormatter localDateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter localTimeformatter = DateTimeFormatter.ofPattern("HH:mm");
-        Reservations.removeAll();
-        Reservations.add(new Reservation(
-                1L,
-                LocalDate.parse("2022-08-11", localDateformatter),
-                LocalTime.parse("13:00", localTimeformatter),
-                "name",
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
-        ));
+        jdbcTemplate.execute("TRUNCATE TABLE reservation");
     }
 
     @DisplayName("create reservation test")
     @Test
     void createReservation() {
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:25", "name");
+        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:35", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -52,17 +40,25 @@ public class ReservationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/2");
+                .header("Location", "/reservations/1");
     }
 
     @DisplayName("duplicate reservation test")
     @Test
     void sameTimeReservationTest() {
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:00", "name2");
+
+        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
+                .when().post("/reservations");
+
+        CreateReservationDTO reservationDto2 = new CreateReservationDTO("2022-08-11", "13:30", "name2");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationDto2)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -71,6 +67,13 @@ public class ReservationTest {
     @DisplayName("get reservation test")
     @Test
     void getReservation() {
+        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationDto)
+                .when().post("/reservations");
+
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
@@ -79,7 +82,7 @@ public class ReservationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("id", is(1))
                 .body("date", is("2022-08-11"))
-                .body("time", is("13:00"))
+                .body("time", is("13:30"))
                 .body("name", is("name"))
                 .body("themeName", is("워너고홈"))
                 .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
@@ -89,10 +92,16 @@ public class ReservationTest {
     @DisplayName("delete reservation test")
     @Test
     void deleteReservation() {
+        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationDto)
+                .when().post("/reservations");
+
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-        assertThat(Reservations.get(1L)).isNull();
     }
 }
