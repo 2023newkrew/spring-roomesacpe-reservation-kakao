@@ -2,6 +2,7 @@ package kakao.repository;
 
 import kakao.domain.Reservation;
 import kakao.domain.Theme;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,7 +19,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class ReservationJDBCRepository {
+@Profile("default")
+public class ReservationJDBCRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationJDBCRepository(JdbcTemplate jdbcTemplate) {

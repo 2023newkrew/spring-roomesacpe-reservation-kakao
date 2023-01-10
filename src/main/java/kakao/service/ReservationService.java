@@ -16,28 +16,25 @@ import java.util.Objects;
 @Service
 public class ReservationService {
 
-//    private final ReservationRepository reservationRepository;
-    private final ReservationJDBCRepository reservationJDBCRepository;
+    private final ReservationRepository reservationRepository;
 
     public ReservationService(
-//            ReservationRepository reservationRepository,
-            ReservationJDBCRepository reservationJDBCRepository
+            ReservationRepository reservationRepository
     ) {
-//        this.reservationRepository = reservationRepository;
-        this.reservationJDBCRepository = reservationJDBCRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public long createReservation(CreateReservationRequest request) {
-        boolean isDuplicate = reservationJDBCRepository.findByDateAndTime(request.date, request.time).size() > 0;
+        boolean isDuplicate = reservationRepository.findByDateAndTime(request.date, request.time).size() > 0;
         if (isDuplicate) {
             throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
         Reservation reservation = new Reservation(request.date, request.time, request.name, ThemeRepository.theme);
-        return reservationJDBCRepository.save(reservation);
+        return reservationRepository.save(reservation);
     }
 
     public ReservationResponse getReservation(Long id) {
-        Reservation reservation = reservationJDBCRepository.findById(id);
+        Reservation reservation = reservationRepository.findById(id);
         if (Objects.isNull(reservation)) {
             throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
         }
@@ -45,7 +42,7 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        int deletedCount = reservationJDBCRepository.delete(id);
+        int deletedCount = reservationRepository.delete(id);
         if (deletedCount == 0) {
             throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
         }
