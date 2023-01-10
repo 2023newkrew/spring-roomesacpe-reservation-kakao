@@ -52,7 +52,6 @@ public class ReservationTest {
                 ");";
         jdbcTemplate.execute(sql);
 
-//        try {
         reservationRepository.add(
                 Reservation.builder()
                         .date(LocalDate.of(1982,2,19))
@@ -61,9 +60,6 @@ public class ReservationTest {
                         .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
                         .build()
         );
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     @Test

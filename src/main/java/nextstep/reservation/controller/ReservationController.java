@@ -17,9 +17,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> addReservation(@RequestBody ReservationRequestDto requestDto) {
-        reservationService.addReservation(requestDto);
+        Long id = reservationService.addReservation(requestDto);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/reservations/1");
+        headers.add("Location", "/reservations/" + id);
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
