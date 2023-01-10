@@ -30,12 +30,6 @@ public class ReservationDAO implements ReservationRepository {
         }
     }
 
-    private Long getGeneratedKey(PreparedStatement ps) throws SQLException {
-        ResultSet generatedKeys = ps.getGeneratedKeys();
-        generatedKeys.next();
-        return generatedKeys.getLong(1);
-    }
-
     @Override
     public Optional<Reservation> findOne(Long id) {
         try (Connection connection = connect()) {
@@ -86,6 +80,12 @@ public class ReservationDAO implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Long getGeneratedKey(PreparedStatement ps) throws SQLException {
+        ResultSet generatedKeys = ps.getGeneratedKeys();
+        generatedKeys.next();
+        return generatedKeys.getLong(1);
     }
 
     private Connection connect() {
