@@ -8,6 +8,8 @@ import nextstep.main.java.nextstep.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.message.ExceptionMessage;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

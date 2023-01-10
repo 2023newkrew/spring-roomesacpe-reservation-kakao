@@ -1,7 +1,10 @@
 package nextstep.main.java.nextstep.repository;
 
+import nextstep.main.java.nextstep.Theme;
 import nextstep.main.java.nextstep.domain.Reservation;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +30,20 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findOne(Long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        return Optional.of(jdbcTemplate.queryForObject(
+                sql,
+                (rs, count) -> new Reservation(rs.getLong("id"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime(),
+                        rs.getString("name"),
+                        new Theme(
+                                rs.getString("theme_name"),
+                                rs.getString("theme_desc"),
+                                rs.getInt("theme_price")
+                        )),
+                id
+        ));
     }
 
     @Override
