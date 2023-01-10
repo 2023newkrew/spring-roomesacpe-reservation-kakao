@@ -2,10 +2,14 @@ package nextstep.repository;
 
 import nextstep.dto.Reservation;
 
+import java.util.List;
+
 public interface ReservationRepository {
-    void createReservation(Reservation reservation);
+    Reservation create(Reservation reservation);
 
-    Reservation findReservation(long id);
+    Reservation find(long id);
 
-    void deleteReservation(long id);
+    List<Reservation> findAll();
+
+    boolean delete(long id);
 }
