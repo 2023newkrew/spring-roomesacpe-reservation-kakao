@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
     Connection con = null;
+
     @Override
     public void save(Reservation reservation) {
         connect();
@@ -31,7 +32,29 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findOne(Long id) {
-        return Optional.empty();
+        connect();
+        Reservation reservation = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            rs.first();
+            return Optional.of(new Reservation(rs.getLong("id"),
+                    rs.getDate("date").toLocalDate(),
+                    rs.getTime("time").toLocalTime(),
+                    rs.getString("name"),
+                    new Theme(
+                            rs.getString("theme_name"),
+                            rs.getString("theme_desc"),
+                            rs.getInt("theme_price")
+                    )));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
+        }
     }
 
     @Override

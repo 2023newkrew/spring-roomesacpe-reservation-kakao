@@ -5,10 +5,7 @@ import nextstep.main.java.nextstep.exception.NoSuchReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class RoomEscapeApplication {
     private static final String ADD = "add";
@@ -23,6 +20,7 @@ public class RoomEscapeApplication {
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
+        ReservationDAO reservationDAO = new ReservationDAO();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -47,7 +45,6 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                ReservationDAO reservationDAO = new ReservationDAO();
                 reservationDAO.save(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
@@ -62,10 +59,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(NoSuchReservationException::new);
+                Reservation reservation = reservationDAO.findOne(id).get();
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
