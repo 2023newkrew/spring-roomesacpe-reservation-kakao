@@ -35,12 +35,12 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 .usingGeneratedKeyColumns("id");
 
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("date", Date.valueOf(reservationRequest.getDate()))
-                .addValue("time", Time.valueOf(reservationRequest.getTime()))
-                .addValue("name", reservationRequest.getName())
-                .addValue("theme_name", theme.getName())
-                .addValue("theme_desc", theme.getDesc())
-                .addValue("theme_price", theme.getPrice());
+                .addValue(Reservation.Column.DATE, Date.valueOf(reservationRequest.getDate()))
+                .addValue(Reservation.Column.TIME, Time.valueOf(reservationRequest.getTime()))
+                .addValue(Reservation.Column.NAME, reservationRequest.getName())
+                .addValue(Reservation.Column.THEME_NAME, theme.getName())
+                .addValue(Reservation.Column.THEME_DESC, theme.getDesc())
+                .addValue(Reservation.Column.THEME_PRICE, theme.getPrice());
 
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
@@ -63,23 +63,19 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public void deleteById(Long id) {
-        if (findById(id).isPresent()) {
-            jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
-            return;
-        }
-        throw new RuntimeException("Reservation not found.");
+        jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
     }
 
     private RowMapper<Reservation> reservationResponseRowMapper() {
         return (resultSet, rowNumber) -> {
-            Long id = resultSet.getLong("id");
-            LocalDate date = resultSet.getDate("date").toLocalDate();
-            LocalTime time = resultSet.getTime("time").toLocalTime();
-            String name = resultSet.getString("name");
+            Long id = resultSet.getLong(Reservation.Column.ID);
+            LocalDate date = resultSet.getDate(Reservation.Column.DATE).toLocalDate();
+            LocalTime time = resultSet.getTime(Reservation.Column.TIME).toLocalTime();
+            String name = resultSet.getString(Reservation.Column.NAME);
 
-            String themeName = resultSet.getString("theme_name");
-            String themeDesc = resultSet.getString("theme_desc");
-            Integer themePrice = resultSet.getInt("theme_price");
+            String themeName = resultSet.getString(Reservation.Column.THEME_NAME);
+            String themeDesc = resultSet.getString(Reservation.Column.THEME_DESC);
+            Integer themePrice = resultSet.getInt(Reservation.Column.THEME_PRICE);
 
             Theme theme = new Theme(themeName, themeDesc, themePrice);
 

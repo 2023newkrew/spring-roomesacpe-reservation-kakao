@@ -1,5 +1,7 @@
 package kakao.service;
 
+import kakao.error.exception.DuplicatedReservationException;
+import kakao.error.exception.ReservationNotFoundException;
 import kakao.model.request.ReservationRequest;
 import kakao.model.response.ReservationResponse;
 import kakao.repository.ReservationRepository;
@@ -23,7 +25,7 @@ public class ReservationService {
                 .size();
 
         if (numberOfBooked > 0) {
-            throw new RuntimeException("Duplicated reservation.");
+            throw new DuplicatedReservationException();
         }
 
         return reservationRepository.create(reservationRequest, ThemeRepository.DEFAULT_THEME);
@@ -31,7 +33,7 @@ public class ReservationService {
 
     public ReservationResponse getReservation(Long id) {
         return reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation not found."));
+                .orElseThrow(ReservationNotFoundException::new);
     }
 
     public void deleteReservation(Long id) {
