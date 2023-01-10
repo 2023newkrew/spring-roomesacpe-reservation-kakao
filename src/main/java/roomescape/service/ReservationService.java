@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
-import roomescape.repository.ReservationMemoryRepository;
+import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
 
 import java.util.NoSuchElementException;
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationMemoryRepository reservationRepository) {
+    public ReservationService(ReservationJdbcRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
