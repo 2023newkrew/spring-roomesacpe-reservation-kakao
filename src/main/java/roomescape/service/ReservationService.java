@@ -4,12 +4,12 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.RoomEscapeApplication;
 import roomescape.domain.Reservation;
+import roomescape.domain.Themes;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationWebRepository;
-import roomescape.domain.TimeTable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,7 +24,7 @@ public class ReservationService {
     public void createReservation(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
-        Reservation reservation = reservationRequest.toEntity(RoomEscapeApplication.theme);
+        Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
 
         checkTimeDuplication(date, time);
         reservationWebRepository.insertReservation(reservation);

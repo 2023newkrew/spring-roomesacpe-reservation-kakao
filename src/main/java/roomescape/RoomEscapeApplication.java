@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
+import roomescape.domain.Themes;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationConsoleRepository;
@@ -19,11 +20,9 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    public static Theme theme;
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = Themes.WANNA_GO_HOME;
         ReservationConsoleRepository reservationConsoleRepository = new ReservationConsoleRepository();
 
         SpringApplication.run(RoomEscapeApplication.class, args);
