@@ -95,4 +95,11 @@ public class ReservationExceptionTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("예약 삭제) ID가 잘못된 경우 (float, string)")
+    @ParameterizedTest
+    @ValueSource(strings = {"/reservations/test", "/reservations/1.1"})
+    void failToDeleteWithInvalidId(String path) {
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
+                .delete(path).then().log().all().statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
