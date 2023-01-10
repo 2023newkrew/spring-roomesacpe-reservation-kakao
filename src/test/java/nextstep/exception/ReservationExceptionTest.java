@@ -87,4 +87,12 @@ public class ReservationExceptionTest {
         RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
                 .get(path).then().log().all().statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @DisplayName("예약 삭제) ID가 없는 경우 조회 불가")
+    @Test
+    void deleteNotExistId() {
+        RestAssured.given().log().all().when().delete("/reservations/-1").then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }
