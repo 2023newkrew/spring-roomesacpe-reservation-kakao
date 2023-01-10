@@ -10,9 +10,9 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private String theme;
+    private Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, String theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -20,8 +20,8 @@ public class Reservation {
         this.theme = theme;
     }
 
-    public Reservation(ReservationRequestDto reservationRequestDto) {
-        this(null, reservationRequestDto.getDate(), reservationRequestDto.getTime(), reservationRequestDto.getName(), "워너고홈");
+    public Reservation(ReservationRequestDto reservationRequestDto, Theme theme) {
+        this(null, reservationRequestDto.getDate(), reservationRequestDto.getTime(), reservationRequestDto.getName(), theme);
     }
 
     public Long getId() {
@@ -38,6 +38,10 @@ public class Reservation {
 
     public String getName() {
         return name;
+    }
+
+    public Theme getTheme() {
+        return theme;
     }
 
     public void setId(Long id) {
