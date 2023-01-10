@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.hamcrest.core.Is.is;
+
 @DisplayName("Reservation Controller")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
@@ -36,5 +38,23 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", "/reservations/1");
+    }
+
+    @DisplayName("예약 조회")
+    @Test
+    void lookupReservation() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(1))
+                .body("date", is("2022-08-11"))
+                .body("time", is("13:00"))
+                .body("name", is("name"))
+                .body("themeName", is("워너고홈"))
+                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
+                .body("themePrice", is(29000));
+
     }
 }
