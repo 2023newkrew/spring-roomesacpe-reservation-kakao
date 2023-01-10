@@ -13,10 +13,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import roomescape.dto.Reservation;
+import roomescape.dto.Theme;
 
 @DisplayName("예외 처리")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationExceptionTest {
+
+    private static final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
 
     @LocalServerPort
     int port;
@@ -40,7 +43,7 @@ public class ReservationExceptionTest {
     @Test
     void failToCreateReservationAlreadyExist() {
         Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-10"),
-                LocalTime.parse("13:00:00"), "name", null);
+                LocalTime.parse("14:00:00"), "name", THEME);
 
         RestAssured.given().contentType(MediaType.APPLICATION_JSON_VALUE).body(reservation).when()
                 .post("/reservations").then().log().all().statusCode(HttpStatus.CREATED.value());
