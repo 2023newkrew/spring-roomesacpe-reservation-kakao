@@ -29,4 +29,13 @@ public class ReservationController {
     public Reservation findReservation(@PathVariable long id){
         return reservationService.findReservation(id);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> cancelReservation(@PathVariable long id){
+        boolean isDeleted = reservationService.cancelReservation(id);
+        if (!isDeleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 }
