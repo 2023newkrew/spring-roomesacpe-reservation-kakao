@@ -35,7 +35,7 @@ public class Reservation {
         return name;
     }
 
-    public web.domain.Theme getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 }
