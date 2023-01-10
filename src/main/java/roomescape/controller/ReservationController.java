@@ -1,14 +1,13 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
 import java.net.URI;
 
-@Controller
+@RestController
 public class ReservationController {
     private final ReservationService reservationService;
 

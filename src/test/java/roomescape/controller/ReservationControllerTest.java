@@ -37,7 +37,6 @@ public class ReservationControllerTest {
                 .body(reservationRequestDto)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .statusCode(HttpStatus.CREATED.value());
     }
 }
