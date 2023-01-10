@@ -13,7 +13,9 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
     private static final String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_BY_ID_SQL = "SELECT * FROM reservation WHERE id = ?";
-    private static final String SELECT_COUNT_BY_DATE_AND_TIME = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+    private static final String SELECT_COUNT_BY_DATE_AND_TIME_SQL = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+    private static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
+    private static final String DELETE_ALL_SQL = "DELETE FROM reservation";
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -82,7 +84,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
         try {
             conn = JdbcUtils.getConnection();
-            pstmt = conn.prepareStatement(SELECT_COUNT_BY_DATE_AND_TIME);
+            pstmt = conn.prepareStatement(SELECT_COUNT_BY_DATE_AND_TIME_SQL);
             pstmt.setDate(1, Date.valueOf(date));
             pstmt.setTime(2, Time.valueOf(time));
             rs = pstmt.executeQuery();
@@ -96,13 +98,37 @@ public class ConsoleReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long reservationId) {
+    public boolean deleteById(Long reservationId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
 
+        try {
+            conn = JdbcUtils.getConnection();
+            pstmt = conn.prepareStatement(DELETE_BY_ID_SQL);
+            pstmt.setLong(1, reservationId);
+
+            return pstmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            JdbcUtils.close(pstmt, conn);
+        }
     }
 
     @Override
     public void deleteAll() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
 
+        try {
+            conn = JdbcUtils.getConnection();
+            pstmt = conn.prepareStatement(DELETE_ALL_SQL);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            JdbcUtils.close(pstmt, conn);
+        }
     }
 
     private Long getGeneratedKey(PreparedStatement pstmt) throws SQLException {
