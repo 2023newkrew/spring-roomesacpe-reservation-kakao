@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import web.dto.request.ReservationRequestDTO;
 
+import static org.hamcrest.core.Is.is;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
 
@@ -33,5 +35,18 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", "/reservations/1");
+    }
+
+    @DisplayName("유효하지 않은 Reservation 생성은 400을 반환한다.")
+    @Test
+    void invalidReservationCreation() {
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestDTO)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
