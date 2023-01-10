@@ -28,16 +28,16 @@ public class ReservationDto {
     @Setter
     private Long themeId;
 
-    public LocalDate getLocalDate() {
+    public LocalDate parseToLocalDate() {
         return LocalDate.parse(this.date, DateTimeFormatter.ISO_DATE);
     }
 
-    public LocalTime getLocalTime() {
+    public LocalTime parseToLocalTime() {
         return LocalTime.parse(this.time, DateTimeFormatter.ISO_LOCAL_TIME);
     }
 
     public static Reservation from(ReservationDto reservationDto) {
-        return new Reservation(reservationDto.getLocalDate(), reservationDto.getLocalTime()
+        return new Reservation(reservationDto.parseToLocalDate(), reservationDto.parseToLocalTime()
                 , reservationDto.getName(), reservationDto.getThemeId());
     }
 }
