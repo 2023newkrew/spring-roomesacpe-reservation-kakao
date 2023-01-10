@@ -71,15 +71,15 @@ public class ConsoleRoomEscapeApplication {
                 System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
             }
 
-//            if (input.startsWith(DELETE)) {
-//                String params = input.split(" ")[1];
-//
-//                Long id = Long.parseLong(params.split(",")[0]);
-//
-//                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-//                    System.out.println("예약이 취소되었습니다.");
-//                }
-//            }
+            if (input.startsWith(DELETE)) {
+                String params = input.split(" ")[1];
+
+                Long id = Long.parseLong(params.split(",")[0]);
+
+                if (reservationRepository.deleteById(id)) {
+                    System.out.println("예약이 취소되었습니다.");
+                }
+            }
 
             if (input.equals(QUIT)) {
                 break;
