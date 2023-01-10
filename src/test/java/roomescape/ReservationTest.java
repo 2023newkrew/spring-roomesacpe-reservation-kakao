@@ -36,5 +36,25 @@ public class ReservationTest {
                 .header("Location", "/reservations/1");
     }
 
+    @Test
+    @DisplayName("예약 거절 테스트")
+    void rejectReservation() throws Exception {
+        // Given
+        ReservationRequest reservationRequest = new ReservationRequest("2022-08-11", "13:00", "kayla");
+        ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie");
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(post("/reservations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(reservationRequest))
+        );
+        ResultActions overlapResultActions = this.mockMvc.perform(post("/reservations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(overlapReservationRequest))
+        );
+
+        // Then
+        overlapResultActions.andExpect(status().isUnprocessableEntity());
+    }
 
 }
