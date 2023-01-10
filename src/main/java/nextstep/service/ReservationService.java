@@ -21,8 +21,8 @@ public class ReservationService {
     }
 
     public Long reserve(ReservationRequestDto reservationRequestDto) {
-        LocalDate date = LocalDate.parse(reservationRequestDto.getDate());
-        LocalTime time = LocalTime.parse(reservationRequestDto.getTime());
+        LocalDate date = reservationRequestDto.getDate();
+        LocalTime time = reservationRequestDto.getTime();
         if (reservationDao.findByDateAndTime(date, time) != null) {
             throw new DuplicatedDateAndTimeException();
         }

@@ -30,7 +30,6 @@ public class ReservationConsole {
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
-
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];

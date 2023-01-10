@@ -11,6 +11,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import static org.hamcrest.core.Is.is;
 
 
@@ -30,8 +33,8 @@ public class ReservationControllerTest {
     void setUp() {
         RestAssured.port = port;
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                "2023-01-10",
-                "13:00:00",
+                LocalDate.parse("2023-01-10"),
+                LocalTime.parse("13:00"),
                 "jay"
         );
         reservationService.reserve(requestDto);
@@ -46,8 +49,8 @@ public class ReservationControllerTest {
     @Test
     void reserve() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                "2023-01-11",
-                "13:00:00",
+                LocalDate.parse("2023-01-11"),
+                LocalTime.parse("13:00:00"),
                 "jay"
         );
 
@@ -64,8 +67,8 @@ public class ReservationControllerTest {
     @Test
     void reserveException() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                "2023-01-10",
-                "13:00:00",
+                LocalDate.parse("2023-01-10"),
+                LocalTime.parse("13:00:00"),
                 "jay"
         );
 
