@@ -1,8 +1,11 @@
 package nextstep.domain;
 
+import lombok.Builder;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Builder
 public class Reservation {
     private Long id;
     private LocalDate date;
