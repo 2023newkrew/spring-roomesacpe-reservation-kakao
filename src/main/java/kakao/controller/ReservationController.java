@@ -1,5 +1,6 @@
 package kakao.controller;
 
+import javax.validation.Valid;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.service.ReservationService;
@@ -19,7 +20,7 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Long> createReservation(@RequestBody CreateReservationRequest request) {
+    public ResponseEntity<Long> createReservation(@Valid @RequestBody CreateReservationRequest request) {
         long generatedId = reservationService.createReservation(request);
         return ResponseEntity.created(URI.create("")).body(generatedId);
     }

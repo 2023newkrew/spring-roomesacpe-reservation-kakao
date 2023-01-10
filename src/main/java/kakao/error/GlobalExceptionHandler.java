@@ -3,6 +3,8 @@ package kakao.error;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.RecordNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -28,6 +30,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodNotAllowedException.class)
     public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(MethodNotAllowedException e) {
         return handlerException(ErrorCode.API_NOT_FOUND);
+    }
+
+    // 요청 시 필요로 하는 필드가 누락되었을 시 발생
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return handlerException(ErrorCode.INVALID_REQUEST_PARAMETER);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return handlerException(ErrorCode.INVALID_REQUEST_PARAMETER);
     }
 
     //Custom
