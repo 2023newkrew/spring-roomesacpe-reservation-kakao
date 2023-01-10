@@ -3,19 +3,27 @@ package web.repository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import web.entity.Reservation;
 import web.exception.ReservationDuplicateException;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static web.repository.MemoryReservationRepository.reservations;
 
 public class ReservationRepositoryTest {
 
-    private final MemoryReservationRepository reservationRepository = new MemoryReservationRepository();
+    DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+            .addScript("classpath:schema.sql")
+            .build();
+
+    private ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
 
     @Nested
     class Save {
@@ -23,23 +31,22 @@ public class ReservationRepositoryTest {
         @Test
         void should_successfully_when_validReservation() {
             LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
             Reservation reservation = Reservation.of(today, now, name);
 
             long reservationId = reservationRepository.save(reservation);
 
-            assertThat(reservations).hasSize(1);
-            Reservation savedReservation = reservations.get(reservationId);
+            Reservation savedReservation = reservationRepository.findById(reservationId).orElseThrow();
             assertThat(savedReservation.getDate()).isEqualTo(today);
-            assertThat(savedReservation.getTime()).isEqualTo(now);
+            assertThat(savedReservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"))).isEqualTo(now.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
             assertThat(savedReservation.getName()).isEqualTo(name);
         }
 
         @Test
         void should_throwException_when_saveDuplicateReservation() {
             LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
             Reservation reservation = Reservation.of(today, now, name);
 
@@ -56,7 +63,7 @@ public class ReservationRepositoryTest {
         @Test
         void should_successfully_when_validReservationId() {
             LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
             Reservation reservation = Reservation.of(today, now, name);
             long reservationId = reservationRepository.save(reservation);
@@ -65,7 +72,7 @@ public class ReservationRepositoryTest {
                     .orElseThrow();
 
             assertThat(findReservation.getDate()).isEqualTo(today);
-            assertThat(findReservation.getTime()).isEqualTo(now);
+            assertThat(findReservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"))).isEqualTo(now.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
             assertThat(findReservation.getName()).isEqualTo(name);
         }
 
@@ -81,7 +88,7 @@ public class ReservationRepositoryTest {
         @Test
         void should_successfully_when_validReservationId() {
             LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
             Reservation reservation = Reservation.of(today, now, name);
             long reservationId = reservationRepository.save(reservation);
@@ -99,6 +106,6 @@ public class ReservationRepositoryTest {
 
     @AfterEach
     void deleteAllReservation() {
-        reservations.clear();
+        reservationRepository.clearAll();
     }
 }

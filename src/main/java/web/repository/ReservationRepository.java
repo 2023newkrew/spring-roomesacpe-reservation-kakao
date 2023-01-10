@@ -12,4 +12,6 @@ public interface ReservationRepository {
     Optional<Reservation> findById(long reservationId);
 
     Long delete(long reservationId);
+
+    void clearAll();
 }
