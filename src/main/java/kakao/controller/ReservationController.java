@@ -11,22 +11,23 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
     @PostMapping
-    public ResponseEntity<Long> createReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<String> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Long reservationId = reservationService.createReservation(reservationRequest);
+        String location = "/reservations/" + reservationId.toString();
 
-        return ResponseEntity.created(URI.create("")).body(reservationId);
+        return ResponseEntity.created(URI.create(location)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id) {
-        return ResponseEntity.ok(reservationService.lookUpReservation(id));
+        return ResponseEntity.ok(reservationService.getReservation(id));
     }
 
     @DeleteMapping("/{id}")
