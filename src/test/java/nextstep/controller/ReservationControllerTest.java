@@ -1,32 +1,23 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.Theme;
 import nextstep.domain.dto.CreateReservationDTO;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.Is.is;
 
-import static org.assertj.core.api.Assertions.*;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+public class ReservationControllerTest {
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("TRUNCATE TABLE reservation");
     }
 
     @DisplayName("create reservation test")

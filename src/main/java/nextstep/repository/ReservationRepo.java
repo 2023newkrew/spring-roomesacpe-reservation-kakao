@@ -6,14 +6,12 @@ import java.sql.Date;
 import java.sql.Time;
 
 public interface ReservationRepo {
-    public Reservation findById(long id);
+    Reservation findById(long id);
 
-    public long add(Reservation reservation);
+    long add(Reservation reservation);
 
-    public int delete(long id);
+    int delete(long id);
 
-    public int countByDateAndTime(Date date, Time time);
-
-    public int reset();
+    int countByDateAndTime(Date date, Time time);
 
 }

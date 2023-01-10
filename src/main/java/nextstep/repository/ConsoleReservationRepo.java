@@ -6,20 +6,12 @@ import nextstep.domain.reservation.Reservation;
 import java.sql.*;
 
 public class ConsoleReservationRepo implements ReservationRepo {
+
     public Reservation findById(long id) {
-        Connection con = null;
+        Connection con = ConnectionManager.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         Reservation reservation = null;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
 
         try {
             String sql = "SELECT * FROM reservation WHERE id = ?;";
@@ -45,33 +37,16 @@ public class ConsoleReservationRepo implements ReservationRepo {
             throw new RuntimeException(e);
         }
 
-        try {
-            if (rs != null)
-                rs.close();
-            if (ps != null)
-                ps.close();
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        ConnectionManager.closeAll(rs, ps, con);
 
         return reservation;
     }
 
     public long add(Reservation reservation) {
-        Connection con = null;
-        Long id = null;
+        Connection con = ConnectionManager.getConnection();
         PreparedStatement ps = null;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        ResultSet rs = null;
+        Long id = null;
 
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
@@ -84,7 +59,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
 
-            ResultSet rs = ps.getGeneratedKeys();
+            rs = ps.getGeneratedKeys();
             if(rs.next()) {
                 id = rs.getLong(1);
             }
@@ -93,31 +68,15 @@ public class ConsoleReservationRepo implements ReservationRepo {
             throw new RuntimeException(e);
         }
 
-        try {
-            if (ps != null)
-                ps.close();
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        ConnectionManager.closeAll(rs, ps, con);
 
         return id;
     }
 
     public int delete(long id) {
-        Connection con = null;
+        Connection con = ConnectionManager.getConnection();
         PreparedStatement ps = null;
         int result = 0;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
 
         try {
             String sql = "DELETE FROM reservation WHERE id = ?;";
@@ -129,32 +88,17 @@ public class ConsoleReservationRepo implements ReservationRepo {
             throw new RuntimeException(e);
         }
 
-        try {
-            if (ps != null)
-                ps.close();
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+
+        ConnectionManager.closeAll(ps, con);
 
         return result;
     }
 
     public int countByDateAndTime(Date date, Time time) {
-        Connection con = null;
+        Connection con = ConnectionManager.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         int result = 0;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
 
         try {
             String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
@@ -170,50 +114,9 @@ public class ConsoleReservationRepo implements ReservationRepo {
             throw new RuntimeException(e);
         }
 
-        try {
-            if (ps != null)
-                ps.close();
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        ConnectionManager.closeAll(rs, ps, con);
 
         return result;
     }
 
-    public int reset() {
-        Connection con = null;
-        PreparedStatement ps = null;
-        int result = 0;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-
-        try {
-            String sql = "TRUNCATE TABLE reservation;";
-            ps = con.prepareStatement(sql);
-            result = ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            if (ps != null)
-                ps.close();
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
-
-        return result;
-    }
 }

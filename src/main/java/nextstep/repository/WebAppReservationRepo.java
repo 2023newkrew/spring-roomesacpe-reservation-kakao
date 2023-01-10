@@ -2,9 +2,7 @@ package nextstep.repository;
 
 import nextstep.Theme;
 import nextstep.domain.reservation.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,12 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
-import java.time.ZoneId;
 
 @Repository
 public class WebAppReservationRepo implements ReservationRepo{
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public WebAppReservationRepo(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -69,8 +66,4 @@ public class WebAppReservationRepo implements ReservationRepo{
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
-    public int reset() {
-        String sql = "TRUNCATE TABLE reservation";
-        return jdbcTemplate.update(sql);
-    }
 }

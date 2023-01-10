@@ -4,23 +4,13 @@ import nextstep.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class Reservation {
-
     private final Long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
     private final Theme theme;
-
-    public Reservation(Long id, String date, String time, String name, Theme theme) {
-        this.id = id;
-        this.date = LocalDate.parse(date);
-        this.time = LocalTime.parse(time);
-        this.name = name;
-        this.theme = theme;
-    }
 
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = null;

@@ -1,25 +1,23 @@
 package nextstep.repository;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import nextstep.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.*;
-
+@SpringBootTest
 public class ConsoleReservationRepoTest {
-    private ReservationRepo consoleReservationRepo = new ConsoleReservationRepo();
+    private final ReservationRepo consoleReservationRepo = new ConsoleReservationRepo();
 
     @DisplayName("reservation test")
     @Test
     void consoleReservationRepo() {
-        consoleReservationRepo.reset();
-
         Reservation newReservation = new Reservation(
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00"),

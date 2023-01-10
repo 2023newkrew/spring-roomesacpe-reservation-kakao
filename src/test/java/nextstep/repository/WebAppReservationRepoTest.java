@@ -22,7 +22,6 @@ public class WebAppReservationRepoTest {
     @DisplayName("reservation test")
     @Test
     void webAppReservationRepo() {
-        webAppReservationRepo.reset();
 
         Reservation newReservation = new Reservation(
                 LocalDate.parse("2022-08-11"),
