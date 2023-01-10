@@ -2,7 +2,6 @@ package nextstep.repository;
 
 import nextstep.Reservation;
 import nextstep.Theme;
-import nextstep.service.RoomEscapeService;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ class ReservationMemoryRepositoryTest {
     }
 
     @Test
-    public void should_createAndIncreaseIndex_when_addRequestGiven() {
+    void should_createAndIncreaseIndex_when_addRequestGiven() {
         Reservation reservation = getReservationToAdd();
 
         Reservation addedReservation = repository.add(reservation);
@@ -41,7 +40,7 @@ class ReservationMemoryRepositoryTest {
     }
 
     @Test
-    public void should_findRightReservation_when_findRequestGiven() {
+    void should_findRightReservation_when_findRequestGiven() {
         repository.add(getReservationToAdd());
 
         Reservation addedReservation = repository.get(0L);
@@ -57,7 +56,7 @@ class ReservationMemoryRepositoryTest {
     }
 
     @Test
-    public void should_deleteReservation_when_deleteRequestGiven() {
+    void should_deleteReservation_when_deleteRequestGiven() {
         repository.add(getReservationToAdd());
 
         repository.delete(0L);
