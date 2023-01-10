@@ -59,7 +59,15 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public void deleteOne(Long id) {
-
+        connect();
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -75,9 +75,8 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                reservationDAO.deleteOne(id);
+                System.out.println("예약이 취소되었습니다.");
             }
 
             if (input.equals(QUIT)) {
