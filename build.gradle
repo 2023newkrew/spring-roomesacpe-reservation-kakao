@@ -16,6 +16,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     runtimeOnly 'com.h2database:h2'
     implementation group: 'joda-time', name: 'joda-time', version: '2.12.2'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.3.Final'
 }
 
 

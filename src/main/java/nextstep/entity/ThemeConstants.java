@@ -1,4 +1,4 @@
-package nextstep.domain;
+package nextstep.entity;
 
 public final class ThemeConstants {
 

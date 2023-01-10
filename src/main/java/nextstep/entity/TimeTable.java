@@ -1,4 +1,4 @@
-package nextstep.domain;
+package nextstep.entity;
 
 import java.time.LocalTime;
 
