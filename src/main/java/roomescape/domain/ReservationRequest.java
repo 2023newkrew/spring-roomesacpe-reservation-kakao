@@ -6,6 +6,8 @@ public class ReservationRequest {
     private String time;
     private String name;
 
+    public ReservationRequest() {}
+
     public ReservationRequest(String date, String time, String name) {
         this.date = date;
         this.time = time;
@@ -23,6 +25,5 @@ public class ReservationRequest {
     public String getName() {
         return name;
     }
-
 
 }
