@@ -2,6 +2,8 @@ package nextstep.domain;
 
 import lombok.Builder;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,14 +14,6 @@ public class Reservation {
     private LocalTime time;
     private String name;
     private Theme theme;
-
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
 
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.date = date;
@@ -48,7 +42,18 @@ public class Reservation {
         return theme;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public static Reservation from(ResultSet rs) throws SQLException {
+        if (!rs.next()) {
+            throw new RuntimeException();
+        }
+        return Reservation.builder()
+                .id(rs.getLong("id"))
+                .date(rs.getDate("date")
+                        .toLocalDate())
+                .time(rs.getTime("time")
+                        .toLocalTime())
+                .name(rs.getString("name"))
+                .theme(Theme.from(rs))
+                .build();
     }
 }
