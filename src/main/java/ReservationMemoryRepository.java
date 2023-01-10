@@ -28,6 +28,6 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return repository.remove(id) != null;
     }
 }
