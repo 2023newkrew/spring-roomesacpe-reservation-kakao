@@ -1,15 +1,18 @@
 package nextstep;
 
+import roomescape.domain.ReservationRequest;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Reservation {
+
     private Long id;
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
@@ -57,4 +60,5 @@ public class Reservation {
     public boolean overlap(Reservation other) {
         return this.date.equals(other.date) && this.time.equals(other.time);
     }
+
 }

@@ -41,10 +41,24 @@ public class ReservationController {
                 .orElse(null);
 
         if(findReservation == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약은 없는 예약입니다.다");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약은 없는 예약입니다.");
         }
 
         return ResponseEntity.ok(findReservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity deleteReservation(@PathVariable Long id) {
+        Reservation findReservation = reservations.stream()
+                .filter(reservation -> reservation.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if(findReservation == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약은 없는 예약입니다.");
+        }
+        reservations.remove(findReservation);
+        return ResponseEntity.noContent().build();
     }
 
 }
