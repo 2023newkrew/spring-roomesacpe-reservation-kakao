@@ -1,5 +1,8 @@
 package nextstep.domain;
 
+import lombok.Builder;
+
+@Builder
 public class Theme {
     private String name;
     private String desc;
