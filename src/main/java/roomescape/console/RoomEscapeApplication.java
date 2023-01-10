@@ -1,4 +1,4 @@
-package nextstep;
+package roomescape.console;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import roomescape.dto.Reservation;
+import roomescape.dto.Theme;
 
 public class RoomEscapeApplication {
 

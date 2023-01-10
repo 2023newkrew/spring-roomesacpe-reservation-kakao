@@ -1,9 +1,8 @@
-package nextstep.exception;
+package roomescape.exception;
 
 import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import nextstep.domain.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import roomescape.dto.Reservation;
 
 @DisplayName("예외 처리")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
