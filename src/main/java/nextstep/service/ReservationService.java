@@ -27,4 +27,8 @@ public class ReservationService {
                         confirmed.getDate().equals(reservation.getDate()) &&
                                 confirmed.getTime().equals(reservation.getTime()));
     }
+
+    public Reservation findReservation(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -64,5 +65,29 @@ class ReservationServiceTest {
                 .isThrownBy(() -> reservationService.reserve(reservation2));
         assertThatNoException()
                 .isThrownBy(() -> reservationService.reserve(reservation3));
+    }
+
+    @DisplayName("예약 조회에 성공하면 Reservation 객체 반환")
+    @Test
+    void findReservation_success() {
+        //given
+        Reservation reservation = generateReservation(
+                null, "2023-01-01", "13:00", "john", testTheme);
+        reservationService.reserve(reservation);
+        Long id = 1L;
+
+        //when
+        Reservation result = reservationService.findReservation(id);
+
+        //then
+        assertThat(result).isEqualTo(reservation);
+    }
+
+
+    @DisplayName("예약 조회에 실패하면 예외 발생")
+    @Test
+    void findReservation_fail() {
+        assertThatThrownBy(() -> reservationService.findReservation(1L))
+                .isInstanceOf(NoSuchElementException.class);
     }
 }
