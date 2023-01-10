@@ -48,11 +48,6 @@ public class ReservationRepositoryTest {
             assertThatThrownBy(() -> reservationRepository.save(reservation))
                     .isInstanceOf(ReservationDuplicateException.class);
         }
-
-        @AfterEach
-        void deleteAllReservation() {
-            reservations.clear();
-        }
     }
 
     @Nested
@@ -78,10 +73,35 @@ public class ReservationRepositoryTest {
         void should_throwException_when_notExistReservation() {
             assertThat(reservationRepository.findById(-1)).isEmpty();
         }
+    }
 
-        @AfterEach
-        void deleteAllReservation() {
-            reservations.clear();
+    @Nested
+    class Cancel {
+
+        @Test
+        void should_successfully_when_validReservationId() {
+            LocalDate today = LocalDate.now();
+            LocalTime now = LocalTime.now();
+            String name = "name";
+            Reservation reservation = Reservation.of(today, now, name);
+            long reservationId = reservationRepository.save(reservation);
+
+            Reservation cancelReservation = reservationRepository.delete(reservationId).orElseThrow();
+            assertThat(cancelReservation.getDate()).isEqualTo(today);
+            assertThat(cancelReservation.getTime()).isEqualTo(now);
+            assertThat(cancelReservation.getName()).isEqualTo(name);
+
+            assertThat(reservationRepository.findById(reservationId)).isEmpty();
         }
+
+        @Test
+        void should_throwException_when_notExistReservation() {
+            assertThat(reservationRepository.delete(-1)).isEmpty();
+        }
+    }
+
+    @AfterEach
+    void deleteAllReservation() {
+        reservations.clear();
     }
 }

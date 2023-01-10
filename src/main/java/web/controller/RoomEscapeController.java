@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.dto.ReservationRequestDto;
 import web.dto.ReservationResponseDto;
-import web.exception.ReservationDuplicateException;
-import web.exception.ReservationNotFoundException;
 import web.service.RoomEscapeService;
 
 import javax.validation.Valid;
@@ -25,7 +23,6 @@ public class RoomEscapeController {
         this.roomEscapeService = roomEscapeService;
     }
 
-    @ExceptionHandler(ReservationDuplicateException.class)
     @PostMapping("/reservations")
     public ResponseEntity<Void> reservation(@RequestBody @Valid ReservationRequestDto requestDto) {
         if (isInvalidTime(requestDto.getTime())) {
@@ -57,12 +54,18 @@ public class RoomEscapeController {
         return time.getMinute() % 30 != 0;
     }
 
-    @ExceptionHandler(ReservationNotFoundException.class)
     @GetMapping("/reservations/{reservationId}")
     public ResponseEntity<ReservationResponseDto> reservation(@PathVariable long reservationId) {
         ReservationResponseDto responseDto = roomEscapeService.findReservationById(reservationId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(responseDto);
+    }
+
+    @DeleteMapping("/reservations/{reservationId}")
+    public ResponseEntity<Void> cancelReservation(@PathVariable long reservationId) {
+        roomEscapeService.cancelReservation(reservationId);
+        return ResponseEntity.noContent()
+                .build();
     }
 }

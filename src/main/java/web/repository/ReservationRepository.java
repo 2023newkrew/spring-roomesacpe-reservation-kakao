@@ -30,4 +30,8 @@ public class ReservationRepository {
     public Optional<Reservation> findById(long reservationId) {
         return Optional.ofNullable(reservations.get(reservationId));
     }
+
+    public Optional<Reservation> delete(long reservationId) {
+        return Optional.ofNullable(reservations.remove(reservationId));
+    }
 }

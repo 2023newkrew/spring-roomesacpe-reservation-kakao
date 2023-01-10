@@ -26,4 +26,9 @@ public class RoomEscapeService {
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
         return ReservationResponseDto.of(reservationId, reservation);
     }
+
+    public void cancelReservation(long reservationId) {
+        reservationRepository.delete(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+    }
 }

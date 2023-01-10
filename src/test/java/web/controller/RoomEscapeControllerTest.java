@@ -26,9 +26,8 @@ import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -197,4 +196,23 @@ public class RoomEscapeControllerTest {
                     .andExpect(status().isNotFound());
         }
     }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class CancelReservation {
+        @Test
+        void shoud_succefully_when_validRequest() throws Exception {
+            doNothing().when(roomEscapeService).cancelReservation(anyLong());
+            mockMvc.perform(delete("/reservations/1"))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        void shoud_status404_then_notExistId() throws Exception {
+            doThrow(ReservationNotFoundException.class).when(roomEscapeService).cancelReservation(anyLong());
+            mockMvc.perform(delete("/reservations/-1"))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
 }
