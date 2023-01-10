@@ -3,9 +3,11 @@ package roomescape.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import roomescape.nextstep.Reservation;
-import roomescape.nextstep.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Repository
@@ -57,5 +59,13 @@ public class ReservationWebRepository implements ReservationRepository {
     public int deleteReservation(Long id) {
         String sql = "DELETE FROM reservation WHERE id = (?)";
         return jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
+        String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
+        return jdbcTemplate.query(sql, reservationRowMapper, date, time)
+                .stream()
+                .findAny();
     }
 }
