@@ -6,10 +6,11 @@ import nextstep.model.Theme;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
-public class ReservationRepository {
+public class ReservationDAO {
 
-    public Reservation addReservation(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
 
         try (Connection con = createConnection();
@@ -29,31 +30,44 @@ public class ReservationRepository {
         }
     }
 
-    public Reservation findReservation(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
 
         try (Connection con = createConnection();
-             PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
+            if (rs.next()) {
                 LocalDate date = rs.getDate("date").toLocalDate();
                 LocalTime time = rs.getTime("time").toLocalTime();
                 String name = rs.getString("name");
                 String themeName = rs.getString("theme_name");
                 String themeDesc = rs.getString("theme_desc");
                 Integer themePrice = rs.getInt("theme_price");
-                return new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice));
+                return Optional.of(new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public void deleteReservation(Long id) {
+    public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+        String sql = "SELECT count(*) as count FROM reservation WHERE date=? AND time=?";
+        try (Connection con = createConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next() && rs.getInt("count") > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -65,10 +79,9 @@ public class ReservationRepository {
         }
     }
     private static Long getId(PreparedStatement ps) throws SQLException {
-        try(ResultSet rs = ps.getGeneratedKeys()) {
-            rs.next();
-            return rs.getLong("id");
-        }
+        ResultSet rs = ps.getGeneratedKeys();
+        rs.next();
+        return rs.getLong("id");
     }
 
     private static Connection createConnection() {

@@ -21,7 +21,7 @@ public class RoomEscapeService {
         if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
             throw new ReservationDuplicateException();
         }
-        return reservationRepository.save(new Reservation(1L, request.getDate(), request.getTime(), request.getName(), theme));
+        return reservationRepository.save(new Reservation(0L, request.getDate(), request.getTime(), request.getName(), theme));
     }
 
     public Reservation getReservation(Long id) {
