@@ -1,6 +1,5 @@
 package reservation.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reservation.domain.Reservation;
@@ -32,6 +31,6 @@ public class ReservationController {
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
         reservationService.deleteReservation(reservationId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
