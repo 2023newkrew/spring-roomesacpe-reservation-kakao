@@ -2,10 +2,11 @@ package nextstep.console.dao;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.web.repository.ReservationRepository;
 
 import java.sql.*;
 
-public class ReservationDao {
+public class ReservationDao implements ReservationRepository {
     private Connection con;
 
     public ReservationDao() {
@@ -19,10 +20,9 @@ public class ReservationDao {
         }
     }
 
-    public void addReservation(Reservation reservation) {
-        try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+    public Long save(Reservation reservation) {
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        try (PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -33,9 +33,14 @@ public class ReservationDao {
             ps.setInt(6, reservation.getTheme()
                     .getPrice());
             ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return -1L;
     }
 
     public Reservation findById(Long id) {

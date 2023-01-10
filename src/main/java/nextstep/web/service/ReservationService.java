@@ -27,10 +27,8 @@ public class ReservationService {
                 requestDto.getName(),
                 theme
         );
-
-        reservationRepository.save(reservation);
-
-        return reservation.getId();
+        
+        return reservationRepository.save(reservation);
     }
 
     public ReservationResponseDto findReservation(Long id) {

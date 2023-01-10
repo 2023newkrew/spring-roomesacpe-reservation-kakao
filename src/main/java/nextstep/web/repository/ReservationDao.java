@@ -32,8 +32,8 @@ public class ReservationDao implements ReservationRepository {
                 .theme(theme)
                 .build();
     };
-    
-    public void save(Reservation reservation) {
+
+    public Long save(Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -48,7 +48,8 @@ public class ReservationDao implements ReservationRepository {
         params.put("theme_price", theme.getPrice());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(params);
-        reservation.setId(key.longValue());
+
+        return key.longValue();
     }
 
     public Reservation findById(Long id) {

@@ -6,7 +6,7 @@ public interface ReservationRepository {
 
     Reservation findById(Long id);
 
-    void save(Reservation reservation);
+    Long save(Reservation reservation);
 
     void deleteById(Long id);
 }

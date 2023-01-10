@@ -24,9 +24,11 @@ public class ReservationMemoryRepository implements ReservationRepository {
                 .orElseThrow(RuntimeException::new);
     }
 
-    public void save(Reservation reservation) {
-        reservation.setId(reservationIdIndex++);
+    public Long save(Reservation reservation) {
+        reservationIdIndex++;
         reservations.add(reservation);
+        
+        return reservationIdIndex;
     }
 
     public void deleteById(Long id) {
