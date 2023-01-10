@@ -11,11 +11,12 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class ReservationDto {
     @NonNull
-    @Pattern(regexp = "{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")
+    @Pattern(regexp = "\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")
     private String date;
 
     @NonNull
