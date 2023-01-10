@@ -1,4 +1,4 @@
-package reservation.domain;
+package reservation.model.domain;
 
 import java.util.Objects;
 

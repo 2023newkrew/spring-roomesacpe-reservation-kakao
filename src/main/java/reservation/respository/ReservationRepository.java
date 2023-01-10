@@ -5,9 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import reservation.domain.Reservation;
-import reservation.domain.Theme;
-import reservation.domain.dto.ReservationDto;
+import reservation.model.domain.Reservation;
+import reservation.model.domain.Theme;
+import reservation.model.dto.RequestReservation;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -24,15 +24,15 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long createReservation(ReservationDto reservationDto, Theme theme) {
+    public Long saveReservation(RequestReservation requestReservation, Theme theme) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservationDto.getDate()));
-            ps.setTime(2, Time.valueOf(reservationDto.getTime()));
-            ps.setString(3, reservationDto.getName());
+            ps.setDate(1, Date.valueOf(requestReservation.getDate()));
+            ps.setTime(2, Time.valueOf(requestReservation.getTime()));
+            ps.setString(3, requestReservation.getName());
             ps.setString(4, theme.getName());
             ps.setString(5, theme.getDesc());
             ps.setInt(6, theme.getPrice());
@@ -43,7 +43,7 @@ public class ReservationRepository {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Reservation getReservation(Long reservationId) {
+    public Reservation findReservationById(Long reservationId) {
         String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
         try {
             return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
@@ -60,7 +60,7 @@ public class ReservationRepository {
         }
     }
 
-    public int deleteReservation(Long reservationId) {
+    public int deleteReservationById(Long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return this.jdbcTemplate.update(sql, reservationId);
     }

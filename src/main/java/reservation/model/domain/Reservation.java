@@ -1,10 +1,7 @@
-package reservation.domain;
+package reservation.model.domain;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class Reservation {
     private Long id;

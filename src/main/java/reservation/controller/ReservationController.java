@@ -2,8 +2,8 @@ package reservation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reservation.domain.Reservation;
-import reservation.domain.dto.ReservationDto;
+import reservation.model.domain.Reservation;
+import reservation.model.dto.RequestReservation;
 import reservation.service.ReservationService;
 import java.net.URI;
 
@@ -17,8 +17,8 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> postReservation(@RequestBody ReservationDto reservationDto) {
-        Long id = reservationService.createReservation(reservationDto);
+    public ResponseEntity<?> createReservation(@RequestBody RequestReservation requestReservation) {
+        Long id = reservationService.createReservation(requestReservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 

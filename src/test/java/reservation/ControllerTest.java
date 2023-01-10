@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import reservation.domain.dto.ReservationDto;
+import reservation.model.dto.RequestReservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,11 +32,11 @@ public class ControllerTest {
         LocalDate localDate = LocalDate.of(2023, 1, 1);
         LocalTime localTime = LocalTime.of(11, 0);
 
-        ReservationDto reservationDto = new ReservationDto(localDate, localTime, "TEST");
+        RequestReservation requestReservation = new RequestReservation(localDate, localTime, "TEST");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationDto)
+                .body(requestReservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())

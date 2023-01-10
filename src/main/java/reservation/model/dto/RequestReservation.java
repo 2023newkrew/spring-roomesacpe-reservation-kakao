@@ -1,14 +1,14 @@
-package reservation.domain.dto;
+package reservation.model.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDto {
+public class RequestReservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
 
-    public ReservationDto(LocalDate date, LocalTime time, String name) {
+    public RequestReservation(LocalDate date, LocalTime time, String name) {
         this.date = date;
         this.time = time;
         this.name = name;

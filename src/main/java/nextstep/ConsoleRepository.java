@@ -1,7 +1,7 @@
 package nextstep;
 
-import reservation.domain.Reservation;
-import reservation.domain.Theme;
+import reservation.model.domain.Reservation;
+import reservation.model.domain.Theme;
 
 import java.sql.*;
 

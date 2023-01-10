@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import reservation.domain.Reservation;
-import reservation.domain.Theme;
-import reservation.domain.dto.ReservationDto;
+import reservation.model.domain.Reservation;
+import reservation.model.domain.Theme;
+import reservation.model.dto.RequestReservation;
 import reservation.respository.ReservationRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +20,7 @@ public class RepositoryTest {
 
     private ReservationRepository reservationRepository;
     private Theme theme;
-    private ReservationDto reservationDto;
+    private RequestReservation requestReservation;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -32,7 +32,7 @@ public class RepositoryTest {
         LocalDate date = LocalDate.of(2023, 1, 1);
         LocalTime time = LocalTime.of(11, 0);
 
-        reservationDto = new ReservationDto(date, time, "name");
+        requestReservation = new RequestReservation(date, time, "name");
     }
 
     @BeforeEach
@@ -43,31 +43,31 @@ public class RepositoryTest {
     @Test
     @DisplayName("예약 생성이 되어야 한다.")
     void save() {
-         Long id = reservationRepository.createReservation(reservationDto, theme);
+         Long id = reservationRepository.saveReservation(requestReservation, theme);
          assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("생성된 예약을 조회할 수 있어야 한다.")
     void find() {
-        Long id = reservationRepository.createReservation(reservationDto, theme);
-        Reservation reservation = reservationRepository.getReservation(id);
+        Long id = reservationRepository.saveReservation(requestReservation, theme);
+        Reservation reservation = reservationRepository.findReservationById(id);
         assertThat(reservation.getTheme()).isEqualTo(theme);
     }
 
     @Test
     @DisplayName("생성된 예약을 취소할 수 있어야 한다.")
     void delete() {
-        Long id = reservationRepository.createReservation(reservationDto, theme);
-        int rowCount = reservationRepository.deleteReservation(id);
+        Long id = reservationRepository.saveReservation(requestReservation, theme);
+        int rowCount = reservationRepository.deleteReservationById(id);
         assertThat(rowCount).isEqualTo(1);
     }
 
     @Test
     @DisplayName("시간과 날짜가 중복되는 예약은 불가능하다.")
     void duplicate(){
-        Long id = reservationRepository.createReservation(reservationDto, theme);
-        assertThat(reservationRepository.existByDateTime(reservationDto.getDate(), reservationDto.getTime()))
+        Long id = reservationRepository.saveReservation(requestReservation, theme);
+        assertThat(reservationRepository.existByDateTime(requestReservation.getDate(), requestReservation.getTime()))
                 .isTrue();
     }
 }
