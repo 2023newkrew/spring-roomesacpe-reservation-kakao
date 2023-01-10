@@ -1,9 +1,9 @@
 package kakao.domain;
 
 public class Theme {
-    private String name;
-    private String desc;
-    private Integer price;
+    private final String name;
+    private final String desc;
+    private final Integer price;
 
     public Theme(String name, String desc, Integer price) {
         this.name = name;
