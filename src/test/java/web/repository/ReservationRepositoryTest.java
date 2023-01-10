@@ -25,6 +25,11 @@ public class ReservationRepositoryTest {
 
     private ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
 
+    @AfterEach
+    void deleteAllReservation() {
+        reservationRepository.clearAll();
+    }
+
     @Nested
     class Save {
 
@@ -102,10 +107,5 @@ public class ReservationRepositoryTest {
         void should_throwException_when_notExistReservation() {
             assertThat(reservationRepository.delete(-1)).isEqualTo(0L);
         }
-    }
-
-    @AfterEach
-    void deleteAllReservation() {
-        reservationRepository.clearAll();
     }
 }

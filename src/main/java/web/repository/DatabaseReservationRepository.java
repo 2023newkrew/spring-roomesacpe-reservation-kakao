@@ -33,7 +33,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+                PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
                 ps.setDate(1, Date.valueOf(reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
                 ps.setTime(2, Time.valueOf(reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
                 ps.setString(3, reservation.getName());

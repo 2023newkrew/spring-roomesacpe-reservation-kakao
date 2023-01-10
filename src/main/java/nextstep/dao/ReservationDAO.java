@@ -23,7 +23,7 @@ public class ReservationDAO {
 
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = con.prepareStatement(sql, new String[] {"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -36,8 +36,9 @@ public class ReservationDAO {
         }
 
         try {
-            if (con != null)
+            if (con != null) {
                 con.close();
+            }
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
@@ -58,7 +59,7 @@ public class ReservationDAO {
 
         try {
             String sql = "SELECT * FROM RESERVATION WHERE ID=?;";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = con.prepareStatement(sql, new String[] {"id"});
             ps.setLong(1, reservationId);
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -77,8 +78,9 @@ public class ReservationDAO {
         }
 
         try {
-            if (con != null)
+            if (con != null) {
                 con.close();
+            }
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
@@ -108,8 +110,9 @@ public class ReservationDAO {
         }
 
         try {
-            if (con != null)
+            if (con != null) {
                 con.close();
+            }
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
