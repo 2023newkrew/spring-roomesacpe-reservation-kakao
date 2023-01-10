@@ -17,6 +17,7 @@ import web.domain.Reservation;
 import web.domain.Theme;
 import web.dto.request.ReservationRequestDTO;
 import web.dto.response.ReservationResponseDTO;
+import web.exception.DuplicatedReservationException;
 import web.exception.NoSuchReservationException;
 
 @RestController
@@ -29,6 +30,13 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
+        boolean isDuplicated = reservations.stream()
+                .anyMatch(item -> Objects.equals(reservationRequestDTO.getDate(), item.getDate().toString())
+                        && Objects.equals(reservationRequestDTO.getTime(), item.getTime().toString()));
+        if (isDuplicated) {
+            throw new DuplicatedReservationException();
+        }
+
         Reservation reservation = reservationRequestDTO.toEntity(++reservationIdIndex, theme);
         reservations.add(reservation);
 

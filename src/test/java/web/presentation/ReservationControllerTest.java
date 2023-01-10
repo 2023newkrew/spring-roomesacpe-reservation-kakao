@@ -44,7 +44,7 @@ public class ReservationControllerTest {
 
     @DisplayName("유효하지 않은 Reservation 생성은 400을 반환한다.")
     @Test
-    void invalidReservationCreation() {
+    void invalidDateTimeReservation() {
         ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "name");
 
         RestAssured.given().log().all()
@@ -53,6 +53,20 @@ public class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("시간대가 겹치는 예약을 하게되면 409를 반환한다.")
+    @Test
+    @Order(3)
+    void duplicateDateTimeReservation() {
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestDTO)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
     }
 
     @DisplayName("Reservation 조회")
@@ -86,7 +100,7 @@ public class ReservationControllerTest {
 
     @DisplayName("Reservation 취소")
     @Test
-    @Order(3)
+    @Order(4)
     void deleteReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
