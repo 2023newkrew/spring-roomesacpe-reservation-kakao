@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ReservationRepository {
-    private final Map<Long, Reservation> reservations = new TreeMap();
+    private final Map<Long, Reservation> reservations = new TreeMap<>();
 
     private Long reservationCount = 1L;
 
