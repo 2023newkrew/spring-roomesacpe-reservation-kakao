@@ -2,9 +2,7 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.Reservation;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -17,6 +15,7 @@ import static org.hamcrest.core.Is.is;
 
 @DisplayName("Reservation Controller")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class ReservationControllerTest {
     @LocalServerPort
     int port;
@@ -26,6 +25,7 @@ class ReservationControllerTest {
         RestAssured.port = port;
     }
 
+    @Order(1)
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
@@ -40,6 +40,7 @@ class ReservationControllerTest {
                 .header("Location", "/reservations/1");
     }
 
+    @Order(2)
     @DisplayName("예약 조회")
     @Test
     void lookupReservation() {
@@ -58,6 +59,7 @@ class ReservationControllerTest {
 
     }
 
+    @Order(3)
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {

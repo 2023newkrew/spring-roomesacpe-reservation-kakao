@@ -18,14 +18,14 @@ public class ReservationInfo {
     public ReservationInfo() {
     }
 
-    public ReservationInfo(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.themeName = theme.getName();
-        this.themeDesc = theme.getDesc();
-        this.themePrice = theme.getPrice();
+    public ReservationInfo(Reservation reservation) {
+        this.id = reservation.getId();
+        this.date = reservation.getDate();
+        this.time = reservation.getTime();
+        this.name = reservation.getName();
+        this.themeName = reservation.getTheme().getName();
+        this.themeDesc = reservation.getTheme().getDesc();
+        this.themePrice = reservation.getTheme().getPrice();
     }
 
     public Long getId() {
