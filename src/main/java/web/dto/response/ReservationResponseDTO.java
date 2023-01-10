@@ -1,12 +1,13 @@
 package web.dto.response;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import web.domain.Reservation;
 import web.domain.Theme;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationResponseDTO {
 
     private final Long id;
