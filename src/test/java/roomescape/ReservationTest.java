@@ -1,6 +1,9 @@
 package roomescape;
 
 import io.restassured.RestAssured;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,4 +60,24 @@ public class ReservationTest {
         overlapResultActions.andExpect(status().isUnprocessableEntity());
     }
 
+
+    @DisplayName("예약 조회 테스트")
+    @Test
+    void showReservation() throws Exception {
+        String name = "kayla";
+        ReservationRequest reservationRequest = new ReservationRequest("2022-08-11", "13:00", name);
+
+        ResultActions resultActions = this.mockMvc.perform(post("/reservations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(reservationRequest))
+        );
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(1))
+                .body("name", is(name));
+    }
 }
