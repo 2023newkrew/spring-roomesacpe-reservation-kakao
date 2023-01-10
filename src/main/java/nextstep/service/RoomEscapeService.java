@@ -2,7 +2,7 @@ package nextstep.service;
 
 import nextstep.Reservation;
 import nextstep.Theme;
-import nextstep.dto.CreateReservationRequest;
+import nextstep.dto.request.CreateReservationRequest;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

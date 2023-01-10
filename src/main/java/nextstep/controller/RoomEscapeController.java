@@ -1,7 +1,8 @@
 package nextstep.controller;
 
 import nextstep.Reservation;
-import nextstep.dto.CreateReservationRequest;
+import nextstep.dto.request.CreateReservationRequest;
+import nextstep.dto.response.ReservationResponse;
 import nextstep.service.RoomEscapeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,18 +21,18 @@ public class RoomEscapeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Reservation> createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
         Reservation reservation = roomEscapeService.add(createReservationRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", "/reservations/" + reservation.getId())
-                .body(reservation);
+                .body(ReservationResponse.fromEntity(reservation));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> findReservation(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> findReservation(@PathVariable Long id) {
         return ResponseEntity
-                .ok(roomEscapeService.get(id));
+                .ok(ReservationResponse.fromEntity(roomEscapeService.get(id)));
     }
 
     @DeleteMapping("/{id}")

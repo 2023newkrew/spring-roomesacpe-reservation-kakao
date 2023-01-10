@@ -1,14 +1,11 @@
 package nextstep;
 
-import nextstep.dto.CreateReservationRequest;
+import nextstep.dto.request.CreateReservationRequest;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationH2Repository;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.RoomEscapeService;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
