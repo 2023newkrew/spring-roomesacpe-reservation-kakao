@@ -55,7 +55,7 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/reservations/{reservationId}")
-    public ResponseEntity<ReservationResponseDto> reservation(@PathVariable long reservationId) {
+    public ResponseEntity<ReservationResponseDto> findReservationById(@PathVariable long reservationId) {
         ReservationResponseDto responseDto = roomEscapeService.findReservationById(reservationId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
