@@ -1,12 +1,14 @@
 package nextstep.controller;
 
 import nextstep.domain.Reservation;
+import nextstep.exception.DuplicateReservationException;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/reservations")
@@ -37,5 +39,15 @@ public class ReservationController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handle(DuplicateReservationException exception) {
+        return ResponseEntity.badRequest().body("날짜와 시간이 일치하는 예약이 이미 존재합니다");
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handle(NoSuchElementException exception) {
+        return ResponseEntity.notFound().build();
     }
 }
