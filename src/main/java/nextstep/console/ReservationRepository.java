@@ -7,7 +7,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDAO {
+public class ReservationRepository {
 
     public Reservation addReservation(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";

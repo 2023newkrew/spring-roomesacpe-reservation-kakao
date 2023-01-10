@@ -3,12 +3,8 @@ package nextstep.console;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 
-import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -19,9 +15,8 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationDAO reservationDAO = new ReservationDAO();
+        ReservationRepository reservationRepository = new ReservationRepository();
 
-        List<Reservation> reservations = new ArrayList<>();
         Long reservationIdIndex = 0L;
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -42,7 +37,7 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = reservationDAO.addReservation(new Reservation(
+                Reservation reservation = reservationRepository.addReservation(new Reservation(
                     ++reservationIdIndex,
                     LocalDate.parse(date),
                     LocalTime.parse(time + ":00"),
@@ -62,7 +57,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findReservation(id);
+                Reservation reservation = reservationRepository.findReservation(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -78,7 +73,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                reservationDAO.deleteReservation(id);
+                reservationRepository.deleteReservation(id);
                 System.out.println("예약이 취소되었습니다.");
             }
 
