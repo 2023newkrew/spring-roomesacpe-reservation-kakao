@@ -3,15 +3,14 @@ package nextstep.repository;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
 
 public interface ReservationRepository {
 
     Long save(ReservationRequestDTO reservationRequestDTO) throws SQLException;
 
-    Optional<ReservationResponseDTO> findById(Long id) throws SQLException;
+    Reservation findById(Long id) throws SQLException;
 
     boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException;
 

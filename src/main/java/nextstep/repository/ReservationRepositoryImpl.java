@@ -10,11 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import javax.sql.DataSource;
-import nextstep.entity.Theme;
 import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
+import nextstep.entity.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,14 +50,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Optional<ReservationResponseDTO> findById(Long id) throws DataAccessException {
+    public Reservation findById(Long id) throws DataAccessException {
         String sql = "SELECT * from reservation WHERE id = ?";
-        ReservationResponseDTO reservationResponseDTO = jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new ReservationResponseDTO(rs.getLong("id"), rs.getDate("date").toLocalDate(),
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(), rs.getString("name"),
                         new Theme(rs.getString("theme_name"),
                                 rs.getString("theme_desc"), rs.getInt("theme_price"))), id);
-        return Optional.ofNullable(reservationResponseDTO);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             throws DataAccessException {
         String sql = "SELECT * from reservation WHERE date = ? AND time = ?";
         return !jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new ReservationResponseDTO(rs.getLong("id"), rs.getDate("date").toLocalDate(),
+                        new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
                                 rs.getTime("time").toLocalTime(), rs.getString("name"),
                                 new Theme(rs.getString("theme_name"),
                                         rs.getString("theme_desc"), rs.getInt("theme_price"))), date, time)

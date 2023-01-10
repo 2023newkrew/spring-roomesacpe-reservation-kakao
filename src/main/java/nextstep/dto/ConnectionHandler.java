@@ -7,13 +7,12 @@ import java.sql.SQLException;
 
 public class ConnectionHandler {
 
-    private final Connection connection;
-
     private static final String CONNECTION_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private static final String USERNAME = "sa";
     private static final String PASSWORD = "";
+    private final Connection connection;
 
-    public ConnectionHandler(){
+    public ConnectionHandler() {
         this.connection = connect();
     }
 
@@ -43,6 +42,4 @@ public class ConnectionHandler {
     public PreparedStatement createPreparedStatement(String sql, String[] columnsNames) throws SQLException {
         return this.connection.prepareStatement(sql, columnsNames);
     }
-
-
 }

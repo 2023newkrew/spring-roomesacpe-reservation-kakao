@@ -1,5 +1,10 @@
 package nextstep.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class Theme {
 
     private final String name;
@@ -7,22 +12,4 @@ public class Theme {
     private final String desc;
 
     private final Integer price;
-
-    public Theme(String name, String desc, Integer price) {
-        this.name = name;
-        this.desc = desc;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
 }

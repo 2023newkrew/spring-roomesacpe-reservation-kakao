@@ -1,11 +1,12 @@
 package nextstep.service;
 
 import java.sql.SQLException;
-import java.util.Optional;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
 import nextstep.exception.ConflictException;
 import nextstep.exception.NotFoundException;
+import nextstep.mapstruct.ReservationMapper;
 import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+
 
     @Autowired
     public ReservationServiceImpl(ReservationRepository reservationRepository) {
@@ -41,8 +43,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationResponseDTO findReservation(Long id) throws SQLException {
         try {
-            Optional<ReservationResponseDTO> reservationRequestDTO = reservationRepository.findById(id);
-            return reservationRequestDTO.orElse(null);
+            Reservation reservation = reservationRepository.findById(id);
+            return ReservationMapper.INSTANCE.reservationToResponseDTO(reservation);
         } catch (DataAccessException e) {
             return null;
         }
