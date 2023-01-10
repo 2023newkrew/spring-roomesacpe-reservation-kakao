@@ -23,6 +23,13 @@ public class Reservation {
         this.name = name;
     }
 
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
+
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
