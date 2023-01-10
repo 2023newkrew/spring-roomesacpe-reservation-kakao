@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
     private final LocalDate date;
@@ -58,5 +59,18 @@ public class Reservation {
                 ", name='" + name + '\'' +
                 ", theme=" + theme +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return date.equals(that.date) && time.equals(that.time) && name.equals(that.name) && theme.equals(that.theme) && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, time, name, theme, id);
     }
 }
