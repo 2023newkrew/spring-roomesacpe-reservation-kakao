@@ -95,7 +95,7 @@ class ReservationMemoryRepositoryTest {
                 .get().isEqualTo(expectedReservation3);
     }
 
-    @DisplayName("id로 예약을 조회한다 - 조회 성공")
+    @DisplayName("id로 예약을 조회한다 - 조회 실패")
     @Test
     void find_fail() {
         Optional<Reservation> result = repository.findById(1L);
