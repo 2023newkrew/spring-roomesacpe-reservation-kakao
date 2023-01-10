@@ -36,7 +36,7 @@
 - 콘솔용 DAO : 직접 커넥션 생성해서 reservation 데이터에 접근
   - [x] 예약 추가
   - [x] 예약 조회
-  - [ ] 예약 삭제
+  - [x] 예약 삭제
 
 - 웹앱용 DAO : JdbcTemplate를 사용해서 reservation 데이터에 접근
   - [ ] 예약 추가
