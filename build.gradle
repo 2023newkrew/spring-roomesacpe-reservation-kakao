@@ -1,8 +1,10 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.7.2'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
-group 'nextstep'
+group 'roomescape.nextstep'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -13,6 +15,12 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
     }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {
