@@ -1,5 +1,7 @@
 package nextstep;
 
+import nextstep.repository.ReservationH2Repository;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -13,10 +15,10 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
+        ReservationH2Repository repository = new ReservationH2Repository();
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -37,14 +39,13 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
                         theme
                 );
 
-                reservations.add(reservation);
+                repository.add(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -58,10 +59,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                Reservation reservation = repository.get(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -77,9 +75,8 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                repository.delete(id);
+                System.out.println("예약이 취소되었습니다.");
             }
 
             if (input.equals(QUIT)) {

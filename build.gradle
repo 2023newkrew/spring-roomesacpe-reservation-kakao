@@ -19,6 +19,8 @@ java {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'com.h2database:h2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
     testImplementation 'org.assertj:assertj-core:3.23.1'
 }
