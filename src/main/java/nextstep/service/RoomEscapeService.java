@@ -4,6 +4,7 @@ import nextstep.Reservation;
 import nextstep.Theme;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class RoomEscapeService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation add(CreateReservationRequest request) {
+    public Reservation add(CreateReservationRequest request) throws DuplicateReservationException {
 
         if (reservationRepository.hasReservationAt(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
@@ -35,7 +36,7 @@ public class RoomEscapeService {
         return reservationRepository.add(reservation);
     }
 
-    public Reservation get(Long id) {
+    public Reservation get(Long id) throws ReservationNotFoundException {
         return reservationRepository.get(id);
     }
 
