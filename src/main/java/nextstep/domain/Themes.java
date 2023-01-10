@@ -32,7 +32,8 @@ public class Themes {
     }
 
     public Theme findById(Long id) {
-        return themes.stream().filter(theme -> id.equals(theme.getId()))
+        return themes.stream()
+                .filter(theme -> id.equals(theme.getId()))
                 .findFirst()
                 .orElse(null);
     }

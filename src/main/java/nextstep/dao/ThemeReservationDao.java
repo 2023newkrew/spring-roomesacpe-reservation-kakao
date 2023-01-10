@@ -3,12 +3,13 @@ package nextstep.dao;
 import nextstep.domain.Themes;
 import nextstep.entity.Reservation;
 import nextstep.domain.Reservations;
-import nextstep.dto.ReservationDto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 
-public class ReservationDao {
+@Repository
+public class ThemeReservationDao {
 
     private final Reservations reservations = Reservations.getInstance();
     private final Themes themes = Themes.getInstance();
