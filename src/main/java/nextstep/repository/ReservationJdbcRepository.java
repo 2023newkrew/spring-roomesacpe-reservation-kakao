@@ -4,6 +4,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +75,23 @@ public class ReservationJdbcRepository implements ReservationRepository{
 
     @Override
     public List<Reservation> findAll() {
-        return null;
+        String sql = "SELECT * FROM reservation";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            resultSet = ps.executeQuery();
+
+            return extractReservations(resultSet);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, ps, resultSet);
+        }
     }
 
     @Override
@@ -123,5 +140,13 @@ public class ReservationJdbcRepository implements ReservationRepository{
                 resultSet.getString("name"),
                 theme
         );
+    }
+
+    private List<Reservation> extractReservations(ResultSet resultSet) throws SQLException {
+        List<Reservation> reservations = new ArrayList<>();
+        while (resultSet.next()) {
+            reservations.add(extractReservation(resultSet));
+        }
+        return reservations;
     }
 }
