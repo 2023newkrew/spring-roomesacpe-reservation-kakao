@@ -1,4 +1,4 @@
-package controller;
+package nextstep.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
