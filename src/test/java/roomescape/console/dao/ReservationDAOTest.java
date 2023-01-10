@@ -21,7 +21,7 @@ public class ReservationDAOTest {
     private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER = "";
     private static final String PASSWORD = "";
-    private static final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    private static final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
 
     private Connection con;
 
@@ -53,5 +53,21 @@ public class ReservationDAOTest {
                 .executeQuery("SELECT count(*) FROM RESERVATION");
         assertThat(resultSet.next()).isTrue();
         assertThat(resultSet.getInt(1)).isEqualTo(1);
+    }
+
+    @DisplayName("예약 찾기")
+    @Test
+    void findReservation() throws SQLException {
+        ReservationDAO reservationDAO = new ReservationDAO(URL, USER, PASSWORD);
+        con.createStatement().executeUpdate("INSERT INTO RESERVATION"
+                + "(id, name, date, time, theme_name, theme_desc, theme_price) "
+                + "VALUES (1, 'test', '2022-08-22', '13:00', '워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
+        Reservation reservation = reservationDAO.findReservation(1);
+        assertThat(reservation.getName()).isEqualTo("test");
+        assertThat(reservation.getDate()).isEqualTo(LocalDate.parse("2022-08-22"));
+        assertThat(reservation.getTime()).isEqualTo(LocalTime.parse("13:00:00"));
+        assertThat(reservation.getTheme().getName()).isEqualTo("워너고홈");
+        assertThat(reservation.getTheme().getDesc()).isEqualTo("병맛 어드벤처 회사 코믹물");
+        assertThat(reservation.getTheme().getPrice()).isEqualTo(29000);
     }
 }
