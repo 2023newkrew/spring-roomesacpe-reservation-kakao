@@ -7,15 +7,17 @@ import static nextstep.domain.ThemeConstants.THEME_PRICE;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ReservationResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,40 +36,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Long save(ReservationRequestDTO reservationRequestDTO) throws SQLException {
-        Connection connection = DataSourceUtils.getConnection(dataSource);
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-        PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-        ps.setDate(1, Date.valueOf(reservationRequestDTO.getDate()));
-        ps.setTime(2, Time.valueOf(reservationRequestDTO.getTime()));
-        ps.setString(3, reservationRequestDTO.getName());
-        ps.setString(4, THEME_NAME);
-        ps.setString(5, THEME_DESC);
-        ps.setInt(6, THEME_PRICE);
-        ps.executeUpdate();
-        ResultSet resultSet = ps.getGeneratedKeys();
-        Long id = null;
-        if (resultSet.next()) {
-            id = resultSet.getLong(1);
-        }
-
-        try {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("resultSet 오류:" + e.getMessage());
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("ps 오류:" + e.getMessage());
-        }
-
-        DataSourceUtils.releaseConnection(connection, dataSource);
-        return id;
+    public Long save(ReservationRequestDTO reservationRequestDTO) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("date", Date.valueOf(reservationRequestDTO.getDate()));
+        parameters.put("time", Time.valueOf(reservationRequestDTO.getTime()));
+        parameters.put("name", reservationRequestDTO.getName());
+        parameters.put("theme_name", THEME_NAME);
+        parameters.put("theme_desc", THEME_DESC);
+        parameters.put("theme_price", THEME_PRICE);
+        return new SimpleJdbcInsert(jdbcTemplate).executeAndReturnKey(parameters).longValue();
     }
 
     @Override
@@ -81,18 +58,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) throws SQLException {
-        Connection connection = DataSourceUtils.getConnection(dataSource);
-        PreparedStatement ps = connection.prepareStatement("DELETE FROM RESERVATION WHERE id = ?");
-        ps.setLong(1, id);
-        ps.executeUpdate();
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("ps 오류:" + e.getMessage());
-        }
-        DataSourceUtils.releaseConnection(connection, dataSource);
+        jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
     }
 
 
