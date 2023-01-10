@@ -4,7 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
-import roomescape.repository.Reservations;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.RoomEscapeException;
+import roomescape.repository.ReservationConsoleRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +24,7 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        ReservationConsoleRepository reservationConsoleRepository = new ReservationConsoleRepository();
 
         SpringApplication.run(RoomEscapeApplication.class, args);
 
@@ -49,7 +52,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                Reservations.putReservation(reservation);
+                reservationConsoleRepository.insertReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -63,7 +66,10 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = Reservations.getReservation(id);
+                Reservation reservation = reservationConsoleRepository.getReservation(id)
+                        .orElseThrow(() -> {
+                            throw new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND);
+                        });
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -79,8 +85,8 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (Reservations.isExist(id)) {
-                    Reservations.deleteReservation(id);
+                if(reservationConsoleRepository.getReservation(id).isPresent()) {
+                    reservationConsoleRepository.deleteReservation(id);
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

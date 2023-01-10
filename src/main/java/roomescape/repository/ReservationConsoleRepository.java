@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-public class ReservationConsoleRepository implements ReservationRepository{
+public class ReservationConsoleRepository implements ReservationRepository {
 
     @Override
     public void insertReservation(Reservation reservation) {
