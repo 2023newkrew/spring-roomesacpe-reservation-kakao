@@ -78,11 +78,6 @@ public class JdbcReservationRepository implements ReservationRepository {
         });
     }
 
-    @Override
-    public void deleteAll() {
-        execute(DELETE_ALL, pstmt -> pstmt.executeUpdate());
-    }
-
     private <T> T execute(String query, PrepareStatementExecutor<T> executor) {
         try (Connection conn = JdbcUtils.getConnection();
             PreparedStatement pstmt = query.equals(INSERT) ? conn.prepareStatement(query, RETURN_GENERATED_KEYS) : conn.prepareStatement(query)) {

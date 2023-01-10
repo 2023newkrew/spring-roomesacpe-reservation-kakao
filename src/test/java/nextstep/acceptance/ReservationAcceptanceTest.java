@@ -31,7 +31,6 @@ public class ReservationAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        reservationRepository.deleteAll();
     }
 
     @Test

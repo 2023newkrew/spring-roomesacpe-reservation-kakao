@@ -2,8 +2,11 @@ package nextstep.domain.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +23,17 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("id"),
+            LocalDate.parse(rs.getString("date")),
+            LocalTime.parse(rs.getString("time")),
+            rs.getString("name"),
+            new Theme(
+                    rs.getString("theme_name"),
+                    rs.getString("theme_desc"),
+                    rs.getInt("theme_price")
+            )
+    );
 
     public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -30,7 +44,13 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Reservation save(Reservation reservation) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservation);
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("date", reservation.getDate())
+                .addValue("time", reservation.getTime())
+                .addValue("name", reservation.getName())
+                .addValue("theme_name", reservation.getTheme().getName())
+                .addValue("theme_desc", reservation.getTheme().getDesc())
+                .addValue("theme_price", reservation.getTheme().getPrice());
         Long reservationId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
 
         return new Reservation(reservationId, reservation);
@@ -38,22 +58,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Optional<Reservation> findById(Long reservationId) {
-        Reservation reservation = jdbcTemplate.queryForObject(
-                SELECT_BY_ID,
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        LocalDate.parse(rs.getString("date")),
-                        LocalTime.parse(rs.getString("time")),
-                        rs.getString("name"),
-                        new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
-                        )
-                ),
-                reservationId
-        );
-        return Optional.ofNullable(reservation);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(SELECT_BY_ID, reservationRowMapper, reservationId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -66,8 +75,4 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         return jdbcTemplate.update(DELETE_BY_ID, reservationId) > 0;
     }
 
-    @Override
-    public void deleteAll() {
-        jdbcTemplate.update(DELETE_ALL);
-    }
 }
