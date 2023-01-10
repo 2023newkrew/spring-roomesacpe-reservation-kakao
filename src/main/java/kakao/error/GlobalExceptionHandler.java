@@ -1,14 +1,15 @@
 package kakao.error;
 
+import javax.validation.ConstraintViolationException;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.RecordNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
@@ -26,21 +27,28 @@ public class GlobalExceptionHandler {
         return handlerException(ErrorCode.API_NOT_FOUND);
     }
 
-    // url에 해당하는 컨트롤러 메소드는 존재하나 Http 메소드가 옳바르지 않을 시 발생
-    @ExceptionHandler(MethodNotAllowedException.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(MethodNotAllowedException e) {
+    // url 에 해당하는 컨트롤러 메소드는 존재하나 Http 메소드가 옳바르지 않을 시 발생
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         return handlerException(ErrorCode.API_NOT_FOUND);
     }
 
-    // 요청 시 필요로 하는 필드가 누락되었을 시 발생
+    // 요청 시 필요로 하는 body 의 필드의 validation 이 실패했을 시 발생
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return handlerException(ErrorCode.INVALID_REQUEST_PARAMETER);
+        return handlerException(ErrorCode.INVALID_BODY_FIELD);
     }
 
+    // 요청 시 필요로 하는 body 의 필드의 서식(ex: date, time 등)이 잘못되었을 시 발생
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        return handlerException(ErrorCode.INVALID_REQUEST_PARAMETER);
+        return handlerException(ErrorCode.INVALID_BODY_FIELD);
+    }
+
+    // path variable 및 query parameter 의 validation 이 실패했을 시 발생
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        return handlerException(ErrorCode.INVALID_PATH_VAR_OR_QUERY_PARAMETER);
     }
 
     //Custom
@@ -51,7 +59,7 @@ public class GlobalExceptionHandler {
         return handlerException(e.getErrorCode());
     }
 
-    // 해당 id의 row가 존재하지 않을 시 발생
+    // 해당 id의 row 가 존재하지 않을 시 발생
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRecordNotFoundException(RecordNotFoundException e) {
         return handlerException(e.getErrorCode());
