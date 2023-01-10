@@ -31,4 +31,9 @@ public class ReservationController {
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
         return ResponseEntity.ok().body(reservationInfo);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteReservation(@PathVariable Long id) {
+        return ResponseEntity.noContent().build();
+    }
 }

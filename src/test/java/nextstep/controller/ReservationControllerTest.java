@@ -57,4 +57,13 @@ class ReservationControllerTest {
                 .body("themePrice", is(29000));
 
     }
+
+    @DisplayName("예약 삭제")
+    @Test
+    void deleteReservation() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }
