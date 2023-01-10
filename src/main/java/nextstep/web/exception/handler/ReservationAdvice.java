@@ -13,9 +13,8 @@ public class ReservationAdvice {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity.status(errorCode.getHttpStatus())
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
                 .body(new ErrorResponse(errorCode.getMessage()));
     }
-    
-
 }

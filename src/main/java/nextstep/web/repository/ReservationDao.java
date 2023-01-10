@@ -19,14 +19,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional
 public class ReservationDao implements ReservationRepository {
+
+    public static final String TABLE_NAME = "reservation";
+    public static final String KEY_COLUMN_NAME = "id";
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> Reservation.from(resultSet);
 
     public Long save(Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(KEY_COLUMN_NAME);
 
         Number key = simpleJdbcInsert.executeAndReturnKey(prepareParams(reservation));
 

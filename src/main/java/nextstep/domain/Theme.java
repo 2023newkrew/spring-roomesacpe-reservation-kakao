@@ -1,33 +1,19 @@
 package nextstep.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Builder
+@Getter
+@AllArgsConstructor
 public class Theme {
     private String name;
     private String desc;
     private Integer price;
-
-    public Theme(String name, String desc, Integer price) {
-        this.name = name;
-        this.desc = desc;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
 
     public static Theme from(ResultSet rs) throws SQLException {
         return Theme.builder()

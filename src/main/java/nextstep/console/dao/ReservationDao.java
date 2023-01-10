@@ -24,12 +24,9 @@ public class ReservationDao implements ReservationRepository {
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme()
-                    .getName());
-            ps.setString(5, reservation.getTheme()
-                    .getDesc());
-            ps.setInt(6, reservation.getTheme()
-                    .getPrice());
+            ps.setString(4, reservation.getTheme().getName());
+            ps.setString(5, reservation.getTheme().getDesc());
+            ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();

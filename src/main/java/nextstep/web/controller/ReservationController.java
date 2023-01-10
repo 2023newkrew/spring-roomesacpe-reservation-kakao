@@ -20,8 +20,7 @@ public class ReservationController {
     public ResponseEntity<URI> createReservation(@RequestBody ReservationRequestDto requestDto) {
         Long createdId = reservationService.createReservation(requestDto);
 
-        return ResponseEntity.created(URI.create("/reservations/" + createdId))
-                .build();
+        return ResponseEntity.created(URI.create("/reservations/" + createdId)).build();
     }
 
     @GetMapping("{id}")
@@ -35,7 +34,6 @@ public class ReservationController {
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
 
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 }
