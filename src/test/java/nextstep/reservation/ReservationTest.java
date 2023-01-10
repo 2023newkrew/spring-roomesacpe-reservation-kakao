@@ -57,7 +57,11 @@ public class ReservationTest {
                         .date(LocalDate.of(1982,2,19))
                         .time(LocalTime.of(2, 2))
                         .name("name")
-                        .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+                        .theme(Theme.builder()
+                                .name("워너고홈 ")
+                                .desc("병맛 어드벤처 회사 코믹물")
+                                .price(29000)
+                                .build())
                         .build()
         );
     }

@@ -21,7 +21,11 @@ public class RoomEscapeConsoleApplication {
         ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
         long reservationIdIndex = 0L;
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = Theme.builder()
+                .name("워너고홈")
+                .desc("병맛 어드벤처 회사 코믹물")
+                .price(29_000)
+                .build();
 
         while (true) {
             System.out.println();

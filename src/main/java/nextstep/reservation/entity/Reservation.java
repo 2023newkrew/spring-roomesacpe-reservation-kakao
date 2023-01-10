@@ -23,6 +23,10 @@ public class Reservation {
         this.date = reservationRequestDto.getDate();
         this.time = reservationRequestDto.getTime();
         this.name = reservationRequestDto.getName();
-        this.theme = new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000);
+        this.theme = Theme.builder()
+                .name("워너고홈 ")
+                .desc("병맛 어드벤처 회사 코믹물")
+                .price(29000)
+                .build();
     }
 }
