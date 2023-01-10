@@ -1,0 +1,80 @@
+package nextstep;
+
+import java.sql.*;
+
+public class ReservationJdbcRepository {
+    public Long save(Reservation reservation) {
+        Connection con = null;
+        try {
+            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setString(4, reservation.getTheme().getName());
+            ps.setString(5, reservation.getTheme().getDesc());
+            ps.setInt(6, reservation.getTheme().getPrice());
+            return (long) ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Reservation findOneById(Long reservationId) {
+        Connection con = null;
+
+        try {
+            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "SELECT * FROM reservation WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, reservationId);
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+            return new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getDate("date").toLocalDate(),
+                    resultSet.getTime("time").toLocalTime(),
+                    resultSet.getString("name"),
+                    new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int delete(Long reservationId) {
+        Connection con = null;
+
+        try {
+            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            String sql = "DELETE FROM reservation WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, reservationId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
