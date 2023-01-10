@@ -1,17 +1,24 @@
 package nextstep.console.dao;
 
 import nextstep.domain.Reservation;
+import nextstep.web.exception.BusinessException;
+import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.repository.ReservationRepository;
 
 import java.sql.*;
 
 public class ReservationDao implements ReservationRepository {
+
+    public static final String JDBC_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
+    public static final String JDBC_USER = "sa";
+    public static final String JDBC_PASSWORD = "";
+
     public ReservationDao() {
     }
 
     public Long save(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-        try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
+        try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             System.out.println("정상적으로 연결되었습니다.");
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
@@ -28,31 +35,29 @@ public class ReservationDao implements ReservationRepository {
             rs.next();
             return rs.getLong(1);
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
     }
 
     public Reservation findById(Long id) {
-        try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
+        try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             String sql = "SELECT * FROM reservation WHERE ID = ?;";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             return Reservation.from(ps.executeQuery());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
     }
 
     public void deleteById(Long id) {
-        try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
+        try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             String sql = "DELETE FROM reservation WHERE ID = ?;";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             ps.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
     }
 }

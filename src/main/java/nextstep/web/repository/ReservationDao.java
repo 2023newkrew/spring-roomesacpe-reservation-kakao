@@ -3,12 +3,15 @@ package nextstep.web.repository;
 import lombok.RequiredArgsConstructor;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.web.exception.BusinessException;
+import nextstep.web.exception.CommonErrorCode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -16,27 +19,19 @@ import java.util.Map;
 public class ReservationDao implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
-        Theme theme = Theme.builder()
-                .name(resultSet.getString("theme_name"))
-                .desc(resultSet.getString("theme_desc"))
-                .price(resultSet.getInt("theme_price"))
-                .build();
-        return Reservation.builder()
-                .id(resultSet.getLong("id"))
-                .date(resultSet.getDate("date")
-                        .toLocalDate())
-                .time(resultSet.getTime("time")
-                        .toLocalTime())
-                .name(resultSet.getString("name"))
-                .theme(theme)
-                .build();
-    };
+    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> Reservation.from(resultSet);
 
     public Long save(Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
+
+        Number key = simpleJdbcInsert.executeAndReturnKey(prepareParams(reservation));
+
+        return key.longValue();
+    }
+
+    private static Map<String, Object> prepareParams(Reservation reservation) {
         Theme theme = reservation.getTheme();
         Map<String, Object> params = new HashMap<>();
 
@@ -46,19 +41,23 @@ public class ReservationDao implements ReservationRepository {
         params.put("theme_name", theme.getName());
         params.put("theme_desc", theme.getDesc());
         params.put("theme_price", theme.getPrice());
-
-        Number key = simpleJdbcInsert.executeAndReturnKey(params);
-
-        return key.longValue();
+        return params;
     }
 
     public Reservation findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE ID = ?;";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper, id);
+        if (reservations.isEmpty()) {
+            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+        }
+
+        return reservations.get(0);
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE ID = ?;";
-        jdbcTemplate.update(sql, id);
+        if (jdbcTemplate.update(sql, id) == 0) {
+            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+        }
     }
 }
