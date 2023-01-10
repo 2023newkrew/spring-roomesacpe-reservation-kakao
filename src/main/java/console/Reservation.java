@@ -1,4 +1,4 @@
-package nextstep;
+package console;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

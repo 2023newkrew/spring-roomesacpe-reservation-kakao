@@ -1,4 +1,4 @@
-package nextstep;
+package console;
 
 public class Theme {
     private String name;
