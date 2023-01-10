@@ -3,9 +3,11 @@ package nextstep.service;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.repository.ReservationRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ReservationServiceImpl implements ReservationService {
 
     private static final Theme ROOM_ESCAPE_THEME = new Theme("검은방", "밀실 탈출", 30_000);
