@@ -15,6 +15,14 @@ public class Reservation {
     private String name;
     private Theme theme;
 
+    private Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
+
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.date = date;
         this.time = time;
@@ -43,9 +51,6 @@ public class Reservation {
     }
 
     public static Reservation from(ResultSet rs) throws SQLException {
-        if (!rs.next()) {
-            throw new RuntimeException();
-        }
         return Reservation.builder()
                 .id(rs.getLong("id"))
                 .date(rs.getDate("date")

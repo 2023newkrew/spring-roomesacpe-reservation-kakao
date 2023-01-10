@@ -30,9 +30,6 @@ public class Theme {
     }
 
     public static Theme from(ResultSet rs) throws SQLException {
-        if (!rs.next()) {
-            throw new RuntimeException();
-        }
         return Theme.builder()
                 .name(rs.getString("theme_name"))
                 .desc(rs.getString("theme_desc"))
