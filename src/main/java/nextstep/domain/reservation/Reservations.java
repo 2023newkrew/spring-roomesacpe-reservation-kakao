@@ -20,4 +20,11 @@ public class Reservations {
     public static void removeAll() {
         reservations.clear();
     }
+
+    public static boolean isReservated(Reservation newReservation) {
+        return reservations.values().stream()
+                .anyMatch((reservation)
+                        -> reservation.getDate().equals(newReservation.getDate())
+                        && reservation.getTime().equals(newReservation.getTime()));
+    }
 }

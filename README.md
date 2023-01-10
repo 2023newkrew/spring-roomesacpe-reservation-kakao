@@ -13,6 +13,7 @@
   - [x] `/reservations`에 post mapping
   - [x] 바디 json을 Reservation 객체로 변환
   - [x] id 추가 후 메모리에 저장
+    - [x] 날짜와 시간이 같은 예약이 있는 경우 생성 실패
   - [x] 201 리스폰스
 
 - 예약 조회 API

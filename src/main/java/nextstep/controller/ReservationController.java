@@ -24,6 +24,9 @@ public class ReservationController {
                 reservationDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
+        if (Reservations.isReservated(reservation)) {
+            return ResponseEntity.badRequest().build();
+        }
         Reservations.add(reservation);
         return ResponseEntity.created(URI.create("/reservations/"+reservation.getId())).build();
     }

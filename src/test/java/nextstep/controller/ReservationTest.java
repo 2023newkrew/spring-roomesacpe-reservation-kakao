@@ -44,7 +44,7 @@ public class ReservationTest {
     @DisplayName("create reservation test")
     @Test
     void createReservation() {
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:00", "name");
+        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:25", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,6 +53,19 @@ public class ReservationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", "/reservations/2");
+    }
+
+    @DisplayName("duplicate reservation test")
+    @Test
+    void sameTimeReservationTest() {
+        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:00", "name2");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationDto)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("get reservation test")
