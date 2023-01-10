@@ -26,19 +26,19 @@ public class ReservationServiceImpl implements ReservationService {
         return repository.save(reservation);
     }
 
-    private boolean hasSameDateAndTimeReservation(Reservation reservation) {
-        List<Reservation> confirmedReservations = repository.findAll();
-        return confirmedReservations.stream()
-                .anyMatch(confirmed ->
-                        confirmed.getDate().equals(reservation.getDate()) &&
-                                confirmed.getTime().equals(reservation.getTime()));
-    }
-
     public Reservation findReservation(Long id) {
         return repository.findById(id).orElseThrow();
     }
 
     public boolean cancelReservation(Long id) {
         return repository.delete(id);
+    }
+
+    private boolean hasSameDateAndTimeReservation(Reservation reservation) {
+        List<Reservation> confirmedReservations = repository.findAll();
+        return confirmedReservations.stream()
+                .anyMatch(confirmed ->
+                        confirmed.getDate().equals(reservation.getDate()) &&
+                                confirmed.getTime().equals(reservation.getTime()));
     }
 }
