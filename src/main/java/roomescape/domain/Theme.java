@@ -1,4 +1,4 @@
-package roomescape.nextstep;
+package roomescape.domain;
 
 public class Theme {
     private final String name;

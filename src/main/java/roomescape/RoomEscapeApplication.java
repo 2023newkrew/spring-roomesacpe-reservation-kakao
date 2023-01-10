@@ -2,8 +2,8 @@ package roomescape;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import roomescape.nextstep.Reservation;
-import roomescape.nextstep.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 import roomescape.repository.Reservations;
 
 import java.time.LocalDate;

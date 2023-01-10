@@ -1,6 +1,6 @@
 package roomescape.dto;
 
-import roomescape.nextstep.Reservation;
+import roomescape.domain.Reservation;
 
 public class ReservationResponse {
     private final Long id;

@@ -1,4 +1,4 @@
-package roomescape.nextstep;
+package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,9 +8,9 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final roomescape.nextstep.Theme theme;
+    private final Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.nextstep.Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.domain.Theme theme) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -45,7 +45,7 @@ public class Reservation {
         return name;
     }
 
-    public roomescape.nextstep.Theme getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 }

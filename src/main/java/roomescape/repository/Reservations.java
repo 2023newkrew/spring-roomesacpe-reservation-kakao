@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
-import roomescape.nextstep.Reservation;
+import roomescape.domain.Reservation;
 
 import java.util.ArrayList;
 import java.util.List;

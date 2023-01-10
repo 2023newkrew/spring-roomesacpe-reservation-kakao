@@ -1,7 +1,7 @@
 package roomescape.dto;
 
-import roomescape.nextstep.Reservation;
-import roomescape.nextstep.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

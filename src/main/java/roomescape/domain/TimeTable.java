@@ -1,6 +1,7 @@
-package roomescape.nextstep;
+package roomescape.domain;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public enum TimeTable {
     A(LocalTime.of(11, 30)),
@@ -16,5 +17,10 @@ public enum TimeTable {
 
     TimeTable(LocalTime time) {
         this.time = time;
+    }
+
+    public static boolean isExist(LocalTime time) {
+        return Arrays.stream(values())
+                .anyMatch(timeTable -> timeTable.time.equals(time));
     }
 }
