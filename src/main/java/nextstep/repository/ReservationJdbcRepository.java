@@ -40,12 +40,12 @@ public class ReservationJdbcRepository implements ReservationRepository{
             }
 
             reservation.setId(resultSet.getLong("id"));
+            return reservation;
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         } finally {
             close(conn, ps, resultSet);
         }
-        return reservation;
     }
 
     @Override
