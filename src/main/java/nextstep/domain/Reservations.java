@@ -24,8 +24,7 @@ public class Reservations {
         return instance;
     }
 
-    public Long add(ReservationDto reservationDto) {
-        Reservation reservation = ReservationDto.from(reservationDto);
+    public Long add(Reservation reservation) {
         reservation.setId(getAutoIncrementId());
 
         reservations.add(reservation);

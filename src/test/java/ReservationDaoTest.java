@@ -22,7 +22,7 @@ public class ReservationDaoTest {
     @Test
     @DisplayName("방탈출 예약하기")
     void test1(){
-        ReservationDto reservation = makeRandomReservationDto("2022-08-23", "13:01", 1L);
+        Reservation reservation = makeRandomReservation("2022-08-23", "13:01", 1L);
 
         Long reservationId = reservationDao.createReservation(reservation);
         assertThat(reservationId).isEqualTo(1);
@@ -45,7 +45,7 @@ public class ReservationDaoTest {
     @Test
     @DisplayName("예약된 방을 조회한다.")
     void test4() {
-        ReservationDto randomReservation = makeRandomReservationDto("2022-08-23", "13:02", 1L);
+        Reservation randomReservation = makeRandomReservation("2022-08-23", "13:02", 1L);
         long reservationId = reservationDao.createReservation(randomReservation);
         Reservation findReservation = reservationDao.findById(reservationId);
 
@@ -63,7 +63,7 @@ public class ReservationDaoTest {
     @Test
     @DisplayName("존재하지 않는 테마는 생성할 수 없다.")
     void test6(){
-        ReservationDto reservation = makeRandomReservationDto("2022-08-23", "13:06", 100L);
+        Reservation reservation = makeRandomReservation("2022-08-23", "13:06", 100L);
 
         assertThatThrownBy(() -> reservationDao.createReservation(reservation))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -72,20 +72,20 @@ public class ReservationDaoTest {
 
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
-    void test7(){
-        ReservationDto reservation1 = makeRandomReservationDto("2022-08-23", "13:07", 1L);
-        ReservationDto reservation2 = makeRandomReservationDto("2022-08-23", "13:07", 1L);
+    void test7() {
+        Reservation reservation1 = makeRandomReservation("2022-08-23", "13:07", 1L);
+        Reservation reservation2 = makeRandomReservation("2022-08-23", "13:07", 1L);
 
         reservationDao.createReservation(reservation1);
         Assertions.assertThatThrownBy(() -> reservationDao.createReservation(reservation2))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    ReservationDto makeRandomReservationDto(String date, String time, Long themeId){
+    Reservation makeRandomReservation(String date, String time, Long themeId){
         List<String> names = List.of("omin", "ethan", "java");
 
         int index = ThreadLocalRandom.current().nextInt(3);
 
-        return new ReservationDto(date, time, names.get(index), themeId);
+        return ReservationDto.from(new ReservationDto(date, time, names.get(index), themeId));
     }
 }
