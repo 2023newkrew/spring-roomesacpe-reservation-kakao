@@ -1,9 +1,11 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Repository
 public class ReservationMemoryRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> repository = new HashMap<>();
