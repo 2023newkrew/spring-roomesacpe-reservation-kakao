@@ -72,4 +72,11 @@ public class ReservationExceptionTest {
                 .when().post("/reservations").then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @DisplayName("예약 조회) ID가 없는 경우 조회 불가")
+    @Test
+    void notExistID() {
+        RestAssured.given().log().all().when().get("/reservations/-1").then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
