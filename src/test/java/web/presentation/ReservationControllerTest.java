@@ -1,5 +1,7 @@
 package web.presentation;
 
+import static org.hamcrest.core.Is.is;
+
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +11,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import web.dto.request.ReservationRequestDTO;
-
-import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
@@ -53,8 +53,6 @@ public class ReservationControllerTest {
     @DisplayName("Reservation 조회")
     @Test
     void retrieveReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
