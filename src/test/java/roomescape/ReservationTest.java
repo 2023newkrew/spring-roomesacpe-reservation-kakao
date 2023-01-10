@@ -20,38 +20,19 @@ public class ReservationTest {
     @LocalServerPort
     int port;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    void setUp() throws Exception {
         RestAssured.port = port;
     }
 
-    @DisplayName("예약 생성 테스트")
     @Test
-    void createReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("2022-08-11", "13:00", "name");
-
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequest)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
-    }
-
-    @Test
-    @DisplayName("예약 거절 테스트")
-    void rejectReservation() throws Exception {
+    @DisplayName("예약 생성 거절 테스트")
+    void rejectCreateReservation() throws Exception {
         // Given
-        ReservationRequest reservationRequest = new ReservationRequest("2022-08-11", "13:00", "kayla");
         ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie");
 
         // When
-        ResultActions resultActions = this.mockMvc.perform(post("/reservations")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(reservationRequest))
-        );
-        ResultActions overlapResultActions = this.mockMvc.perform(post("/reservations")
+        ResultActions overlapResultActions = mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(overlapReservationRequest))
         );
@@ -64,14 +45,6 @@ public class ReservationTest {
     @DisplayName("예약 조회 테스트")
     @Test
     void showReservation() throws Exception {
-        String name = "kayla";
-        ReservationRequest reservationRequest = new ReservationRequest("2022-08-11", "13:00", name);
-
-        ResultActions resultActions = this.mockMvc.perform(post("/reservations")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(reservationRequest))
-        );
-
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
@@ -80,4 +53,35 @@ public class ReservationTest {
                 .body("id", is(1))
                 .body("name", is(name));
     }
+
+    @DisplayName("예약 조회 거절 테스트")
+    @Test
+    void rejectShowReservation() throws Exception {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/10")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("예약 삭제 테스트")
+    @Test
+    void deleteReservation() throws Exception {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/2")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("예약 삭제 거절 테스트")
+    @Test
+    void rejectDeleteReservation() throws Exception {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/20")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
 }
