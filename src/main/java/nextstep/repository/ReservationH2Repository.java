@@ -11,16 +11,7 @@ public class ReservationH2Repository implements ReservationRepository{
 
     @Override
     public Reservation add(Reservation reservation) {
-        Connection con = null;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        Connection con = getConnection();
 
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
@@ -42,29 +33,15 @@ public class ReservationH2Repository implements ReservationRepository{
             throw new RuntimeException(e);
         }
 
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        closeConnection(con);
 
         return reservation;
     }
 
     @Override
     public Reservation get(Long id) {
-        Connection con = null;
+        Connection con = getConnection();
         Reservation result = null;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
 
         try {
             String sql = "SELECT * FROM reservation WHERE id = ?";
@@ -88,28 +65,14 @@ public class ReservationH2Repository implements ReservationRepository{
             throw new RuntimeException(e);
         }
 
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        closeConnection(con);
 
         return result;
     }
 
     @Override
     public void delete(Long id) {
-        Connection con = null;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        Connection con = getConnection();
 
         try {
             String sql = "DELETE FROM reservation WHERE id = ?";
@@ -120,6 +83,24 @@ public class ReservationH2Repository implements ReservationRepository{
             throw new RuntimeException(e);
         }
 
+        closeConnection(con);
+    }
+
+    private Connection getConnection() {
+        Connection con = null;
+
+        // 드라이버 연결
+        try {
+            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+        return con;
+    }
+
+    private void closeConnection(Connection con) {
         try {
             if (con != null)
                 con.close();
