@@ -1,5 +1,6 @@
 package kakao.repository;
 
+import kakao.model.entity.Reservation;
 import kakao.model.request.ReservationRequest;
 import kakao.model.response.ReservationResponse;
 import kakao.model.response.Theme;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
@@ -36,9 +38,9 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 .addValue("date", Date.valueOf(reservationRequest.getDate()))
                 .addValue("time", Time.valueOf(reservationRequest.getTime()))
                 .addValue("name", reservationRequest.getName())
-                .addValue("themeName", theme.getName())
-                .addValue("themeDesc", theme.getDesc())
-                .addValue("themePrice", theme.getPrice());
+                .addValue("theme_name", theme.getName())
+                .addValue("theme_desc", theme.getDesc())
+                .addValue("theme_price", theme.getPrice());
 
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
@@ -47,20 +49,28 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     public Optional<ReservationResponse> findById(Long id) {
         return jdbcTemplate.query("SELECT * FROM reservation WHERE id=?", reservationResponseRowMapper(), id)
                 .stream()
+                .map(ReservationResponse::new)
                 .findAny();
     }
 
     @Override
     public List<ReservationResponse> findByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.query("SELECT * FROM reservation WHERE date=? AND time=?", reservationResponseRowMapper(), date, time);
+        return jdbcTemplate
+                .query("SELECT * FROM reservation WHERE date=? AND time=?", reservationResponseRowMapper(), date, time).stream()
+                .map(ReservationResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
+        if (findById(id).isPresent()) {
+            jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
+            return;
+        }
+        throw new RuntimeException("Reservation not found.");
     }
 
-    private RowMapper<ReservationResponse> reservationResponseRowMapper() {
+    private RowMapper<Reservation> reservationResponseRowMapper() {
         return (resultSet, rowNumber) -> {
             Long id = resultSet.getLong("id");
             LocalDate date = resultSet.getDate("date").toLocalDate();
@@ -73,7 +83,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
             Theme theme = new Theme(themeName, themeDesc, themePrice);
 
-            return new ReservationResponse(id, date, time, name, theme);
+            return new Reservation(id, date, time, name, theme);
         };
     }
 }
