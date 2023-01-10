@@ -31,4 +31,8 @@ public class ReservationService {
     public Reservation findReservation(Long id) {
         return repository.findById(id).orElseThrow();
     }
+
+    public boolean cancelReservation(Long id) {
+        return repository.delete(id);
+    }
 }

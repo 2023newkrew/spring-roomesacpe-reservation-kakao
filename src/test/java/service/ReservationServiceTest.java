@@ -83,11 +83,32 @@ class ReservationServiceTest {
         assertThat(result).isEqualTo(reservation);
     }
 
-
     @DisplayName("예약 조회에 실패하면 예외 발생")
     @Test
     void findReservation_fail() {
         assertThatThrownBy(() -> reservationService.findReservation(1L))
                 .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @DisplayName("예약 취소에 성공하면 true 반환")
+    @Test
+    void delete_success() {
+        Reservation reservation = generateReservation(
+                null, "2023-01-01", "13:00", "john", testTheme);
+        reservationService.reserve(reservation);
+        Long id = 1L;
+
+        //when
+        boolean result = reservationService.cancelReservation(id);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("예약 취소에 실패하면 false 반환")
+    @Test
+    void delete_fail() {
+        //then
+        assertThat(reservationService.cancelReservation(1L)).isFalse();
     }
 }
