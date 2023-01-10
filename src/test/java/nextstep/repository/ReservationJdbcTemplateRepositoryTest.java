@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -77,5 +78,31 @@ class ReservationJdbcTemplateRepositoryTest {
         assertThat(savedReservation1).isEqualTo(expectedReservation1);
         assertThat(savedReservation2).isEqualTo(expectedReservation2);
         assertThat(savedReservation3).isEqualTo(expectedReservation3);
+    }
+
+    @DisplayName("id로 예약을 조회한다 - 조회 성공")
+    @Test
+    void find_success() {
+        repository.save(inputReservation1);
+        repository.save(inputReservation2);
+        repository.save(inputReservation3);
+
+        Optional<Reservation> result1 = repository.findById(1L);
+        Optional<Reservation> result2 = repository.findById(2L);
+        Optional<Reservation> result3 = repository.findById(3L);
+
+        assertThat(result1).isNotEmpty()
+                .get().isEqualTo(expectedReservation1);
+        assertThat(result2).isNotEmpty()
+                .get().isEqualTo(expectedReservation2);
+        assertThat(result3).isNotEmpty()
+                .get().isEqualTo(expectedReservation3);
+    }
+
+    @DisplayName("id로 예약을 조회한다 - 조회 실패")
+    @Test
+    void find_fail() {
+        Optional<Reservation> result = repository.findById(1L);
+        assertThat(result).isEmpty();
     }
 }

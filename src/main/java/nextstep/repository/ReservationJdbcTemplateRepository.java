@@ -1,7 +1,10 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -45,7 +48,12 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, reservationRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -57,4 +65,19 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public boolean delete(Long id) {
         return false;
     }
+
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+        Theme theme = new Theme(
+                rs.getString("theme_name"),
+                rs.getString("theme_desc"),
+                rs.getInt("theme_price")
+        );
+        return new Reservation(
+                rs.getLong("id"),
+                rs.getDate("date").toLocalDate(),
+                rs.getTime("time").toLocalTime(),
+                rs.getString("name"),
+                theme
+        );
+    };
 }
