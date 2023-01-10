@@ -4,6 +4,10 @@ import nextstep.Reservation;
 import nextstep.Theme;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReservationDAO {
     public void addReservation(Reservation reservation) {
@@ -61,6 +65,44 @@ public class ReservationDAO {
 
         closeConnection(con);
         return reservation;
+    }
+
+    public List<Reservation> findReservationByDateAndTime(LocalDate localDate, LocalTime localTime) {
+        Connection con = null;
+        List<Reservation> reservations = new ArrayList<>();
+
+        con = getConnection(con);
+
+        try {
+            String sql = "SELECT * FROM reservation WHERE DATE = ? AND TIME = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, Date.valueOf(localDate));
+            ps.setTime(2, Time.valueOf(localTime));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                Date date = rs.getDate("date");
+                Time time = rs.getTime("time");
+                String name = rs.getString("name");
+                String themeName = rs.getString("theme_name");
+                String themeDesc = rs.getString("theme_desc");
+                Integer themePrice = rs.getInt("theme_price");
+
+                reservations.add(new Reservation(
+                        id,
+                        date.toLocalDate(),
+                        time.toLocalTime(),
+                        name,
+                        new Theme(themeName, themeDesc, themePrice)
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        closeConnection(con);
+        return reservations;
     }
 
     public boolean deleteReservation(Long id) {

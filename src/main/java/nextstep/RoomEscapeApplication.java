@@ -1,9 +1,11 @@
 package nextstep;
 
 import nextstep.console.ReservationDAO;
+import nextstep.exceptions.CustomException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -40,6 +42,11 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
+
+                List<Reservation> reservationsByDateAndTime = reservationDAO.findReservationByDateAndTime(reservation.getDate(), reservation.getTime());
+                if (reservationsByDateAndTime.size() > 0) {
+                    throw new CustomException();
+                }
 
                 reservationDAO.addReservation(reservation);
 
