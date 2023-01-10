@@ -12,7 +12,7 @@ public class DatabaseExecutor {
     private JdbcTemplate jdbcTemplate;
 
     public void createTable(String tableName) {
-        jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
+        jdbcTemplate.execute("CREATE TABLE " + tableName + "(" +
                 "id bigint not null auto_increment," +
                 "date date," +
                 "time time," +

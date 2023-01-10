@@ -1,8 +1,9 @@
 package nextstep.domain.repository;
 
 import nextstep.common.DatabaseExecutor;
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.reservation.Reservation;
+import nextstep.domain.theme.Theme;
+import nextstep.domain.reservation.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static nextstep.domain.repository.QuerySetting.Reservation.*;
+import static nextstep.domain.QuerySetting.Reservation.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest(includeFilters = {
