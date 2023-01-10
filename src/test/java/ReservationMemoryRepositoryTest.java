@@ -46,13 +46,22 @@ class ReservationMemoryRepositoryTest {
 
     }
 
+    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
+        return new Reservation(
+                id,
+                LocalDate.parse(date),
+                LocalTime.parse(time),
+                name,
+                theme
+        );
+    }
+
     @DisplayName("예약을 저장한다.")
     @Test
     void save() {
         Reservation savedReservation = repository.save(inputReservation1);
         assertThat(savedReservation).isEqualTo(expectedReservation1);
     }
-
 
     @DisplayName("여러개의 예약을 연속적으로 저장한다.")
     @Test
@@ -109,15 +118,5 @@ class ReservationMemoryRepositoryTest {
     void findAll_empty() {
         List<Reservation> result = repository.findAll();
         assertThat(result).isEmpty();
-    }
-
-    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date),
-                LocalTime.parse(time),
-                name,
-                theme
-        );
     }
 }
