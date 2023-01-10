@@ -19,13 +19,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(classes = RoomEscapeWebApplication.class)
 class ThemeReservationServiceTest {
+    public static final String RESERVATION_DATE = "2022-12-20";
     @Autowired
     private ThemeReservationService themeReservationService;
 
     @Test
     @DisplayName("방탈출 예약하기")
     void test1(){
-        ReservationDto reservationDto = makeRandomReservationDto("2022-08-23", "13:01");
+        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:01");
 
         Long reservationId = themeReservationService.reserve(reservationDto);
         ReservationDetail findReservation = themeReservationService.findById(reservationId);
@@ -35,7 +36,7 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
     void test2(){
-        ReservationDto reservationDto = makeRandomReservationDto("2022-08-23", "13:02");
+        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:02");
         Long reservationId = themeReservationService.reserve(reservationDto);
 
         System.out.println("reservationId = " + reservationId);
@@ -53,7 +54,7 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("예약된 방을 조회한다.")
     void test4() {
-        ReservationDto randomReservation = makeRandomReservationDto("2022-08-23", "13:04");
+        ReservationDto randomReservation = makeRandomReservationDto(RESERVATION_DATE, "13:04");
         Long reservationId = themeReservationService.reserve(randomReservation);
         System.out.println(Reservations.getInstance().findAll());
         System.out.println(reservationId);
@@ -73,8 +74,8 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
     void test7() {
-        ReservationDto reservation1 = makeRandomReservationDto("2022-08-23", "13:07");
-        ReservationDto reservation2 = makeRandomReservationDto("2022-08-23", "13:07");
+        ReservationDto reservation1 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
+        ReservationDto reservation2 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
 
         themeReservationService.reserve(reservation1);
         Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
