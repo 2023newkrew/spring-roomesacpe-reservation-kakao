@@ -71,8 +71,21 @@ public class ReservationDAO implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        return Optional.empty();
+    public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+        connect();
+        String sql = "SELECT * FROM reservation WHERE date = ? AND time = ?";
+        ResultSet rs = null;
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
+            rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
+        }
     }
 
     private void connect() {

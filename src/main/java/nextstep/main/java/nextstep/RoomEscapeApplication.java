@@ -1,11 +1,13 @@
 package nextstep.main.java.nextstep;
 
 import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.exception.NoSuchReservationException;
+import nextstep.main.java.nextstep.exception.DuplicateReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+
+import static nextstep.main.java.nextstep.message.ExceptionMessage.*;
 
 public class RoomEscapeApplication {
     private static final String ADD = "add";
@@ -43,6 +45,10 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
+
+                if (reservationDAO.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time))) {
+                    throw new DuplicateReservationException(DUPLICATE_RESERVATION_MESSAGE);
+                }
 
                 reservationDAO.save(reservation);
 

@@ -31,9 +31,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
+    public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
         return reservationMap.values().stream()
-                .filter(x -> x.getDate().equals(date) && x.getTime().equals(time))
-                .findAny();
+                .anyMatch(x -> x.getDate().equals(date) && x.getTime().equals(time));
     }
 }

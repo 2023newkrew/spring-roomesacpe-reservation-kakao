@@ -53,7 +53,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        return Optional.empty();
+    public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+        return true;
     }
 }
