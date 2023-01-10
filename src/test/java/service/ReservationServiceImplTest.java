@@ -22,7 +22,7 @@ class ReservationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        testTheme = new Theme("Theme", "Theme desc", 10_000);
+        testTheme = new Theme("검은방", "밀실 탈출", 30_000);
         reservationService = new ReservationServiceImpl(new ReservationMemoryRepository());
     }
 
@@ -40,9 +40,9 @@ class ReservationServiceImplTest {
     @Test
     void reserve_duplicate() {
         Reservation reservation1 = generateReservation(
-                null, "2023-01-01", "13:00", "john", testTheme);
+                null, "2023-01-01", "13:00", "john", null);
         Reservation reservation2 = generateReservation(
-                null, "2023-01-01", "13:00", "kim", testTheme);
+                null, "2023-01-01", "13:00", "kim", null);
 
         assertThatNoException()
                 .isThrownBy(() -> reservationService.reserve(reservation1));
@@ -54,11 +54,11 @@ class ReservationServiceImplTest {
     @Test
     void reserve_success() {
         Reservation reservation1 = generateReservation(
-                null, "2023-01-01", "13:00", "john", testTheme);
+                null, "2023-01-01", "13:00", "john", null);
         Reservation reservation2 = generateReservation(
-                null, "2023-01-01", "14:00", "john", testTheme);
+                null, "2023-01-01", "14:00", "john", null);
         Reservation reservation3 = generateReservation(
-                null, "2023-01-02", "13:00", "john", testTheme);
+                null, "2023-01-02", "13:00", "john", null);
 
         assertThatNoException()
                 .isThrownBy(() -> reservationService.reserve(reservation1));
@@ -73,15 +73,18 @@ class ReservationServiceImplTest {
     void findReservation_success() {
         //given
         Reservation reservation = generateReservation(
-                null, "2023-01-01", "13:00", "john", testTheme);
+                null, "2023-01-01", "13:00", "john", null);
         reservationService.reserve(reservation);
         Long id = 1L;
+
+        Reservation expected = generateReservation(
+                id, "2023-01-01", "13:00", "john", testTheme);
 
         //when
         Reservation result = reservationService.findReservation(id);
 
         //then
-        assertThat(result).isEqualTo(reservation);
+        assertThat(result).isEqualTo(expected);
     }
 
     @DisplayName("예약 조회에 실패하면 예외 발생")
