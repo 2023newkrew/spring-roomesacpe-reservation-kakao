@@ -84,6 +84,13 @@ class ReservationMemoryRepositoryTest {
                 .get().isEqualTo(expectedReservation3);
     }
 
+    @DisplayName("id로 예약을 조회한다 - 조회 성공")
+    @Test
+    void find_fail() {
+        Optional<Reservation> result = repository.findById(1L);
+        assertThat(result).isEmpty();
+    }
+
     private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
         return new Reservation(
                 id,
