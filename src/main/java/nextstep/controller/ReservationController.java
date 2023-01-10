@@ -15,7 +15,7 @@ import java.net.URI;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
 
     @Autowired
     public ReservationController(ReservationService reservationService) {
