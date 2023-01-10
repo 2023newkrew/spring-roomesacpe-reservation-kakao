@@ -1,11 +1,17 @@
 package web.presentation;
 
 import java.net.URI;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,23 +30,43 @@ import web.exception.NoSuchReservationException;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private Long reservationIdIndex = 0L;
-    private final Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    private final JdbcTemplate jdbcTemplate;
+    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    List<Reservation> reservations = new ArrayList<>();
+
+    public ReservationController(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @PostMapping("")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
-        boolean isDuplicated = reservations.stream()
-                .anyMatch(item -> Objects.equals(reservationRequestDTO.getDate(), item.getDate().toString())
-                        && Objects.equals(reservationRequestDTO.getTime(), item.getTime().toString()));
-        if (isDuplicated) {
+        Reservation reservation = reservationRequestDTO.toEntity(defaultTheme);
+
+        String selectSql = "SELECT id FROM reservation WHERE date = (?) AND time = (?) LIMIT 1 ";
+
+        List<Long> ids = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
+                rs.getLong("id")), Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime()));
+
+        if (ids.size() > 0) {
             throw new DuplicatedReservationException();
         }
 
-        Reservation reservation = reservationRequestDTO.toEntity(++reservationIdIndex, theme);
-        reservations.add(reservation);
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final Theme theme = reservation.getTheme();
 
-        return ResponseEntity.created(URI.create("/reservations/" + reservationIdIndex)).build();
+        this.jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setString(4, theme.getName());
+            ps.setString(5, theme.getDesc());
+            ps.setInt(6, theme.getPrice());
+            return ps;
+        }, keyHolder);
+
+        return ResponseEntity.created(URI.create("/reservations/" + keyHolder.getKey())).build();
     }
 
     @GetMapping("/{id}")

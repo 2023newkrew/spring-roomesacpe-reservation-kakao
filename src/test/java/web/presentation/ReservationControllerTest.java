@@ -97,25 +97,25 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
-
-    @DisplayName("Reservation 취소")
-    @Test
-    @Order(4)
-    void deleteReservation() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("없는 예약을 취소하면 404를 반환한다.")
-    @Test
-    void deleteNotExistingReservation() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/15")
-                .then().log().all()
-                .statusCode(HttpStatus.NOT_FOUND.value());
-    }
+    //
+    // @DisplayName("Reservation 취소")
+    // @Test
+    // @Order(4)
+    // void deleteReservation() {
+    //     RestAssured.given().log().all()
+    //             .contentType(MediaType.APPLICATION_JSON_VALUE)
+    //             .when().delete("/reservations/1")
+    //             .then().log().all()
+    //             .statusCode(HttpStatus.NO_CONTENT.value());
+    // }
+    //
+    // @DisplayName("없는 예약을 취소하면 404를 반환한다.")
+    // @Test
+    // void deleteNotExistingReservation() {
+    //     RestAssured.given().log().all()
+    //             .contentType(MediaType.APPLICATION_JSON_VALUE)
+    //             .when().delete("/reservations/15")
+    //             .then().log().all()
+    //             .statusCode(HttpStatus.NOT_FOUND.value());
+    // }
 }

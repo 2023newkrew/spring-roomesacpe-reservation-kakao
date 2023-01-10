@@ -15,8 +15,8 @@ public class ReservationRequestDTO {
     private final String time;
     private final String name;
 
-    public Reservation toEntity(Long reservationId, Theme theme) {
-        return new Reservation(reservationId, LocalDate.parse(date),
+    public Reservation toEntity(Theme theme) {
+        return new Reservation(null, LocalDate.parse(date),
                 LocalTime.parse(time + ":00"), this.name, theme);
     }
 }
