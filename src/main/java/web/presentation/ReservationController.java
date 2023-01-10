@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -71,6 +70,26 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> retrieveReservation(@PathVariable Long id) {
+        Reservation reservation = getReservationById(id);
+
+        final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservation);
+
+        return ResponseEntity.ok()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationResponseDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        getReservationById(id);
+
+        String deleteSql = "DELETE FROM reservation WHERE id = (?)";
+        this.jdbcTemplate.update(deleteSql, id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    private Reservation getReservationById(final Long id) throws NoSuchReservationException {
         String selectSql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
 
         List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) -> new Reservation(
@@ -86,21 +105,6 @@ public class ReservationController {
         if (reservations.size() == 0) {
             throw new NoSuchReservationException();
         }
-
-        final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservations.get(0));
-
-        return ResponseEntity.ok()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationResponseDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        boolean removed = reservations.removeIf(item -> Objects.equals(item.getId(), id));
-        if (!removed) {
-            throw new NoSuchReservationException();
-        }
-
-        return ResponseEntity.noContent().build();
+        return reservations.get(0);
     }
 }
