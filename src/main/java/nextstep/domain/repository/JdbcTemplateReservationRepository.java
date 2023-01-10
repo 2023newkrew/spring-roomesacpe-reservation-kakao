@@ -38,7 +38,9 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Optional<Reservation> findById(Long reservationId) {
-        Reservation reservation = jdbcTemplate.queryForObject(SELECT_BY_ID, new Object[] {reservationId},(rs, rowNum) -> new Reservation(
+        Reservation reservation = jdbcTemplate.queryForObject(
+                SELECT_BY_ID,
+                (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
@@ -48,19 +50,20 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                                 rs.getString("theme_desc"),
                                 rs.getInt("theme_price")
                         )
-                )
+                ),
+                reservationId
         );
         return Optional.ofNullable(reservation);
     }
 
     @Override
     public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_DATE_AND_TIME, new Object[] {Date.valueOf(date), Time.valueOf(time)}, Integer.class) > 0;
+        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_DATE_AND_TIME, Integer.class, Date.valueOf(date), Time.valueOf(time)) > 0;
     }
 
     @Override
     public boolean deleteById(Long reservationId) {
-        return jdbcTemplate.update(DELETE_BY_ID, new Object[] {reservationId}) == 1;
+        return jdbcTemplate.update(DELETE_BY_ID, reservationId) > 0;
     }
 
     @Override
