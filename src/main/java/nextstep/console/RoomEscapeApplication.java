@@ -3,6 +3,7 @@ package nextstep.console;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ReservationDAO reservationDAO = new ReservationDAO();
+
         List<Reservation> reservations = new ArrayList<>();
         Long reservationIdIndex = 0L;
 
@@ -39,15 +42,13 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
-
-                reservations.add(reservation);
+                Reservation reservation = reservationDAO.addReservation(new Reservation(
+                    ++reservationIdIndex,
+                    LocalDate.parse(date),
+                    LocalTime.parse(time + ":00"),
+                    name,
+                    theme
+                ));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -61,10 +62,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                Reservation reservation = reservationDAO.findReservation(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -80,9 +78,8 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                reservationDAO.deleteReservation(id);
+                System.out.println("예약이 취소되었습니다.");
             }
 
             if (input.equals(QUIT)) {
