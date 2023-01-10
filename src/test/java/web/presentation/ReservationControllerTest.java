@@ -74,6 +74,16 @@ public class ReservationControllerTest {
                 .body("themePrice", is(29000));
     }
 
+    @DisplayName("없는 Reservation 조회 시 404를 반환한다.")
+    @Test
+    void retrieveNotExistingReservation() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/15")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
     @DisplayName("Reservation 취소")
     @Test
     @Order(3)

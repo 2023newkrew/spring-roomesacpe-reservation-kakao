@@ -40,7 +40,7 @@ public class ReservationController {
         Reservation reservation = reservations.stream()
                 .filter(item -> Objects.equals(item.getId(), id))
                 .findAny()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NoSuchReservationException::new);
 
         final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservation);
 
