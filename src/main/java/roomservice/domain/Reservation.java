@@ -3,8 +3,10 @@ package roomservice.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Reservation {
     private Long id;
     private LocalDate date;

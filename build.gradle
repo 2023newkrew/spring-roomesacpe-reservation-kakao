@@ -15,6 +15,11 @@ repositories {
 }
 
 dependencies{
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // log
+    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
