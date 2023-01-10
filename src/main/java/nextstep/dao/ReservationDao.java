@@ -14,6 +14,10 @@ public class ReservationDao {
     private final Themes themes = Themes.getInstance();
 
     public Long createReservation(ReservationDto reservationDto){
+        if(reservations.findByDateTime(reservationDto.getLocalDate(), reservationDto.getLocalTime()) != null){
+            throw new IllegalArgumentException("같은 날짜와 시간에 예약할 수 없습니다.");
+        }
+
         if (themes.findById(reservationDto.getThemeId()) == null){
             throw new IllegalArgumentException("없는 테마입니다.");
         }

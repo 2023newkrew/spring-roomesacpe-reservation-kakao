@@ -3,6 +3,8 @@ package nextstep.domain;
 import nextstep.entity.Reservation;
 import nextstep.dto.ReservationDto;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class Reservations {
     }
 
     public Long add(ReservationDto reservationDto) {
-        Reservation reservation = Reservation.from(reservationDto);
+        Reservation reservation = reservationDto.toReservation();
         reservation.setId(getAutoIncrementId());
 
         reservations.add(reservation);
@@ -52,5 +54,13 @@ public class Reservations {
 
     public List<Reservation> findAll() {
         return reservations;
+    }
+
+    public Reservation findByDateTime(LocalDate date, LocalTime time) {
+        return reservations.stream()
+                .filter(reservation -> reservation.getTime().equals(time)
+                        && reservation.getDate().equals(date))
+                .findFirst()
+                .orElse(null);
     }
 }
