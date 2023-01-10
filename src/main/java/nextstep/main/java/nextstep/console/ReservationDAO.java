@@ -34,7 +34,7 @@ public class ReservationDAO implements ReservationRepository {
         }
     }
 
-    private Long  getGeneratedKeys(PreparedStatement ps) throws SQLException {
+    private Long getGeneratedKeys(PreparedStatement ps) throws SQLException {
         ResultSet generatedKeys = ps.getGeneratedKeys();
         generatedKeys.next();
         return generatedKeys.getLong(1);
@@ -53,14 +53,14 @@ public class ReservationDAO implements ReservationRepository {
             rs.first();
             return Optional.of(
                     new Reservation(rs.getLong("id"),
-                    rs.getDate("date").toLocalDate(),
-                    rs.getTime("time").toLocalTime(),
-                    rs.getString("name"),
-                    new Theme(
-                            rs.getString("theme_name"),
-                            rs.getString("theme_desc"),
-                            rs.getInt("theme_price")
-                    ))
+                            rs.getDate("date").toLocalDate(),
+                            rs.getTime("time").toLocalTime(),
+                            rs.getString("name"),
+                            new Theme(
+                                    rs.getString("theme_name"),
+                                    rs.getString("theme_desc"),
+                                    rs.getInt("theme_price")
+                            ))
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);

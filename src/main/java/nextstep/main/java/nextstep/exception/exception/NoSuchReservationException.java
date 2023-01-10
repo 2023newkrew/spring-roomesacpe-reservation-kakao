@@ -1,6 +1,6 @@
 package nextstep.main.java.nextstep.exception.exception;
 
-public class NoSuchReservationException extends RuntimeException{
+public class NoSuchReservationException extends RuntimeException {
     public NoSuchReservationException() {
         super();
     }

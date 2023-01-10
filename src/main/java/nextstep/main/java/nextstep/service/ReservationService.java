@@ -18,7 +18,7 @@ public class ReservationService {
 
     public Reservation save(ReservationCreateRequestDto request) {
         Reservation reservation = new Reservation(request.getDate(), request.getTime(), request.getName(), new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
-        if(repository.existsByDateAndTime(reservation.getDate(), reservation.getTime())){
+        if (repository.existsByDateAndTime(reservation.getDate(), reservation.getTime())) {
             throw new DuplicateReservationException();
         }
         return repository.save(reservation);
