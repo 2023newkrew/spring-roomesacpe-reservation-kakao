@@ -8,4 +8,5 @@ public interface ReservationRepo {
     public long add(Reservation reservation);
 
     public int delete(long id);
+
 }

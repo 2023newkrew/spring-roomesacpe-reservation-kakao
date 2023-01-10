@@ -59,4 +59,13 @@ public class Reservation {
     public Theme getTheme() {
         return theme;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Reservation reservation = (Reservation) obj;
+        return this.name.equals(reservation.getName())
+        && this.date.equals(reservation.getDate())
+        && this.time.equals(reservation.getTime())
+        && this.theme.equals(reservation.getTheme());
+    }
 }
