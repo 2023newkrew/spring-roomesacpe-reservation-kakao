@@ -1,37 +1,15 @@
 package web.repository;
 
-import org.springframework.stereotype.Repository;
-import web.entity.Reservation;
-import web.exception.ReservationDuplicateException;
 
-import java.util.HashMap;
+import web.entity.Reservation;
+
 import java.util.Optional;
 
-@Repository
-public class ReservationRepository {
+public interface ReservationRepository {
 
-    static final HashMap<Long, Reservation> reservations = new HashMap<>();
-    private static long createdId = 0L;
+    long save(Reservation reservation);
 
-    public long save(Reservation reservation) {
-        if (isDuplicateReservation(reservation)) {
-            throw new ReservationDuplicateException();
-        }
-        reservations.put(++createdId, reservation);
-        return createdId;
-    }
+    Optional<Reservation> findById(long reservationId);
 
-    private boolean isDuplicateReservation(Reservation reservation) {
-        return reservations.values()
-                .stream()
-                .anyMatch(savedReservation -> savedReservation.isDuplicate(reservation));
-    }
-
-    public Optional<Reservation> findById(long reservationId) {
-        return Optional.ofNullable(reservations.get(reservationId));
-    }
-
-    public Optional<Reservation> delete(long reservationId) {
-        return Optional.ofNullable(reservations.remove(reservationId));
-    }
+    Long delete(long reservationId);
 }

@@ -28,7 +28,9 @@ public class RoomEscapeService {
     }
 
     public void cancelReservation(long reservationId) {
-        reservationRepository.delete(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+        long deleteReservationCount = reservationRepository.delete(reservationId);
+        if (deleteReservationCount == 0) {
+            throw new ReservationNotFoundException(reservationId);
+        }
     }
 }

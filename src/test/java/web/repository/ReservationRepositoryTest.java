@@ -11,11 +11,11 @@ import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static web.repository.ReservationRepository.reservations;
+import static web.repository.MemoryReservationRepository.reservations;
 
 public class ReservationRepositoryTest {
 
-    private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final MemoryReservationRepository reservationRepository = new MemoryReservationRepository();
 
     @Nested
     class Save {
@@ -86,17 +86,14 @@ public class ReservationRepositoryTest {
             Reservation reservation = Reservation.of(today, now, name);
             long reservationId = reservationRepository.save(reservation);
 
-            Reservation cancelReservation = reservationRepository.delete(reservationId).orElseThrow();
-            assertThat(cancelReservation.getDate()).isEqualTo(today);
-            assertThat(cancelReservation.getTime()).isEqualTo(now);
-            assertThat(cancelReservation.getName()).isEqualTo(name);
-
+            long deleteReservationCount = reservationRepository.delete(reservationId);
+            assertThat(deleteReservationCount).isEqualTo(1L);
             assertThat(reservationRepository.findById(reservationId)).isEmpty();
         }
 
         @Test
         void should_throwException_when_notExistReservation() {
-            assertThat(reservationRepository.delete(-1)).isEmpty();
+            assertThat(reservationRepository.delete(-1)).isEqualTo(0L);
         }
     }
 
