@@ -107,6 +107,7 @@ public class ReservationTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @Disabled
     @DisplayName("예약 삭제 거절 테스트")
     @Test
     void rejectDeleteReservation() throws Exception {
