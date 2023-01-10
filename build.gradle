@@ -24,7 +24,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     runtimeOnly 'com.h2database:h2'
+
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 }
 
 java {
