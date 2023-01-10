@@ -24,9 +24,12 @@ public class ConsoleView {
         System.out.println("예약 날짜: " + reservation.getDate());
         System.out.println("예약 시간: " + reservation.getTime());
         System.out.println("예약자 이름: " + reservation.getName());
-        System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-        System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-        System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+        System.out.println("예약 테마 이름: " + reservation.getTheme()
+                .getName());
+        System.out.println("예약 테마 설명: " + reservation.getTheme()
+                .getDesc());
+        System.out.println("예약 테마 가격: " + reservation.getTheme()
+                .getPrice());
     }
 
     public void printCancelReservation() {

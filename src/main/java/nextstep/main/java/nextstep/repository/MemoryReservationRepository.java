@@ -32,7 +32,10 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return reservationMap.values().stream()
-                .anyMatch(x -> x.getDate().equals(date) && x.getTime().equals(time));
+        return reservationMap.values()
+                .stream()
+                .anyMatch(x -> x.getDate()
+                        .equals(date) && x.getTime()
+                        .equals(time));
     }
 }

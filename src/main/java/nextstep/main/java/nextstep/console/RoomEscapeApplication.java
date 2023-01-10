@@ -51,7 +51,8 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findOne(id).get();
+                Reservation reservation = reservationDAO.findOne(id)
+                        .get();
 
                 consoleView.printReservationInfo(reservation);
             }

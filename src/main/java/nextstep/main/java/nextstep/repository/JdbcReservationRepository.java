@@ -35,12 +35,16 @@ public class JdbcReservationRepository implements ReservationRepository {
             preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
             preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
             preparedStatement.setString(3, reservation.getName());
-            preparedStatement.setString(4, reservation.getTheme().getName());
-            preparedStatement.setString(5, reservation.getTheme().getDesc());
-            preparedStatement.setInt(6, reservation.getTheme().getPrice());
+            preparedStatement.setString(4, reservation.getTheme()
+                    .getName());
+            preparedStatement.setString(5, reservation.getTheme()
+                    .getDesc());
+            preparedStatement.setInt(6, reservation.getTheme()
+                    .getPrice());
             return preparedStatement;
         }, keyHolder);
-        return new Reservation(keyHolder.getKey().longValue(), reservation);
+        return new Reservation(keyHolder.getKey()
+                .longValue(), reservation);
     }
 
     @Override
@@ -50,8 +54,10 @@ public class JdbcReservationRepository implements ReservationRepository {
                 sql,
                 (rs, count) -> new Reservation(
                         rs.getLong("id"),
-                        rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime(),
+                        rs.getDate("date")
+                                .toLocalDate(),
+                        rs.getTime("time")
+                                .toLocalTime(),
                         rs.getString("name"),
                         new Theme(
                                 rs.getString("theme_name"),

@@ -25,7 +25,8 @@ public class ReservationService {
     }
 
     public Reservation findOneById(Long id) {
-        return repository.findOne(id).orElseThrow(NoSuchReservationException::new);
+        return repository.findOne(id)
+                .orElseThrow(NoSuchReservationException::new);
     }
 
     public void deleteOneById(Long id) {

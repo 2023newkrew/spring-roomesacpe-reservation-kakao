@@ -9,6 +9,12 @@ public class ReservationCreateRequestDto {
     private final LocalTime time;
     private final String name;
 
+    public ReservationCreateRequestDto(LocalDate date, LocalTime time, String name) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+    }
+
     public LocalDate getDate() {
         return date;
     }
@@ -19,12 +25,6 @@ public class ReservationCreateRequestDto {
 
     public String getName() {
         return name;
-    }
-
-    public ReservationCreateRequestDto(LocalDate date, LocalTime time, String name) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
     }
 
     @Override
