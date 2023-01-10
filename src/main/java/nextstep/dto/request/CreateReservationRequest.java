@@ -1,5 +1,8 @@
 package nextstep.dto.request;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class CreateReservationRequest {
     private final String date;
     private final String time;
@@ -11,11 +14,12 @@ public class CreateReservationRequest {
         this.name = name;
     }
 
-    public String getDate() {
-        return date;
+    public LocalDate getDate() {
+        return LocalDate.parse(date);
     }
-    public String getTime() {
-        return time;
+
+    public LocalTime getTime() {
+        return LocalTime.parse(time + ":00");
     }
 
     public String getName() {

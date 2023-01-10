@@ -8,9 +8,6 @@ import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Service
 public class RoomEscapeService {
     public static final Theme DEFAULT_THEME = Theme.of("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -25,15 +22,13 @@ public class RoomEscapeService {
 
     public Reservation add(CreateReservationRequest request) {
 
-        LocalDate date = LocalDate.parse(request.getDate());
-        LocalTime time = LocalTime.parse(request.getTime() + ":00");
-        if (reservationRepository.hasReservationAt(date, time)) {
+        if (reservationRepository.hasReservationAt(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
         }
 
         Reservation reservation = Reservation.of(
-                date,
-                time,
+                request.getDate(),
+                request.getTime(),
                 request.getName(),
                 DEFAULT_THEME
         );
