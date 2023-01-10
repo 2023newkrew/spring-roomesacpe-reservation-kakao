@@ -1,27 +1,29 @@
 package roomservice.controller;
 
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.json.JSONObject;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import roomservice.domain.Reservation;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
-
 @DisplayName("Http Method")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReservationTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
-    private final static LocalTime testTime = LocalTime.of(13, 0);
-    private Reservation reservation;
+    private Reservation reservation = new Reservation();
+    private RestTemplate restTemplate = new RestTemplate();
+    private String baseUrl;
 
     @LocalServerPort
     int port;
@@ -29,15 +31,16 @@ public class ReservationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        Reservation reservation = new Reservation();
         reservation.setDate(testDate);
-        reservation.setTime(testTime);
         reservation.setName("hi");
+        baseUrl = "http://localhost:" + port;
     }
 
     @DisplayName("Http Method - POST")
     @Test
+    @Order(1)
     void createReservation() {
+        reservation.setTime(LocalTime.of(1, 0));
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
@@ -49,12 +52,14 @@ public class ReservationTest {
 
     @DisplayName("Http Method - GET")
     @Test
+    @Order(2)
     void showReservation() {
-        ReservationController reservationController = new ReservationController();
-        reservationController.createReservation(reservation);
+        reservation.setTime(LocalTime.of(2, 0));
+        URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
+                .getHeaders().getLocation();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/1")
+                .when().get(path)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", is("hi"));
@@ -63,12 +68,14 @@ public class ReservationTest {
 
     @DisplayName("Http Method - DELETE")
     @Test
+    @Order(3)
     void deleteReservation() {
-        ReservationController reservationController = new ReservationController();
-        reservationController.createReservation(reservation);
+        reservation.setTime(LocalTime.of(3, 0));
+        URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
+                .getHeaders().getLocation();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/1")
+                .when().delete(path)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
