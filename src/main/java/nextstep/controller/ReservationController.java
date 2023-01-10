@@ -3,12 +3,14 @@ package nextstep.controller;
 import nextstep.Reservation;
 import nextstep.ReservationInfo;
 import nextstep.Theme;
+import nextstep.exceptions.CustomException;
 import nextstep.web.ReservationQueryingDAO;
 import nextstep.web.ReservationUpdatingDAO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
@@ -24,15 +26,12 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity createReservation(@RequestBody Reservation reservation) {
+        List<Reservation> reservationsByDateAndTime = reservationQueryingDAO.findReservationByDateAndTime(reservation.getDate(), reservation.getTime());
+        if (reservationsByDateAndTime.size() > 0) {
+            throw new CustomException();
+        }
+
         Reservation newReservation = new Reservation(reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
-
-//        boolean existsReservation = reservations.stream()
-//                .anyMatch(r -> r.getDate().equals(reservation.getDate())
-//                        && r.getTime().equals(reservation.getTime()));
-//        if (existsReservation) {
-//            throw new CustomException();
-//        }
-
         Long id = reservationUpdatingDAO.insertWithKeyHolder(newReservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }

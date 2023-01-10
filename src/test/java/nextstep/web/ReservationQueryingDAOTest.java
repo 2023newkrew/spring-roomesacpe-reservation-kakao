@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,5 +40,16 @@ class ReservationQueryingDAOTest {
 
         assertThat(reservation).isNotNull();
         assertThat(reservation.getName()).isEqualTo("name");
+    }
+
+    @Test
+    void findReservationByDateAndTime() {
+        List<Reservation> reservations = reservationQueryingDAO.findReservationByDateAndTime(
+                LocalDate.of(2022, 8, 11),
+                LocalTime.of(13, 0)
+        );
+
+        assertThat(reservations).hasSize(1);
+        assertThat(reservations.get(0).getName()).isEqualTo("name");
     }
 }
