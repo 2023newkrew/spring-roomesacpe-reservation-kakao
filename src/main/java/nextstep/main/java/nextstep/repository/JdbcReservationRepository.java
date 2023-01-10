@@ -3,6 +3,7 @@ package nextstep.main.java.nextstep.repository;
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.Theme;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -50,23 +51,27 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> findOne(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(
-                sql,
-                (rs, count) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getDate("date")
-                                .toLocalDate(),
-                        rs.getTime("time")
-                                .toLocalTime(),
-                        rs.getString("name"),
-                        new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
-                        )
-                ),
-                id
-        ));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    sql,
+                    (rs, count) -> new Reservation(
+                            rs.getLong("id"),
+                            rs.getDate("date")
+                                    .toLocalDate(),
+                            rs.getTime("time")
+                                    .toLocalTime(),
+                            rs.getString("name"),
+                            new Theme(
+                                    rs.getString("theme_name"),
+                                    rs.getString("theme_desc"),
+                                    rs.getInt("theme_price")
+                            )
+                    ),
+                    id
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
