@@ -1,9 +1,9 @@
-package nextstep;
+package nextstep.roomescape;
 
-import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.ReservationRepositoryJdbcImpl;
-import nextstep.reservation.ReservationServiceImpl;
-import nextstep.reservation.domain.Theme;
+import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.ReservationRepositoryJdbcImpl;
+import nextstep.roomescape.reservation.ReservationServiceImpl;
+import nextstep.roomescape.reservation.domain.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 

@@ -1,7 +1,7 @@
-package nextstep.reservation;
+package nextstep.roomescape.reservation;
 
-import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
+import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.Theme;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

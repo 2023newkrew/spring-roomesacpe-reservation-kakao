@@ -1,6 +1,6 @@
-package nextstep.reservation;
+package nextstep.roomescape.reservation;
 
-import nextstep.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

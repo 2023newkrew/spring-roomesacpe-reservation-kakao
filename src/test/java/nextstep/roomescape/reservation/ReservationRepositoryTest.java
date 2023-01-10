@@ -1,8 +1,8 @@
-package nextstep.reservation;
+package nextstep.roomescape.reservation;
 
-import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
-import nextstep.reservation.exception.CreateReservationException;
+import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.Theme;
+import nextstep.roomescape.reservation.exception.CreateReservationException;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;

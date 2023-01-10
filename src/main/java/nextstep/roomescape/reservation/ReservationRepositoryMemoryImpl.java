@@ -1,7 +1,8 @@
-package nextstep.reservation;
+package nextstep.roomescape.reservation;
 
-import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.exception.CreateReservationException;
+import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.exception.CreateReservationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,6 +38,7 @@ public class ReservationRepositoryMemoryImpl implements ReservationRepository{
     }
 
     @Override
+    @Transactional
     public Boolean delete(long id) {
         if (reservationList.containsKey(id)) {
             reservationList.remove(id);

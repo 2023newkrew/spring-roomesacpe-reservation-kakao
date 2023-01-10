@@ -1,4 +1,4 @@
-package nextstep.reservation.exception;
+package nextstep.roomescape.reservation.exception;
 
 public class CreateReservationException extends RuntimeException {
 }

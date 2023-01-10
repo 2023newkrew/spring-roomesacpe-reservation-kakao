@@ -1,10 +1,11 @@
-package nextstep.reservation;
+package nextstep.roomescape.reservation;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
+import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.Theme;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -25,6 +29,21 @@ public class ReservationControllerTest {
     @LocalServerPort
     int port;
     private Theme theme;
+    static ReservationRepository reservationRepository = new ReservationRepositoryJdbcImpl(new JdbcTemplate(dataSource()));
+
+    public static DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:~/test");
+        return dataSource;
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        reservationRepository.clear();
+    }
 
     @BeforeEach
     void setUp() {

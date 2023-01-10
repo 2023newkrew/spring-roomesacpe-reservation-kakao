@@ -1,4 +1,4 @@
-package nextstep.reservation.domain;
+package nextstep.roomescape.reservation.domain;
 
 import org.springframework.lang.Nullable;
 
