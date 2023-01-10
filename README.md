@@ -114,7 +114,7 @@ HTTP/1.1 204
   - `Reservation` 객체를 넘겨받는다.
   - 넘겨받은 `Reservation` 객체와 동일한 `날짜` 와 `시간`의 예약이 존재하는지 확인한다.
     - `Respository` 의 모든 예약을 조회해서 중복 여부를 확인한다.
-    - 존재하는 경우 `IllegalArgumentException` 예외를 던진다.
+    - 존재하는 경우 예외를 던진다.
     - 테마가 하나만 존재하므로 해당 테마를 `Reservation` 객체에 주입한다.
   - `Repository` 에 `Reservation` 객체를 넘겨서 예약을 저장한다.
   - 예약에 성공하면 `Reservation` 객체를 반환한다.
