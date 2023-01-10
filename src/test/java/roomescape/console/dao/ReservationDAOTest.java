@@ -62,7 +62,7 @@ public class ReservationDAOTest {
         con.createStatement().executeUpdate("INSERT INTO RESERVATION"
                 + "(id, name, date, time, theme_name, theme_desc, theme_price) "
                 + "VALUES (1, 'test', '2022-08-22', '13:00', '워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
-        Reservation reservation = reservationDAO.findReservation(1);
+        Reservation reservation = reservationDAO.findReservation(1L);
         assertThat(reservation.getName()).isEqualTo("test");
         assertThat(reservation.getDate()).isEqualTo(LocalDate.parse("2022-08-22"));
         assertThat(reservation.getTime()).isEqualTo(LocalTime.parse("13:00:00"));
@@ -78,7 +78,7 @@ public class ReservationDAOTest {
         con.createStatement().executeUpdate("INSERT INTO RESERVATION"
                 + "(id, name, date, time, theme_name, theme_desc, theme_price) "
                 + "VALUES (1, 'test', '2022-08-22', '13:00', '워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
-        reservationDAO.deleteReservation(1);
+        reservationDAO.deleteReservation(1L);
         ResultSet resultSet = con.createStatement()
                 .executeQuery("SELECT count(*) FROM RESERVATION");
         assertThat(resultSet.next()).isTrue();

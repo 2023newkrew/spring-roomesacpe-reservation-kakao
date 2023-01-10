@@ -36,7 +36,7 @@ public class ReservationDAO {
         }
     }
 
-    private Reservation executeFindConnection(Connection con, int id) {
+    private Reservation executeFindConnection(Connection con, Long id) {
         try {
             PreparedStatement ps = con.prepareStatement(FIND_SQL, new String[]{"id"});
             setFindPreparedStatement(ps, id);
@@ -47,7 +47,7 @@ public class ReservationDAO {
         }
     }
 
-    private void executeDeleteConnection(Connection con, int id) {
+    private void executeDeleteConnection(Connection con, Long id) {
         try {
             PreparedStatement ps = con.prepareStatement(DELETE_SQL, new String[]{"id"});
             setDeletePreparedStatement(ps, id);
@@ -67,12 +67,12 @@ public class ReservationDAO {
         ps.setInt(6, reservation.getTheme().getPrice());
     }
 
-    private void setFindPreparedStatement(PreparedStatement ps, int id) throws SQLException {
-        ps.setInt(1, id);
+    private void setFindPreparedStatement(PreparedStatement ps, Long id) throws SQLException {
+        ps.setLong(1, id);
     }
 
-    private void setDeletePreparedStatement(PreparedStatement ps, int id) throws SQLException {
-        ps.setInt(1, id);
+    private void setDeletePreparedStatement(PreparedStatement ps, Long id) throws SQLException {
+        ps.setLong(1, id);
     }
 
 
@@ -126,14 +126,14 @@ public class ReservationDAO {
         }
     }
 
-    public Reservation findReservation(int id) {
+    public Reservation findReservation(Long id) {
         Connection con = openConnection();
         Reservation reservation = executeFindConnection(con, id);
         closeConnection(con);
         return reservation;
     }
 
-    public void deleteReservation(int id) {
+    public void deleteReservation(Long id) {
         Connection con = openConnection();
         executeDeleteConnection(con, id);
         closeConnection(con);
