@@ -6,8 +6,6 @@ import kakao.repository.ReservationRepository;
 import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-
 @Service
 public class ReservationService {
 
@@ -20,18 +18,18 @@ public class ReservationService {
     }
 
     public Long createReservation(ReservationRequest reservationRequest) {
-        boolean booked = reservationRepository
+        int numberOfBooked = reservationRepository
                 .findByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())
-                .size() > 0;
+                .size();
 
-        if (booked) {
+        if (numberOfBooked > 0) {
             throw new RuntimeException("Duplicated reservation.");
         }
 
         return reservationRepository.create(reservationRequest, ThemeRepository.DEFAULT_THEME);
     }
 
-    public ReservationResponse lookUpReservation(Long id) {
+    public ReservationResponse getReservation(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reservation not found."));
     }
