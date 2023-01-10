@@ -22,4 +22,13 @@ public class Theme {
     public Integer getPrice() {
         return price;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Theme)) return false;
+
+        Theme cp = (Theme) obj;
+
+        return this.name.equals(cp.name) && this.desc.equals(cp.desc) && this.price.equals(cp.price);
+    }
 }

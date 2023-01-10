@@ -42,6 +42,18 @@ public class Reservation implements Comparable<Reservation> {
         return theme;
     }
 
+    public String getThemeName() {
+        return theme.getName();
+    }
+
+    public String getThemeDesc() {
+        return theme.getDesc();
+    }
+
+    public int getThemePrice() {
+        return theme.getPrice();
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
