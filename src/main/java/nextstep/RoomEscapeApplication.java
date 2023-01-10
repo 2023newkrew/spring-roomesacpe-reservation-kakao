@@ -1,5 +1,8 @@
 package nextstep;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -7,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+@SpringBootApplication
 public class RoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
@@ -14,6 +18,10 @@ public class RoomEscapeApplication {
     private static final String QUIT = "quit";
 
     public static void main(String[] args) {
+        SpringApplication.run(RoomEscapeApplication.class, args);
+    }
+
+    public static void console(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Reservation> reservations = new ArrayList<>();
         Long reservationIdIndex = 0L;
