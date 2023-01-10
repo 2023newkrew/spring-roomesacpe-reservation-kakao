@@ -3,10 +3,15 @@ package nextstep;
 import java.sql.*;
 
 public class ConsoleRepository {
-    public void addReservation(Reservation reservation) {
-        Connection con = null;
+    private Connection con;
 
+    public ConsoleRepository() {
+        this.con = null;
+    }
+
+    private void makeConnection(){
         try {
+            con = null;
             con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
             assert con != null;
             System.out.println("정상적으로 연결되었습니다.");
@@ -14,6 +19,10 @@ public class ConsoleRepository {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void saveReservation(Reservation reservation) {
+        makeConnection();
 
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
@@ -39,21 +48,11 @@ public class ConsoleRepository {
     }
 
     public Reservation getReservation(Long id) {
-        Connection con = null;
-
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
-            assert con != null;
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException | AssertionError e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        makeConnection();
 
         Reservation reservation = null;
         try {
             String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?;";
-
             assert con != null;
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
@@ -66,7 +65,8 @@ public class ConsoleRepository {
                         rs.getTime(2).toLocalTime(),
                         rs.getString(3),
                         new Theme(rs.getString(4),
-                                rs.getString(5), rs.getInt(6))
+                                rs.getString(5),
+                                rs.getInt(6))
                 );
             }
 
@@ -89,16 +89,7 @@ public class ConsoleRepository {
     }
 
     public int deleteReservation(Long id) {
-        Connection con = null;
-
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
-            assert con != null;
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException | AssertionError e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        makeConnection();
 
         int row;
         try {

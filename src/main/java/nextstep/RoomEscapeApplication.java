@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -45,9 +44,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                // 요 로직 대신 레포 로직을 사용해서 저장해야 한다.
-                // reservations.add(reservation);
-                consoleRepository.addReservation(reservation);
+                consoleRepository.saveReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
