@@ -1,9 +1,7 @@
 package nextstep.main.java.nextstep.repository;
 
 import nextstep.main.java.nextstep.domain.Reservation;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

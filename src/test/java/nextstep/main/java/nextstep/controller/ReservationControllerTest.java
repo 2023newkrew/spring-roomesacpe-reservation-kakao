@@ -7,6 +7,7 @@ import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
 import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import nextstep.main.java.nextstep.service.ReservationService;
+import org.apache.catalina.core.ApplicationContext;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,14 +16,13 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.hamcrest.core.Is.is;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,12 +38,12 @@ public class ReservationControllerTest {
             LocalTime.of(1, 30),
             "name"
     );
+
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
         RestAssured.registerParser("application/json", Parser.JSON);
     }
-
 
     @DisplayName("예약 생성 테스트")
     @Test

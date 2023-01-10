@@ -2,15 +2,12 @@ package nextstep.main.java.nextstep.exception;
 
 import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static nextstep.main.java.nextstep.exception.ErrorCode.DUPLICATE_RESERVATION_ERROR;
 import static nextstep.main.java.nextstep.exception.ErrorCode.NO_SUCH_RESERVATION_ERROR;
-import static nextstep.main.java.nextstep.message.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
-import static nextstep.main.java.nextstep.message.ExceptionMessage.NO_SUCH_RESERVATION_MESSAGE;
 
 @RestControllerAdvice
 public class ReservationAdvice {

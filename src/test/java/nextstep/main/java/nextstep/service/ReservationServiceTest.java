@@ -6,7 +6,6 @@ import nextstep.main.java.nextstep.exception.exception.DuplicateReservationExcep
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
 import org.junit.jupiter.api.*;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
