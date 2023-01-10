@@ -4,7 +4,6 @@ import java.net.URI;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
     private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-    List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

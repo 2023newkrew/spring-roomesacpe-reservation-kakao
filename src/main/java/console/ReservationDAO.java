@@ -75,7 +75,7 @@ public class ReservationDAO {
                     rs.getString(4),
                     theme
             );
-            System.out.println(reservation);
+
             con.close();
             return Optional.of(reservation);
         } catch (SQLException e) {

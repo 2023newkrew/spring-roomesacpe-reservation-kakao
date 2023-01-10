@@ -2,9 +2,7 @@ package web.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import lombok.ToString;
 
-@ToString
 public class Reservation {
 
     private Long id;
