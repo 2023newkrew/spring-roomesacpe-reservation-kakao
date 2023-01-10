@@ -1,13 +1,13 @@
 package web.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import web.dto.ReservationRequestDto;
+import web.dto.ReservationResponseDto;
 import web.exception.ReservationDuplicateException;
+import web.exception.ReservationNotFoundException;
 import web.service.RoomEscapeService;
 
 import javax.validation.Valid;
@@ -55,5 +55,14 @@ public class RoomEscapeController {
 
     private boolean isUnitOf30Minutes(LocalTime time) {
         return time.getMinute() % 30 != 0;
+    }
+
+    @ExceptionHandler(ReservationNotFoundException.class)
+    @GetMapping("/reservations/{reservationId}")
+    public ResponseEntity<ReservationResponseDto> reservation(@PathVariable long reservationId) {
+        ReservationResponseDto responseDto = roomEscapeService.findReservationById(reservationId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(responseDto);
     }
 }

@@ -5,6 +5,7 @@ import web.entity.Reservation;
 import web.exception.ReservationDuplicateException;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Repository
 public class ReservationRepository {
@@ -24,5 +25,9 @@ public class ReservationRepository {
         return reservations.values()
                 .stream()
                 .anyMatch(savedReservation -> savedReservation.isDuplicate(reservation));
+    }
+
+    public Optional<Reservation> findById(long reservationId) {
+        return Optional.ofNullable(reservations.get(reservationId));
     }
 }

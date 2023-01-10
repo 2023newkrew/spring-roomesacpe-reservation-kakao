@@ -14,15 +14,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import web.dto.ReservationResponseDto;
+import web.entity.Reservation;
 import web.exception.ReservationDuplicateException;
+import web.exception.ReservationNotFoundException;
 import web.service.RoomEscapeService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -156,6 +163,38 @@ public class RoomEscapeControllerTest {
                     "\t\"time\": \"13:00\",\n" +
                     "\t\"name\": \"name\"\n" +
                     "}";
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class GetRegistration {
+
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            ReservationResponseDto responseDto = ReservationResponseDto.of(1,
+                    Reservation.of(
+                            LocalDate.of(2022, 8, 11),
+                            LocalTime.of(13, 0),
+                            "name"));
+            when(roomEscapeService.findReservationById(anyLong())).thenReturn(responseDto);
+            mockMvc.perform(get("/reservations/1"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(1))
+                    .andExpect(jsonPath("$.date").value("2022-08-11"))
+                    .andExpect(jsonPath("$.time").value("13:00"))
+                    .andExpect(jsonPath("$.name").value("name"))
+                    .andExpect(jsonPath("$.themeName").value("워너고홈"))
+                    .andExpect(jsonPath("$.themeDesc").value("병맛 어드벤처 회사 코믹물"))
+                    .andExpect(jsonPath("$.themePrice").value(29000));
+        }
+
+        @Test
+        void should_status404_when_notExistId() throws Exception {
+            when(roomEscapeService.findReservationById(anyLong())).thenThrow(ReservationNotFoundException.class);
+            mockMvc.perform(get("/reservations/-1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
         }
     }
 }

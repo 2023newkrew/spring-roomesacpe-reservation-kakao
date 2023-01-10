@@ -54,4 +54,34 @@ public class ReservationRepositoryTest {
             reservations.clear();
         }
     }
+
+    @Nested
+    class Find {
+
+        @Test
+        void should_successfully_when_validReservationId() {
+            LocalDate today = LocalDate.now();
+            LocalTime now = LocalTime.now();
+            String name = "name";
+            Reservation reservation = Reservation.of(today, now, name);
+            long reservationId = reservationRepository.save(reservation);
+
+            Reservation findReservation = reservationRepository.findById(reservationId)
+                    .orElseThrow();
+
+            assertThat(findReservation.getDate()).isEqualTo(today);
+            assertThat(findReservation.getTime()).isEqualTo(now);
+            assertThat(findReservation.getName()).isEqualTo(name);
+        }
+
+        @Test
+        void should_throwException_when_notExistReservation() {
+            assertThat(reservationRepository.findById(-1)).isEmpty();
+        }
+
+        @AfterEach
+        void deleteAllReservation() {
+            reservations.clear();
+        }
+    }
 }
