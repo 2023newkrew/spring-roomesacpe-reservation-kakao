@@ -1,4 +1,4 @@
-package roomservice;
+package roomservice.domain;
 
 import java.time.LocalTime;
 

@@ -1,10 +1,10 @@
 package roomservice.domain;
 
-import roomservice.Theme;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Data;
 
+@Data
 public class Reservation {
     private Long id;
     private LocalDate date;
@@ -18,25 +18,5 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.theme = theme;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Theme getTheme() {
-        return theme;
     }
 }

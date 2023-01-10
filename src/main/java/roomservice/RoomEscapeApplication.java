@@ -1,6 +1,7 @@
 package roomservice;
 
 import roomservice.domain.Reservation;
+import roomservice.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
