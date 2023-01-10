@@ -38,7 +38,7 @@ public class ReservationDao {
         final String insertSql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(insertSql, new String[] {"id"});
+            PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -52,15 +52,34 @@ public class ReservationDao {
     }
 
     public Reservation findById(Long id) {
-        return reservations.get((int) (id - 1));
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                new Reservation(
+                        rs.getLong("id"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime(),
+                        rs.getString("name"),
+                        new Theme(
+                                rs.getString("theme_name"),
+                                rs.getString("theme_desc"),
+                                rs.getInt("theme_price"))
+                ), id);
     }
 
     public void clear() {
-        reservations = new ArrayList<>();
+        String sql = "DELETE FROM reservation";
+        jdbcTemplate.update(sql);
+        resetId();
+    }
+
+    private void resetId() {
+        String sql = "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1";
+        jdbcTemplate.execute(sql);
     }
 
     public void delete(Long id) {
-        reservations.remove(id.intValue());
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     public Reservation findByDateAndTime(LocalDate date, LocalTime time) {
