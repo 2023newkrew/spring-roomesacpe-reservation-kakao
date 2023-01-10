@@ -19,7 +19,7 @@ public class RoomEscapeController {
     @PostMapping("/reservations")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = roomEscapeService.createReservation(request);
-        return ResponseEntity.created(URI.create("/reservations"+ reservation.getId())).build();
+        return ResponseEntity.created(URI.create("/reservations/"+ reservation.getId())).build();
     }
 
     @GetMapping("/reservations/{id}")

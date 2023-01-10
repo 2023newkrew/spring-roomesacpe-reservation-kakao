@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -44,10 +45,12 @@ public class RoomEscapeControllerTest {
     void createReservation() {
         ExtractableResponse<Response> response = 예약_생성("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 0));
 
+        String id = response.header(HttpHeaders.LOCATION).split("/")[2];
+
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
 
-        Reservation reservation = reservationRepository.findById(1L).orElseThrow();
+        Reservation reservation = reservationRepository.findById(Long.parseLong(id)).orElseThrow();
         assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2022, 11, 11));
         assertThat(reservation.getTime()).isEqualTo(LocalTime.of(13, 0));
         assertThat(reservation.getName()).isEqualTo("name");
@@ -57,8 +60,8 @@ public class RoomEscapeControllerTest {
     @DisplayName("예약을 조회한다")
     @Test
     void getReservation() {
-        Long id = 1L;
-        예약_생성("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 0));
+        String id = 예약_생성("name", LocalDate.of(2022, 11, 11), LocalTime.of(13, 0))
+                .header(HttpHeaders.LOCATION).split("/")[2];
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +76,6 @@ public class RoomEscapeControllerTest {
         assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2022, 11, 11));
         assertThat(reservation.getTime()).isEqualTo(LocalTime.of(13, 0));
         assertThat(reservation.getName()).isEqualTo("name");
-        assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservation.getThemeName()).isEqualTo("워너고홈");
         assertThat(reservation.getThemeDesc()).isEqualTo("병맛 어드벤처 회사 코믹물");
         assertThat(reservation.getThemePrice()).isEqualTo(29_000);
