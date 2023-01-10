@@ -55,4 +55,11 @@ public class ReservationUpdatingDAOTest {
         assertThat(reservationById).isNotNull();
         assertThat(reservationById.getName()).isEqualTo("name3");
     }
+
+    @Test
+    void delete() {
+        int rowNum = reservationUpdatingDAO.delete(1L);
+
+        assertThat(rowNum).isEqualTo(1);
+    }
 }
