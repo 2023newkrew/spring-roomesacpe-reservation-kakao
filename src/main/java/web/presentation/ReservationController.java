@@ -71,12 +71,23 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> retrieveReservation(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(item -> Objects.equals(item.getId(), id))
-                .findAny()
-                .orElseThrow(NoSuchReservationException::new);
+        String selectSql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
 
-        final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservation);
+        List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) -> new Reservation(
+                rs.getLong("id"),
+                rs.getDate("date").toLocalDate(),
+                rs.getTime("time").toLocalTime(),
+                rs.getString("name"),
+                new Theme(rs.getString("theme_name"),
+                        rs.getString("theme_desc"),
+                        rs.getInt("theme_price")
+                ))), id);
+
+        if (reservations.size() == 0) {
+            throw new NoSuchReservationException();
+        }
+
+        final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservations.get(0));
 
         return ResponseEntity.ok()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
