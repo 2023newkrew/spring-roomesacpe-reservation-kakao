@@ -1,5 +1,8 @@
 package nextstep.dto.request;
 
+import nextstep.Reservation;
+import nextstep.Theme;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -8,10 +11,18 @@ public class CreateReservationRequest {
     private final String time;
     private final String name;
 
-    public CreateReservationRequest(String date, String time, String name) {
+    private CreateReservationRequest(String date, String time, String name) {
         this.date = date;
         this.time = time;
         this.name = name;
+    }
+
+    public static CreateReservationRequest of(String date, String time, String name) {
+        return new CreateReservationRequest(date, time, name);
+    }
+
+    public Reservation toEntity() {
+        return Reservation.of(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, Theme.DEFAULT_THEME);
     }
 
     public LocalDate getDate() {

@@ -1,6 +1,5 @@
 package nextstep.controller;
 
-import nextstep.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
@@ -25,17 +24,17 @@ public class RoomEscapeController {
     @PostMapping("")
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) throws DuplicateReservationException {
-        Reservation reservation = roomEscapeService.add(createReservationRequest);
+        ReservationResponse reservationResponse = roomEscapeService.add(createReservationRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header("Location", "/reservations/" + reservation.getId())
-                .body(ReservationResponse.fromEntity(reservation));
+                .header("Location", "/reservations/" + reservationResponse.getId())
+                .body(reservationResponse);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> findReservation(@PathVariable Long id) throws ReservationNotFoundException {
         return ResponseEntity
-                .ok(ReservationResponse.fromEntity(roomEscapeService.get(id)));
+                .ok(roomEscapeService.get(id));
     }
 
     @DeleteMapping("/{id}")

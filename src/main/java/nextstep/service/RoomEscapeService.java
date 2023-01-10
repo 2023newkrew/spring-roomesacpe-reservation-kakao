@@ -1,8 +1,8 @@
 package nextstep.service;
 
 import nextstep.Reservation;
-import nextstep.Theme;
 import nextstep.dto.request.CreateReservationRequest;
+import nextstep.dto.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationRepository;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RoomEscapeService {
-    public static final Theme DEFAULT_THEME = Theme.of("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     private final ReservationRepository reservationRepository;
 
 
@@ -21,23 +19,18 @@ public class RoomEscapeService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation add(CreateReservationRequest request) throws DuplicateReservationException {
+    public ReservationResponse add(CreateReservationRequest request) throws DuplicateReservationException {
 
         if (reservationRepository.hasReservationAt(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
         }
 
-        Reservation reservation = Reservation.of(
-                request.getDate(),
-                request.getTime(),
-                request.getName(),
-                DEFAULT_THEME
-        );
-        return reservationRepository.add(reservation);
+        Reservation reservation = request.toEntity();
+        return ReservationResponse.fromEntity(reservationRepository.add(reservation));
     }
 
-    public Reservation get(Long id) throws ReservationNotFoundException {
-        return reservationRepository.get(id);
+    public ReservationResponse get(Long id) throws ReservationNotFoundException {
+        return ReservationResponse.fromEntity(reservationRepository.get(id));
     }
 
     public void delete(Long id) {

@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.Reservation;
+import nextstep.Theme;
 import nextstep.service.RoomEscapeService;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class ReservationMemoryRepositoryTest {
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
-                RoomEscapeService.DEFAULT_THEME
+                Theme.DEFAULT_THEME
         );
     }
 
@@ -34,7 +35,7 @@ class ReservationMemoryRepositoryTest {
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
-                RoomEscapeService.DEFAULT_THEME
+                Theme.DEFAULT_THEME
         );
         assertThat(addedReservation).isEqualTo(expected);
     }
@@ -50,7 +51,7 @@ class ReservationMemoryRepositoryTest {
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
-                RoomEscapeService.DEFAULT_THEME
+                Theme.DEFAULT_THEME
         );
         assertThat(addedReservation).isEqualTo(expected);
     }
