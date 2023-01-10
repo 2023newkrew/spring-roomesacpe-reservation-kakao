@@ -1,8 +1,8 @@
 package roomservice.repository;
 
 import roomservice.domain.Reservation;
-import roomservice.exception.DuplicatedReservationException;
-import roomservice.exception.NonExistentReservationException;
+import roomservice.exceptions.exception.DuplicatedReservationException;
+import roomservice.exceptions.exception.NonExistentReservationException;
 import java.util.HashMap;
 import java.util.Map;
 

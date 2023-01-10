@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomservice.domain.Reservation;
-import roomservice.exception.DuplicatedReservationException;
-import roomservice.exception.NonExistentReservationException;
+import roomservice.exceptions.exception.DuplicatedReservationException;
+import roomservice.exceptions.exception.NonExistentReservationException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

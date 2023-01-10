@@ -1,4 +1,4 @@
-package roomservice.exception;
+package roomservice.exceptions.exception;
 
 public class DuplicatedReservationException extends RuntimeException {
 }

@@ -50,11 +50,24 @@ public class ReservationTest {
                 .header("Location", "/reservations/1");
     }
 
+    @DisplayName("Http Method - POST Exception")
+    @Test
+    void createReservationDuplicateException() {
+        reservation.setTime(LocalTime.of(2, 0));
+        restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("이미 예약된 시간입니다."));
+    }
+
     @DisplayName("Http Method - GET")
     @Test
-    @Order(2)
     void showReservation() {
-        reservation.setTime(LocalTime.of(2, 0));
+        reservation.setTime(LocalTime.of(3, 0));
         URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
                 .getHeaders().getLocation();
         RestAssured.given().log().all()
@@ -65,12 +78,22 @@ public class ReservationTest {
                 .body("name", is("hi"));
     }
 
+    @DisplayName("Http Method - GET Exception")
+    @Test
+    void showReservationException() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/0")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 예약 id입니다."));
+    }
+
 
     @DisplayName("Http Method - DELETE")
     @Test
-    @Order(3)
     void deleteReservation() {
-        reservation.setTime(LocalTime.of(3, 0));
+        reservation.setTime(LocalTime.of(4, 0));
         URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
                 .getHeaders().getLocation();
         RestAssured.given().log().all()
@@ -78,5 +101,16 @@ public class ReservationTest {
                 .when().delete(path)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("Http Method - DELETE Exception")
+    @Test
+    void deleteReservationException() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/0")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 예약 id입니다."));
     }
 }
