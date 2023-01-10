@@ -40,7 +40,7 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time+":00"), name, theme);
+                Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
                 long id = consoleReservationRepo.add(newReservation);
 
                 System.out.println("예약이 등록되었습니다.");
@@ -50,34 +50,35 @@ public class RoomEscapeApplication {
                 System.out.println("예약자 이름: " + newReservation.getName());
             }
 
-//            if (input.startsWith(FIND)) {
-//                String params = input.split(" ")[1];
-//
-//                Long id = Long.parseLong(params.split(",")[0]);
-//
-//                Reservation reservation = reservations.stream()
-//                        .filter(it -> Objects.equals(it.getId(), id))
-//                        .findFirst()
-//                        .orElseThrow(RuntimeException::new);
-//
-//                System.out.println("예약 번호: " + reservation.getId());
-//                System.out.println("예약 날짜: " + reservation.getDate());
-//                System.out.println("예약 시간: " + reservation.getTime());
-//                System.out.println("예약자 이름: " + reservation.getName());
-//                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-//                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-//                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
-//            }
-//
-//            if (input.startsWith(DELETE)) {
-//                String params = input.split(" ")[1];
-//
-//                Long id = Long.parseLong(params.split(",")[0]);
-//
-//                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-//                    System.out.println("예약이 취소되었습니다.");
-//                }
-//            }
+            if (input.startsWith(FIND)) {
+                String params = input.split(" ")[1];
+
+                Long id = Long.parseLong(params.split(",")[0]);
+
+                Reservation reservation = consoleReservationRepo.findById(id);
+
+                if (reservation == null) {
+                    System.out.println("해당하는 예약이 없습니다");
+                    continue;
+                }
+                System.out.println("예약 번호: " + reservation.getId());
+                System.out.println("예약 날짜: " + reservation.getDate());
+                System.out.println("예약 시간: " + reservation.getTime());
+                System.out.println("예약자 이름: " + reservation.getName());
+                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
+                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
+                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+            }
+
+            if (input.startsWith(DELETE)) {
+                String params = input.split(" ")[1];
+
+                Long id = Long.parseLong(params.split(",")[0]);
+
+                if (consoleReservationRepo.delete(id) == 1) {
+                    System.out.println("예약이 취소되었습니다.");
+                }
+            }
 
             if (input.equals(QUIT)) {
                 break;

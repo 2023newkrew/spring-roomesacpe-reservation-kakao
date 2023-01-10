@@ -125,7 +125,6 @@ public class ConsoleReservationRepo implements ReservationRepo {
             ps.setLong(1, id);
             result = ps.executeUpdate();
 
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
