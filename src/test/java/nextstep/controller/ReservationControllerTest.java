@@ -1,7 +1,7 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;

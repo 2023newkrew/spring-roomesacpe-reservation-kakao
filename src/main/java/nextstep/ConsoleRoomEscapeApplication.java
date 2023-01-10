@@ -1,6 +1,8 @@
 package nextstep;
 
 import nextstep.console.ReservationDAO;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.exceptions.CustomException;
 
 import java.time.LocalDate;
@@ -8,7 +10,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
-public class RoomEscapeApplication {
+public class ConsoleRoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";

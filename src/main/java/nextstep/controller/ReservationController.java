@@ -1,8 +1,8 @@
 package nextstep.controller;
 
-import nextstep.Reservation;
-import nextstep.ReservationInfo;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.ReservationInfo;
+import nextstep.domain.Theme;
 import nextstep.exceptions.CustomException;
 import nextstep.web.ReservationQueryingDAO;
 import nextstep.web.ReservationUpdatingDAO;

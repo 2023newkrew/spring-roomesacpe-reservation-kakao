@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
