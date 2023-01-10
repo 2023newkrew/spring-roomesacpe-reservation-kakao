@@ -58,7 +58,8 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public List<Reservation> findAll() {
-        return null;
+        String sql = "SELECT * FROM reservation";
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     @Override
