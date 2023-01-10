@@ -10,14 +10,14 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
-    Connection con = null;
+    Connection connection = null;
 
     @Override
     public Reservation save(Reservation reservation) {
         connect();
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
             preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
             preparedStatement.setString(3, reservation.getName());
@@ -26,7 +26,7 @@ public class ReservationDAO implements ReservationRepository {
             preparedStatement.setInt(6, reservation.getTheme().getPrice());
 
             preparedStatement.executeUpdate();
-            return new Reservation(getGeneratedKeys(preparedStatement), reservation);
+            return new Reservation(getGeneratedKey(preparedStatement), reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -34,7 +34,7 @@ public class ReservationDAO implements ReservationRepository {
         }
     }
 
-    private Long getGeneratedKeys(PreparedStatement ps) throws SQLException {
+    private Long getGeneratedKey(PreparedStatement ps) throws SQLException {
         ResultSet generatedKeys = ps.getGeneratedKeys();
         generatedKeys.next();
         return generatedKeys.getLong(1);
@@ -47,7 +47,7 @@ public class ReservationDAO implements ReservationRepository {
         String sql = "SELECT * FROM reservation WHERE id = ?";
 
         try {
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
             rs.first();
@@ -74,7 +74,7 @@ public class ReservationDAO implements ReservationRepository {
         connect();
         String sql = "DELETE FROM reservation WHERE id = ?";
         try {
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -90,7 +90,7 @@ public class ReservationDAO implements ReservationRepository {
         String sql = "SELECT * FROM reservation WHERE date = ? AND time = ?";
         ResultSet rs = null;
         try {
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
             rs = ps.executeQuery();
@@ -104,7 +104,7 @@ public class ReservationDAO implements ReservationRepository {
 
     private void connect() {
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            connection = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
@@ -114,8 +114,8 @@ public class ReservationDAO implements ReservationRepository {
 
     private void closeConnection() {
         try {
-            if (con != null)
-                con.close();
+            if (connection != null)
+                connection.close();
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
