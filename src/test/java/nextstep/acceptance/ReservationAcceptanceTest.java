@@ -3,7 +3,7 @@ package nextstep.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.domain.Reservations;
+import nextstep.domain.repository.ReservationRepository;
 import nextstep.dto.CreateReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,12 +26,12 @@ public class ReservationAcceptanceTest {
     private int port;
 
     @Autowired
-    private Reservations reservations;
+    private ReservationRepository reservationRepository;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        reservations.deleteAll();
+        reservationRepository.deleteAll();
     }
 
     @Test
@@ -64,6 +64,8 @@ public class ReservationAcceptanceTest {
         // given
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "davi-eddie");
         ExtractableResponse<Response> response = createReservation(createReservationRequest);
+        String expected = response.header("Location").split("/")[2];
+
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
 
@@ -74,7 +76,7 @@ public class ReservationAcceptanceTest {
         // then
         .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("id", equalTo(1))
+                .body("id", equalTo(Integer.valueOf(expected)))
                 .body("date", equalTo(createReservationRequest.getDate()))
                 .body("time", equalTo(createReservationRequest.getTime()))
                 .body("name", equalTo(createReservationRequest.getName()));
