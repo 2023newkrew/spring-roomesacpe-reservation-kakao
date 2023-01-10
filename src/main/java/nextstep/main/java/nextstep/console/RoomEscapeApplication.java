@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 
-import static nextstep.main.java.nextstep.message.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
+import static nextstep.main.java.nextstep.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 
 public class RoomEscapeApplication {
     private static final String ADD = "add";

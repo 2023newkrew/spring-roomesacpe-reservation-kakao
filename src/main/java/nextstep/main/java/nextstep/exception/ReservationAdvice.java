@@ -24,9 +24,14 @@ public class ReservationAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(NO_SUCH_RESERVATION_ERROR);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(Exception exception) {
+        exception.printStackTrace();
+        return ResponseEntity.internalServerError().build();
+    }
+
     protected ResponseEntity<Object> handleExceptionInternal(Error error) {
         return ResponseEntity.status(error.getHttpStatus())
                 .body(new ErrorResponse(error.getErrorCode(), error.getErrorMessage()));
     }
-    
 }
