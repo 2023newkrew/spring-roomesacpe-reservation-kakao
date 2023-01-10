@@ -71,7 +71,6 @@ public class ReservationTest {
     @DisplayName("get reservation test")
     @Test
     void getReservation() {
-
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")

@@ -24,6 +24,14 @@ public class Reservation {
         this.theme = theme;
     }
 
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this.id = null;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
+
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
