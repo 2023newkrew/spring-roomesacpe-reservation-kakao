@@ -10,12 +10,10 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
-    Connection connection = null;
 
     @Override
     public Reservation save(Reservation reservation) {
-        connect();
-        try {
+        try (Connection connection = connect()) {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
@@ -29,8 +27,6 @@ public class ReservationDAO implements ReservationRepository {
             return new Reservation(getGeneratedKey(preparedStatement), reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection();
         }
     }
 
@@ -42,14 +38,11 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findOne(Long id) {
-        connect();
-        ResultSet rs;
-        String sql = "SELECT * FROM reservation WHERE id = ?";
-
-        try {
+        try (Connection connection = connect()) {
+            String sql = "SELECT * FROM reservation WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             rs.first();
             return Optional.of(
                     new Reservation(rs.getLong("id"),
@@ -64,60 +57,43 @@ public class ReservationDAO implements ReservationRepository {
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection();
         }
     }
 
     @Override
     public void deleteOne(Long id) {
-        connect();
-        String sql = "DELETE FROM reservation WHERE id = ?";
-        try {
+        try (Connection connection = connect()) {
+            String sql = "DELETE FROM reservation WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
+
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection();
         }
     }
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        connect();
-        String sql = "SELECT * FROM reservation WHERE date = ? AND time = ?";
-        ResultSet rs = null;
-        try {
+        try (Connection connection = connect()) {
+            String sql = "SELECT * FROM reservation WHERE date = ? AND time = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
+
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
-            rs = ps.executeQuery();
-            return rs.next();
+
+            return ps.executeQuery().next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            closeConnection();
         }
     }
 
-    private void connect() {
-        try {
-            connection = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
+    private Connection connect() {
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
+            return connection;
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private void closeConnection() {
-        try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
+        throw new RuntimeException();
     }
 }
