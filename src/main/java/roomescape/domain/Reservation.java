@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import roomescape.exception.ErrorCode;
+import roomescape.exception.RoomEscapeException;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -13,16 +16,20 @@ public class Reservation {
     public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.domain.Theme theme) {
         this.id = id;
         this.date = date;
+        validateTime(time);
         this.time = time;
         this.name = name;
         this.theme = theme;
     }
 
+    private void validateTime(LocalTime time) {
+        if (!TimeTable.isExist(time)) {
+            throw new RoomEscapeException(ErrorCode.TIME_TABLE_NOT_AVAILABLE);
+        }
+    }
+
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
+        this(null, date, time, name, theme);
     }
 
     public void setId(Long id) {

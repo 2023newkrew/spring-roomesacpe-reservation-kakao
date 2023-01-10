@@ -3,6 +3,7 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.RoomEscapeApplication;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.ErrorCode;
@@ -23,17 +24,10 @@ public class ReservationService {
     public void createReservation(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
-        validateTime(time);
-        checkTimeDuplication(date, time);
-        reservationWebRepository.insertReservation(
-                reservationRequest.toEntity(RoomEscapeApplication.theme)
-        );
-    }
+        Reservation reservation = reservationRequest.toEntity(RoomEscapeApplication.theme);
 
-    private void validateTime(LocalTime time) {
-        if (!TimeTable.isExist(time)) {
-            throw new RoomEscapeException(ErrorCode.TIME_TABLE_NOT_AVAILABLE);
-        }
+        checkTimeDuplication(date, time);
+        reservationWebRepository.insertReservation(reservation);
     }
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {
