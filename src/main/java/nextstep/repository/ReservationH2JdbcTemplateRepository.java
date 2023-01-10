@@ -2,7 +2,9 @@ package nextstep.repository;
 
 import nextstep.Reservation;
 import nextstep.Theme;
+import nextstep.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -44,24 +46,26 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public Reservation get(Long id) {
+    public Reservation get(Long id)  throws ReservationNotFoundException {
         String sql = "SELECT * FROM reservation where id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getDate(2).toLocalDate(),
-                        resultSet.getTime(3).toLocalTime(),
-                        resultSet.getString(4),
-                        new Theme(
-                            resultSet.getString(5),
-                            resultSet.getString(6),
-                            resultSet.getInt(7)
-                        )
-                    );
-                    return reservation;
-                }, id);
+        try {
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) -> new Reservation(
+                                resultSet.getLong("id"),
+                                resultSet.getDate(2).toLocalDate(),
+                                resultSet.getTime(3).toLocalTime(),
+                                resultSet.getString(4),
+                                new Theme(
+                                        resultSet.getString(5),
+                                        resultSet.getString(6),
+                                        resultSet.getInt(7)
+                                )
+                        ),
+                    id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ReservationNotFoundException(e.getMessage());
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.Reservation;
 import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.ReservationNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,14 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation get(Long id) {
-        return reservations.get(id);
+    public Reservation get(Long id)  throws ReservationNotFoundException {
+        Reservation reservation = reservations.get(id);
+
+        if (reservation == null) {
+            throw new ReservationNotFoundException();
+        }
+
+        return reservation;
     }
 
     @Override

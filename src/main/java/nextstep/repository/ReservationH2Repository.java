@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.Reservation;
 import nextstep.Theme;
+import nextstep.exception.ReservationNotFoundException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -31,15 +32,15 @@ public class ReservationH2Repository implements ReservationRepository{
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
         }
-
-        closeConnection(con);
 
         return reservation;
     }
 
     @Override
-    public Reservation get(Long id) {
+    public Reservation get(Long id) throws ReservationNotFoundException {
         Connection con = getConnection();
         Reservation result = null;
 
@@ -60,12 +61,14 @@ public class ReservationH2Repository implements ReservationRepository{
                 Theme reservationTheme = new Theme(themeName, themeDesc, themePrice);
 
                 result = new Reservation(reservationId, reservationDate, reservationTime, reservationName, reservationTheme);
+            } else {
+                throw new ReservationNotFoundException();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
         }
-
-        closeConnection(con);
 
         return result;
     }
@@ -81,9 +84,9 @@ public class ReservationH2Repository implements ReservationRepository{
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
         }
-
-        closeConnection(con);
     }
 
     private Connection getConnection() {
