@@ -5,20 +5,26 @@ import roomescape.model.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ReservationMemoryRepository implements ReservationRepository{
-    private static Map<Long, Reservation> reservations = new HashMap<>();
-    private static Long reservationIdIndex = 0L;
+    private final Map<Long, Reservation> reservations;
+    private final AtomicLong reservationIdIndex;
+
+    ReservationMemoryRepository() {
+        reservations = new ConcurrentHashMap<>();
+        reservationIdIndex = new AtomicLong();
+    }
 
     @Override
     public Long save(Reservation reservation) {
-        reservation.setId(reservationIdIndex);
-        reservations.put(reservationIdIndex, reservation);
-        return reservationIdIndex++;
+        reservation.setId(reservationIdIndex.get());
+        reservations.put(reservationIdIndex.get(), reservation);
+        return reservationIdIndex.getAndIncrement();
     }
 
     @Override
