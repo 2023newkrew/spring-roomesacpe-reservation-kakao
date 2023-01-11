@@ -15,17 +15,13 @@ public class ReservationResponse {
     @JsonFormat(shape = Shape.STRING, pattern = "HH:mm")
     public final LocalTime time;
     public final String name;
-    public final String themeName;
-    public final String themeDesc;
-    public final Integer themePrice;
+    public final ThemeResponse theme;
 
     public ReservationResponse(Reservation reservation) {
         this.id = reservation.getId();
         this.date = reservation.getDate();
         this.time = reservation.getTime();
         this.name = reservation.getName();
-        this.themeName = reservation.getTheme().getName();
-        this.themeDesc = reservation.getTheme().getDesc();
-        this.themePrice = reservation.getTheme().getPrice();
+        this.theme = new ThemeResponse(reservation.getTheme());
     }
 }

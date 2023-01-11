@@ -22,9 +22,9 @@ public class ThemeService {
 
     public ThemeResponse createTheme(CreateThemeRequest request) {
         Theme theme = Theme.builder()
-                .name(request.getName())
-                .desc(request.getDesc())
-                .price(request.getPrice())
+                .name(request.name)
+                .desc(request.desc)
+                .price(request.price)
                 .build();
         return new ThemeResponse(themeRepository.save(theme));
     }
