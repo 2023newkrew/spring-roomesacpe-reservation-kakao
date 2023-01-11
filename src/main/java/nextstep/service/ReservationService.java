@@ -26,8 +26,8 @@ public class ReservationService {
 
     @Transactional
     public Long createReservation(CreateReservationRequest createReservationRequest) {
-        LocalDate date = LocalDate.parse(createReservationRequest.getDate());
-        LocalTime time = LocalTime.parse(createReservationRequest.getTime());
+        LocalDate date = createReservationRequest.parseDate();
+        LocalTime time = createReservationRequest.parseTime();
 
         if (reservationRepository.existsByDateAndTime(date, time)) {
             throw new ApplicationException(DUPLICATE_RESERVATION);
