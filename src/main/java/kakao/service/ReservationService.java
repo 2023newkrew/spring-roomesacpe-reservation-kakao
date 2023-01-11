@@ -10,8 +10,6 @@ import kakao.repository.ReservationJDBCRepository;
 import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 @Service
 public class ReservationService {
 
@@ -31,11 +29,7 @@ public class ReservationService {
     }
 
     public ReservationResponse getReservation(Long id) {
-        Reservation reservation = reservationJDBCRepository.findById(id);
-        if (Objects.isNull(reservation)) {
-            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
-        return new ReservationResponse(reservation);
+        return new ReservationResponse(reservationJDBCRepository.findById(id));
     }
 
     public void deleteReservation(Long id) {

@@ -2,6 +2,8 @@ package kakao.repository;
 
 import kakao.domain.Reservation;
 import kakao.domain.Theme;
+import kakao.error.ErrorCode;
+import kakao.error.exception.RecordNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,7 +51,7 @@ public class ReservationJDBCRepository {
         try {
             return jdbcTemplate.queryForObject(SELECT_SQL, customerRowMapper, id);
         } catch (DataAccessException e) {
-            return null;
+            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
         }
     }
 
