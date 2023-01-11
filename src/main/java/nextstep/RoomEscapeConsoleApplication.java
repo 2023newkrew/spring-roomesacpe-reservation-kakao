@@ -1,7 +1,8 @@
 package nextstep;
 
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
-import nextstep.repository.ConsoleReservationRepo;
+import nextstep.repository.ConsoleReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,7 +14,7 @@ public class RoomEscapeConsoleApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static final ConsoleReservationRepo consoleReservationRepo = new ConsoleReservationRepo();
+    private static final ConsoleReservationRepository CONSOLE_RESERVATION_REPOSITORY = new ConsoleReservationRepository();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -37,7 +38,7 @@ public class RoomEscapeConsoleApplication {
                 String name = params.split(",")[2];
 
                 Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
-                long id = consoleReservationRepo.add(newReservation);
+                long id = CONSOLE_RESERVATION_REPOSITORY.add(newReservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + id);
@@ -51,7 +52,7 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = consoleReservationRepo.findById(id).get();
+                Reservation reservation = CONSOLE_RESERVATION_REPOSITORY.findById(id).get();
 
                 if (reservation == null) {
                     System.out.println("해당하는 예약이 없습니다");
@@ -71,7 +72,7 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (consoleReservationRepo.delete(id) == 1) {
+                if (CONSOLE_RESERVATION_REPOSITORY.delete(id) == 1) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

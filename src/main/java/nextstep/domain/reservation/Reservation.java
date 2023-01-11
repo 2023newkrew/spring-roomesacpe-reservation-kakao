@@ -1,6 +1,6 @@
 package nextstep.domain.reservation;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

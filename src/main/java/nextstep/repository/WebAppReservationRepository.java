@@ -1,6 +1,6 @@
 package nextstep.repository;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,11 +14,11 @@ import java.sql.Time;
 import java.util.Optional;
 
 @Repository
-public class WebAppReservationRepo implements ReservationRepo{
+public class WebAppReservationRepository implements ReservationRepo{
 
     private final JdbcTemplate jdbcTemplate;
 
-    public WebAppReservationRepo(JdbcTemplate jdbcTemplate) {
+    public WebAppReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

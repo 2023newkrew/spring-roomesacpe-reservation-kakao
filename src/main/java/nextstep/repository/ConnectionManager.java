@@ -32,7 +32,7 @@ public class ConnectionManager {
             try {
                 closeable.close();
             } catch (Exception e) {
-                System.err.println("con 오류:" + e.getMessage());
+                System.err.println("오류:" + e.getMessage());
             }
         }
     }

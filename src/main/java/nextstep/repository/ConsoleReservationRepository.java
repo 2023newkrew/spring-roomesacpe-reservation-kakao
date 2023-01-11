@@ -1,12 +1,12 @@
 package nextstep.repository;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 
 import java.sql.*;
 import java.util.Optional;
 
-public class ConsoleReservationRepo implements ReservationRepo {
+public class ConsoleReservationRepository implements ReservationRepo {
 
     public Optional<Reservation> findById(long id) {
         Connection con = ConnectionManager.getConnection();

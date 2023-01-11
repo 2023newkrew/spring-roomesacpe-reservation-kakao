@@ -2,11 +2,14 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.dto.CreateReservationDTO;
+import nextstep.repository.WebAppReservationRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.Is.is;
 
@@ -24,7 +27,6 @@ public class ReservationControllerTest {
     @Test
     void createReservation() {
         CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:35", "name");
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
@@ -37,7 +39,6 @@ public class ReservationControllerTest {
     @DisplayName("duplicate reservation test")
     @Test
     void sameTimeReservationTest() {
-
         CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
 
         RestAssured.given().log().all()

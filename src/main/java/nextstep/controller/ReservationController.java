@@ -1,10 +1,7 @@
 package nextstep.controller;
 
-import nextstep.Theme;
 import nextstep.domain.dto.GetReservationDTO;
-import nextstep.domain.reservation.Reservation;
 import nextstep.domain.dto.CreateReservationDTO;
-import nextstep.repository.WebAppReservationRepo;
 import nextstep.service.WebAppReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,10 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/reservations")

@@ -1,10 +1,10 @@
 package nextstep.service;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.dto.CreateReservationDTO;
 import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.reservation.Reservation;
-import nextstep.repository.WebAppReservationRepo;
+import nextstep.repository.WebAppReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.time.LocalTime;
 public class WebAppReservationService {
 
     @Autowired
-    private WebAppReservationRepo webAppReservationRepo;
+    private WebAppReservationRepository webAppReservationRepository;
 
     public long addReservation(CreateReservationDTO reservationDto) {
         Reservation reservation = new Reservation(
@@ -26,17 +26,18 @@ public class WebAppReservationService {
                 reservationDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
-        if (webAppReservationRepo.countByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
+        if (webAppReservationRepository.countByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
             return -1;
         }
-        return webAppReservationRepo.add(reservation);
+        return webAppReservationRepository.add(reservation);
     }
 
     public GetReservationDTO getReservation(Long id) {
-        return new GetReservationDTO(webAppReservationRepo.findById(id).orElseThrow());
+        return new GetReservationDTO(webAppReservationRepository.findById(id).orElseThrow());
     }
 
     public void deleteReservation(Long id) {
-        webAppReservationRepo.delete(id);
+        webAppReservationRepository.delete(id);
     }
+
 }
