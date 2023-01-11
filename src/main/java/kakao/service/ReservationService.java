@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -37,6 +39,7 @@ public class ReservationService {
         );
     }
 
+    @Transactional(readOnly = true)
     public ReservationResponse getReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id);
         if (Objects.isNull(reservation)) {
