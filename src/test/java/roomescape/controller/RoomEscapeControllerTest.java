@@ -24,9 +24,16 @@ public class RoomEscapeControllerTest {
     @LocalServerPort
     int port;
 
+    Reservation reservation;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        reservation = new Reservation(1L,
+                LocalDate.of(2022,8,11),
+                LocalTime.of(13,0,0),
+                "name22",
+                new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
     }
 
     /**
@@ -35,12 +42,6 @@ public class RoomEscapeControllerTest {
     @DisplayName("Http Method - POST")
     @Test
     void createReservation() {
-        Reservation reservation = new Reservation(1L,
-                LocalDate.of(2022,8,11),
-                LocalTime.of(13,0,0),
-                "name22",
-                new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
@@ -77,5 +78,12 @@ public class RoomEscapeControllerTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생한다")
+    @Test
+    void duplicatedReservation(){
+//        createReservation();
+
     }
 }
