@@ -1,4 +1,4 @@
-package roomescape.console.dao;
+package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +16,7 @@ import roomescape.dto.Reservation;
 import roomescape.dto.Theme;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
-public class ReservationDAOTest {
+public class ConsoleReservationDAOTest {
 
     private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER = "";
@@ -50,7 +50,7 @@ public class ReservationDAOTest {
                     + "VALUES ('" + DATE_DATA1 + "', '" + TIME_DATA + "', '" + NAME_DATA + "', '"
                     + THEME_NAME_DATA + "', '" + THEME_DESC_DATA + "', '" + THEME_PRICE_DATA + "');";
 
-    private final ReservationDAO reservationDAO = new ReservationDAO(URL, USER, PASSWORD);
+    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(URL, USER, PASSWORD);
     private Connection con;
 
     @BeforeEach

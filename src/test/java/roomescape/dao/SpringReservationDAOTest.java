@@ -11,13 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.dto.Reservation;
 import roomescape.dto.Theme;
 
 @DisplayName("JDBC 데이터베이스 접근 테스트")
 @JdbcTest
-public class ReservationDAOTest {
+public class SpringReservationDAOTest {
 
     private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
@@ -51,12 +50,9 @@ public class ReservationDAOTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     @BeforeEach
     void setUp() {
-        reservationDAO = new ReservationDAO(namedParameterJdbcTemplate);
+        reservationDAO = new SpringReservationDAO(jdbcTemplate);
 
         jdbcTemplate.execute(DROP_TABLE);
         jdbcTemplate.execute(CREATE_TABLE);
@@ -98,13 +94,5 @@ public class ReservationDAOTest {
 
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
         assertThat(count).isEqualTo(0L);
-    }
-
-    @DisplayName("예약 날짜 및 시간으로 예약 수 조회")
-    @Test
-    void findCountReservationByDateTime() {
-        Long count = reservationDAO.findCountReservationByDateTime(DATE_DATA1, TIME_DATA);
-
-        assertThat(count).isEqualTo(1L);
     }
 }

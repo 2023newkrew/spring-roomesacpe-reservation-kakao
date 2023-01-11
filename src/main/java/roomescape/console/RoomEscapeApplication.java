@@ -3,7 +3,8 @@ package roomescape.console;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
-import roomescape.console.dao.ReservationDAO;
+import roomescape.dao.ConsoleReservationDAO;
+import roomescape.dao.ReservationDAO;
 import roomescape.dto.Reservation;
 import roomescape.dto.Theme;
 
@@ -20,7 +21,7 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationDAO dao = new ReservationDAO(URL, USER, PASSWORD);
+        ReservationDAO dao = new ConsoleReservationDAO(URL, USER, PASSWORD);
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
