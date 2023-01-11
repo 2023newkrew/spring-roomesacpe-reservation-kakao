@@ -1,10 +1,11 @@
 package nextstep.repository;
 
+import nextstep.dto.ReservationRequestDTO;
+import nextstep.entity.Reservation;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import nextstep.dto.ReservationRequestDTO;
-import nextstep.entity.Reservation;
 
 public interface ReservationRepository {
 

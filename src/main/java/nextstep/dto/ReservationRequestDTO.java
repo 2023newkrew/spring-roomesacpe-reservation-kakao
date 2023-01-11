@@ -1,9 +1,10 @@
 package nextstep.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @RequiredArgsConstructor

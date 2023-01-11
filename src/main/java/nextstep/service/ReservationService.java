@@ -1,8 +1,9 @@
 package nextstep.service;
 
-import java.sql.SQLException;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ReservationResponseDTO;
+
+import java.sql.SQLException;
 
 public interface ReservationService {
 
