@@ -1,4 +1,4 @@
-package nextstep.dao;
+package nextstep.repository;
 
 import static nextstep.entity.ThemeConstants.THEME_DESC;
 import static nextstep.entity.ThemeConstants.THEME_NAME;
@@ -9,26 +9,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import nextstep.dto.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
-import nextstep.exception.ConflictException;
 
-public class ReservationDAO {
+public class ReservationJDBCRepositoryImpl implements ReservationRepository {
 
     private final ConnectionHandler connectionHandler;
 
-    public ReservationDAO() {
-        this.connectionHandler = new ConnectionHandler();
+    public ReservationJDBCRepositoryImpl(ConnectionHandler connectionHandler) {
+        this.connectionHandler = connectionHandler;
     }
 
-
-    public Reservation addReservation(ReservationRequestDTO requestDTO) {
-        validate(requestDTO);
-        Reservation reservation = insertReservation(requestDTO);
-        return reservation;
-    }
 
     private Reservation insertReservation(ReservationRequestDTO requestDTO) {
         Reservation reservation = null;
@@ -53,31 +48,29 @@ public class ReservationDAO {
         return reservation;
     }
 
-    private void validate(ReservationRequestDTO requestDTO) {
-        // 드라이버 연결
-        findReservationByDateAndTime(requestDTO);
+
+    @Override
+    public boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException {
+        String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
+        PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+        ps.setDate(1, Date.valueOf(date));
+        ps.setTime(2, Time.valueOf(time));
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
 
     }
 
-    private void findReservationByDateAndTime(ReservationRequestDTO requestDTO) {
-        try {
-            String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(requestDTO.getDate()));
-            ps.setTime(2, Time.valueOf(requestDTO.getTime()));
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                throw new ConflictException("이미 존재하는 예약입니다.");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
+        Reservation reservation = insertReservation(reservationRequestDTO);
+        return reservation;
     }
 
     public Reservation findById(Long id) {
         Reservation reservation = findReservationById(id);
         return reservation;
     }
+
 
     private Reservation findReservationById(Long id) {
         Reservation reservation = null;
@@ -96,16 +89,17 @@ public class ReservationDAO {
         return reservation;
     }
 
-    public void deleteById(Long id) {
-        deleteReservationById(id);
+    @Override
+    public int deleteById(Long id) {
+        return deleteReservationById(id);
     }
 
-    private void deleteReservationById(Long id) {
+    private int deleteReservationById(Long id) {
         try {
             String sql = "DELETE FROM RESERVATION WHERE ID = ?";
             PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
-            ps.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -123,7 +117,4 @@ public class ReservationDAO {
     }
 
 
-    public void releaseConnection() {
-        connectionHandler.release();
-    }
 }

@@ -8,7 +8,7 @@ import nextstep.entity.Reservation;
 
 public interface ReservationRepository {
 
-    Long save(ReservationRequestDTO reservationRequestDTO) throws SQLException;
+    Reservation save(ReservationRequestDTO reservationRequestDTO) throws SQLException;
 
     Reservation findById(Long id) throws SQLException;
 

@@ -34,7 +34,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Long save(ReservationRequestDTO reservationRequestDTO) {
+    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("date", Date.valueOf(reservationRequestDTO.getDate()));
         parameters.put("time", Time.valueOf(reservationRequestDTO.getTime()));
@@ -42,11 +42,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         parameters.put("theme_name", THEME_NAME);
         parameters.put("theme_desc", THEME_DESC);
         parameters.put("theme_price", THEME_PRICE);
-        return new SimpleJdbcInsert(jdbcTemplate)
+        long id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("RESERVATION")
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(parameters)
                 .longValue();
+        return new Reservation(id, reservationRequestDTO.getDate(), reservationRequestDTO.getTime(),
+                reservationRequestDTO.getName(),
+                new Theme(THEME_NAME, THEME_DESC, THEME_PRICE));
+
     }
 
     @Override

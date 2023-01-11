@@ -25,11 +25,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
-
         validate(reservationRequestDTO);
-
-        return reservationRepository.save(reservationRequestDTO);
+        return reservationRepository.save(reservationRequestDTO).getId();
     }
+
+
+
+
 
     private void validate(ReservationRequestDTO reservationRequestDTO) throws SQLException {
         boolean isExist = reservationRepository.existByDateAndTime(
