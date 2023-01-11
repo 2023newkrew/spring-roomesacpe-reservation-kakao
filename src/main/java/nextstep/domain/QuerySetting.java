@@ -14,6 +14,7 @@ public class QuerySetting {
     public static class Theme {
         public static final String TABLE_NAME = "THEME";
         public static final String PK_NAME = "id";
+        public static final String SELECT_BY_NAME = "SELECT * FROM theme WHERE name = ?";
     }
 
 }

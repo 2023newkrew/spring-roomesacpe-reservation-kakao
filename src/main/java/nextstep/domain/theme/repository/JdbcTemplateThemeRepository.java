@@ -1,7 +1,10 @@
 package nextstep.domain.theme.repository;
 
+import nextstep.domain.QuerySetting;
 import nextstep.domain.theme.Theme;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -16,6 +19,12 @@ public class JdbcTemplateThemeRepository implements ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<Theme> themeRowMapper = (rs, rowNum) -> new Theme(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("desc"),
+            rs.getInt("price")
+    );
 
     public JdbcTemplateThemeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,7 +43,11 @@ public class JdbcTemplateThemeRepository implements ThemeRepository {
 
     @Override
     public Optional<Theme> findByName(String name) {
-        return Optional.empty();
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(SELECT_BY_NAME, themeRowMapper, name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -10,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static nextstep.domain.QuerySetting.Theme.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +27,7 @@ public class ThemeRepositoryTest {
 
     @BeforeAll
     static void createTable(@Autowired DatabaseExecutor databaseExecutor) {
-        databaseExecutor.createTable(TABLE_NAME);
+        databaseExecutor.createThemeTable();
     }
 
     @Test
@@ -41,6 +43,30 @@ public class ThemeRepositoryTest {
         assertThat(savedTheme).usingRecursiveComparison()
                 .ignoringFields(PK_NAME)
                 .isEqualTo(theme);
+    }
+
+    @Test
+    void 테마를_이름으로_조회한다() {
+        // given
+        String themeName = "혜화 잡화점";
+        Theme savedTheme = themeRepository.save(new Theme(themeName, "테마 설명", 22_000));
+
+        // when
+        Theme findByName = themeRepository.findByName(themeName)
+                .orElseThrow();
+
+        // then
+        assertThat(findByName).usingRecursiveComparison()
+                .isEqualTo(savedTheme);
+    }
+
+    @Test
+    void 특정_이름을_가진_테마가_존재하지_않을_경우_아무것도_반환되지_않는다() {
+        // given
+        String themeName = "혜화 잡화점";
+
+        // when, then
+        assertThat(themeRepository.findByName(themeName)).isEqualTo(Optional.empty());
     }
 
 }

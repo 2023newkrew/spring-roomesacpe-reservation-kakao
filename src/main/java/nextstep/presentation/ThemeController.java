@@ -1,13 +1,11 @@
 package nextstep.presentation;
 
 import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.response.FindThemeResponse;
 import nextstep.service.ThemeService;
 import nextstep.utils.ThemeRequestValidator;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -30,6 +28,13 @@ public class ThemeController {
 
         return ResponseEntity.created(URI.create("/themes" + themeId))
                 .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<FindThemeResponse> findThemeByName(@RequestParam String name) {
+        FindThemeResponse findThemeResponse = themeService.findThemeByName(name);
+
+        return ResponseEntity.ok(findThemeResponse);
     }
 
 }
