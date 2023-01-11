@@ -6,7 +6,6 @@ import java.util.Scanner;
 import nextstep.dao.ReservationDAO;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
-import nextstep.entity.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -23,10 +22,6 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         SpringApplication.run(RoomEscapeApplication.class, args);
         Scanner scanner = new Scanner(System.in);
-
-        Long reservationIdIndex = 0L;
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();
@@ -45,7 +40,6 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
                 Reservation reservation = reservationDAO.addReservation(
                         new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name));
-
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
