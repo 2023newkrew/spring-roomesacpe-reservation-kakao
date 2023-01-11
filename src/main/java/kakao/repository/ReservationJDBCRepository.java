@@ -69,7 +69,7 @@ public class ReservationJDBCRepository implements ReservationRepository {
     }
 
     public Reservation findById(Long id) {
-        String SELECT_SQL = "select * from reservation join theme on reservation.id = theme.id where reservation.id=?";
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.id=?";
         try {
             return jdbcTemplate.queryForObject(SELECT_SQL, reservationRowMapper, id);
         } catch (DataAccessException e) {
@@ -78,7 +78,7 @@ public class ReservationJDBCRepository implements ReservationRepository {
     }
 
     public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        String SELECT_SQL = "select * from reservation join theme on reservation.id = theme.id where date=? and time=?";
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where date=? and time=?";
         return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, date, time);
     }
 
