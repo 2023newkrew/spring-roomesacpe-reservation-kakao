@@ -45,19 +45,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(
                     sql,
-                    (rs, count) -> new Reservation(
-                            rs.getLong("id"),
-                            rs.getDate("date")
-                                    .toLocalDate(),
-                            rs.getTime("time")
-                                    .toLocalTime(),
-                            rs.getString("name"),
-                            new Theme(
-                                    rs.getString("theme_name"),
-                                    rs.getString("theme_desc"),
-                                    rs.getInt("theme_price")
-                            )
-                    ),
+                    (rs, count) -> Reservation.of(rs),
                     id
             ));
         } catch (EmptyResultDataAccessException e) {
