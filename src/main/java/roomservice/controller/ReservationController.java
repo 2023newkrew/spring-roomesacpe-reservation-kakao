@@ -5,20 +5,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomservice.domain.Reservation;
 import roomservice.repository.ReservationDao;
+import roomservice.service.ReservationService;
 
 import java.net.URI;
 
 /**
- * ReservationController processes various requests related to reservations, including create, show, and delete methods.
+ * ReservationController processes various HTTP requests
+ * related to reservations, including create, show, and delete methods.
  */
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationDao reservationDao;
+    private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     /**
@@ -28,18 +30,18 @@ public class ReservationController {
      */
     @PostMapping()
     public ResponseEntity<Void> createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationDao.insertReservation(reservation);
+        Long id = reservationService.createReservation(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     /**
-     * Find a reservation from this program.
+     * show a reservation which have specific id.
      * @param id which you want to find.
      * @return "ok" response with reservation if successfully found.
      */
     @GetMapping("/{id}")
     public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
-        return ResponseEntity.ok().body(reservationDao.selectReservation(id));
+        return ResponseEntity.ok().body(reservationService.findReservation(id));
     }
 
     /**
@@ -49,7 +51,7 @@ public class ReservationController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationDao.deleteReservation(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }
