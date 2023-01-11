@@ -4,6 +4,7 @@ import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.repository.ReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,14 +19,14 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationDAO reservationDAO = new ReservationDAO();
+        ReservationRepository reservationRepository = new JdbcReservationRepository();
 
         while (true) {
             String input = getCommandInput(scanner);
 
             if (input.startsWith(ADD)) {
                 try {
-                    Reservation reservation = addReservation(input, reservationDAO);
+                    Reservation reservation = addReservation(input, reservationRepository);
 
                     printReservation(reservation);
                 }
@@ -35,7 +36,7 @@ public class RoomEscapeApplication {
             }
             if (input.startsWith(FIND)) {
                 try {
-                    Reservation reservation = findReservation(input, reservationDAO);
+                    Reservation reservation = findReservation(input, reservationRepository);
 
                     printReservation(reservation);
                     printReservationTheme(reservation.getTheme());
@@ -45,7 +46,7 @@ public class RoomEscapeApplication {
                 }
             }
             if (input.startsWith(DELETE)) {
-                deleteReservation(input, reservationDAO);
+                deleteReservation(input, reservationRepository);
             }
             if (input.equals(QUIT)) {
                 break;
@@ -65,7 +66,7 @@ public class RoomEscapeApplication {
         return scanner.nextLine();
     }
 
-    public static Reservation addReservation(String input, ReservationDAO reservationDAO) {
+    public static Reservation addReservation(String input, ReservationRepository reservationRepository) {
         String params = input.split(" ")[1];
         String date = params.split(",")[0];
         String time = params.split(",")[1];
@@ -73,11 +74,11 @@ public class RoomEscapeApplication {
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
-        if (reservationDAO.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time + ":00"))) {
+        if (reservationRepository.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time + ":00"))) {
             throw new ReservationDuplicateException();
         }
 
-        Reservation reservation = reservationDAO.save(new Reservation(
+        Reservation reservation = reservationRepository.save(new Reservation(
                 0L,
                 LocalDate.parse(date),
                 LocalTime.parse(time + ":00"),
@@ -88,22 +89,22 @@ public class RoomEscapeApplication {
         return reservation;
     }
 
-    public static Reservation findReservation(String input, ReservationDAO reservationDAO) {
+    public static Reservation findReservation(String input, ReservationRepository reservationRepository) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
-        Optional<Reservation> result = reservationDAO.findById(id);
+        Optional<Reservation> result = reservationRepository.findById(id);
         if (result.isEmpty()) {
             throw new ReservationNotFoundException(id);
         }
         return result.get();
     }
 
-    public static void deleteReservation(String input, ReservationDAO reservationDAO) {
+    public static void deleteReservation(String input, ReservationRepository reservationRepository) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
-        reservationDAO.deleteById(id);
+        reservationRepository.deleteById(id);
 
         System.out.println("예약이 취소되었습니다.");
     }

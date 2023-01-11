@@ -4,6 +4,7 @@ import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class RoomEscapeService {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomEscapeService(ReservationRepository reservationRepository) {
+    public RoomEscapeService(JdbcTemplateReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
