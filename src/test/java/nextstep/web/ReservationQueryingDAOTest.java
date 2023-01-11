@@ -3,6 +3,7 @@ package nextstep.web;
 import nextstep.dao.web.ReservationQueryingDAO;
 import nextstep.domain.Reservation;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -40,7 +41,8 @@ class ReservationQueryingDAOTest {
     }
 
     @Test
-    void findReservationById() {
+    @DisplayName("ID를 통해 예약 정보를 잘 받아오는지 테스트")
+    void findReservationByIdTest() {
         Reservation reservation = reservationQueryingDAO.findReservationById(1L);
 
         assertThat(reservation).isNotNull();
@@ -48,7 +50,8 @@ class ReservationQueryingDAOTest {
     }
 
     @Test
-    void findReservationByDateAndTime() {
+    @DisplayName("예약 날짜와 시간이 일치하는 예약 정보를 잘 받아오는지 테스트")
+    void findReservationByDateAndTimeTest() {
         List<Reservation> reservations = reservationQueryingDAO.findReservationByDateAndTime(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0)

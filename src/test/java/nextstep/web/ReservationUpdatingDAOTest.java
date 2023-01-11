@@ -5,6 +5,7 @@ import nextstep.dao.web.ReservationUpdatingDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,7 +43,8 @@ public class ReservationUpdatingDAOTest {
     }
 
     @Test
-    void insertWithKeyHolder() {
+    @DisplayName("예약 정보를 생성하고 생성한 예약의 ID를 잘 받아오는지 테스트")
+    void insertWithKeyHolderTest() {
         Reservation reservation = new Reservation(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0),
@@ -63,7 +65,8 @@ public class ReservationUpdatingDAOTest {
     }
 
     @Test
-    void delete() {
+    @DisplayName("ID가 일치하는 예약을 잘 삭제하는지 테스트")
+    void deleteTest() {
         int rowNum = reservationUpdatingDAO.delete(1L);
 
         assertThat(rowNum).isEqualTo(1);

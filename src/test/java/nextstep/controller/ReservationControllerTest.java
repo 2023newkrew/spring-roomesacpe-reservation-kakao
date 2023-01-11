@@ -28,7 +28,7 @@ class ReservationControllerTest {
     @Order(1)
     @DisplayName("예약 생성")
     @Test
-    void createReservation() {
+    void createReservationTest() {
         Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
 
         RestAssured.given().log().all()
@@ -43,7 +43,7 @@ class ReservationControllerTest {
     @Order(2)
     @DisplayName("예약 조회")
     @Test
-    void lookupReservation() {
+    void lookupReservationTest() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
@@ -62,7 +62,7 @@ class ReservationControllerTest {
     @Order(3)
     @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
     @Test
-    void reservationException() {
+    void reservationExceptionTest() {
         Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
 
         RestAssured.given().log().all()
@@ -77,7 +77,7 @@ class ReservationControllerTest {
     @Order(4)
     @DisplayName("예약 삭제")
     @Test
-    void deleteReservation() {
+    void deleteReservationTest() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
