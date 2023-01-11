@@ -52,7 +52,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(LocalDate date, LocalTime time, String name, Theme theme) {
+    public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
         validateReservation(date, time);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
@@ -69,7 +69,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         };
 
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return findById(keyHolder.getKey().longValue());
+        return keyHolder.getKey().longValue();
     }
 
     private void validateReservation(LocalDate date, LocalTime time) {
