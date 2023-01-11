@@ -37,8 +37,8 @@ class ReservationServiceTest {
     void createReservation() {
         // given
         ReservationRequest reservationRequest = new ReservationRequest(
-            LocalDate.now(),
-            LocalTime.of(11, 30),
+            LocalDate.now().toString(),
+            LocalTime.of(11, 30).toString(),
             "name"
         );
 
@@ -54,15 +54,15 @@ class ReservationServiceTest {
     void createReservationDuplicated() {
         // given
         ReservationRequest reservationRequest1 = new ReservationRequest(
-            LocalDate.now(),
-            LocalTime.of(11, 30),
+            LocalDate.now().toString(),
+            LocalTime.of(11, 30).toString(),
             "reservation1"
         );
         reservationService.createReservation(reservationRequest1);
 
         ReservationRequest reservationRequest2 = new ReservationRequest(
-            LocalDate.now(),
-            LocalTime.of(11, 30),
+            LocalDate.now().toString(),
+            LocalTime.of(11, 30).toString(),
             "reservation2"
         );
 
@@ -76,8 +76,8 @@ class ReservationServiceTest {
     void getReservation() {
         // given
         ReservationRequest reservationRequest = new ReservationRequest(
-            LocalDate.now(),
-            LocalTime.of(11, 30),
+            LocalDate.now().toString(),
+            LocalTime.of(11, 30).toString(),
             "name"
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
@@ -97,8 +97,8 @@ class ReservationServiceTest {
     void deleteReservation() {
         // given
         ReservationRequest reservationRequest = new ReservationRequest(
-            LocalDate.now(),
-            LocalTime.of(11, 30),
+            LocalDate.now().toString(),
+            LocalTime.of(11, 30).toString(),
             "name"
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
