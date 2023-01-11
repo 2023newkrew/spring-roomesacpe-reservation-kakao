@@ -3,10 +3,10 @@ package nextstep.exceptions.exception;
 import nextstep.exceptions.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class InvalidInputException extends RuntimeException {
+public class InvalidRequestException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public InvalidInputException(ErrorCode errorCode) {
+    public InvalidRequestException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 

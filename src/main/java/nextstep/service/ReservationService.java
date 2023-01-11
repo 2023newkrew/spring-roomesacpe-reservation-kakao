@@ -5,7 +5,7 @@ import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequest;
 import nextstep.dto.ReservationResponse;
 import nextstep.exceptions.ErrorCode;
-import nextstep.exceptions.exception.InvalidInputException;
+import nextstep.exceptions.exception.InvalidRequestException;
 import nextstep.repository.ReservationDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class ReservationService {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
         if (reservationDao.countByDateAndTime(date, time) > 0) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_DUPLICATED);
+            throw new InvalidRequestException(ErrorCode.RESERVATION_DUPLICATED);
         }
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -38,14 +38,14 @@ public class ReservationService {
     public ReservationResponse retrieve(Long id) {
         Optional<Reservation> reservation = reservationDao.findById(id);
         if (reservation.isEmpty()) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new InvalidRequestException(ErrorCode.RESERVATION_NOT_FOUND);
         }
         return new ReservationResponse(reservation.get());
     }
 
     public void delete(Long id) {
         if (reservationDao.findById(id).isEmpty()) {
-            throw new InvalidInputException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new InvalidRequestException(ErrorCode.RESERVATION_NOT_FOUND);
         }
         reservationDao.delete(id);
     }

@@ -2,7 +2,7 @@ package nextstep;
 
 import nextstep.dto.ReservationRequest;
 import nextstep.dto.ReservationResponse;
-import nextstep.exceptions.exception.InvalidInputException;
+import nextstep.exceptions.exception.InvalidRequestException;
 import nextstep.repository.ReservationJdbcDao;
 import nextstep.service.ReservationService;
 
@@ -50,7 +50,7 @@ public class ReservationConsole {
                     System.out.println("예약 날짜: " + reservationRequest.getDate());
                     System.out.println("예약 시간: " + reservationRequest.getTime());
                     System.out.println("예약자 이름: " + reservationRequest.getName());
-                } catch (InvalidInputException e) {
+                } catch (InvalidRequestException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -69,7 +69,7 @@ public class ReservationConsole {
                     System.out.println("예약 테마 이름: " + reservationDto.getThemeName());
                     System.out.println("예약 테마 설명: " + reservationDto.getThemeDesc());
                     System.out.println("예약 테마 가격: " + reservationDto.getThemePrice());
-                } catch (InvalidInputException e) {
+                } catch (InvalidRequestException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -82,7 +82,7 @@ public class ReservationConsole {
                 try {
                     reservationService.delete(id);
                     System.out.println("예약이 취소되었습니다.");
-                } catch (InvalidInputException e) {
+                } catch (InvalidRequestException e) {
                     System.out.println(e.getMessage());
                 }
             }
