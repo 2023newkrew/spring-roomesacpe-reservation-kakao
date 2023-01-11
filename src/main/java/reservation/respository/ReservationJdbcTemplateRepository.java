@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
-import reservation.model.dto.RequestReservation;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,14 +16,15 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 @Repository
-public class ReservationJdbcTemplateRepository {
+public class ReservationJdbcTemplateRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long saveReservation(Reservation reservation) {
+    @Override
+    public Long save(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -43,7 +43,8 @@ public class ReservationJdbcTemplateRepository {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Reservation findReservationById(Long reservationId) {
+    @Override
+    public Reservation findById(Long reservationId) {
         String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
         try {
             return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
@@ -60,7 +61,8 @@ public class ReservationJdbcTemplateRepository {
         }
     }
 
-    public int deleteReservationById(Long reservationId) {
+    @Override
+    public int deleteById(Long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return this.jdbcTemplate.update(sql, reservationId);
     }

@@ -1,11 +1,14 @@
 package nextstep;
 
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
+import reservation.respository.ReservationRepository;
 
 import java.sql.*;
 
-public class ReservationJdbcRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private Connection makeConnection(){
         Connection con = null;
@@ -20,10 +23,13 @@ public class ReservationJdbcRepository {
         return con;
     }
 
-    public void saveReservation(Reservation reservation) {
+    @Override
+    public Long save(Reservation reservation) {
+        Long id = 0L;
         try (Connection con = makeConnection()){
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             assert con != null;
+            KeyHolder keyHolder = new GeneratedKeyHolder();
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
@@ -32,13 +38,16 @@ public class ReservationJdbcRepository {
             ps.setString(5, reservation.getTheme().getDesc());
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
+            id = (long) keyHolder.getKey();
             ps.close();
         } catch (SQLException | AssertionError e) {
             throw new RuntimeException(e);
         }
+        return id;
     }
 
-    public Reservation getReservation(Long id) {
+    @Override
+    public Reservation findById(Long id) {
         Reservation reservation = null;
         try (Connection con = makeConnection()){
             String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?;";
@@ -72,7 +81,8 @@ public class ReservationJdbcRepository {
         return reservation;
     }
 
-    public int deleteReservation(Long id) {
+    @Override
+    public int deleteById(Long id) {
         int row;
         try (Connection con = makeConnection()){
             String sql = "DELETE FROM reservation WHERE id = ?;";

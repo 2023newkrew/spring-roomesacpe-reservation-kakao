@@ -47,7 +47,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                RESERVATION_JDBC_REPOSITORY.saveReservation(reservation);
+                RESERVATION_JDBC_REPOSITORY.save(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -61,7 +61,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = RESERVATION_JDBC_REPOSITORY.getReservation(id);
+                Reservation reservation = RESERVATION_JDBC_REPOSITORY.findById(id);
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
@@ -76,7 +76,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if(RESERVATION_JDBC_REPOSITORY.deleteReservation(id) > 0) {
+                if(RESERVATION_JDBC_REPOSITORY.deleteById(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

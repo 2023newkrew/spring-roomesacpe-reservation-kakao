@@ -26,21 +26,21 @@ public class ReservationService {
             throw new DuplicateException(RESERVATION_DUPLICATED);
         }
 
-        return reservationJdbcTemplateRepository.saveReservation(makeReservationBeforeStore(requestReservation, theme));
+        return reservationJdbcTemplateRepository.save(makeReservationBeforeStore(requestReservation, theme));
     }
 
     public Reservation getReservation(Long id) {
         if(!reservationJdbcTemplateRepository.existById(id)){
             throw new NotFoundException(RESERVATION_NOT_FOUND);
         }
-        return reservationJdbcTemplateRepository.findReservationById(id);
+        return reservationJdbcTemplateRepository.findById(id);
     }
 
     public void deleteReservation(Long id) {
         if(!reservationJdbcTemplateRepository.existById(id)){
             throw new NotFoundException(RESERVATION_NOT_FOUND);
         }
-        reservationJdbcTemplateRepository.deleteReservationById(id);
+        reservationJdbcTemplateRepository.deleteById(id);
     }
 
     // 저장되기 이전의 Reservation 객체를 생성 - 레이어 간 DTO 구분
