@@ -2,11 +2,11 @@ package kakao.error.exception;
 
 import kakao.error.ErrorCode;
 
-public class DuplicatedReservationException extends RuntimeException {
+public class DuplicatedReservationException extends CustomException {
     private final ErrorCode errorCode;
 
     public DuplicatedReservationException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
         this.errorCode = errorCode;
     }
 
