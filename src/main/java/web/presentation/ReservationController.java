@@ -2,14 +2,13 @@ package web.presentation;
 
 import java.net.URI;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,17 +28,21 @@ import web.exception.NoSuchReservationException;
 public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
     private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
-    public ReservationController(final JdbcTemplate jdbcTemplate) {
+    public ReservationController(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @PostMapping("")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
         Reservation reservation = reservationRequestDTO.toEntity(defaultTheme);
 
-        String selectSql = "SELECT id FROM reservation WHERE date = (?) AND time = (?) LIMIT 1 ";
+        String selectSql = "SELECT id FROM reservation WHERE date = (?) AND time = (?) LIMIT 1";
 
         List<Long> ids = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
                 rs.getLong("id")), Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime()));
@@ -48,22 +51,9 @@ public class ReservationController {
             throw new DuplicatedReservationException();
         }
 
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        final Theme theme = reservation.getTheme();
+        long newReservationId = this.insertActor.executeAndReturnKey(reservation.buildParams()).longValue();
 
-        this.jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
-            return ps;
-        }, keyHolder);
-
-        return ResponseEntity.created(URI.create("/reservations/" + keyHolder.getKey())).build();
+        return ResponseEntity.created(URI.create("/reservations/" + newReservationId)).build();
     }
 
     @GetMapping("/{id}")

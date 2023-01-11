@@ -2,6 +2,8 @@ package web.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Reservation {
 
@@ -37,5 +39,17 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
+    }
+
+    public Map<String, Object> buildParams() {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("date", this.date);
+        params.put("time", this.time);
+        params.put("name", this.name);
+        params.put("theme_name", this.theme.getName());
+        params.put("theme_desc", this.theme.getDesc());
+        params.put("theme_price", this.theme.getPrice());
+
+        return params;
     }
 }
