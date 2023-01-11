@@ -45,7 +45,8 @@ public class ConsoleRoomEscapeApplication {
                         theme
                 );
 
-                List<Reservation> reservationsByDateAndTime = reservationDAO.findReservationByDateAndTime(reservation.getDate(), reservation.getTime());
+                List<Reservation> reservationsByDateAndTime = reservationDAO.findReservationByDateAndTime(
+                        reservation.getDate(), reservation.getTime());
                 if (reservationsByDateAndTime.size() > 0) {
                     throw new CustomException();
                 }

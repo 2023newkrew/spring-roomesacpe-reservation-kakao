@@ -30,11 +30,15 @@ public class ReservationUpdatingDAOTest {
     @BeforeEach
     void setUp() {
         List<Object[]> reservations = List.of(
-                new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("13:00:00"), "name", "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000},
-                new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("14:00:00"), "name2", "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000}
+                new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("13:00:00"), "name", "워너고홈", "병맛 어드벤처 회사 코믹물",
+                        29_000},
+                new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("14:00:00"), "name2", "워너고홈", "병맛 어드벤처 회사 코믹물",
+                        29_000}
         );
 
-        jdbcTemplate.batchUpdate("INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);", reservations);
+        jdbcTemplate.batchUpdate(
+                "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);",
+                reservations);
     }
 
     @Test

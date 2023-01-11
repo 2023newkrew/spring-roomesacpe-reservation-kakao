@@ -134,8 +134,9 @@ public class ReservationDAO {
 
     private static void closeConnection(Connection con) {
         try {
-            if (con != null)
+            if (con != null) {
                 con.close();
+            }
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }

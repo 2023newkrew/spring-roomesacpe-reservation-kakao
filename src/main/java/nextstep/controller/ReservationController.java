@@ -19,19 +19,22 @@ public class ReservationController {
     private final ReservationUpdatingDAO reservationUpdatingDAO;
     private final Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
-    public ReservationController(ReservationQueryingDAO reservationQueryingDAO, ReservationUpdatingDAO reservationUpdatingDAO) {
+    public ReservationController(ReservationQueryingDAO reservationQueryingDAO,
+                                 ReservationUpdatingDAO reservationUpdatingDAO) {
         this.reservationQueryingDAO = reservationQueryingDAO;
         this.reservationUpdatingDAO = reservationUpdatingDAO;
     }
 
     @PostMapping("")
     public ResponseEntity createReservation(@RequestBody Reservation reservation) {
-        List<Reservation> reservationsByDateAndTime = reservationQueryingDAO.findReservationByDateAndTime(reservation.getDate(), reservation.getTime());
+        List<Reservation> reservationsByDateAndTime = reservationQueryingDAO.findReservationByDateAndTime(
+                reservation.getDate(), reservation.getTime());
         if (reservationsByDateAndTime.size() > 0) {
             throw new CustomException();
         }
 
-        Reservation newReservation = new Reservation(reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
+        Reservation newReservation = new Reservation(reservation.getDate(), reservation.getTime(),
+                reservation.getName(), theme);
         Long id = reservationUpdatingDAO.insertWithKeyHolder(newReservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
