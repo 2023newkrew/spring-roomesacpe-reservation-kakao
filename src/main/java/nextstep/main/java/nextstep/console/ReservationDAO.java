@@ -10,8 +10,8 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
-    Connection con = null;
     private static final int ONE = 1;
+    Connection con = null;
 
     @Override
     public Reservation save(Reservation reservation) {

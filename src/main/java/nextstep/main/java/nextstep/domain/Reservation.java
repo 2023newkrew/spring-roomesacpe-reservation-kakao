@@ -32,6 +32,21 @@ public class Reservation {
         this.theme = theme;
     }
 
+    public static Reservation of(ResultSet resultSet) throws SQLException {
+        return new Reservation(resultSet.getLong("id"),
+                resultSet.getDate("date")
+                        .toLocalDate(),
+                resultSet.getTime("time")
+                        .toLocalTime(),
+                resultSet.getString("name"),
+                new Theme(
+                        resultSet.getString("theme_name"),
+                        resultSet.getString("theme_desc"),
+                        resultSet.getInt("theme_price")
+                )
+        );
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,21 +65,6 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
-    }
-
-    public static Reservation of(ResultSet resultSet) throws SQLException {
-        return new Reservation(resultSet.getLong("id"),
-                resultSet.getDate("date")
-                        .toLocalDate(),
-                resultSet.getTime("time")
-                        .toLocalTime(),
-                resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
-        );
     }
 
     @Override

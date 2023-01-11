@@ -14,12 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 public class JdbcReservationRepositoryTest {
+    private static Theme defaultTheme;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     private ReservationRepository repository;
-
-    private static Theme defaultTheme;
 
     @BeforeAll
     static void beforeAll() {

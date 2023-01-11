@@ -1,7 +1,6 @@
 package nextstep.main.java.nextstep.repository;
 
 import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.repositoryUtil.ReservationPreparedStatementCreator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
