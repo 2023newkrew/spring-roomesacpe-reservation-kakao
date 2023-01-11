@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
     Connection con = null;
+    private static final int ONE = 1;
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -35,12 +36,6 @@ public class ReservationDAO implements ReservationRepository {
         } finally {
             closeConnection();
         }
-    }
-
-    private Long getGeneratedKeys(PreparedStatement ps) throws SQLException {
-        ResultSet generatedKeys = ps.getGeneratedKeys();
-        generatedKeys.next();
-        return generatedKeys.getLong(1);
     }
 
     @Override
@@ -75,13 +70,13 @@ public class ReservationDAO implements ReservationRepository {
     }
 
     @Override
-    public void deleteOne(Long id) {
+    public Boolean deleteOne(Long id) {
         connect();
         String sql = "DELETE FROM reservation WHERE id = ?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            ps.executeUpdate();
+            return ONE == ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -105,6 +100,12 @@ public class ReservationDAO implements ReservationRepository {
         } finally {
             closeConnection();
         }
+    }
+
+    private Long getGeneratedKeys(PreparedStatement ps) throws SQLException {
+        ResultSet generatedKeys = ps.getGeneratedKeys();
+        generatedKeys.next();
+        return generatedKeys.getLong(1);
     }
 
     private void connect() {

@@ -20,6 +20,7 @@ import java.util.Optional;
 @Primary
 public class JdbcReservationRepository implements ReservationRepository {
     private static final int EMPTY_SIZE = 0;
+    private static final int ONE = 1;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -75,9 +76,9 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteOne(Long id) {
+    public Boolean deleteOne(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        return ONE == jdbcTemplate.update(sql, id);
     }
 
     @Override

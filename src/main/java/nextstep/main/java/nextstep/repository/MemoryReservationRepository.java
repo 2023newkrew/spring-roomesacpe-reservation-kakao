@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -26,8 +27,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteOne(Long id) {
-        reservationMap.remove(id);
+    public Boolean deleteOne(Long id) {
+        return Objects.nonNull(reservationMap.remove(id));
     }
 
     @Override

@@ -69,7 +69,7 @@ public class JdbcReservationRepositoryTest {
         assertThat(repository.findOne(1L)
                 .get())
                 .isEqualTo(reservation);
-        repository.deleteOne(1L);
+        assertThat(repository.deleteOne(1L)).isTrue();
         assertThat(repository.findOne(1L)
                 .isEmpty())
                 .isTrue();
