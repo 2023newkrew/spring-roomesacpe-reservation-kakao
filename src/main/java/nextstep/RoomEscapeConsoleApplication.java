@@ -7,6 +7,7 @@ import roomescape.model.Reservation;
 import roomescape.model.Theme;
 import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ThemeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,17 +21,19 @@ public class RoomEscapeConsoleApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
     private final ReservationRepository reservationRepository;
-//    private final ThemeRepository themeRepository;
+    private final ThemeRepository themeRepository;
 
-    public RoomEscapeConsoleApplication(ReservationJdbcRepository reservationRepository) {
+    public RoomEscapeConsoleApplication(ReservationJdbcRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
-//        this.themeRepository = themeRepository;
+        this.themeRepository = themeRepository;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = themeRepository.findOneByName("워너고홈").orElseThrow(() -> {
+            throw new RuntimeException("테마를 불러오는데 실패했습니다.");
+        });
 
         // todo 리팩토링
         while (true) {
