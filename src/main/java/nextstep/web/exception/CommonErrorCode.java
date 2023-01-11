@@ -10,7 +10,9 @@ public enum CommonErrorCode implements ErrorCode {
 
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 리소스를 찾을 수 없습니다."),
 
-    SQL_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SQL 연결 실패");
+    SQL_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SQL 연결 실패."),
+
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
 
