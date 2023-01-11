@@ -16,14 +16,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Repository
-public class ReservationJdbcTemplateDao implements ReservationDao {
+public class ReservationJdbcTemplateRepository implements ReservationRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public ReservationJdbcTemplateDao() {
+    public ReservationJdbcTemplateRepository() {
     }
 
     @Autowired
-    public ReservationJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

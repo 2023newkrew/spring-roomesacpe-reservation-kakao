@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Repository
-public class ReservationJdbcDao implements ReservationDao {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     public Long save(Reservation reservation) {
         Connection con = null;

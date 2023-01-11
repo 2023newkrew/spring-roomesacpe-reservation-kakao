@@ -2,7 +2,7 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.dto.ReservationRequestDto;
-import nextstep.repository.ReservationJdbcTemplateDao;
+import nextstep.repository.ReservationJdbcTemplateRepository;
 import nextstep.service.ReservationService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class ReservationControllerTest {
     @Autowired
     ReservationService reservationService;
     @Autowired
-    ReservationJdbcTemplateDao reservationJdbcTemplateDao;
+    ReservationJdbcTemplateRepository reservationJdbcTemplateDao;
 
     @BeforeEach
     void setUp() {

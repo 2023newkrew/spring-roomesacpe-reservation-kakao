@@ -1,10 +1,9 @@
 package nextstep;
 
-import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequestDto;
 import nextstep.dto.ReservationResponseDto;
 import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.repository.ReservationJdbcDao;
+import nextstep.repository.ReservationJdbcRepository;
 import nextstep.service.ReservationService;
 
 import java.time.LocalDate;
@@ -17,9 +16,8 @@ public class ReservationConsole {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-
     public static void main(String[] args) {
-        final ReservationService reservationService = new ReservationService(new ReservationJdbcDao());
+        final ReservationService reservationService = new ReservationService(new ReservationJdbcRepository());
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -54,7 +52,6 @@ public class ReservationConsole {
                     System.out.println("이미 예약된 날짜와 시간입니다.");
                 }
             }
-
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];

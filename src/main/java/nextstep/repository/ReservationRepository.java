@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Repository
-public interface ReservationDao {
+public interface ReservationRepository {
     Long save(Reservation reservation);
 
     int countByDateAndTime(LocalDate date, LocalTime time);

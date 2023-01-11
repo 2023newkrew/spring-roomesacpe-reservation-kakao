@@ -5,7 +5,7 @@ import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequestDto;
 import nextstep.dto.ReservationResponseDto;
 import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.repository.ReservationDao;
+import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +14,28 @@ import java.time.LocalTime;
 
 @Service
 public class ReservationService {
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(@Qualifier("reservationJdbcTemplateDao") ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationService(@Qualifier("reservationJdbcTemplateRepository") ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     public Long reserve(ReservationRequestDto reservationRequestDto) {
         LocalDate date = reservationRequestDto.getDate();
         LocalTime time = reservationRequestDto.getTime();
 
-        if (reservationDao.countByDateAndTime(date, time) > 0) {
+        if (reservationRepository.countByDateAndTime(date, time) > 0) {
             throw new DuplicatedDateAndTimeException();
         }
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         Reservation newReservation = new Reservation(date, time, reservationRequestDto.getName(), theme);
 
-        return reservationDao.save(newReservation);
+        return reservationRepository.save(newReservation);
     }
 
     public ReservationResponseDto retrieve(Long id) {
-        Reservation reservation = reservationDao.findById(id);
+        Reservation reservation = reservationRepository.findById(id);
         if (reservation != null) {
             return new ReservationResponseDto(
                     reservation.getId(),
@@ -51,6 +51,6 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationDao.delete(id);
+        reservationRepository.delete(id);
     }
 }
