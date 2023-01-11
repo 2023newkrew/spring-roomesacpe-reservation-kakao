@@ -66,8 +66,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
     public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-//            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
             ps.setString(3, name);
@@ -76,7 +75,9 @@ public class ConsoleReservationRepository implements ReservationRepository {
             ps.setInt(6, theme.getPrice());
             ps.executeUpdate();
 
-            return ps.getGeneratedKeys().getLong(1);
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            generatedKeys.next();
+            return generatedKeys.getLong("id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
