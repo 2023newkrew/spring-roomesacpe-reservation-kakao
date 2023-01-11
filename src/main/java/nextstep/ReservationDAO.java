@@ -1,5 +1,8 @@
 package nextstep;
 
+import domain.Reservation;
+import domain.Theme;
+
 import java.sql.*;
 
 public class ReservationDAO {
@@ -10,7 +13,7 @@ public class ReservationDAO {
         // 드라이버 연결
         try (
                 Connection con = DriverManager.getConnection(DB_URL, "sa", "");
-                PreparedStatement ps = con.prepareStatement(INSERT_SQL, new String[]{"id"});
+                PreparedStatement ps = con.prepareStatement(INSERT_SQL, new String[]{"id"})
         ) {
             System.out.println("정상적으로 연결되었습니다.");
             ps.setDate(1, Date.valueOf(reservation.getDate()));
@@ -41,12 +44,12 @@ public class ReservationDAO {
         // 드라이버 연결
         try (
                 Connection con = DriverManager.getConnection(DB_URL, "sa", "");
-                PreparedStatement ps = con.prepareStatement(SELECT_SQL);
+                PreparedStatement ps = con.prepareStatement(SELECT_SQL)
         ) {
             System.out.println("정상적으로 연결되었습니다.");
             ps.setLong(1, id);
             try (
-                    ResultSet rs = ps.executeQuery();
+                    ResultSet rs = ps.executeQuery()
             ) {
                 if (!rs.next()) return null;
 
@@ -72,7 +75,7 @@ public class ReservationDAO {
 
         try (
                 Connection con = DriverManager.getConnection(DB_URL, "sa", "");
-                PreparedStatement ps = con.prepareStatement(sql);
+                PreparedStatement ps = con.prepareStatement(sql)
         ) {
 
             System.out.println("정상적으로 연결되었습니다.");

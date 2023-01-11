@@ -1,6 +1,6 @@
 package kakao.repository;
 
-import kakao.domain.Reservation;
+import domain.Reservation;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

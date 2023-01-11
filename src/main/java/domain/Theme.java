@@ -1,4 +1,4 @@
-package kakao.domain;
+package domain;
 
 public class Theme {
     private final String name;

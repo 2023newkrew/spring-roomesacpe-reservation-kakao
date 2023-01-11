@@ -1,6 +1,6 @@
 package kakao.repository;
 
-import kakao.domain.Reservation;
+import domain.Reservation;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;

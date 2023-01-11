@@ -1,7 +1,7 @@
 package kakao.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import kakao.domain.Reservation;
+import domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

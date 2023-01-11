@@ -1,5 +1,8 @@
 package nextstep;
 
+import domain.Reservation;
+import domain.Theme;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -41,7 +44,7 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
-                
+
                 long reservationId = reservationDAO.addReservation(reservation);
                 if (reservationId >= 0) {
                     System.out.println("예약이 등록되었습니다.");

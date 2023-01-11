@@ -1,6 +1,6 @@
 package kakao.service;
 
-import kakao.domain.Reservation;
+import domain.Reservation;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.error.ErrorCode;

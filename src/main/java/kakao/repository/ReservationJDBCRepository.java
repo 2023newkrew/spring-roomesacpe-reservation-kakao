@@ -1,7 +1,7 @@
 package kakao.repository;
 
-import kakao.domain.Reservation;
-import kakao.domain.Theme;
+import domain.Reservation;
+import domain.Theme;
 import kakao.error.ErrorCode;
 import kakao.error.exception.RecordNotFoundException;
 import org.springframework.dao.DataAccessException;

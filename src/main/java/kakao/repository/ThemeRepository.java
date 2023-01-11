@@ -1,6 +1,6 @@
 package kakao.repository;
 
-import kakao.domain.Theme;
+import domain.Theme;
 import org.springframework.stereotype.Repository;
 
 @Repository
