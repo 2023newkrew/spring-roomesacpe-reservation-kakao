@@ -49,7 +49,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
         try {
             return jdbcTemplate.queryForObject(
                     sql,
-                    (resultSet, rowNum) -> Reservation.fromResultSet(resultSet),
+                    (resultSet, rowNum) -> ReservationResultSetMapper.mapRow(resultSet),
                     id);
         } catch (EmptyResultDataAccessException e) {
             throw new ReservationNotFoundException();

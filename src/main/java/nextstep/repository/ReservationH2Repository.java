@@ -7,7 +7,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationH2Repository implements ReservationRepository{
+public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public Reservation add(Reservation reservation) {
@@ -50,7 +50,7 @@ public class ReservationH2Repository implements ReservationRepository{
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                result = Reservation.fromResultSet(rs);
+                result = ReservationResultSetMapper.mapRow(rs);
             } else {
                 throw new ReservationNotFoundException();
             }
