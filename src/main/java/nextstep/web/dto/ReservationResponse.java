@@ -1,9 +1,8 @@
 package nextstep.web.dto;
 
-import nextstep.model.Reservation;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import nextstep.model.Reservation;
 
 public class ReservationResponse {
     private Long id;
@@ -19,7 +18,8 @@ public class ReservationResponse {
                 reservation.getTheme().getName(), reservation.getTheme().getDesc(), reservation.getTheme().getPrice());
     }
 
-    public ReservationResponse(Long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc, Integer themePrice) {
+    public ReservationResponse(Long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc,
+                               Integer themePrice) {
         this.id = id;
         this.date = date;
         this.time = time;

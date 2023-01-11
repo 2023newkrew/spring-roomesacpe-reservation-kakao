@@ -27,10 +27,15 @@ public class Theme {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Theme theme = (Theme) o;
-        return Objects.equals(name, theme.name) && Objects.equals(desc, theme.desc) && Objects.equals(price, theme.price);
+        return Objects.equals(name, theme.name) && Objects.equals(desc, theme.desc) && Objects.equals(price,
+                theme.price);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package nextstep.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.web.dto.ReservationRequest;
@@ -17,11 +21,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RoomEscapeControllerTest {
@@ -125,7 +124,7 @@ public class RoomEscapeControllerTest {
     private Long 예약_생성_후_번호를_반환한다(String name, LocalDate date, LocalTime time) {
         ReservationRequest request = new ReservationRequest(name, date, time);
 
-        String id =  RestAssured.given().log().all()
+        String id = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()

@@ -1,5 +1,9 @@
 package nextstep.web;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.web.dto.ReservationRequest;
@@ -9,11 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class RoomEscapeServiceTest {

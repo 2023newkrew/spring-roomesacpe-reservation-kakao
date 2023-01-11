@@ -1,13 +1,18 @@
 package nextstep.console;
 
-import nextstep.model.Reservation;
-import nextstep.repository.ReservationConverter;
-import nextstep.repository.ReservationRepository;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
+import nextstep.model.Reservation;
+import nextstep.repository.ReservationConverter;
+import nextstep.repository.ReservationRepository;
 
 
 public class JdbcReservationRepository implements ReservationRepository {
@@ -24,7 +29,8 @@ public class JdbcReservationRepository implements ReservationRepository {
             ResultSet resultSet = ps.getGeneratedKeys();
             resultSet.next();
             Long id = resultSet.getLong("id");
-            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(),
+                    reservation.getTheme());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -35,7 +41,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
 
         try (Connection con = createConnection();
-            PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 

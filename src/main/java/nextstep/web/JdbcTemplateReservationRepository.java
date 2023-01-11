@@ -1,5 +1,9 @@
 package nextstep.web;
 
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
 import nextstep.model.Reservation;
 import nextstep.repository.ReservationConverter;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,11 +13,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Optional;
 
 @Repository
 public class JdbcTemplateReservationRepository implements nextstep.repository.ReservationRepository {
@@ -37,7 +36,8 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
         jdbcTemplate.update(creator, keyHolder);
         Long id = keyHolder.getKey().longValue();
 
-        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(),
+                reservation.getTheme());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT count(*) FROM reservation WHERE date=? AND time=?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, time);
-        return  count > 0;
+        return count > 0;
     }
 
     public void deleteAll() {
