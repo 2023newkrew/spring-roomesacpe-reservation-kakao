@@ -1,19 +1,16 @@
 package nextstep.domain.reservation;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class Reservation {
-
     private final Long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
     private final Theme theme;
-
 
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = null;
@@ -51,12 +48,10 @@ public class Reservation {
         return theme;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        Reservation reservation = (Reservation) obj;
+    public boolean equals(Reservation reservation) {
         return this.name.equals(reservation.getName())
-        && this.date.equals(reservation.getDate())
-        && this.time.equals(reservation.getTime())
-        && this.theme.equals(reservation.getTheme());
+                && this.date.equals(reservation.getDate())
+                && this.time.equals(reservation.getTime())
+                && this.theme.equals(reservation.getTheme());
     }
 }

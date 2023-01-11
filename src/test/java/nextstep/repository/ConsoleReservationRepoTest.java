@@ -1,12 +1,13 @@
 package nextstep.repository;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -38,7 +39,7 @@ public class ConsoleReservationRepoTest {
     void can_find_by_id() {
         long id = this.consoleReservationRepo.add(this.testReservation);
         Reservation reservation = this.consoleReservationRepo.findById(id);
-        assertEquals(reservation, this.testReservation);
+        assertTrue(reservation.equals(this.testReservation));
     }
 
     @DisplayName("can return null for nonexistent id")

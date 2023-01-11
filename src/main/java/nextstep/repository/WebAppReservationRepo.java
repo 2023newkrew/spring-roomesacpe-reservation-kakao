@@ -1,6 +1,6 @@
 package nextstep.repository;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
-import java.time.ZoneId;
 
 @Repository
 public class WebAppReservationRepo implements ReservationRepo{

@@ -1,6 +1,6 @@
 package nextstep.controller;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.dto.CreateReservationDTO;

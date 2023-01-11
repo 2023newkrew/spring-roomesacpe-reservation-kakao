@@ -1,6 +1,6 @@
 package nextstep.repository;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 
 import java.sql.*;

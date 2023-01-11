@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RoomEscapeWebApplication {
+public class WebAppMain {
     public static void main(String[] args) {
-        SpringApplication.run(RoomEscapeWebApplication.class, args);
+        SpringApplication.run(WebAppMain.class, args);
     }
 }

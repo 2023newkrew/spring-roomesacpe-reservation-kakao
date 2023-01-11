@@ -1,6 +1,6 @@
 package nextstep.repository;
 
-import nextstep.Theme;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ public class WebAppReservationRepoTest {
     void can_find_by_id() {
         long id = this.webAppReservationRepo.add(this.testReservation);
         Reservation reservation = this.webAppReservationRepo.findById(id);
-        assertEquals(reservation, this.testReservation);
+        assertTrue(reservation.equals(this.testReservation));
     }
 
     @DisplayName("can return null for nonexistent id")

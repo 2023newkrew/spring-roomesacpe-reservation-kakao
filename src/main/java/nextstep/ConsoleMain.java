@@ -1,17 +1,14 @@
 package nextstep;
 
-import nextstep.domain.dto.CreateReservationDTO;
+import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import nextstep.repository.ConsoleReservationRepo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
-public class RoomEscapeApplication {
+public class ConsoleMain {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
