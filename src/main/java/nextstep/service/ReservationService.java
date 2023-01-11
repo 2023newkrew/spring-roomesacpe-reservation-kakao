@@ -25,7 +25,6 @@ public class ReservationService {
     public Long reserve(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
-
         if (reservationDao.countByDateAndTime(date, time) > 0) {
             throw new InvalidInputException(ErrorCode.RESERVATION_DUPLICATED);
         }

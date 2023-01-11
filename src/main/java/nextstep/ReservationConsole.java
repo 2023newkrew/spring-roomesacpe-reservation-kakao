@@ -51,7 +51,7 @@ public class ReservationConsole {
                     System.out.println("예약 시간: " + reservationRequest.getTime());
                     System.out.println("예약자 이름: " + reservationRequest.getName());
                 } catch (InvalidInputException e) {
-                    System.out.println("이미 예약된 날짜와 시간입니다.");
+                    System.out.println(e.getMessage());
                 }
             }
 
@@ -60,8 +60,8 @@ public class ReservationConsole {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                ReservationResponse reservationDto = reservationService.retrieve(id);
-                if (reservationDto != null) {
+                try {
+                    ReservationResponse reservationDto = reservationService.retrieve(id);
                     System.out.println("예약 번호: " + reservationDto.getId());
                     System.out.println("예약 날짜: " + reservationDto.getDate());
                     System.out.println("예약 시간: " + reservationDto.getTime());
@@ -69,9 +69,9 @@ public class ReservationConsole {
                     System.out.println("예약 테마 이름: " + reservationDto.getThemeName());
                     System.out.println("예약 테마 설명: " + reservationDto.getThemeDesc());
                     System.out.println("예약 테마 가격: " + reservationDto.getThemePrice());
-                    continue;
+                } catch (InvalidInputException e) {
+                    System.out.println(e.getMessage());
                 }
-                System.out.println("예약 정보가 없습니다.");
             }
 
             if (input.startsWith(DELETE)) {
@@ -79,8 +79,12 @@ public class ReservationConsole {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                reservationService.delete(id);
-                System.out.println("예약이 취소되었습니다.");
+                try {
+                    reservationService.delete(id);
+                    System.out.println("예약이 취소되었습니다.");
+                } catch (InvalidInputException e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
             if (input.equals(QUIT)) {
