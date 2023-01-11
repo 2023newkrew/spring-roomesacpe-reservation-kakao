@@ -29,6 +29,7 @@ public class SpringReservationDAO extends ReservationDAO {
         }
     }
 
+    @Override
     protected boolean existReservation(LocalDate date, LocalTime time) {
         List<Boolean> result = jdbcTemplate.query(
                 new ExistReservationPreparedStatementCreator(date, time),existRowMapper);
