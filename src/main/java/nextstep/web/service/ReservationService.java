@@ -33,7 +33,7 @@ public class ReservationService {
     public FindReservationResponseDto findReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id);
 
-        return FindReservationResponseDto.of(reservation);
+        return FindReservationResponseDto.from(reservation);
     }
 
     public void deleteReservation(Long id) {
