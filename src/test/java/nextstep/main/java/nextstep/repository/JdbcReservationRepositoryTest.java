@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,18 +39,20 @@ public class JdbcReservationRepositoryTest {
     @DisplayName("예약 생성 기능 테스트")
     @Test
     public void saveTest() {
-        Reservation expectedReservation = new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme);
+        Reservation expectedReservation = new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme);
 
         Reservation actualReservation = repository.save(expectedReservation);
 
-        assertThat(actualReservation)
-                .isEqualTo(expectedReservation);
+        assertThat(actualReservation.getDate()).isEqualTo(expectedReservation.getDate());
+        assertThat(actualReservation.getTime()).isEqualTo(expectedReservation.getTime());
+        assertThat(actualReservation.getName()).isEqualTo(expectedReservation.getName());
+        assertThat(actualReservation.getTheme()).isEqualTo(expectedReservation.getTheme());
     }
 
     @DisplayName("예약 단건 조회 기능 테스트")
     @Test
     public void findOneTest() {
-        Reservation savedReservation = repository.save(new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme));
+        Reservation savedReservation = repository.save(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme));
 
         assertThat(repository.findOne(savedReservation.getId())
                 .get())
@@ -66,7 +67,7 @@ public class JdbcReservationRepositoryTest {
     @DisplayName("예약 단건 삭제 기능 테스트")
     @Test
     public void deleteOneTest() {
-        Reservation savedReservation = repository.save(new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme));
+        Reservation savedReservation = repository.save(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme));
         Long savedReservationId = savedReservation.getId();
         assertThat(repository.findOne(savedReservationId)
                 .get())
@@ -83,7 +84,7 @@ public class JdbcReservationRepositoryTest {
     public void existByDateAndTimeTest() {
         LocalDate localDate = LocalDate.of(2023, 1, 9);
         LocalTime localTime = LocalTime.of(1, 30);
-        Reservation reservation = new Reservation(1L, LocalDate.of(2023, 1, 9), localTime, "name", defaultTheme);
+        Reservation reservation = new Reservation(LocalDate.of(2023, 1, 9), localTime, "name", defaultTheme);
 
         assertThat(repository.existsByDateAndTime(localDate, localTime)).isFalse();
         repository.save(reservation);
