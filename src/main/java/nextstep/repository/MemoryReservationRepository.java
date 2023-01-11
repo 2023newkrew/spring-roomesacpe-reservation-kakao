@@ -25,13 +25,13 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(LocalDate date, LocalTime time, String name, Theme theme) {
+    public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
         validateReservation(date, time);
         Long primaryKey = memoryDbSingleton.getPrimaryKey();
         Reservation reservation = new Reservation(primaryKey, date, time, name, theme);
         reservationMap.put(primaryKey, reservation);
         memoryDbSingleton.increasePrimaryKey();
-        return reservation;
+        return primaryKey;
     }
 
     private void validateReservation(LocalDate date, LocalTime time) {

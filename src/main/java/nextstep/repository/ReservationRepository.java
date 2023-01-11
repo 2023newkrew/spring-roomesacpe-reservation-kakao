@@ -11,5 +11,5 @@ public interface ReservationRepository {
 
     void deleteById(Long id);
 
-    Reservation save(LocalDate date, LocalTime time, String name, Theme theme);
+    Long save(LocalDate date, LocalTime time, String name, Theme theme);
 }

@@ -1,6 +1,6 @@
 package nextstep;
 
-import nextstep.repository.MemoryReservationRepository;
+import nextstep.repository.ConsoleReservationRepository;
 import nextstep.service.ReservationService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,7 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final ReservationService reservationService = new ReservationService(new MemoryReservationRepository());
+    private static final ReservationService reservationService = new ReservationService(new ConsoleReservationRepository());
 
     public static void main(String[] args) {
         SpringApplication.run(RoomEscapeApplication.class, args);
@@ -42,8 +42,10 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 try {
-                    Reservation reservation = reservationService.createReservation(LocalDate.parse(date),
+                    Long id = reservationService.createReservation(LocalDate.parse(date),
                             LocalTime.parse(time + ":00"), name, theme);
+                    Reservation reservation = reservationService.findById(id);
+
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());

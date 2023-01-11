@@ -25,9 +25,9 @@ public class ReservationController {
     @PostMapping("")
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Reservation reservation = reservationService.createReservation(request.getDate(),
+        Long id = reservationService.createReservation(request.getDate(),
                 request.getTime(), request.getName(), theme);
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/{id}")
