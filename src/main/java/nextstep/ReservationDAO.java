@@ -30,7 +30,6 @@ public class ReservationDAO {
     }
 
     public void addReservation(Reservation reservation) {
-        // 드라이버 연결
         try {
             String sql = "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
@@ -46,13 +45,10 @@ public class ReservationDAO {
         }
     }
 
-    public Reservation lookUpReservation(Long sid){
+    public Reservation lookUpReservation(Long findId){
         try{
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT * FROM RESERVATION WHERE id=?");
-
-            pstmt = con.prepareStatement(sql.toString());
-            pstmt.setString(1, String.valueOf(sid));
+            pstmt = con.prepareStatement("SELECT * FROM RESERVATION WHERE id=?");
+            pstmt.setString(1, String.valueOf(findId));
             rs = pstmt.executeQuery();
             if (rs.next()) {
                 Long id = rs.getLong("id");
@@ -69,5 +65,15 @@ public class ReservationDAO {
             throw new RuntimeException(e);
         }
         return new Reservation(null,null,null,null,null);
+    }
+
+    public void deleteReservation(Long deleteId){
+        try {
+            pstmt = con.prepareStatement("DELETE FROM RESERVATION WHERE id=?");
+            pstmt.setString(1, String.valueOf(deleteId));
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
