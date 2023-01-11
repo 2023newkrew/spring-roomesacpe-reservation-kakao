@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.mvc.repository.theme;
 
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -60,5 +61,13 @@ public class JdbcThemeRepository implements ThemeRepository{
     public void deleteById(long id) {
         String sql = "DELETE FROM theme WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void update(Long id, ThemeUpdateRequest request) {
+        String sql = "UPDATE theme " +
+                "SET name = ?, desc = ?, price = ? " +
+                "WHERE id = ?";
+        jdbcTemplate.update(sql, request.getName(), request.getDesc(), request.getPrice(), id);
     }
 }

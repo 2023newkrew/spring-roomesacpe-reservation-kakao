@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
 import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,9 @@ public class ThemeService {
 
     public void deleteById(Long id) {
         themeRepository.deleteById(id);
+    }
+
+    public void update(Long id, ThemeUpdateRequest request) {
+        themeRepository.update(id, request);
     }
 }

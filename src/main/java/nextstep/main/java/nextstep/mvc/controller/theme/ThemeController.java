@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
 import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,14 @@ public class ThemeController {
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         themeService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @RequestBody ThemeUpdateRequest themeUpdateRequest) {
+        themeService.update(id, themeUpdateRequest);
+
         return ResponseEntity.noContent().build();
     }
 }
