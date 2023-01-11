@@ -10,3 +10,5 @@ spring:
   sql:
     init:
       mode: always
+      schema-locations: classpath:schema/reservation_schema.sql, classpath:schema/theme_schema.sql
+      data-locations: classpath:data/reservation_init.sql, classpath:data/theme_init.sql

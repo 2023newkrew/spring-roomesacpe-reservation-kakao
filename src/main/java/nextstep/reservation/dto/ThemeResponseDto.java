@@ -1,13 +1,15 @@
 package nextstep.reservation.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Builder
 @ToString
-public class ThemeRequestDto {
+public class ThemeResponseDto {
+    private Long id;
+
     private String name;
 
     private String desc;

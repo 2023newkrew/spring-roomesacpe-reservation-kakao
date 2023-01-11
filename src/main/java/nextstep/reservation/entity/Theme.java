@@ -1,7 +1,6 @@
 package nextstep.reservation.entity;
 
 import lombok.*;
-import nextstep.reservation.dto.ThemeRequestDto;
 
 @NoArgsConstructor
 @AllArgsConstructor

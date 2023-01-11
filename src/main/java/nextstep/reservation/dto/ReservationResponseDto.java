@@ -3,9 +3,7 @@ package nextstep.reservation.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
-import nextstep.reservation.entity.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -2,7 +2,6 @@ package nextstep.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import nextstep.reservation.entity.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

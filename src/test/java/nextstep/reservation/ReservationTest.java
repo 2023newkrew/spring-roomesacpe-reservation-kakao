@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,6 +23,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = {"classpath:schema/reservation_schema.sql", "classpath:data/reservation_init.sql"})
 public class ReservationTest {
     @LocalServerPort
     int port;
@@ -30,47 +31,16 @@ public class ReservationTest {
     @Autowired
     ReservationRepository reservationRepository;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
-
-        String sql = "CREATE TABLE RESERVATION" +
-                "("+
-                "id          bigint not null auto_increment,"+
-                "date        date," +
-                "time        time," +
-                "name        varchar(20)," +
-                "theme_name  varchar(20)," +
-                "theme_desc  varchar(255)," +
-                "theme_price int," +
-                "primary key (id)," +
-                "unique (date, time)"+
-                ");";
-        jdbcTemplate.execute(sql);
-
-        reservationRepository.add(
-                Reservation.builder()
-                        .date(LocalDate.of(1982,2,19))
-                        .time(LocalTime.of(2, 2))
-                        .name("name")
-                        .theme(Theme.builder()
-                                .name("워너고홈 ")
-                                .desc("병맛 어드벤처 회사 코믹물")
-                                .price(29000)
-                                .build())
-                        .build()
-        );
     }
 
     @Test
     void 예약_생성() {
         Map<String, Object> reservationRequest = new HashMap<>();
         reservationRequest.put("date", "2022-08-01");
-        reservationRequest.put("time", "13:00");
+        reservationRequest.put("time", "14:00");
         reservationRequest.put("name", "name");
         reservationRequest.put("themeName", "워너고홈");
         reservationRequest.put("themeDesc", "병맛 어드벤처 회사 코믹물");
@@ -83,7 +53,7 @@ public class ReservationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .header("Location", "/reservations/3");
     }
 
     @Test
@@ -126,6 +96,6 @@ public class ReservationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("해당 시간에 중복된 예약이 있습니다."));
+                .body(is("해당 시간에 해당 테마의 중복된 예약이 있습니다."));
     }
 }

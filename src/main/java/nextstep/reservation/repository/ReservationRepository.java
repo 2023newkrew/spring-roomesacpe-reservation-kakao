@@ -6,13 +6,14 @@ import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exceptions.exception.DuplicateReservationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         try {
-            return (long) jdbcTemplate.update(con -> {
+            jdbcTemplate.update(con -> {
                 PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
                 pstmt.setDate(1, Date.valueOf(reservation.getDate()));
                 pstmt.setTime(2, Time.valueOf(reservation.getTime()));
@@ -39,6 +40,8 @@ public class ReservationRepository {
                 pstmt.setInt(6, reservation.getTheme().getPrice());
                 return pstmt;
             }, keyHolder);
+
+            return keyHolder.getKey().longValue();
         }
         catch (DuplicateKeyException e) {
             throw new DuplicateReservationException();
