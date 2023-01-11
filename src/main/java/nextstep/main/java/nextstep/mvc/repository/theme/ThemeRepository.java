@@ -10,12 +10,7 @@ import java.util.Optional;
 public interface ThemeRepository {
     Long save(ThemeCreateRequest request);
     Optional<Theme> findById(long id);
-
-    Optional<Theme> findByName(String name);
-
     List<Theme> findAll();
-
     void deleteById(long id);
-
     void update(Long id, ThemeUpdateRequest request);
 }

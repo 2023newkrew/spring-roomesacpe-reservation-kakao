@@ -1,6 +1,7 @@
 package nextstep.main.java.nextstep.mvc.service.theme;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
@@ -22,15 +23,10 @@ public class ThemeService {
         return themeRepository.save(request);
     }
 
-    public Theme findByName(String name) {
-        return themeRepository.findByName(name)
-                .orElseThrow(RuntimeException::new);
-    }
-
     public ThemeFindResponse findById(Long id) {
         return themeMapper.themeToFindResponse(
             themeRepository.findById(id)
-                .orElseThrow(RuntimeException::new)
+                .orElseThrow(NoSuchThemeException::new)
         );
     }
 

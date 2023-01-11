@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 
-import static nextstep.main.java.nextstep.global.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
+import static nextstep.main.java.nextstep.global.constant.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 
 @Deprecated
 public class RoomEscapeApplication {

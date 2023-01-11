@@ -1,6 +1,8 @@
 package nextstep.main.java.nextstep.global.exception.exception;
 
-public class DuplicateReservationException extends RuntimeException {
+import nextstep.main.java.nextstep.global.exception.error.ErrorCode;
+
+public class DuplicateReservationException extends ApiException {
     public DuplicateReservationException() {
         super();
     }
@@ -9,15 +11,9 @@ public class DuplicateReservationException extends RuntimeException {
         super(message);
     }
 
-    public DuplicateReservationException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public ErrorCode getError() {
+        return ErrorCode.DUPLICATE_RESERVATION_ERROR;
     }
 
-    public DuplicateReservationException(Throwable cause) {
-        super(cause);
-    }
-
-    protected DuplicateReservationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }
