@@ -5,7 +5,7 @@ import reservation.model.domain.Theme;
 
 import java.sql.*;
 
-public class ConsoleRepository {
+public class ReservationJdbcRepository {
 
     private Connection makeConnection(){
         Connection con = null;

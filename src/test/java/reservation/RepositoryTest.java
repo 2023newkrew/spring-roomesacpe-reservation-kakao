@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
 import reservation.model.dto.RequestReservation;
-import reservation.respository.ReservationRepository;
+import reservation.respository.ReservationJdbcTemplateRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 @JdbcTest
 public class RepositoryTest {
 
-    private ReservationRepository reservationRepository;
+    private ReservationJdbcTemplateRepository reservationJdbcTemplateRepository;
     private Theme theme;
     private RequestReservation requestReservation;
 
@@ -37,37 +37,37 @@ public class RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationRepository(jdbcTemplate);
+        reservationJdbcTemplateRepository = new ReservationJdbcTemplateRepository(jdbcTemplate);
     }
 
     @Test
     @DisplayName("예약 생성이 되어야 한다.")
     void save() {
-         Long id = reservationRepository.saveReservation(requestReservation, theme);
+         Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
          assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("생성된 예약을 조회할 수 있어야 한다.")
     void find() {
-        Long id = reservationRepository.saveReservation(requestReservation, theme);
-        Reservation reservation = reservationRepository.findReservationById(id);
+        Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+        Reservation reservation = reservationJdbcTemplateRepository.findReservationById(id);
         assertThat(reservation.getTheme()).isEqualTo(theme);
     }
 
     @Test
     @DisplayName("생성된 예약을 취소할 수 있어야 한다.")
     void delete() {
-        Long id = reservationRepository.saveReservation(requestReservation, theme);
-        int rowCount = reservationRepository.deleteReservationById(id);
+        Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+        int rowCount = reservationJdbcTemplateRepository.deleteReservationById(id);
         assertThat(rowCount).isEqualTo(1);
     }
 
     @Test
     @DisplayName("시간과 날짜가 중복되는 예약은 불가능하다.")
     void duplicate(){
-        Long id = reservationRepository.saveReservation(requestReservation, theme);
-        assertThat(reservationRepository.existByDateTime(requestReservation.getDate(), requestReservation.getTime()))
+        Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+        assertThat(reservationJdbcTemplateRepository.existByDateTime(requestReservation.getDate(), requestReservation.getTime()))
                 .isTrue();
     }
 }

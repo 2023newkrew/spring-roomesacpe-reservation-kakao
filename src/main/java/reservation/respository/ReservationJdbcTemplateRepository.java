@@ -17,10 +17,10 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 @Repository
-public class ReservationRepository {
+public class ReservationJdbcTemplateRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

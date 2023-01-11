@@ -14,7 +14,7 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final ConsoleRepository consoleRepository = new ConsoleRepository();
+    private static final ReservationJdbcRepository RESERVATION_JDBC_REPOSITORY = new ReservationJdbcRepository();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -47,7 +47,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                consoleRepository.saveReservation(reservation);
+                RESERVATION_JDBC_REPOSITORY.saveReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -61,7 +61,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = consoleRepository.getReservation(id);
+                Reservation reservation = RESERVATION_JDBC_REPOSITORY.getReservation(id);
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
@@ -76,7 +76,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if(consoleRepository.deleteReservation(id) > 0) {
+                if(RESERVATION_JDBC_REPOSITORY.deleteReservation(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }
