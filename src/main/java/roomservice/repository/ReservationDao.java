@@ -1,15 +1,23 @@
 package roomservice.repository;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import roomservice.domain.Reservation;
 import roomservice.exceptions.exception.DuplicatedReservationException;
 import roomservice.exceptions.exception.NonExistentReservationException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class ReservationDao {
+//    private JdbcTemplate jdbcTemplate;
     private final Map<Long, Reservation> cache = new HashMap<>();
     private long id = 1L;
 
+/*    public ReservationDao(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
+*/
     public long insertReservation(Reservation reservation) {
         validateDuplication(reservation);
         reservation.setId(id);

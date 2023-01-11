@@ -1,5 +1,6 @@
 package roomservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomservice.domain.Reservation;
@@ -10,7 +11,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationDao reservationDao = new ReservationDao();
+    private final ReservationDao reservationDao;
+
+    @Autowired
+    public ReservationController(ReservationDao reservationDao){
+        this.reservationDao = reservationDao;
+    }
 
     @PostMapping()
     public ResponseEntity<Void> createReservation(@RequestBody Reservation reservation) {
