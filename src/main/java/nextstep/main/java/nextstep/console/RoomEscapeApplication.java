@@ -1,14 +1,14 @@
 package nextstep.main.java.nextstep.console;
 
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.Theme;
-import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.global.exception.exception.DuplicateReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 
-import static nextstep.main.java.nextstep.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
+import static nextstep.main.java.nextstep.global.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 
 public class RoomEscapeApplication {
     private static final String ADD = "add";

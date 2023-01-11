@@ -1,11 +1,11 @@
-package nextstep.main.java.nextstep.service;
+package nextstep.main.java.nextstep.service.reservation;
 
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.domain.Theme;
-import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
-import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
-import nextstep.main.java.nextstep.repository.ReservationRepository;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.global.exception.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
+import nextstep.main.java.nextstep.repository.reservation.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 @Service

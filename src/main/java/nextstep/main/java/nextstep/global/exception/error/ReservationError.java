@@ -1,9 +1,9 @@
-package nextstep.main.java.nextstep.exception.error;
+package nextstep.main.java.nextstep.global.exception.error;
 
 import org.springframework.http.HttpStatus;
 
-import static nextstep.main.java.nextstep.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
-import static nextstep.main.java.nextstep.exception.exception.ExceptionMessage.NO_SUCH_RESERVATION_MESSAGE;
+import static nextstep.main.java.nextstep.global.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
+import static nextstep.main.java.nextstep.global.exception.exception.ExceptionMessage.NO_SUCH_RESERVATION_MESSAGE;
 
 public enum ReservationError implements Error {
     NO_SUCH_RESERVATION_ERROR(404, HttpStatus.NOT_FOUND, NO_SUCH_RESERVATION_MESSAGE),

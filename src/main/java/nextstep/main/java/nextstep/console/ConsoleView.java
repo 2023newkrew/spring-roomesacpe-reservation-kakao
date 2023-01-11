@@ -1,6 +1,6 @@
 package nextstep.main.java.nextstep.console;
 
-import nextstep.main.java.nextstep.domain.Reservation;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
 
 public class ConsoleView {
     public void printCommand() {

@@ -1,10 +1,11 @@
 package nextstep.main.java.nextstep.service;
 
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
-import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
-import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.global.exception.exception.DuplicateReservationException;
+import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
+import nextstep.main.java.nextstep.repository.reservation.MemoryReservationRepository;
+import nextstep.main.java.nextstep.service.reservation.ReservationService;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;

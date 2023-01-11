@@ -1,8 +1,8 @@
-package nextstep.main.java.nextstep.controller;
+package nextstep.main.java.nextstep.controller.reservation;
 
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.service.ReservationService;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.service.reservation.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.exception.exception;
+package nextstep.main.java.nextstep.global.exception.exception;
 
 public class DuplicateReservationException extends RuntimeException {
     public DuplicateReservationException() {

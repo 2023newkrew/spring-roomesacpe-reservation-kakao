@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.exception.error;
+package nextstep.main.java.nextstep.global.exception.error;
 
 public class ErrorResponse {
     private final int code;

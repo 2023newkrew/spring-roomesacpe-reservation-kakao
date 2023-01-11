@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.exception.exception;
+package nextstep.main.java.nextstep.global.exception.exception;
 
 public class NoSuchReservationException extends RuntimeException {
     public NoSuchReservationException() {

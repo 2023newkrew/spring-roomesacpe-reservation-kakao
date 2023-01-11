@@ -1,8 +1,8 @@
-package nextstep.main.java.nextstep.repository;
+package nextstep.main.java.nextstep.repository.reservation;
 
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.Theme;
-import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

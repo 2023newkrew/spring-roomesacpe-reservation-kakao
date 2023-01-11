@@ -1,8 +1,8 @@
 package nextstep.main.java.nextstep.console;
 
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.Theme;
-import nextstep.main.java.nextstep.repository.ReservationRepository;
+import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.repository.reservation.ReservationRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
