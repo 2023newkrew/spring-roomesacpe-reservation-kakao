@@ -1,11 +1,10 @@
 package roomservice;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class SpringApplication {
     public static void main(String[] args){
-        SpringApplication.run(DemoApplication.class, args);
+        org.springframework.boot.SpringApplication.run(SpringApplication.class, args);
     }
 }

@@ -1,3 +1,4 @@
+
 CREATE TABLE RESERVATION
 (
     id          bigint not null auto_increment,

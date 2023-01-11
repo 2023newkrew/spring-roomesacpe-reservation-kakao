@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class RoomEscapeApplication {
+public class ConsoleApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
