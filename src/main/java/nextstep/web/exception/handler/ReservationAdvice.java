@@ -5,6 +5,7 @@ import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.exception.ErrorCode;
 import nextstep.web.exception.ErrorResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +23,14 @@ public class ReservationAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException() {
         ErrorCode errorCode = CommonErrorCode.SERVER_ERROR;
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(new ErrorResponse(errorCode.getHttpStatus().value(), errorCode.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleArgumentNotValidException() {
+        ErrorCode errorCode = CommonErrorCode.BAD_PARAMETER_REQUEST;
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(new ErrorResponse(errorCode.getHttpStatus().value(), errorCode.getMessage()));

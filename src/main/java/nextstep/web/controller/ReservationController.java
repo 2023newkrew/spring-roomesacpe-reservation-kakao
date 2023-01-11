@@ -8,6 +8,8 @@ import nextstep.web.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
@@ -17,7 +19,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public Response<CreateReservationResponseDto> createReservation(@RequestBody CreateReservationRequestDto requestDto) {
+    public Response<CreateReservationResponseDto> createReservation(@RequestBody @Valid CreateReservationRequestDto requestDto) {
         CreateReservationResponseDto location = new CreateReservationResponseDto(
                 BASE_URI + "/" + reservationService.createReservation(requestDto)
         );

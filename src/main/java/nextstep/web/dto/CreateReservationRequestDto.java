@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -19,5 +20,6 @@ public class CreateReservationRequestDto {
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime time;
 
+    @NotBlank
     private String name;
 }
