@@ -1,33 +1,32 @@
 package nextstep;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Scanner;
 import nextstep.dao.ReservationDAO;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
-import nextstep.entity.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Scanner;
 
+@SpringBootApplication
 public class RoomEscapeApplication {
+
     private static final String ADD = "add";
+
     private static final String FIND = "find";
+
     private static final String DELETE = "delete";
+
     private static final String QUIT = "quit";
 
-    private static final ReservationDAO reservationDAO = new ReservationDAO();
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         SpringApplication.run(RoomEscapeApplication.class, args);
         Scanner scanner = new Scanner(System.in);
 
-        Long reservationIdIndex = 0L;
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
+        ReservationDAO reservationDAO = new ReservationDAO();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -36,7 +35,7 @@ public class RoomEscapeApplication {
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
 
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().trim();
             if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
 
@@ -79,7 +78,6 @@ public class RoomEscapeApplication {
 
             if (input.equals(QUIT)) {
                 reservationDAO.releaseConnection();
-
                 break;
             }
         }

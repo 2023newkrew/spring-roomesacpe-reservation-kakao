@@ -1,15 +1,14 @@
 package nextstep.exception;
 
-import java.util.List;
 import org.springframework.http.HttpStatus;
 
 public class ConflictException extends BaseException {
 
-    public ConflictException(List<String> errorMessages) {
-        super(HttpStatus.CONFLICT, errorMessages);
+    public ConflictException(ExceptionMetadata metadata) {
+        super(metadata.getMessage(), metadata.getHttpStatus());
     }
 
-    public ConflictException(String... errorMessage) {
-        super(HttpStatus.CONFLICT, errorMessage);
+    public ConflictException(String message) {
+        super(message, HttpStatus.CONFLICT);
     }
 }

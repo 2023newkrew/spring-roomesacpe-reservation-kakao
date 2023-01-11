@@ -1,15 +1,14 @@
 package nextstep.exception;
 
-import java.util.List;
 import org.springframework.http.HttpStatus;
 
 public class NotFoundException extends BaseException {
 
-    public NotFoundException(List<String> errorMessages) {
-        super(HttpStatus.NOT_FOUND, errorMessages);
+    public NotFoundException(ExceptionMetadata metadata) {
+        super(metadata.getMessage(), metadata.getHttpStatus());
     }
 
-    public NotFoundException(String... errorMessage) {
-        super(HttpStatus.NOT_FOUND, errorMessage);
+    public NotFoundException(String message) {
+        super(message, HttpStatus.NOT_FOUND);
     }
 }

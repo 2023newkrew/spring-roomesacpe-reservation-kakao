@@ -1,13 +1,9 @@
 package nextstep.exception;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties({"stackTrace", "suppressed", "cause", "message", "localizedMessage"})
@@ -15,35 +11,21 @@ import org.springframework.http.HttpStatus;
 @JsonTypeName(value = "error")
 public class BaseException extends RuntimeException {
 
-    protected List<String> errorMessages = new ArrayList<>();
+    protected String message;
 
     @JsonIgnore
     protected HttpStatus errorStatus;
 
-    public BaseException(HttpStatus errorStatus, List<String> errorMessages) {
+    public BaseException(String message, HttpStatus errorStatus) {
+        this.message = message;
         this.errorStatus = errorStatus;
-        this.errorMessages = errorMessages;
     }
 
-    public BaseException(HttpStatus errorStatus, String... errorMessage) {
-        this.errorStatus = errorStatus;
-        errorMessages.addAll(Arrays.asList(errorMessage));
-    }
-
-    @JsonGetter("messages")
-    public List<String> getErrorMessages() {
-        return errorMessages;
-    }
-
-    public void setErrorMessages(List<String> errorMessages) {
-        this.errorMessages = errorMessages;
+    public String getMessage() {
+        return message;
     }
 
     public HttpStatus getErrorStatus() {
         return errorStatus;
-    }
-
-    public void setErrorStatus(HttpStatus errorStatus) {
-        this.errorStatus = errorStatus;
     }
 }
