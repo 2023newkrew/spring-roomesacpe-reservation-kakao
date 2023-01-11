@@ -54,8 +54,8 @@ public class ReservationResponse {
                 reservation.getId(),
                 reservation.getDate().toString(),
                 reservation.getTime().toString(),
-                reservation.getTheme().getName(),
                 reservation.getName(),
+                reservation.getTheme().getName(),
                 reservation.getTheme().getDesc(),
                 reservation.getTheme().getPrice()
         );
