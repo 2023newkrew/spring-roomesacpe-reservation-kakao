@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,14 +55,14 @@ public class ReservationDao implements ReservationRepository {
 
     private static Map<String, Object> prepareParams(Reservation reservation) {
         Theme theme = reservation.getTheme();
-        Map<String, Object> params = new HashMap<>();
 
-        params.put("date", reservation.getDate());
-        params.put("time", reservation.getTime());
-        params.put("name", reservation.getName());
-        params.put("theme_name", theme.getName());
-        params.put("theme_desc", theme.getDesc());
-        params.put("theme_price", theme.getPrice());
-        return params;
+        return Map.of(
+                "date", reservation.getDate(),
+                "time", reservation.getTime(),
+                "name", reservation.getName(),
+                "theme_name", theme.getName(),
+                "theme_desc", theme.getDesc(),
+                "theme_price", theme.getPrice()
+        );
     }
 }
