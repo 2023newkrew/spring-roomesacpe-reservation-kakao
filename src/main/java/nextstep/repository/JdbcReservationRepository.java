@@ -9,9 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -25,51 +23,40 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
-        );
-        return reservation;
+        return Reservation.from(resultSet);
     };
 
     @Override
     public Reservation findById(Long id) {
-        String sql = "select * from reservation where id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        return jdbcTemplate.queryForObject(findByIdSql, actorRowMapper, id);
     }
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(deleteByIdSql, id);
     }
 
     @Override
     public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
         validateReservation(date, time);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
 
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(date));
-            ps.setTime(2, Time.valueOf(time));
-            ps.setString(3, name);
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
-            return ps;
+            return getReservationPreparedStatement(connection, date, time, name, theme);
         };
 
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    @Override
+    public void createTable() throws SQLException {
+        jdbcTemplate.execute(createTableSql);
+    }
+
+    @Override
+    public void dropTable() throws SQLException {
+        jdbcTemplate.execute(dropTableSql);
     }
 
     private void validateReservation(LocalDate date, LocalTime time) {

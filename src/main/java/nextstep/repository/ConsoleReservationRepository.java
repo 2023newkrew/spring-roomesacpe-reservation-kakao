@@ -29,50 +29,30 @@ public class ConsoleReservationRepository implements ReservationRepository {
     @Override
     public Reservation findById(Long id) {
         try {
-            String sql = "select * from reservation where id = ?";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = con.prepareStatement(findByIdSql, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
-            return new Reservation(
-                    resultSet.getLong("ID"),
-                    resultSet.getDate("DATE").toLocalDate(),
-                    resultSet.getTime("TIME").toLocalTime(),
-                    resultSet.getString("NAME"),
-                    new Theme(
-                            resultSet.getString("theme_name"),
-                            resultSet.getString("theme_desc"),
-                            resultSet.getInt("theme_price")
-                    )
-            );
+            return Reservation.from(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteById(Long id) {
-        try {
-            String sql = "delete from reservation where id = ?";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setLong(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void deleteById(Long id) throws SQLException {
+        PreparedStatement ps = con.prepareStatement(deleteByIdSql, new String[]{"id"});
+        ps.setLong(1, id);
+        int cnt = ps.executeUpdate();
+        if (cnt == 0) throw new RuntimeException("해당 id의 예약은 존재하지 않습니다.");
     }
 
     @Override
     public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
         try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(date));
-            ps.setTime(2, Time.valueOf(time));
-            ps.setString(3, name);
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
+            validateReservation(date, time);
+
+            PreparedStatement ps = getReservationPreparedStatement(con, date, time, name, theme);
             ps.executeUpdate();
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
