@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.Reservation;
+import nextstep.exception.DatabaseException;
 import nextstep.exception.ReservationNotFoundException;
 
 import java.sql.*;
@@ -30,7 +31,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 reservation.setId(id);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         } finally {
             closeConnection(con);
         }
@@ -55,7 +56,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 throw new ReservationNotFoundException();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         } finally {
             closeConnection(con);
         }
@@ -73,7 +74,7 @@ public class ReservationH2Repository implements ReservationRepository {
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         } finally {
             closeConnection(con);
         }
@@ -94,7 +95,7 @@ public class ReservationH2Repository implements ReservationRepository {
             int cnt = rs.getInt("cnt");
             return cnt >= 1;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         } finally {
             closeConnection(con);
         }
@@ -110,6 +111,7 @@ public class ReservationH2Repository implements ReservationRepository {
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
+            throw new DatabaseException(e);
         }
         return con;
     }
@@ -120,6 +122,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 con.close();
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
+            throw new DatabaseException(e);
         }
     }
 }

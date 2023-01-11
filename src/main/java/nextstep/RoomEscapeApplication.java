@@ -2,6 +2,7 @@ package nextstep;
 
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.response.ReservationResponse;
+import nextstep.exception.DatabaseException;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationH2Repository;
@@ -46,6 +47,8 @@ public class RoomEscapeApplication {
                     System.out.println("예약자 이름: " + reservation.getName());
                 } catch (DuplicateReservationException e) {
                     System.out.println(e.getMessage());
+                } catch (DatabaseException e) {
+                    System.out.println(e.getMessage());
                 }
 
 
@@ -68,6 +71,8 @@ public class RoomEscapeApplication {
                     System.out.println("예약 테마 가격: " + reservation.getThemePrice());
                 } catch (ReservationNotFoundException e) {
                     System.out.println(e.getMessage());
+                } catch (DatabaseException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
@@ -76,9 +81,12 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                roomEscapeService.delete(id);
-
-                System.out.println("예약이 취소되었습니다.");
+                try {
+                    roomEscapeService.delete(id);
+                    System.out.println("예약이 취소되었습니다.");
+                } catch (DatabaseException e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
             if (input.equals(QUIT)) {
