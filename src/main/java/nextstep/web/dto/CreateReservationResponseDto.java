@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CreateReservationResponseDto {
-    private final Long location;
+    private final String location;
 }
