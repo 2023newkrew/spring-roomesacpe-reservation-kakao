@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.util.Optional;
 
 @Repository
 public class WebAppReservationRepo implements ReservationRepo{
@@ -21,10 +22,11 @@ public class WebAppReservationRepo implements ReservationRepo{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation findById(long id) {
+    public Optional<Reservation> findById(long id) {
+        Reservation reservation = null;
         String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?;";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
+            reservation = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
                     rs.getLong("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getTime("time").toLocalTime(),
@@ -36,8 +38,8 @@ public class WebAppReservationRepo implements ReservationRepo{
                     )
             ), id);
         } catch (IncorrectResultSizeDataAccessException ex) {
-            return null;
         }
+        return Optional.ofNullable(reservation);
     }
 
     public long add(Reservation reservation) {

@@ -26,7 +26,7 @@ public class ConsoleReservationRepoTest {
         );
 
         long id = consoleReservationRepo.add(newReservation);
-        Reservation reservation = consoleReservationRepo.findById(id);
+        Reservation reservation = consoleReservationRepo.findById(id).orElseThrow();
 
         assertThat(reservation).isEqualTo(newReservation);
 
@@ -37,7 +37,7 @@ public class ConsoleReservationRepoTest {
 
         consoleReservationRepo.delete(id);
 
-        Reservation reservation2 = consoleReservationRepo.findById(id);
+        Reservation reservation2 = consoleReservationRepo.findById(id).orElse(null);
 
         assertThat(reservation2).isNull();
     }

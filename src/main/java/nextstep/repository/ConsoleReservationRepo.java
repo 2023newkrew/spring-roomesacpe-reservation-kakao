@@ -4,10 +4,11 @@ import nextstep.Theme;
 import nextstep.domain.reservation.Reservation;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class ConsoleReservationRepo implements ReservationRepo {
 
-    public Reservation findById(long id) {
+    public Optional<Reservation> findById(long id) {
         Connection con = ConnectionManager.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -39,7 +40,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
 
         ConnectionManager.closeAll(rs, ps, con);
 
-        return reservation;
+        return Optional.ofNullable(reservation);
     }
 
     public long add(Reservation reservation) {

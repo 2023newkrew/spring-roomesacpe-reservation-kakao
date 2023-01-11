@@ -4,9 +4,10 @@ import nextstep.domain.reservation.Reservation;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Optional;
 
 public interface ReservationRepo {
-    Reservation findById(long id);
+    Optional<Reservation> findById(long id);
 
     long add(Reservation reservation);
 

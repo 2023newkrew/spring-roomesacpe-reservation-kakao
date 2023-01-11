@@ -40,7 +40,7 @@ public class ReservationController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
-        Reservation reservation = webAppReservationRepo.findById(id);
+        Reservation reservation = webAppReservationRepo.findById(id).orElseThrow();
         GetReservationDTO getReservationDTO = new GetReservationDTO(reservation);
         return ResponseEntity.ok().body(getReservationDTO);
     }

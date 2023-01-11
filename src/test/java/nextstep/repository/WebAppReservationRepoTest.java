@@ -31,7 +31,7 @@ public class WebAppReservationRepoTest {
         );
 
         long id = webAppReservationRepo.add(newReservation);
-        Reservation reservation = webAppReservationRepo.findById(id);
+        Reservation reservation = webAppReservationRepo.findById(id).orElseThrow();
         assertThat(reservation).isEqualTo(newReservation);
 
         int countSameDateAndTime = webAppReservationRepo.countByDateAndTime(
@@ -41,7 +41,7 @@ public class WebAppReservationRepoTest {
 
         webAppReservationRepo.delete(id);
 
-        Reservation reservation2 = webAppReservationRepo.findById(id);
+        Reservation reservation2 = webAppReservationRepo.findById(id).orElse(null);
 
         assertThat(reservation2).isNull();
     }

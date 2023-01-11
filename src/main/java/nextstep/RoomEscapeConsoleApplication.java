@@ -51,7 +51,7 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = consoleReservationRepo.findById(id);
+                Reservation reservation = consoleReservationRepo.findById(id).get();
 
                 if (reservation == null) {
                     System.out.println("해당하는 예약이 없습니다");
