@@ -24,13 +24,13 @@ public class ReservationDAO {
     private static final String THEME_DESC_TABLE = "theme_desc";
     private static final String THEME_PRICE_TABLE = "theme_price";
 
+    private static final String ADD_SQL =
+            "INSERT INTO reservation( date, time, name, theme_name, theme_desc, theme_price) "
+                    + "VALUES (:date, :time, :name, :theme_name, :theme_desc, :theme_price);";
     private static final String FIND_SQL =
             "SELECT * FROM reservation WHERE id = :id;";
     private static final String FIND_BY_DATETIME_SQL =
             "SELECT count(*) FROM reservation WHERE date = :date and time = :time;";
-    private static final String ADD_SQL =
-            "INSERT INTO reservation( date, time, name, theme_name, theme_desc, theme_price) "
-                    + "VALUES (:date, :time, :name, :theme_name, :theme_desc, :theme_price);";
     private static final String DELETE_SQL =
             "DELETE FROM reservation where id = :id;";
 
