@@ -1,7 +1,8 @@
 package nextstep.web.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
@@ -9,14 +10,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReservationResponseDto {
 
-    private final Long id;
-    private final LocalDate date;
-    private final LocalTime time;
-    private final String name;
-    private final Theme theme;
+    private Long id;
+    private LocalDate date;
+    private LocalTime time;
+    private String name;
+    private Theme theme;
 
     public static ReservationResponseDto of(Reservation reservation) {
         return new ReservationResponseDto(
