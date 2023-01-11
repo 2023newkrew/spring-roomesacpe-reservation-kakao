@@ -1,5 +1,7 @@
-package nextstep;
+package nextstep.domain;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -36,5 +38,22 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
+    public static Reservation from(ResultSet resultSet) throws SQLException {
+        return new Reservation(resultSet.getLong("ID"),
+                resultSet.getDate("DATE").toLocalDate(),
+                resultSet.getTime("TIME").toLocalTime(),
+                resultSet.getString("NAME"),
+                new Theme(
+                        resultSet.getString("theme_name"),
+                        resultSet.getString("theme_desc"),
+                        resultSet.getInt("theme_price")
+                )
+        );
     }
 }
