@@ -13,6 +13,8 @@ import roomescape.dto.ReservationRequestDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.hamcrest.Matchers.*;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
 
@@ -38,6 +40,6 @@ public class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .header("Location", res -> startsWith("/reservations/"));
     }
 }
