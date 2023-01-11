@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ReservationServiceTest {

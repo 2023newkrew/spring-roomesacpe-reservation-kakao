@@ -56,9 +56,9 @@ public class RoomEscapeApplication {
                 try {
                     reservation = new Reservation(date, time, name, theme);
                     reservationConsoleRepository.getReservationByDateAndTime(date, time)
-                            .ifPresent((e) -> {
-                                throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
-                            });
+                        .ifPresent((e) -> {
+                            throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
+                        });
                 } catch (RoomEscapeException e) {
                     System.err.println(e.getMessage());
                     continue;
@@ -81,9 +81,9 @@ public class RoomEscapeApplication {
 
                 try {
                     reservation = reservationConsoleRepository.getReservation(id)
-                            .orElseThrow(() -> {
-                                throw new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND);
-                            });
+                        .orElseThrow(() -> {
+                            throw new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND);
+                        });
                 } catch (RoomEscapeException e) {
                     System.err.println(e.getMessage());
                     continue;

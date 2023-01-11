@@ -33,14 +33,14 @@ public class ReservationService {
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {
         reservationWebRepository.getReservationByDateAndTime(date, time)
-                .ifPresent(reservation -> {
-                    throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
-                });
+            .ifPresent(reservation -> {
+                throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
+            });
     }
 
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationWebRepository.getReservation(reservationId)
-                .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
+            .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
         return ReservationResponse.fromEntity(reservation);
     }
 

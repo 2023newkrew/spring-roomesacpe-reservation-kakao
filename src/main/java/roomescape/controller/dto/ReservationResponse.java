@@ -51,13 +51,13 @@ public class ReservationResponse {
 
     public static ReservationResponse fromEntity(Reservation reservation) {
         return new ReservationResponse(
-                reservation.getId(),
-                reservation.getDate().toString(),
-                reservation.getTime().toString(),
-                reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
+            reservation.getId(),
+            reservation.getDate().toString(),
+            reservation.getTime().toString(),
+            reservation.getName(),
+            reservation.getTheme().getName(),
+            reservation.getTheme().getDesc(),
+            reservation.getTheme().getPrice()
         );
     }
 }

@@ -13,7 +13,7 @@ public class Reservation {
     private final String name;
     private final Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.domain.Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
         validateTime(time);

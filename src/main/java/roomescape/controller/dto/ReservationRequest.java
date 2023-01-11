@@ -8,9 +8,9 @@ import java.time.LocalTime;
 
 public class ReservationRequest {
 
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
 
     public ReservationRequest(LocalDate date, LocalTime time, String name) {
         this.date = date;
@@ -32,10 +32,10 @@ public class ReservationRequest {
 
     public Reservation toEntity(Theme theme) {
         return new Reservation(
-                date,
-                time,
-                name,
-                theme
+            date,
+            time,
+            name,
+            theme
         );
     }
 }
