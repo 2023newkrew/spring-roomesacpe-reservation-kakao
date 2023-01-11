@@ -22,7 +22,7 @@ public class RoomEscapeController {
     @PostMapping("")
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) throws DuplicateReservationException {
-        ReservationResponse reservationResponse = roomEscapeService.add(createReservationRequest);
+        ReservationResponse reservationResponse = roomEscapeService.createReservationForWeb(createReservationRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", "/reservations/" + reservationResponse.getId())
@@ -32,12 +32,12 @@ public class RoomEscapeController {
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> findReservation(@PathVariable Long id) throws ReservationNotFoundException {
         return ResponseEntity
-                .ok(roomEscapeService.get(id));
+                .ok(roomEscapeService.findReservationForWeb(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        roomEscapeService.delete(id);
+        roomEscapeService.cancelReservation(id);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

@@ -2,6 +2,7 @@ package nextstep.service;
 
 import nextstep.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
+import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.dto.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
@@ -17,21 +18,36 @@ public class RoomEscapeService {
         this.reservationRepository = reservationRepository;
     }
 
-    public ReservationResponse add(CreateReservationRequest request) throws DuplicateReservationException {
+    public ReservationResponse createReservationForWeb(CreateReservationRequest request) throws DuplicateReservationException {
+        return ReservationResponse.fromEntity(createReservation(request));
+    }
 
+    public ReservationConsoleResponse createReservationForConsole(CreateReservationRequest request) throws DuplicateReservationException {
+        return ReservationConsoleResponse.fromEntity(createReservation(request));
+    }
+
+    private Reservation createReservation(CreateReservationRequest request) throws DuplicateReservationException {
         if (reservationRepository.hasReservationAt(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
         }
 
         Reservation reservation = request.toEntity();
-        return ReservationResponse.fromEntity(reservationRepository.add(reservation));
+        return reservationRepository.add(reservation);
     }
 
-    public ReservationResponse get(Long id) throws ReservationNotFoundException {
-        return ReservationResponse.fromEntity(reservationRepository.get(id));
+    public ReservationResponse findReservationForWeb(Long id) throws ReservationNotFoundException {
+        return ReservationResponse.fromEntity(findReservation(id));
     }
 
-    public void delete(Long id) {
+    public ReservationConsoleResponse findReservationForConsole(Long id) throws ReservationNotFoundException {
+        return ReservationConsoleResponse.fromEntity(findReservation(id));
+    }
+
+    private Reservation findReservation(Long id) throws ReservationNotFoundException {
+        return reservationRepository.get(id);
+    }
+
+    public void cancelReservation(Long id) {
         reservationRepository.delete(id);
     }
 }

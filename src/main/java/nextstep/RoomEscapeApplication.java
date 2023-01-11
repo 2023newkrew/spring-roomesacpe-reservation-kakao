@@ -1,7 +1,7 @@
 package nextstep;
 
 import nextstep.dto.request.CreateReservationRequest;
-import nextstep.dto.response.ReservationResponse;
+import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.exception.DatabaseException;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
@@ -39,15 +39,13 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 try {
-                    ReservationResponse reservation = roomEscapeService.add(CreateReservationRequest.of(date, time, name));
+                    ReservationConsoleResponse reservation = roomEscapeService.createReservationForConsole(CreateReservationRequest.of(date, time, name));
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());
                     System.out.println("예약 시간: " + reservation.getTime());
                     System.out.println("예약자 이름: " + reservation.getName());
-                } catch (DuplicateReservationException e) {
-                    System.out.println(e.getMessage());
-                } catch (DatabaseException e) {
+                } catch (DuplicateReservationException | DatabaseException e) {
                     System.out.println(e.getMessage());
                 }
 
@@ -60,7 +58,7 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    ReservationResponse reservation = roomEscapeService.get(id);
+                    ReservationConsoleResponse reservation = roomEscapeService.findReservationForConsole(id);
 
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());
@@ -69,9 +67,7 @@ public class RoomEscapeApplication {
                     System.out.println("예약 테마 이름: " + reservation.getThemeName());
                     System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
                     System.out.println("예약 테마 가격: " + reservation.getThemePrice());
-                } catch (ReservationNotFoundException e) {
-                    System.out.println(e.getMessage());
-                } catch (DatabaseException e) {
+                } catch (ReservationNotFoundException | DatabaseException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -82,7 +78,7 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    roomEscapeService.delete(id);
+                    roomEscapeService.cancelReservation(id);
                     System.out.println("예약이 취소되었습니다.");
                 } catch (DatabaseException e) {
                     System.out.println(e.getMessage());
