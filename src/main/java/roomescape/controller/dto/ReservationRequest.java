@@ -12,6 +12,12 @@ public class ReservationRequest {
     private LocalTime time;
     private String name;
 
+    public ReservationRequest(LocalDate date, LocalTime time, String name) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+    }
+
     public LocalDate getDate() {
         return date;
     }
@@ -22,18 +28,6 @@ public class ReservationRequest {
 
     public String getName() {
         return name;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Reservation toEntity(Theme theme) {
