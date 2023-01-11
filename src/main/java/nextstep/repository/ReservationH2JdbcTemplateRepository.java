@@ -3,7 +3,6 @@ package nextstep.repository;
 import nextstep.Reservation;
 import nextstep.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Qualifier("jdbcTemplate")
 @Repository
@@ -65,8 +65,14 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public boolean hasReservationAt(LocalDate date, LocalTime time) {
-        String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND time = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, Date.valueOf(date), Time.valueOf(time));
-        return count >= 1;
+        String sql = "SELECT id AS cnt FROM reservation WHERE date = ? AND time = ? LIMIT 1";
+        List<Long> reservationIds = jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> rs.getLong("id"),
+                Date.valueOf(date),
+                Time.valueOf(time)
+        );
+
+        return reservationIds.size() == 1;
     }
 }

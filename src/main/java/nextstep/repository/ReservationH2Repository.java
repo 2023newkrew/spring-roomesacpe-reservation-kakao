@@ -93,15 +93,13 @@ public class ReservationH2Repository implements ReservationRepository {
 
         try {
             con = getConnection();
-            String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND time = ?";
+            String sql = "SELECT id AS cnt FROM reservation WHERE date = ? AND time = ? LIMIT 1";
             ps = con.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
             rs = ps.executeQuery();
 
-            rs.next();
-            int cnt = rs.getInt("cnt");
-            return cnt >= 1;
+            return rs.next();
         } catch (SQLException e) {
             throw new DatabaseException(e);
         } finally {
