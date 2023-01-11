@@ -30,7 +30,7 @@ public class Reservation {
         if (date == null || time == null || name == null || name.length() == 0) {
             throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
         }
-        if (!TimeTable.isValid(time)) {
+        if (!TimeTable.isValid(time) || date.isBefore(LocalDate.now())) {
             throw new InvalidRequestException(ErrorCode.TIME_INVALID);
         }
     }

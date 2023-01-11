@@ -37,7 +37,7 @@ public class ReservationControllerTest {
     void setUp() {
         RestAssured.port = port;
         ReservationRequest requestDto = new ReservationRequest(
-                LocalDate.parse("2023-01-10"),
+                LocalDate.parse("2023-03-10"),
                 LocalTime.parse("13:00"),
                 "jay"
         );
@@ -53,7 +53,7 @@ public class ReservationControllerTest {
     @Test
     void reserveNotDuplicated() {
         Map<String, String> request = new HashMap<>() {{
-            put("date", "2023-01-11");
+            put("date", "2023-03-11");
             put("time", "13:00");
             put("name", "jay");
         }};
@@ -71,7 +71,7 @@ public class ReservationControllerTest {
     @Test
     void reserveDuplicated() {
         Map<String, String> request = new HashMap<>() {{
-            put("date", "2023-01-10");
+            put("date", "2023-03-10");
             put("time", "13:00");
             put("name", "jay");
         }};
@@ -89,7 +89,25 @@ public class ReservationControllerTest {
     @Test
     void reserveInvalidTime() {
         Map<String, String> request = new HashMap<>() {{
-            put("date", "2023-01-11");
+            put("date", "2023-03-11");
+            put("time", "01:00");
+            put("name", "jay");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("예약이 불가능한 시간입니다."));
+    }
+
+    @DisplayName("예약 - 과거의 날짜로 요청시 예외처리 되어야 한다")
+    @Test
+    void reservePastDate() {
+        Map<String, String> request = new HashMap<>() {{
+            put("date", "2023-01-01");
             put("time", "01:00");
             put("name", "jay");
         }};
@@ -108,9 +126,9 @@ public class ReservationControllerTest {
     @CsvSource(value = {
             ";14:30;jack",
             "abc;14:30;jack",
-            "2023-02-01;;jack",
-            "2023-02-01;abc;jack",
-            "2023-02-01;14:30;"
+            "2023-03-01;;jack",
+            "2023-03-01;abc;jack",
+            "2023-03-01;14:30;"
     }, delimiter = ';')
     void reserveInvalidInputValue(String date, String time, String name) {
         Map<String, String> request = new HashMap<>() {{
@@ -136,7 +154,7 @@ public class ReservationControllerTest {
     }, delimiter = ';')
     void reserveInvalidInputKey(String date, String time, String name) {
         Map<String, String> request = new HashMap<>() {{
-            put(date, "2023-02-01");
+            put(date, "2023-03-01");
             put(time, "13:00");
             put(name, "jack");
         }};
@@ -159,7 +177,7 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(1))
-                .body("date", is("2023-01-10"))
+                .body("date", is("2023-03-10"))
                 .body("time", is("13:00:00"))
                 .body("name", is("jay"))
                 .body("themeName", is("워너고홈"))
