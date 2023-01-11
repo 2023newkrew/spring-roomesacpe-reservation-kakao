@@ -9,28 +9,29 @@ import kakao.error.exception.RecordNotFoundException;
 import kakao.repository.ReservationJDBCRepository;
 import kakao.repository.ReservationRepository;
 import kakao.repository.ThemeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-
-    public ReservationService(
-            ReservationRepository reservationRepository
-    ) {
-        this.reservationRepository = reservationRepository;
-    }
 
     public Reservation createReservation(CreateReservationRequest request) {
         boolean isDuplicate = reservationRepository.findByDateAndTime(request.date, request.time).size() > 0;
         if (isDuplicate) {
             throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
-        Reservation reservation = new Reservation(request.date, request.time, request.name, ThemeRepository.theme);
-        return reservationRepository.save(reservation);
+        return reservationRepository.save(Reservation.builder()
+                .date(request.date)
+                .time(request.time)
+                .name(request.name)
+                .theme(ThemeRepository.theme)
+                .build()
+        );
     }
 
     public ReservationResponse getReservation(Long id) {

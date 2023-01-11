@@ -3,6 +3,7 @@ package kakao.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -14,6 +15,7 @@ public class Reservation implements Comparable<Reservation> {
     private String name;
     private Theme theme;
 
+    @Builder
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this(null, date, time, name, theme);
     }

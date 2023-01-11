@@ -1,5 +1,10 @@
 package kakao.error;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum ErrorCode {
     // 공통 에러
     INTERNAL_SERVER_ERROR(500, "서버 내부 에러입니다. 관리자에게 문의해 주세요."),
@@ -13,17 +18,4 @@ public enum ErrorCode {
 
     private final int status;
     private final String message;
-
-    ErrorCode(int status, String message) {
-        this.status = status;
-        this.message = message;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }
