@@ -12,11 +12,14 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public Reservation add(Reservation reservation) {
-        Connection con = getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
+            con = getConnection();
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -24,7 +27,7 @@ public class ReservationH2Repository implements ReservationRepository {
             ps.setString(5, reservation.getTheme().getDesc());
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
+            rs = ps.getGeneratedKeys();
 
             if (rs.next()) {
                 Long id = rs.getLong(1);
@@ -33,7 +36,7 @@ public class ReservationH2Repository implements ReservationRepository {
         } catch (SQLException e) {
             throw new DatabaseException(e);
         } finally {
-            closeConnection(con);
+            closeResources(con, ps, rs);
         }
 
         return reservation;
@@ -41,55 +44,60 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public Reservation get(Long id) throws ReservationNotFoundException {
-        Connection con = getConnection();
-        Reservation result = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
+            con = getConnection();
             String sql = "SELECT * FROM reservation WHERE id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.next()) {
-                result = ReservationResultSetMapper.mapRow(rs);
+                return ReservationResultSetMapper.mapRow(rs);
             } else {
                 throw new ReservationNotFoundException();
             }
         } catch (SQLException e) {
             throw new DatabaseException(e);
         } finally {
-            closeConnection(con);
+            closeResources(con, ps, rs);
         }
-
-        return result;
     }
 
     @Override
     public void delete(Long id) {
-        Connection con = getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
 
         try {
+            con = getConnection();
             String sql = "DELETE FROM reservation WHERE id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException(e);
         } finally {
-            closeConnection(con);
+            closeResources(con, ps ,null);
         }
     }
 
     @Override
     public boolean hasReservationAt(LocalDate date, LocalTime time) {
-        Connection con = getConnection();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
+            con = getConnection();
             String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND time = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             rs.next();
             int cnt = rs.getInt("cnt");
@@ -97,7 +105,7 @@ public class ReservationH2Repository implements ReservationRepository {
         } catch (SQLException e) {
             throw new DatabaseException(e);
         } finally {
-            closeConnection(con);
+            closeResources(con, ps, rs);
         }
     }
 
@@ -116,12 +124,16 @@ public class ReservationH2Repository implements ReservationRepository {
         return con;
     }
 
-    private void closeConnection(Connection con) {
+    private void closeResources(Connection con, PreparedStatement ps, ResultSet rs) {
         try {
+            if (rs != null)
+                rs.close();
+            if (ps != null)
+                ps.close();
             if (con != null)
                 con.close();
         } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
+            System.err.println("db resource 오류:" + e.getMessage());
             throw new DatabaseException(e);
         }
     }
