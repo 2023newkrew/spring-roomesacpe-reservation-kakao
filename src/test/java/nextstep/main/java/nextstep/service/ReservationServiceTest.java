@@ -5,7 +5,10 @@ import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
 import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,12 +18,13 @@ import static org.assertj.core.api.Assertions.*;
 public class ReservationServiceTest {
 
     private static final ReservationService service = new ReservationService(new MemoryReservationRepository());
+
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MemoryReservationRepository.reservationMap
-                .put(1L,new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", null));
+                .put(1L, new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", null));
         MemoryReservationRepository.reservationMap
-                .put(2L,new Reservation(2L, LocalDate.of(2025, 1, 9), LocalTime.of(1, 30), "reservation2", null));
+                .put(2L, new Reservation(2L, LocalDate.of(2025, 1, 9), LocalTime.of(1, 30), "reservation2", null));
     }
 
     @AfterEach
@@ -45,10 +49,17 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 예외 삭제시 에외 발생 테스트")
+    void deleteOneByIdNoSuchReservationExceptionTest() {
+        Long nonExistReservation = 0L;
+        assertThatCode(() -> service.deleteOneById(nonExistReservation)).isInstanceOf(NoSuchReservationException.class);
+    }
+
+    @Test
     @DisplayName("예약 중복 등록 테스트")
-    void createDuplicateTest(){
+    void createDuplicateTest() {
         ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name");
-            assertThatThrownBy(() -> service.save(requestDto)).isInstanceOf(DuplicateReservationException.class);
+        assertThatThrownBy(() -> service.save(requestDto)).isInstanceOf(DuplicateReservationException.class);
     }
 
 }

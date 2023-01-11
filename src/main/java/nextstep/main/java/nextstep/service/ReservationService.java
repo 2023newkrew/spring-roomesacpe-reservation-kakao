@@ -30,6 +30,8 @@ public class ReservationService {
     }
 
     public void deleteOneById(Long id) {
-        repository.deleteOne(id);
+        if(!repository.deleteOne(id)){
+            throw new NoSuchReservationException();
+        }
     }
 }
