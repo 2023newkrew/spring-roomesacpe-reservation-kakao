@@ -22,40 +22,31 @@ public class RoomEscapeApplication {
         ReservationRepository reservationRepository = new JdbcReservationRepository();
 
         while (true) {
-            String input = getCommandInput(scanner);
-
-            if (input.startsWith(ADD)) {
-                try {
+            String input = getInput(scanner);
+            try {
+                if (input.startsWith(ADD)) {
                     Reservation reservation = addReservation(input, reservationRepository);
-
                     printReservation(reservation);
                 }
-                catch (ReservationDuplicateException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-            if (input.startsWith(FIND)) {
-                try {
+                if (input.startsWith(FIND)) {
                     Reservation reservation = findReservation(input, reservationRepository);
-
                     printReservation(reservation);
                     printReservationTheme(reservation.getTheme());
                 }
-                catch (ReservationNotFoundException e) {
-                    System.out.println(e.getMessage());
+                if (input.startsWith(DELETE)) {
+                    deleteReservation(input, reservationRepository);
                 }
-            }
-            if (input.startsWith(DELETE)) {
-                deleteReservation(input, reservationRepository);
-            }
-            if (input.equals(QUIT)) {
-                break;
+                if (input.equals(QUIT)) {
+                    break;
+                }
+            } catch (RuntimeException e) {
+                System.err.println(e.getMessage());
             }
         }
         scanner.close();
     }
 
-    public static String getCommandInput(Scanner scanner) {
+    public static String getInput(Scanner scanner) {
         System.out.println();
         System.out.println("### 명령어를 입력하세요. ###");
         System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
