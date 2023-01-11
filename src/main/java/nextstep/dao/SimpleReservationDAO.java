@@ -15,6 +15,9 @@ public class SimpleReservationDAO implements ReservationDAO{
 
     private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
             (resultSet, rowNum) -> {
+                if (rowNum == 0) {
+                    return null;
+                }
                 ThemeDTO theme = new ThemeDTO(
                         resultSet.getString("theme_name"),
                         resultSet.getString("theme_desc"),
@@ -87,7 +90,8 @@ public class SimpleReservationDAO implements ReservationDAO{
             var ps = connection.prepareStatement(DELETE_BY_ID_SQL);
             ps.setLong(1,id);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -97,8 +101,9 @@ public class SimpleReservationDAO implements ReservationDAO{
 
     private Connection getConnection() throws SQLException {
         try {
-            return DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-        } catch (SQLException e) {
+            return DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+        }
+        catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw e;
