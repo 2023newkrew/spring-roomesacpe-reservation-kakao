@@ -44,7 +44,7 @@ public class ReservationController {
         List<Long> ids = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
                 rs.getLong("id")), Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime()));
 
-        if (ids.size() > 0) {
+        if (!ids.isEmpty()) {
             throw new DuplicatedReservationException();
         }
 
@@ -100,7 +100,7 @@ public class ReservationController {
                         rs.getInt("theme_price")
                 ))), id);
 
-        if (reservations.size() == 0) {
+        if (reservations.isEmpty()) {
             throw new NoSuchReservationException();
         }
         return reservations.get(0);
