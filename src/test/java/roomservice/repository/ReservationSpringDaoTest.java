@@ -22,12 +22,12 @@ public class ReservationSpringDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReservationSpringDao reservationSpringDao;
+    private ReservationDao reservationDao;
     private Reservation testReservation;
 
     @BeforeEach
     void setUp() {
-        reservationSpringDao = new ReservationSpringDao(jdbcTemplate);
+        reservationDao = new ReservationSpringDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE RESERVATION IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
                 "    id          bigint not null auto_increment,\n" +
@@ -46,43 +46,43 @@ public class ReservationSpringDaoTest {
 
     @Test
     void createTest() {
-        assertThat(reservationSpringDao.insertReservation(testReservation)).isEqualTo(1L);
+        assertThat(reservationDao.insertReservation(testReservation)).isEqualTo(1L);
     }
 
     @Test
     void throwExceptionWhenDuplicated() {
-        reservationSpringDao.insertReservation(testReservation);
+        reservationDao.insertReservation(testReservation);
         assertThatThrownBy(() -> {
-            reservationSpringDao.insertReservation(testReservation);
+            reservationDao.insertReservation(testReservation);
         }).isInstanceOf(DuplicatedReservationException.class);
     }
 
     @Test
     void showTest() {
-        long id = reservationSpringDao.insertReservation(testReservation);
+        long id = reservationDao.insertReservation(testReservation);
         testReservation.setId(id);
-        assertThat(reservationSpringDao.selectReservation(id)).isEqualTo(testReservation);
+        assertThat(reservationDao.selectReservation(id)).isEqualTo(testReservation);
     }
 
     @Test
     void throwExceptionWhenReservationNotExist() {
         assertThatThrownBy(() -> {
-            reservationSpringDao.selectReservation(1L);
+            reservationDao.selectReservation(1L);
         }).isInstanceOf(NonExistentReservationException.class);
 
         assertThatThrownBy(() -> {
-            reservationSpringDao.deleteReservation(1L);
+            reservationDao.deleteReservation(1L);
         }).isInstanceOf(NonExistentReservationException.class);
     }
 
     @Test
     void deleteTest() {
-        long id = reservationSpringDao.insertReservation(testReservation);
+        long id = reservationDao.insertReservation(testReservation);
         testReservation.setId(id);
-        reservationSpringDao.deleteReservation(id);
+        reservationDao.deleteReservation(id);
 
         assertThatThrownBy(() -> {
-            reservationSpringDao.selectReservation(id);
+            reservationDao.selectReservation(id);
         }).isInstanceOf(NonExistentReservationException.class);
     }
 }

@@ -60,11 +60,11 @@ public class ReservationConsoleDao implements ReservationDao{
                 reservation.setDate(rs.getDate("date").toLocalDate());
                 reservation.setName(rs.getString("name"));
                 reservation.setId(rs.getLong("id"));
-                reservation.setTheme(
-                        new Theme(rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price"))
-                );
+//                reservation.setTheme(
+//                        new Theme(rs.getString("theme_name"),
+//                                rs.getString("theme_desc"),
+//                                rs.getInt("theme_price"))
+//                );
                 return reservation;
             }
             throw new NonExistentReservationException();
