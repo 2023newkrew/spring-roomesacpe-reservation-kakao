@@ -22,4 +22,7 @@ public class CreateReservationRequest {
 
     @NotBlank
     public final String name;
+
+    @NotNull
+    public final Long themeId;
 }
