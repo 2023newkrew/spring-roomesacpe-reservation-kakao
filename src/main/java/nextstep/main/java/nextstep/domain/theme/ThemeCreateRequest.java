@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ThemeCreateRequestDto {
+public class ThemeCreateRequest {
     private String name;
     private String desc;
     private int price;

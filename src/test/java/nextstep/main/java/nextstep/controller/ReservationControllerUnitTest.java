@@ -2,7 +2,7 @@ package nextstep.main.java.nextstep.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
 import nextstep.main.java.nextstep.service.reservation.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,13 +50,13 @@ public class ReservationControllerUnitTest {
     @Test
     @DisplayName("컨트롤러 create() 테스트")
     void create() throws Exception {
-        ReservationCreateRequestDto request = new ReservationCreateRequestDto(
+        ReservationCreateRequest request = new ReservationCreateRequest(
                 LocalDate.of(2023, 1, 9),
                 LocalTime.of(1, 30),
                 "name"
         );
         String content = objectMapper.writeValueAsString(request);
-        given(reservationService.save(any(ReservationCreateRequestDto.class))).willReturn(reservation);
+        given(reservationService.save(any(ReservationCreateRequest.class))).willReturn(reservation);
 
         mockMvc.perform(post("/reservations")
                 .content(content)
@@ -68,7 +68,7 @@ public class ReservationControllerUnitTest {
     @Test
     @DisplayName("컨트롤러 findOne() 테스트")
     void findOne() throws Exception {
-        given(reservationService.findOneById(1L)).willReturn(reservation);
+//        given(reservationService.findOneById(1L)).willReturn(reservation);
 
         mockMvc.perform(get("/reservations/1"))
                 .andExpect(status().isOk())

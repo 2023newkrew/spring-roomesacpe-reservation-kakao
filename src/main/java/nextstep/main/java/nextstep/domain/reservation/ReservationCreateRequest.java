@@ -5,11 +5,10 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
-public class ReservationCreateRequestDto {
+public class ReservationCreateRequest {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;

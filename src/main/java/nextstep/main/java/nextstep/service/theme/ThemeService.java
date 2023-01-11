@@ -2,7 +2,7 @@ package nextstep.main.java.nextstep.service.theme;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.domain.theme.Theme;
-import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequestDto;
+import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequest;
 import nextstep.main.java.nextstep.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ThemeService {
     private final ThemeRepository themeRepository;
 
-    public Long save(ThemeCreateRequestDto request) {
+    public Long save(ThemeCreateRequest request) {
         return themeRepository.save(request);
     }
 

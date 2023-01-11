@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.repository.theme;
 
 import nextstep.main.java.nextstep.domain.theme.Theme;
-import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequestDto;
+import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -34,7 +34,7 @@ public class JdbcThemeRepository implements ThemeRepository{
     );
 
     @Override
-    public Long save(ThemeCreateRequestDto request) {
+    public Long save(ThemeCreateRequest request) {
         return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(request)).longValue();
     }
 

@@ -2,7 +2,7 @@ package nextstep.main.java.nextstep.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.service.reservation.ReservationService;
 import org.hamcrest.Matchers;
@@ -33,9 +33,10 @@ public class ReservationControllerTest {
     private ReservationService reservationService;
 
 
-    ReservationCreateRequestDto request = new ReservationCreateRequestDto(
+    ReservationCreateRequest request = new ReservationCreateRequest(
             LocalDate.of(2023, 1, 9),
             LocalTime.of(1, 30),
+            "name",
             "name"
     );
 

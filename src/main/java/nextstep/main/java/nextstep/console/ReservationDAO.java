@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.console;
 
 import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
 import nextstep.main.java.nextstep.domain.theme.Theme;
 import nextstep.main.java.nextstep.repository.reservation.ReservationRepository;
 
@@ -38,7 +38,7 @@ public class ReservationDAO implements ReservationRepository {
 //    }
 
     @Override
-    public Long save(ReservationCreateRequestDto request) {
+    public Long save(ReservationCreateRequest request) {
         return null;
     }
 

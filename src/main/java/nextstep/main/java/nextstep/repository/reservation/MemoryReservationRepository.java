@@ -1,8 +1,7 @@
 package nextstep.main.java.nextstep.repository.reservation;
 
 import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -18,7 +17,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     private static Long count = 1L;
 
     @Override
-    public Long save(ReservationCreateRequestDto request) {
+    public Long save(ReservationCreateRequest request) {
         return null;
     }
 

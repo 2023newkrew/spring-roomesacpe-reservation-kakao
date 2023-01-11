@@ -1,15 +1,13 @@
 package nextstep.main.java.nextstep.repository.reservation;
 
 import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
 import nextstep.main.java.nextstep.domain.theme.Theme;
-import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -33,8 +31,21 @@ public class JdbcReservationRepository implements ReservationRepository {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("id"),
+            resultSet.getDate("date").toLocalDate(),
+            resultSet.getTime("time").toLocalTime(),
+            resultSet.getString("name"),
+            new Theme(
+                    resultSet.getLong("theme_id"),
+                    resultSet.getString("theme_name"),
+                    resultSet.getString("desc"),
+                    resultSet.getInt("price")
+            )
+    );
+
     @Override
-    public Long save(ReservationCreateRequestDto request) {
+    public Long save(ReservationCreateRequest request) {
         String sql = "INSERT INTO reservation (DATE, TIME, NAME, THEME_ID) " +
                 "VALUES (:date, :time, :name, (SELECT id FROM theme WHERE name = :theme_name))";
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
@@ -55,27 +66,12 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findOne(Long id) {
-        return Optional.empty();
-//        String sql = "SELECT * FROM reservation WHERE id = ?";
-//        try {
-//            return Optional.ofNullable(jdbcTemplate.queryForObject(
-//                    sql,
-//                    (rs, count) -> new Reservation(
-//                            rs.getLong("id"),
-//                            rs.getDate("date").toLocalDate(),
-//                            rs.getTime("time").toLocalTime(),
-//                            rs.getString("name"),
-//                            new Theme(
-//                                    rs.getString("theme_name"),
-//                                    rs.getString("theme_desc"),
-//                                    rs.getInt("theme_price")
-//                            )
-//                    ),
-//                    id
-//            ));
-//        } catch (EmptyResultDataAccessException e) {
-//            throw new NoSuchReservationException();
-//        }
+        String sql = "SELECT t.name as theme_name, r.*, t.* " +
+                "FROM reservation AS r " +
+                "JOIN theme AS t ON r.theme_id = t.id " +
+                "WHERE r.id = ?";
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, reservationRowMapper, id));
     }
 
     @Override
