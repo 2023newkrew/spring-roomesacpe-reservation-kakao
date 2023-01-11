@@ -82,6 +82,11 @@ public class ReservationJDBCRepository implements ReservationRepository {
         return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, date, time);
     }
 
+    public List<Reservation> findByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where theme.id = ? and date=? and time=?";
+        return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, themeId, date, time);
+    }
+
     public int delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
         return jdbcTemplate.update(DELETE_SQL, id);

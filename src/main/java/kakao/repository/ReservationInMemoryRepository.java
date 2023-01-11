@@ -32,8 +32,10 @@ public class ReservationInMemoryRepository implements ReservationRepository {
         return reservations.getOrDefault(id, null);
     }
 
-    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        return reservations.values().stream().filter(reservation -> reservation.isDuplicate(date, time)).collect(Collectors.toList());
+    public List<Reservation> findByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return reservations.values().stream()
+                .filter(reservation -> reservation.isDuplicate(date, time) && Objects.equals(reservation.getTheme().getId(), themeId))
+                .collect(Collectors.toList());
     }
 
     public int delete(Long id) {

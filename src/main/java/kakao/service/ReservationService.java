@@ -28,7 +28,7 @@ public class ReservationService {
     private final ThemeRepository themeRepository;
 
     public Reservation createReservation(CreateReservationRequest request) {
-        checkDuplicatedReservation(request.date, request.time);
+        checkDuplicatedReservation(request.themeId, request.date, request.time);
         Theme theme = getExistTheme(request.themeId);
         return reservationRepository.save(Reservation.builder()
                 .date(request.date)
@@ -52,8 +52,8 @@ public class ReservationService {
         return reservationRepository.delete(id);
     }
 
-    private void checkDuplicatedReservation(LocalDate date, LocalTime time) {
-        boolean isDuplicate = reservationRepository.findByDateAndTime(date, time).size() > 0;
+    private void checkDuplicatedReservation(Long themeId, LocalDate date, LocalTime time) {
+        boolean isDuplicate = reservationRepository.findByThemeIdAndDateAndTime (themeId, date, time).size() > 0;
         if (isDuplicate) {
             throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
