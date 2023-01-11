@@ -7,8 +7,8 @@ import java.util.Optional;
 @Repository
 public class ThemeMockRepository implements ThemeRepository {
     @Override
-    public long save(Theme theme) {
-        return 0;
+    public Long save(Theme theme) {
+        return 0L;
     }
 
     @Override

@@ -4,7 +4,7 @@ import roomescape.model.Theme;
 import java.util.Optional;
 
 public interface ThemeRepository {
-    long save(Theme theme);
+    Long save(Theme theme);
     Optional<Theme> findOneByName(String themeName);
     void deleteByName(String themeName);
 }
