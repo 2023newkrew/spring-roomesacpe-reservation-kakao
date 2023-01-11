@@ -2,9 +2,11 @@ package nextstep.presentation;
 
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
+import nextstep.exception.InvalidCreateReservationRequestException;
 import nextstep.service.ReservationService;
-import nextstep.utils.ReservationRequestValidator;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -14,18 +16,17 @@ import java.net.URI;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final ReservationRequestValidator reservationRequestValidator;
 
-    public ReservationController(ReservationService reservationService, ReservationRequestValidator reservationRequestValidator) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.reservationRequestValidator = reservationRequestValidator;
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
-        reservationRequestValidator.validateCreateRequest(createReservationRequest);
-        Long reservationId = reservationService.createReservation(createReservationRequest);
+    public ResponseEntity<Void> createReservation(@Validated @RequestBody CreateReservationRequest createReservationRequest, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            throw new InvalidCreateReservationRequestException();
 
+        Long reservationId = reservationService.createReservation(createReservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + reservationId))
                 .build();
     }
