@@ -1,9 +1,7 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcTemplateDao implements ReservationDao {
@@ -49,23 +48,9 @@ public class ReservationJdbcTemplateDao implements ReservationDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                    new Reservation(
-                            rs.getLong("id"),
-                            rs.getDate("date").toLocalDate(),
-                            rs.getTime("time").toLocalTime(),
-                            rs.getString("name"),
-                            new Theme(
-                                    rs.getString("theme_name"),
-                                    rs.getString("theme_desc"),
-                                    rs.getInt("theme_price"))
-                    ), id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return jdbcTemplate.query(sql, getRowMapper(), id).stream().findAny();
     }
 
     public void clear() {

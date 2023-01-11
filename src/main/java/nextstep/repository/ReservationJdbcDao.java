@@ -1,13 +1,15 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
-import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.exceptions.exception.InvalidInputException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
@@ -41,7 +43,7 @@ public class ReservationJdbcDao implements ReservationDao {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (DuplicatedDateAndTimeException e) {
+        } catch (InvalidInputException e) {
             System.out.println("해당 날짜와 시간은 이미 예약되었습니다.");
         }
 
@@ -92,10 +94,10 @@ public class ReservationJdbcDao implements ReservationDao {
         return count;
     }
 
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         Connection con = null;
         ResultSet rs;
-        Reservation reservation;
+        Optional<Reservation> reservation;
 
         // 드라이버 연결
         try {
@@ -111,7 +113,7 @@ public class ReservationJdbcDao implements ReservationDao {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
-            reservation = getResultFromResultSet(rs);
+            reservation = getReservationsFromResultSet(rs).stream().findAny();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -126,20 +128,12 @@ public class ReservationJdbcDao implements ReservationDao {
         return reservation;
     }
 
-    private static Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
-        if (!rs.next()) {
-            System.out.println("해당 예약은 존재하지 않습니다.");
-            return null;
+    private List<Reservation> getReservationsFromResultSet(ResultSet rs) throws SQLException {
+        List<Reservation> reservations = new ArrayList<>();
+        while (rs.next()) {
+            reservations.add(getRowMapper().mapRow(rs, 0));
         }
-        return new Reservation(
-                rs.getLong("id"),
-                rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime(),
-                rs.getString("name"),
-                new Theme(rs.getString("theme_name"),
-                        rs.getString("theme_desc"),
-                        rs.getInt("theme_price"))
-        );
+        return reservations;
     }
 
     public void delete(Long id) {

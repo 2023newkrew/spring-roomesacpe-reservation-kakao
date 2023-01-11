@@ -1,17 +1,16 @@
 package nextstep.controller;
 
-import nextstep.dto.ReservationRequestDto;
-import nextstep.dto.ReservationResponseDto;
+import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationResponse;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@RequestMapping("/reservations")
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
-
     private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
@@ -19,14 +18,15 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Long id = reservationService.reserve(reservationRequestDto);
+    public ResponseEntity<Void> reserve(@RequestBody ReservationRequest reservationRequest) {
+        Long id = reservationService.reserve(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/{id}")
-    public ReservationResponseDto retrieve(@PathVariable Long id) {
-        return reservationService.retrieve(id);
+    public ResponseEntity<ReservationResponse> retrieve(@PathVariable Long id) {
+        ReservationResponse reservationResponse = reservationService.retrieve(id);
+        return ResponseEntity.ok().body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

@@ -1,8 +1,8 @@
 package nextstep;
 
-import nextstep.dto.ReservationRequestDto;
-import nextstep.dto.ReservationResponseDto;
-import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationResponse;
+import nextstep.exceptions.exception.InvalidInputException;
 import nextstep.repository.ReservationJdbcDao;
 import nextstep.service.ReservationService;
 
@@ -37,20 +37,20 @@ public class ReservationConsole {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                ReservationRequestDto reservationRequestDto = new ReservationRequestDto(
+                ReservationRequest reservationRequest = new ReservationRequest(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name
                 );
 
                 try {
-                    Long id = reservationService.reserve(reservationRequestDto);
+                    Long id = reservationService.reserve(reservationRequest);
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + id);
-                    System.out.println("예약 날짜: " + reservationRequestDto.getDate());
-                    System.out.println("예약 시간: " + reservationRequestDto.getTime());
-                    System.out.println("예약자 이름: " + reservationRequestDto.getName());
-                } catch (DuplicatedDateAndTimeException e) {
+                    System.out.println("예약 날짜: " + reservationRequest.getDate());
+                    System.out.println("예약 시간: " + reservationRequest.getTime());
+                    System.out.println("예약자 이름: " + reservationRequest.getName());
+                } catch (InvalidInputException e) {
                     System.out.println("이미 예약된 날짜와 시간입니다.");
                 }
             }
@@ -60,7 +60,7 @@ public class ReservationConsole {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                ReservationResponseDto reservationDto = reservationService.retrieve(id);
+                ReservationResponse reservationDto = reservationService.retrieve(id);
                 if (reservationDto != null) {
                     System.out.println("예약 번호: " + reservationDto.getId());
                     System.out.println("예약 날짜: " + reservationDto.getDate());

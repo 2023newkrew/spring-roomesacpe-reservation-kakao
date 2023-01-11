@@ -2,15 +2,17 @@ package nextstep.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.dto.ReservationRequestDto;
-import nextstep.dto.ReservationResponseDto;
-import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationResponse;
+import nextstep.exceptions.ErrorCode;
+import nextstep.exceptions.exception.InvalidInputException;
 import nextstep.repository.ReservationDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -20,34 +22,26 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public Long reserve(ReservationRequestDto reservationRequestDto) {
-        LocalDate date = reservationRequestDto.getDate();
-        LocalTime time = reservationRequestDto.getTime();
+    public Long reserve(ReservationRequest reservationRequest) {
+        LocalDate date = reservationRequest.getDate();
+        LocalTime time = reservationRequest.getTime();
 
         if (reservationDao.countByDateAndTime(date, time) > 0) {
-            throw new DuplicatedDateAndTimeException();
+            throw new InvalidInputException(ErrorCode.RESERVATION_DUPLICATED);
         }
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-        Reservation newReservation = new Reservation(date, time, reservationRequestDto.getName(), theme);
+        Reservation newReservation = new Reservation(date, time, reservationRequest.getName(), theme);
 
         return reservationDao.save(newReservation);
     }
 
-    public ReservationResponseDto retrieve(Long id) {
-        Reservation reservation = reservationDao.findById(id);
-        if (reservation != null) {
-            return new ReservationResponseDto(
-                    reservation.getId(),
-                    reservation.getDate(),
-                    reservation.getTime(),
-                    reservation.getName(),
-                    reservation.getTheme().getName(),
-                    reservation.getTheme().getDesc(),
-                    reservation.getTheme().getPrice()
-            );
+    public ReservationResponse retrieve(Long id) {
+        Optional<Reservation> reservation = reservationDao.findById(id);
+        if (reservation.isEmpty()) {
+            throw new InvalidInputException(ErrorCode.RESERVATION_NOT_FOUND);
         }
-        return null;
+        return new ReservationResponse(reservation.get());
     }
 
     public void delete(Long id) {

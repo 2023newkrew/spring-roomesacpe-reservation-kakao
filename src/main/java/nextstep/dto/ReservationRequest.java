@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationRequestDto {
+public class ReservationRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
@@ -13,7 +13,7 @@ public class ReservationRequestDto {
     private LocalTime time;
     private String name;
 
-    public ReservationRequestDto(LocalDate date, LocalTime time, String name) {
+    public ReservationRequest(LocalDate date, LocalTime time, String name) {
         this.date = date;
         this.time = time;
         this.name = name;

@@ -1,7 +1,7 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.dto.ReservationRequestDto;
+import nextstep.dto.ReservationRequest;
 import nextstep.repository.ReservationJdbcTemplateDao;
 import nextstep.service.ReservationService;
 import org.junit.jupiter.api.*;
@@ -32,7 +32,7 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        ReservationRequestDto requestDto = new ReservationRequestDto(
+        ReservationRequest requestDto = new ReservationRequest(
                 LocalDate.parse("2023-01-10"),
                 LocalTime.parse("13:00"),
                 "jay"
@@ -48,7 +48,7 @@ public class ReservationControllerTest {
     @DisplayName("중복이 없는 데이터로 예약 요청시 예약이 성공되어야 함")
     @Test
     void reserve() {
-        ReservationRequestDto requestDto = new ReservationRequestDto(
+        ReservationRequest requestDto = new ReservationRequest(
                 LocalDate.parse("2023-01-11"),
                 LocalTime.parse("13:00:00"),
                 "jay"
@@ -66,7 +66,7 @@ public class ReservationControllerTest {
     @DisplayName("중복된 날짜와 시간으로 예약시 예외처리 되어야 함")
     @Test
     void reserveException() {
-        ReservationRequestDto requestDto = new ReservationRequestDto(
+        ReservationRequest requestDto = new ReservationRequest(
                 LocalDate.parse("2023-01-10"),
                 LocalTime.parse("13:00:00"),
                 "jay"
