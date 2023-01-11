@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -55,7 +56,7 @@ public class ReservationControllerUnitTest {
                 "name"
         );
         String content = objectMapper.writeValueAsString(request);
-        given(reservationService.save(request)).willReturn(reservation);
+        given(reservationService.save(any(ReservationCreateRequestDto.class))).willReturn(reservation);
 
         mockMvc.perform(post("/reservations")
                 .content(content)
