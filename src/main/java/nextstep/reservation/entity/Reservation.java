@@ -9,24 +9,16 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
+@ToString
 public class Reservation {
     private Long id;
+
     private LocalDate date;
+
     private LocalTime time;
+
     private String name;
 
     private Theme theme;
-
-    public Reservation(ReservationRequestDto reservationRequestDto) {
-        this.date = reservationRequestDto.getDate();
-        this.time = reservationRequestDto.getTime();
-        this.name = reservationRequestDto.getName();
-        this.theme = Theme.builder()
-                .name("워너고홈 ")
-                .desc("병맛 어드벤처 회사 코믹물")
-                .price(29000)
-                .build();
-    }
 }

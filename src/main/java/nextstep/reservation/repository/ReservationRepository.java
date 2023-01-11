@@ -17,7 +17,6 @@ import java.sql.*;
 @Repository
 @RequiredArgsConstructor
 public class ReservationRepository {
-
     private final JdbcTemplate jdbcTemplate;
 
     public void delete(final Long id) {
@@ -26,22 +25,19 @@ public class ReservationRepository {
     }
 
     public Long add(Reservation reservation) {
-        String sql = "INSERT INTO reservation SET date = ?, time = ?, name = ?, theme_name = ?, theme_desc = ?, theme_price = ?";
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         try {
-            return (long) jdbcTemplate.update(new PreparedStatementCreator() {
-                @Override
-                public PreparedStatement createPreparedStatement(final Connection con) throws SQLException {
-                    PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
-                    pstmt.setDate(1, Date.valueOf(reservation.getDate()));
-                    pstmt.setTime(2, Time.valueOf(reservation.getTime()));
-                    pstmt.setString(3, reservation.getName());
-                    pstmt.setString(4, reservation.getTheme().getName());
-                    pstmt.setString(5, reservation.getTheme().getDesc());
-                    pstmt.setInt(6, reservation.getTheme().getPrice());
-                    return pstmt;
-                }
+            return (long) jdbcTemplate.update(con -> {
+                PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
+                pstmt.setDate(1, Date.valueOf(reservation.getDate()));
+                pstmt.setTime(2, Time.valueOf(reservation.getTime()));
+                pstmt.setString(3, reservation.getName());
+                pstmt.setString(4, reservation.getTheme().getName());
+                pstmt.setString(5, reservation.getTheme().getDesc());
+                pstmt.setInt(6, reservation.getTheme().getPrice());
+                return pstmt;
             }, keyHolder);
         }
         catch (DuplicateKeyException e) {

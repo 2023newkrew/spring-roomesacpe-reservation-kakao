@@ -8,7 +8,6 @@ import java.sql.*;
 
 
 public class ConsoleReservationRepository {
-
     private final String url = "jdbc:h2:~/roomescape;AUTO_SERVER=true";
     private final String user = "kakao";
 

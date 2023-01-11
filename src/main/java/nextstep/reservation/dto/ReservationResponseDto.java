@@ -1,5 +1,7 @@
 package nextstep.reservation.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,25 +11,22 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
-@Setter
+@Builder
 @ToString
 public class ReservationResponseDto {
-    private long id;
+    private Long id;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime time;
+
     private String name;
+
     private String themeName;
+
     private String themeDesc;
-    private int themePrice;
 
-    public ReservationResponseDto(Reservation reservation) {
-        this.id = reservation.getId();
-        this.date = reservation.getDate();
-        this.time = reservation.getTime();
-        this.name = reservation.getName();
-        this.themeName = reservation.getTheme().getName();
-        this.themeDesc = reservation.getTheme().getDesc();
-        this.themePrice = reservation.getTheme().getPrice();
-    }
-
+    private Integer themePrice;
 }

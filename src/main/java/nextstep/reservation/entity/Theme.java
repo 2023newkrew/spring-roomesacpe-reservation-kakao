@@ -1,15 +1,13 @@
 package nextstep.reservation.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import nextstep.reservation.dto.ThemeRequestDto;
 
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
+@ToString
 public class Theme {
     private Long id;
 
@@ -18,10 +16,4 @@ public class Theme {
     private String desc;
 
     private Integer price;
-
-    public Theme(ThemeRequestDto themeRequestDto) {
-        this.name = themeRequestDto.getName();
-        this.desc = themeRequestDto.getDesc();
-        this.price = themeRequestDto.getPrice();
-    }
 }

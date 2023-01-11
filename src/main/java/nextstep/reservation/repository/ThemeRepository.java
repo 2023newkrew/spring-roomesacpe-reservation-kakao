@@ -16,19 +16,17 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 public class ThemeRepository {
     private final JdbcTemplate jdbcTemplate;
+
     public Long add(Theme theme) {
         String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        return (long) jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(final Connection con) throws SQLException {
-                PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
-                pstmt.setString(1, theme.getName());
-                pstmt.setString(2, theme.getDesc());
-                pstmt.setLong(3, theme.getPrice());
-                return pstmt;
-            }
+        return (long) jdbcTemplate.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
+            pstmt.setString(1, theme.getName());
+            pstmt.setString(2, theme.getDesc());
+            pstmt.setLong(3, theme.getPrice());
+            return pstmt;
         }, keyHolder);
     }
 }

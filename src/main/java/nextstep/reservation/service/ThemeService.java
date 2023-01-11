@@ -2,8 +2,8 @@ package nextstep.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.ThemeRequestDto;
-import nextstep.reservation.entity.Theme;
 import nextstep.reservation.repository.ThemeRepository;
+import nextstep.reservation.util.mapper.ThemeMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 public class ThemeService {
     private final ThemeRepository themeRepository;
 
+    private final ThemeMapper themeMapper;
+
     public Long addTheme(final ThemeRequestDto themeRequestDto) {
-        return themeRepository.add(new Theme(themeRequestDto));
+        return themeRepository.add(themeMapper.requestDtoToTheme(themeRequestDto));
     }
 }

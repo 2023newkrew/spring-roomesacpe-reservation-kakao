@@ -68,10 +68,14 @@ public class ReservationTest {
 
     @Test
     void 예약_생성() {
-        Map<String, String> reservationRequest = new HashMap<>();
+        Map<String, Object> reservationRequest = new HashMap<>();
         reservationRequest.put("date", "2022-08-01");
         reservationRequest.put("time", "13:00");
         reservationRequest.put("name", "name");
+        reservationRequest.put("themeName", "워너고홈");
+        reservationRequest.put("themeDesc", "병맛 어드벤처 회사 코믹물");
+        reservationRequest.put("themePrice", 29000);
+
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -108,10 +112,13 @@ public class ReservationTest {
 
     @Test
     void 중복_예약_오류() {
-        Map<String, String> reservationRequest = new HashMap<>();
+        Map<String, Object> reservationRequest = new HashMap<>();
         reservationRequest.put("date", "1982-02-19");
         reservationRequest.put("time", "02:02");
         reservationRequest.put("name", "name");
+        reservationRequest.put("themeName", "워너고홈");
+        reservationRequest.put("themeDesc", "병맛 어드벤처 회사 코믹물");
+        reservationRequest.put("themePrice", 29000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

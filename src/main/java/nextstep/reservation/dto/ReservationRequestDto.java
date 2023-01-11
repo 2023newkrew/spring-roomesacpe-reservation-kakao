@@ -2,17 +2,17 @@ package nextstep.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import nextstep.reservation.entity.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Builder
+@ToString
 public class ReservationRequestDto {
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate date;
 
@@ -20,4 +20,10 @@ public class ReservationRequestDto {
     LocalTime time;
 
     String name;
+
+    String themeName;
+
+    String themeDesc;
+
+    Integer themePrice;
 }
