@@ -1,4 +1,4 @@
-package web.presentation;
+package web.controller;
 
 import static org.hamcrest.core.Is.is;
 
