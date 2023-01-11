@@ -3,8 +3,8 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.controller.response.ReservationResponse;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.Themes;
 import roomescape.exception.ErrorCode;

@@ -1,4 +1,4 @@
-package roomescape.controller.request;
+package roomescape.controller.dto;
 
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationRequest {
+
     private LocalDate date;
     private LocalTime time;
     private String name;
