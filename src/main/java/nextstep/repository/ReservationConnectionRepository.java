@@ -33,6 +33,9 @@ public class ReservationConnectionRepository implements ReservationRepository {
         ps.executeUpdate();
 
         ResultSet rs = ps.getGeneratedKeys();
+        if (!rs.next()) {
+            throw new SQLException();
+        }
 
         return rs.getLong(1);
     }
@@ -45,6 +48,9 @@ public class ReservationConnectionRepository implements ReservationRepository {
         ps.setLong(1, id);
 
         ResultSet rs = ps.executeQuery();
+        if (!rs.next()) {
+            throw new SQLException();
+        }
 
         return new Reservation(rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
