@@ -1,16 +1,5 @@
 package nextstep.repository;
 
-import static nextstep.entity.ThemeConstants.THEME_DESC;
-import static nextstep.entity.ThemeConstants.THEME_NAME;
-import static nextstep.entity.ThemeConstants.THEME_PRICE;
-
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import javax.sql.DataSource;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
@@ -21,18 +10,27 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import static nextstep.entity.ThemeConstants.*;
+
 @Repository
-@Transactional
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
 
     @Autowired
     public ReservationRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Transactional
     @Override
     public Long save(ReservationRequestDTO reservationRequestDTO) {
         Map<String, Object> parameters = new HashMap<>();
@@ -71,6 +69,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 .isEmpty();
     }
 
+    @Transactional
     @Override
     public int deleteById(Long id) throws DataAccessException {
         return jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
