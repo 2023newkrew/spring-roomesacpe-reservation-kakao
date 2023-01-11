@@ -61,9 +61,11 @@ public class ReservationJDBCRepository {
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
     }
 
-    public int delete(Long id) {
+    public void delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
-
-        return jdbcTemplate.update(DELETE_SQL, id);
+        
+        if (jdbcTemplate.update(DELETE_SQL, id) == 0) {
+            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
     }
 }

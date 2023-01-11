@@ -1,31 +1,24 @@
 package kakao.service;
 
-import domain.Reservation;
+import domain.ReservationFactory;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
-import kakao.error.ErrorCode;
-import kakao.error.exception.DuplicatedReservationException;
-import kakao.error.exception.RecordNotFoundException;
 import kakao.repository.ReservationJDBCRepository;
-import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationService {
 
     private final ReservationJDBCRepository reservationJDBCRepository;
+    private final ReservationFactory reservationFactory;
 
     public ReservationService(ReservationJDBCRepository reservationJDBCRepository) {
         this.reservationJDBCRepository = reservationJDBCRepository;
+        this.reservationFactory = new ReservationFactory(reservationJDBCRepository);
     }
 
     public long createReservation(CreateReservationRequest request) {
-        boolean isDuplicate = reservationJDBCRepository.findByDateAndTime(request.date, request.time).size() > 0;
-        if (isDuplicate) {
-            throw new DuplicatedReservationException();
-        }
-        Reservation reservation = new Reservation(request.date, request.time, request.name, ThemeRepository.theme);
-        return reservationJDBCRepository.save(reservation);
+        return reservationJDBCRepository.save(reservationFactory.createReservation(request));
     }
 
     public ReservationResponse getReservation(Long id) {
@@ -33,9 +26,6 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        int deletedCount = reservationJDBCRepository.delete(id);
-        if (deletedCount == 0) {
-            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
+        reservationJDBCRepository.delete(id);
     }
 }
