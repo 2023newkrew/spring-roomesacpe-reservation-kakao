@@ -5,7 +5,6 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.roomescape.reservation.domain.Reservation;
 import nextstep.roomescape.reservation.domain.Theme;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,37 +12,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
-@DisplayName("Http Method")
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
 
     @LocalServerPort
     int port;
     private Theme theme;
-    static ReservationRepository reservationRepository = new ReservationRepositoryJdbcImpl(new JdbcTemplate(dataSource()));
-
-    public static DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:~/test");
-        return dataSource;
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        reservationRepository.clear();
-    }
 
     @BeforeEach
     void setUp() {
@@ -55,21 +36,26 @@ public class ReservationControllerTest {
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
-        Reservation reservation = createRequest(LocalDate.parse("2022-08-12"));
+        Reservation reservation = createRequest(LocalDate.parse("2099-01-01"));
 
-        RestAssured.given().log().all()
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+        String id = response.response().getHeader("Location").split("/")[2];
+        deleteReservation(Long.parseLong(id));
+
     }
 
     @DisplayName("예약 생성 예외처리")
     @Test
     void createReservationDuplicate() {
-        Reservation reservation = createRequest(LocalDate.parse("2022-08-13"));
-        createReservation(createRequest(LocalDate.parse("2022-08-13")));
+        Reservation reservation = createRequest(LocalDate.parse("2099-02-02"));
+        ExtractableResponse<Response> response = createReservation(reservation);
+        String id = response.response().getHeader("Location").split("/")[2];
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
@@ -77,29 +63,31 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("CreateReservationException"));
+        deleteReservation(Long.parseLong(id));
     }
 
-    /**
-     * HttpMethodController > showUser 메서드
-     */
-    @DisplayName("Http Method - GET")
+
+    @DisplayName("예약 검색")
     @Test
     void showReservation() {
 
-        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2022-08-20")));
+        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2099-03-03")));
         String id = reservation.response().getHeader("Location").split("/")[2];
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("date", is("2022-08-20"))
+                .body("date", is("2099-03-03"))
                 .body("time", is("13:00:00"));
+        deleteReservation(Long.parseLong(id));
     }
 
+
+    @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {
-        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2022-08-15")));
+        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2099-04-04")));
         String id = reservation.response().getHeader("Location").split("/")[2];
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -120,6 +108,15 @@ public class ReservationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
                 .when().post("/reservations")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> deleteReservation(Long id) {
+        return RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/" + id)
                 .then().log().all()
                 .extract();
     }

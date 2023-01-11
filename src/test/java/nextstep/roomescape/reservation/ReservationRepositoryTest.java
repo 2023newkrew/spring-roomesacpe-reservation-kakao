@@ -4,6 +4,7 @@ import nextstep.roomescape.reservation.domain.Reservation;
 import nextstep.roomescape.reservation.domain.Theme;
 import nextstep.roomescape.reservation.exception.CreateReservationException;
 import org.junit.jupiter.api.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,60 +20,68 @@ class ReservationRepositoryTest {
     void setUp() {
         reservationRepository = new ReservationRepositoryMemoryImpl();
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        reservationRepository.create(new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme));
     }
 
-    @AfterEach
-    void tearDown() {
-        reservationRepository.clear();
-    }
 
-    @Test
     @DisplayName("예약 삽입")
+    @Transactional
+    @Test
     void createReservationTest() {
-        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
+        Reservation reservation = createRequest(LocalDate.parse("9999-01-02"));
         Reservation result = reservationRepository.create(reservation);
         assertEquals(result, reservation);
     }
 
-    @Test
     @DisplayName("예약 ID로 조회")
+    @Transactional
+    @Test
     void findByIdTest() {
-        Reservation reservation = new Reservation(1L, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme);
-
-        Reservation result = reservationRepository.findById(1L);
+        Reservation reservation = reservationRepository.create(createRequest(LocalDate.parse("9999-02-02")));
+        Reservation result = reservationRepository.findById(reservation.getId());
         assertEquals(result, reservation);
     }
 
-    @Test
     @DisplayName("예약 날짜/시간 조회")
+    @Transactional
+    @Test
     void findByDateTimeTest() {
-        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"));
+        reservationRepository.create(createRequest(LocalDate.parse("9999-03-03")));
+        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("9999-03-03"), LocalTime.parse("13:00"));
         assertEquals(result, true);
     }
 
-    @Test
     @DisplayName("없는 예약 날짜/시간 조회")
+    @Test
     void findByDateTimeEmptyTest() {
-        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
+        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("9966-08-14"), LocalTime.parse("13:00"));
         assertEquals(result, false);
     }
 
-    @Test
     @DisplayName("중복 시간에 예약시 예외 발생")
+    @Transactional
+    @Test
     void duplicateTimeReservationThrowException() {
+        reservationRepository.create(createRequest(LocalDate.parse("9999-04-04")));
         Assertions.assertThrows(CreateReservationException.class,
                 () -> reservationRepository.create(
-                        new Reservation(null, LocalDate.parse("2022-08-11"), LocalTime.parse("13:00"), "name", theme)
+                        new Reservation(null, LocalDate.parse("9999-04-04"), LocalTime.parse("13:00"), "name", theme)
                 ));
     }
 
-    @Test
     @DisplayName("예약 삭제")
+    @Transactional
+    @Test
     void deleteReservation() {
-        long id = 1L;
+        Reservation reservation = reservationRepository.create(createRequest(LocalDate.parse("9999-05-05")));
+        long id = reservation.getId();
         Boolean result = reservationRepository.delete(id);
         assertEquals(result,true);
         assertNull(reservationRepository.findById(id));
+    }
+
+    private Reservation createRequest(LocalDate date) {
+        final LocalTime time = LocalTime.parse("13:00");
+        final String name = "kakao";
+        return new Reservation(null, date, time, name, theme);
     }
 }
