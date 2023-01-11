@@ -32,6 +32,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+
         jdbcTemplate.update((connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
@@ -42,6 +43,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             preparedStatement.setInt(6, reservation.getTheme().getPrice());
             return preparedStatement;
         }, keyHolder);
+
         return new Reservation(keyHolder.getKey().longValue(), reservation);
     }
 

@@ -10,12 +10,17 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
+    private static final String SERVER_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
+    private static final String USER_NAME = "sa";
+    private static final String PASSWORD = "";
 
     @Override
     public Reservation save(Reservation reservation) {
-        try (Connection connection = connect()) {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"})) {
+
             preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
             preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
             preparedStatement.setString(3, reservation.getName());
@@ -32,9 +37,11 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findOne(Long id) {
-        try (Connection connection = connect()) {
-            String sql = "SELECT * FROM reservation WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+
+        try (Connection connection = connect();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             rs.first();
@@ -56,9 +63,10 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public void deleteOne(Long id) {
-        try (Connection connection = connect()) {
-            String sql = "DELETE FROM reservation WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
+        String sql = "DELETE FROM reservation WHERE id = ?";
+
+        try (Connection connection = connect();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setLong(1, id);
             ps.executeUpdate();
@@ -69,9 +77,10 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        try (Connection connection = connect()) {
-            String sql = "SELECT * FROM reservation WHERE date = ? AND time = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM reservation WHERE date = ? AND time = ?";
+
+        try (Connection connection = connect();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
@@ -89,8 +98,8 @@ public class ReservationDAO implements ReservationRepository {
     }
 
     private Connection connect() {
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
-            return connection;
+        try {
+            return DriverManager.getConnection(SERVER_URL, USER_NAME, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
         }
