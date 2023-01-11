@@ -72,4 +72,10 @@ public class ReservationWebRepository implements ReservationRepository {
                 .stream()
                 .findAny();
     }
+
+    @Override
+    public void deleteAllReservations() {
+        String sql = "DELETE FROM reservation";
+        jdbcTemplate.execute(sql);
+    }
 }

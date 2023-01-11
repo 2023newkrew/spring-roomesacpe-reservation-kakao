@@ -26,7 +26,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
             resultSet = ps.getGeneratedKeys();
             return resultSetToReservationId(resultSet);
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            System.err.println("오류:" + e.getMessage());
             e.printStackTrace();
         } finally {
             if (resultSet != null) try { resultSet.close(); } catch (SQLException e) {}
@@ -66,7 +66,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         ) {
             return resultSetToReservation(resultSet);
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            System.err.println("오류:" + e.getMessage());
             e.printStackTrace();
         }
         return Optional.empty();
@@ -105,7 +105,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         ) {
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            System.err.println("오류:" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -143,5 +143,18 @@ public class ReservationConsoleRepository implements ReservationRepository {
         ps.setTime(2, Time.valueOf(time));
 
         return ps;
+    }
+
+    @Override
+    public void deleteAllReservations() {
+        String sql = "DELETE FROM reservation";
+        try (
+            Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            PreparedStatement ps = con.prepareStatement(sql);
+        ) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("오류:" + e.getMessage());
+        }
     }
 }
