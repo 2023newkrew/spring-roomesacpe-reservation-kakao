@@ -30,7 +30,7 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     }
 
     @Override
-    public ReservationDetail findById(Long id) {
+    public ReservationDetail findById(Long id) throws SQLException{
         Reservation reservation = themeReservationDao.findById(id);
         if (reservation == null) {
             return null;

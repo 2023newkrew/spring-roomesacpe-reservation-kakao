@@ -9,5 +9,5 @@ public interface ThemeReservationService {
 
     public void cancelById(Long id);
 
-    public ReservationDetail findById(Long id);
+    ReservationDetail findById(Long id) throws SQLException;
 }

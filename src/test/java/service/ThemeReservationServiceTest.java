@@ -1,7 +1,6 @@
 package service;
 
 import nextstep.RoomEscapeWebApplication;
-import nextstep.domain.Reservations;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
 import nextstep.service.ThemeReservationService;
@@ -48,7 +47,7 @@ class ThemeReservationServiceTest {
     @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
     void test3(){
         assertThatThrownBy(() -> themeReservationService.cancelById(1000L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SQLException.class);
     }
 
     @Test
@@ -56,8 +55,6 @@ class ThemeReservationServiceTest {
     void test4() {
         ReservationDto randomReservation = makeRandomReservationDto(RESERVATION_DATE, "13:04");
         Long reservationId = themeReservationService.reserve(randomReservation);
-        System.out.println(Reservations.getInstance().findAll());
-        System.out.println(reservationId);
         ReservationDetail reservationDetail = themeReservationService.findById(reservationId);
 
         assertThat(reservationDetail.getName()).isEqualTo(randomReservation.getName());
@@ -65,7 +62,7 @@ class ThemeReservationServiceTest {
 
     @Test
     @DisplayName("예약되지 않은 방을 조회한다.")
-    void test5() {
+    void test5() throws SQLException{
         ReservationDetail findReservation = themeReservationService.findById(100L);
 
         assertThat(findReservation).isNull();
@@ -79,7 +76,7 @@ class ThemeReservationServiceTest {
 
         themeReservationService.reserve(reservation1);
         Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SQLException.class);
     }
 
     ReservationDto makeRandomReservationDto(String date, String time){
