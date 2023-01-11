@@ -6,15 +6,12 @@ import nextstep.dto.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomEscapeService {
     private final ReservationRepository reservationRepository;
 
-
-    @Autowired
     public RoomEscapeService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
