@@ -20,7 +20,7 @@ public class ConsoleReservationRepository implements ReservationRepo {
             ps.setLong(1, id);
             rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 reservation = new Reservation(
                         rs.getLong(1),
                         rs.getDate(2).toLocalDate(),
@@ -61,7 +61,7 @@ public class ConsoleReservationRepository implements ReservationRepo {
             ps.executeUpdate();
 
             rs = ps.getGeneratedKeys();
-            if(rs.next()) {
+            if (rs.next()) {
                 id = rs.getLong(1);
             }
 
@@ -108,7 +108,7 @@ public class ConsoleReservationRepository implements ReservationRepo {
             ps.setTime(2, time);
             rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 result = rs.getInt(1);
             }
         } catch (SQLException e) {

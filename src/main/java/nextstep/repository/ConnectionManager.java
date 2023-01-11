@@ -22,7 +22,7 @@ public class ConnectionManager {
     }
 
     public static void closeAll(AutoCloseable... closeables) {
-        for(AutoCloseable closeable : closeables) {
+        for (AutoCloseable closeable : closeables) {
             close(closeable);
         }
     }
