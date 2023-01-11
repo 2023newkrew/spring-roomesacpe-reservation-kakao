@@ -17,6 +17,7 @@ public class RoomEscapeApplication {
         Scanner scanner = new Scanner(System.in);
         List<Reservation> reservations = new ArrayList<>();
         Long reservationIdIndex = 0L;
+        ReservationDAO reservationDAO = new ReservationDAO();
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -47,6 +48,7 @@ public class RoomEscapeApplication {
                 );
 
                 reservations.add(reservation);
+                reservationDAO.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
