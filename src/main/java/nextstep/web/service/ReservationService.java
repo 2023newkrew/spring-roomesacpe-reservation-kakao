@@ -2,8 +2,8 @@ package nextstep.web.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.web.dto.ReservationRequestDto;
-import nextstep.web.dto.ReservationResponseDto;
+import nextstep.web.dto.CreateReservationRequestDto;
+import nextstep.web.dto.FindReservationResponseDto;
 import nextstep.web.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +19,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Long createReservation(ReservationRequestDto requestDto) {
+    public Long createReservation(CreateReservationRequestDto requestDto) {
         Reservation reservation = Reservation.of(
                 requestDto.getDate(),
                 requestDto.getTime(),
@@ -30,10 +30,10 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public ReservationResponseDto findReservation(Long id) {
+    public FindReservationResponseDto findReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id);
 
-        return ReservationResponseDto.of(reservation);
+        return FindReservationResponseDto.of(reservation);
     }
 
     public void deleteReservation(Long id) {

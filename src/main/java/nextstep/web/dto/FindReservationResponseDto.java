@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationResponseDto {
+public class FindReservationResponseDto {
 
     private Long id;
     private LocalDate date;
@@ -20,8 +20,8 @@ public class ReservationResponseDto {
     private String name;
     private Theme theme;
 
-    public static ReservationResponseDto of(Reservation reservation) {
-        return new ReservationResponseDto(
+    public static FindReservationResponseDto of(Reservation reservation) {
+        return new FindReservationResponseDto(
                 reservation.getId(),
                 reservation.getDate(),
                 reservation.getTime(),

@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationRequestDto {
+public class CreateReservationRequestDto {
 
     @DateTimeFormat(pattern = "YYYY-MM-dd")
     private LocalDate date;

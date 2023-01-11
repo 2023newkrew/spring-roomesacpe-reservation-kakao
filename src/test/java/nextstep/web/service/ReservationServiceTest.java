@@ -2,7 +2,7 @@ package nextstep.web.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.web.dto.ReservationRequestDto;
+import nextstep.web.dto.CreateReservationRequestDto;
 import nextstep.web.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ class ReservationServiceTest {
 
     @Test
     void 예약을_생성할_수_있다() {
-        ReservationRequestDto requestDto = new ReservationRequestDto(
+        CreateReservationRequestDto requestDto = new CreateReservationRequestDto(
                 LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1"
         );
         when(reservationRepository.save(any()))

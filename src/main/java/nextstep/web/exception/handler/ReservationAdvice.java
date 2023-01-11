@@ -16,7 +16,7 @@ public class ReservationAdvice {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(new ErrorResponse(errorCode.getMessage()));
+                .body(new ErrorResponse(errorCode.getHttpStatus().value(), errorCode.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -24,6 +24,6 @@ public class ReservationAdvice {
         ErrorCode errorCode = CommonErrorCode.SERVER_ERROR;
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(new ErrorResponse(errorCode.getMessage()));
+                .body(new ErrorResponse(errorCode.getHttpStatus().value(), errorCode.getMessage()));
     }
 }
