@@ -4,11 +4,11 @@ import nextstep.RoomEscapeWebApplication;
 import nextstep.entity.Reservation;
 import nextstep.dao.ThemeReservationDao;
 import nextstep.dto.ReservationDto;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 
 import java.sql.SQLException;
 import java.util.List;
@@ -34,6 +34,7 @@ class ThemeReservationDaoTest {
 
         themeReservationDao.insert(reservation);
         Long reservationId = reservation.getId();
+        System.out.println("reservationId = " + reservationId);
         Reservation findReservation = themeReservationDao.findById(reservationId);
         assertThat(reservationId).isNotNull();
         assertThat(findReservation).isNotNull();
@@ -45,7 +46,9 @@ class ThemeReservationDaoTest {
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
         themeReservationDao.insert(reservation);
 
+        System.out.println("reservation.getId() = " + reservation.getId());
         themeReservationDao.deleteReservation(reservation.getId());
+        System.out.println("asd" + themeReservationDao.findById(reservation.getId()));
         assertThat(themeReservationDao.findById(reservation.getId())).isNull();
     }
 
@@ -77,7 +80,7 @@ class ThemeReservationDaoTest {
     @DisplayName("존재하지 않는 테마는 예약 할 수 없다.")
     void test6(){
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:06", NOT_EXIST_THEME_ID);
-        assertThatThrownBy(() -> themeReservationDao.insert(reservation)).isInstanceOf(SQLException.class);
+        assertThatThrownBy(() -> themeReservationDao.insert(reservation)).isInstanceOf(RuntimeException.class); // DataIntegrityViolationException
     }
 
     @Test
@@ -85,10 +88,9 @@ class ThemeReservationDaoTest {
     void test7() throws SQLException{
         Reservation reservation1 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
         Reservation reservation2 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
-
         themeReservationDao.insert(reservation1);
         assertThatThrownBy(() -> themeReservationDao.insert(reservation2))
-                .isInstanceOf(JdbcSQLIntegrityConstraintViolationException.class);
+                .isInstanceOf(RuntimeException.class); // DuplicateKeyException
     }
 
     Reservation makeRandomReservation(String date, String time, Long themeId){

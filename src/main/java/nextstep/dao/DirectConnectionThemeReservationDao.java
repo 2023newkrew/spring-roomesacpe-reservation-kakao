@@ -11,7 +11,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
 @RequiredArgsConstructor
 public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
 
@@ -22,6 +21,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
     private final DataSource dataSource;
     @Override
     public int insert(Reservation reservation) throws SQLException{
+        System.out.println("DirectConnectionThemeReservationDao.insert");
         Connection con = dataSource.getConnection();
         System.out.println(con);
         PreparedStatement psmt = null;

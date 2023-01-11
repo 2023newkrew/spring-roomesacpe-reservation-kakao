@@ -77,7 +77,7 @@ class ThemeReservationServiceTest {
 
         themeReservationService.reserve(reservation1);
         Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
-                .isInstanceOf(SQLException.class);
+                .isInstanceOf(RuntimeException.class);
     }
 
     ReservationDto makeRandomReservationDto(String date, String time){
