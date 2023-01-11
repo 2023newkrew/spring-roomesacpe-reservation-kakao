@@ -1,12 +1,15 @@
 package roomescape.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,15 +17,21 @@ import java.util.List;
 public class RoomEscapeController {
     List<Reservation> reservationList = new ArrayList<>();
 
-    //https://localhost:8080/reservations  / post data{}
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation){
-        if (reservationList.stream().filter(reserve -> reserve.getDate().equals(reservation.getDate()))
-                .filter(reserve -> reserve.getTime().equals(reservation.getTime())).count() == 1) {
-            return ResponseEntity.badRequest().build();
-        }
-        reservationList.add(reservation);
+
+        jdbcTemplate.update(
+            "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)",
+                    Date.valueOf(reservation.getDate()),
+                    Time.valueOf(reservation.getTime()),
+                    reservation.getName(),
+                    reservation.getTheme().getName(),
+                    reservation.getTheme().getDesc(),
+                    reservation.getTheme().getPrice()
+        );
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
     }
 
