@@ -19,7 +19,8 @@ import static org.assertj.core.api.Assertions.*;
 class ThemeReservationDaoTest {
 
     private final static Long EXIST_THEME_ID = 1L;
-    private final static Long NOT_EXIST_THEME_ID = 1000L;
+    private final static Long NOT_EXIST_THEME_ID = Long.MAX_VALUE;
+    private final static Long NOT_EXIST_RESERVATION_ID = Long.MAX_VALUE;
     public static final String RESERVATION_DATE = "2022-12-12";
 
     @Autowired
@@ -71,12 +72,10 @@ class ThemeReservationDaoTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 테마는 생성할 수 없다.")
+    @DisplayName("존재하지 않는 테마는 예약 할 수 없다.")
     void test6(){
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:06", NOT_EXIST_THEME_ID);
-
-        assertThatThrownBy(() -> themeReservationDao.createReservation(reservation))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> themeReservationDao.insert(reservation)).isInstanceOf(SQLException.class);
     }
 
 
