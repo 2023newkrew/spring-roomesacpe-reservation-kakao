@@ -21,14 +21,17 @@ public class ReservationService {
         this.themeRepository = themeRepository;
     }
 
-    public Long createReservation(ReservationRequestDto reservationRequest) {
+    public Reservation createReservation(ReservationRequestDto reservationRequest) {
         Theme theme = themeRepository
                 .findOneByName("워너고홈")
                 .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that Name");});
         if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
             throw new IllegalArgumentException("Already have reservation at that date & time");
         }
-        return reservationRepository.save(new Reservation(reservationRequest, theme));
+        Reservation reservation = new Reservation(reservationRequest, theme);
+        Long id = reservationRepository.save(reservation);
+        reservation.setId(id);  //
+        return reservation;
     }
 
     public ReservationResponseDto findReservation(Long reservationId) {
