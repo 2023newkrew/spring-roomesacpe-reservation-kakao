@@ -60,7 +60,6 @@ public class RoomEscapeApplication {
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 Reservation reservation = reservationService.findById(id);
@@ -83,7 +82,6 @@ public class RoomEscapeApplication {
                     reservationService.deleteReservation(id);
                     System.out.println("예약이 취소되었습니다.");
                 } catch (Exception e) {
-                    e.printStackTrace();
                     System.out.println("예약을 취소할 수 없습니다.");
                 }
 

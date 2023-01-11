@@ -6,6 +6,7 @@ import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -23,7 +24,7 @@ public class ReservationService {
         return reservationRepository.findById(id);
     }
 
-    public void deleteReservation(Long id) {
+    public void deleteReservation(Long id) throws SQLException {
         reservationRepository.deleteById(id);
     }
 

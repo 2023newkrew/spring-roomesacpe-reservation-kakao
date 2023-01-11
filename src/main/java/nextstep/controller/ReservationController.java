@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/reservations")
@@ -38,7 +39,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity deleteReservation(@PathVariable("id") Long id) throws SQLException {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
