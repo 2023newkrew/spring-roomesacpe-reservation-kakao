@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class Reservation implements Comparable<Reservation> {
     private Long id;
     private LocalDate date;
@@ -16,8 +15,12 @@ public class Reservation implements Comparable<Reservation> {
     private Theme theme;
 
     @Builder
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this(null, date, time, name, theme);
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme  = theme;
     }
 
     public void setId(Long id) {

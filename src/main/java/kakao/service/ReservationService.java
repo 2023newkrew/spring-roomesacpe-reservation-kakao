@@ -59,7 +59,7 @@ public class ReservationService {
     private Theme getExistTheme(Long themeId) {
         Theme theme = themeRepository.findById(themeId);
         if (Objects.isNull(theme)) {
-            throw new RuntimeException("...");
+            throw new RecordNotFoundException(ErrorCode.THEME_NOT_FOUND);
         }
         return theme;
     }

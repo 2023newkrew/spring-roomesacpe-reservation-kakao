@@ -7,11 +7,11 @@ import kakao.domain.Reservation;
 
 public interface ReservationRepository {
 
-    public Reservation save(Reservation reservation);
+    Reservation save(Reservation reservation);
 
-    public Reservation findById(Long id);
+    Reservation findById(Long id);
 
-    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
+    List<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 
-    public int delete(Long id);
+    int delete(Long id);
 }

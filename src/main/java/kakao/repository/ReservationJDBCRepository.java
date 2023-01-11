@@ -38,27 +38,29 @@ public class ReservationJDBCRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private static final RowMapper<Reservation> customerRowMapper = (resultSet, rowNum) -> {
-        Long id = resultSet.getLong("id");
-        LocalDate date = resultSet.getDate("date").toLocalDate();
-        LocalTime time = resultSet.getTime("time").toLocalTime();
-        String name = resultSet.getString("name");
-        String themeName = resultSet.getString("theme_name");
-        String themeDesc = resultSet.getString("theme_desc");
-        Integer themePrice = resultSet.getInt("theme_price");
-        return new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice));
+    private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        Theme theme = Theme.builder()
+                .id(resultSet.getLong("theme.id"))
+                .name(resultSet.getString("theme.name"))
+                .desc(resultSet.getString("desc"))
+                .price(resultSet.getInt("price"))
+                .build();
+        return Reservation.builder()
+                .id(resultSet.getLong("reservation.id"))
+                .date(resultSet.getDate("date").toLocalDate())
+                .time(resultSet.getTime("time").toLocalTime())
+                .name(resultSet.getString("reservation.name"))
+                .theme(theme)
+                .build();
     };
 
     public Reservation save(Reservation reservation) {
         try {
-            // TODO : Theme 이 별도의 table 로 분리되면 BeanPropertySqlParameterSource 적용하기
             SqlParameterSource params = new MapSqlParameterSource()
                     .addValue("date", reservation.getDate())
                     .addValue("time", reservation.getTime())
                     .addValue("name", reservation.getName())
-                    .addValue("theme_name", reservation.getTheme().getName())
-                    .addValue("theme_desc", reservation.getTheme().getDesc())
-                    .addValue("theme_price", reservation.getTheme().getPrice());
+                    .addValue("theme_id", reservation.getTheme().getId());
             reservation.setId(jdbcInsert.executeAndReturnKey(params).longValue());
             return reservation;
         } catch (DuplicateKeyException e) {
@@ -67,17 +69,17 @@ public class ReservationJDBCRepository implements ReservationRepository {
     }
 
     public Reservation findById(Long id) {
-        String SELECT_SQL = "select * from reservation where id=?";
+        String SELECT_SQL = "select * from reservation join theme on reservation.id = theme.id where reservation.id=?";
         try {
-            return jdbcTemplate.queryForObject(SELECT_SQL, customerRowMapper, id);
+            return jdbcTemplate.queryForObject(SELECT_SQL, reservationRowMapper, id);
         } catch (DataAccessException e) {
             return null;
         }
     }
 
     public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        String SELECT_SQL = "select * from reservation where date=? and time=?";
-        return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
+        String SELECT_SQL = "select * from reservation join theme on reservation.id = theme.id where date=? and time=?";
+        return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, date, time);
     }
 
     public int delete(Long id) {
