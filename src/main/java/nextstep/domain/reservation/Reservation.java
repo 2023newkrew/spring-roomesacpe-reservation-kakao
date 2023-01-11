@@ -4,6 +4,7 @@ import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
     private Long id;
@@ -28,6 +29,16 @@ public class Reservation {
         this.theme = theme;
     }
 
+    @Deprecated
+    public boolean isSameDateAndTime(LocalDate date, LocalTime time) {
+        return this.date.equals(date) && this.time.equals(time);
+    }
+
+    @Deprecated
+    public boolean isSameId(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public Long getId() {
         return id;
     }
@@ -48,4 +59,8 @@ public class Reservation {
         return theme;
     }
 
+    @Deprecated
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
