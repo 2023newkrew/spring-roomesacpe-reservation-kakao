@@ -32,7 +32,7 @@ public class ThemeController {
 
     @GetMapping
     public ResponseEntity<FindThemeResponse> findThemeByName(@RequestParam String name) {
-        FindThemeResponse findThemeResponse = themeService.findThemeByName(name);
+        FindThemeResponse findThemeResponse = FindThemeResponse.from(themeService.findThemeByName(name));
 
         return ResponseEntity.ok(findThemeResponse);
     }

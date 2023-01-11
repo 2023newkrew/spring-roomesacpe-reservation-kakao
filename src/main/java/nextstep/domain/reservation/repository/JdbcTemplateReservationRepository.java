@@ -24,14 +24,14 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
-            rs.getLong("id"),
+            rs.getLong("r_id"),
             LocalDate.parse(rs.getString("date")),
             LocalTime.parse(rs.getString("time")),
-            rs.getString("name"),
+            rs.getString("r_name"),
             new Theme(
-                    rs.getString("theme_name"),
-                    rs.getString("theme_desc"),
-                    rs.getInt("theme_price")
+                    rs.getString("t_name"),
+                    rs.getString("desc"),
+                    rs.getInt("price")
             )
     );
 
@@ -48,9 +48,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 .addValue("date", reservation.getDate())
                 .addValue("time", reservation.getTime())
                 .addValue("name", reservation.getName())
-                .addValue("theme_name", reservation.getTheme().getName())
-                .addValue("theme_desc", reservation.getTheme().getDesc())
-                .addValue("theme_price", reservation.getTheme().getPrice());
+                .addValue("theme_id", reservation.getTheme().getId());
         Long reservationId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
 
         return new Reservation(reservationId, reservation);

@@ -3,6 +3,7 @@ package nextstep.domain.reservation.repository;
 import nextstep.common.DatabaseExecutor;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.theme.Theme;
+import nextstep.domain.theme.repository.ThemeRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +25,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 )
 public class ReservationRepositoryTest {
 
-    private static final Theme DEFAULT_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ThemeRepository themeRepository;
 
     @BeforeAll
     static void createTable(@Autowired DatabaseExecutor databaseExecutor) {
         databaseExecutor.createReservationTable();
+        databaseExecutor.createThemeTable();
     }
 
     @Test
     void 예약을_생성한다() {
         // given
-        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", DEFAULT_THEME);
+        Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
+        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme);
 
         // when
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -52,8 +56,8 @@ public class ReservationRepositoryTest {
     @Test
     void 예약을_id로_조회한다() {
         // given
-        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", DEFAULT_THEME);
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
+        Reservation savedReservation = reservationRepository.save(new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme));
         Long id = savedReservation.getId();
 
         // when
@@ -62,14 +66,15 @@ public class ReservationRepositoryTest {
 
         // then
         assertThat(savedReservation).usingRecursiveComparison()
+                .ignoringFields("theme.id")
                 .isEqualTo(findById);
     }
 
     @Test
     void id에_해당하는_예약이_없을_경우_아무것도_반환되지_않는다() {
         // given
-        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", DEFAULT_THEME);
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
+        Reservation savedReservation = reservationRepository.save(new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme));
         Long invalidId = savedReservation.getId() + 1000;
 
         // when
@@ -82,7 +87,8 @@ public class ReservationRepositoryTest {
     @Test
     void 날짜와_시간이_같은_예약을_조회한다() {
         // given
-        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", DEFAULT_THEME);
+        Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
+        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme);
         reservationRepository.save(reservation);
 
         // when, then
@@ -92,7 +98,8 @@ public class ReservationRepositoryTest {
     @Test
     void id에_해당하는_예약을_삭제한다() {
         // given
-        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", DEFAULT_THEME);
+        Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
+        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme);
         Long reservationId = reservationRepository.save(reservation).getId();
 
         // when, then

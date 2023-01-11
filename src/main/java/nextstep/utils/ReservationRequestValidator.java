@@ -13,7 +13,8 @@ public class ReservationRequestValidator {
     public void validateCreateRequest(CreateReservationRequest createReservationRequest) {
         if (StringUtils.isEmpty(createReservationRequest.getDate())
                 || StringUtils.isEmpty(createReservationRequest.getTime())
-                || StringUtils.isEmpty(createReservationRequest.getName())) {
+                || StringUtils.isEmpty(createReservationRequest.getName())
+                || StringUtils.isEmpty(createReservationRequest.getThemeName())) {
             throw new ApplicationException(INVALID_RESERVATION_REQUEST_DATA);
         }
     }

@@ -42,7 +42,7 @@ public class ReservationControllerTest {
     void 예약_생성에_성공한다() throws Exception {
         // given
         Long reservationId = 20L;
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", "13:00", "eddie");
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", "13:00", "eddie", "테마 이름");
 
         doNothing().when(reservationRequestValidator)
                         .validateCreateRequest(any(CreateReservationRequest.class));
@@ -64,7 +64,7 @@ public class ReservationControllerTest {
     @Test
     void 예약_정보_부족으로_예약에_실패한다() throws Exception {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", null, "eddie");
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", null, "eddie", "테마 이름");
 
         doThrow(new ApplicationException(ErrorType.INVALID_RESERVATION_REQUEST_DATA))
                 .when(reservationRequestValidator)

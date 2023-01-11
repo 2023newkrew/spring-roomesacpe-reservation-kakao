@@ -24,9 +24,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             pstmt.setDate(1, Date.valueOf(reservation.getDate()));
             pstmt.setTime(2, Time.valueOf(reservation.getTime()));
             pstmt.setString(3, reservation.getName());
-            pstmt.setString(4, reservation.getTheme().getName());
-            pstmt.setString(5, reservation.getTheme().getDesc());
-            pstmt.setInt(6, reservation.getTheme().getPrice());
+            pstmt.setLong(4, reservation.getTheme().getId());
             pstmt.executeUpdate();
 
             return new Reservation(getGeneratedKey(pstmt), reservation);
@@ -41,14 +39,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
             if (rs.next()) {
                 return Optional.of(new Reservation(
-                        rs.getLong("id"),
+                        rs.getLong("r_id"),
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
-                        rs.getString("name"),
+                        rs.getString("r_name"),
                         new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
+                                rs.getString("t_name"),
+                                rs.getString("desc"),
+                                rs.getInt("price")
                         )
                 ));
             }

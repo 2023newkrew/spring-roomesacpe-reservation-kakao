@@ -22,10 +22,11 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
 
-    private static final Theme DEFAULT_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     @Mock
     private ReservationRepository reservationRepository;
+
+    @Mock
+    private ThemeService themeService;
 
     @InjectMocks
     private ReservationService reservationService;
@@ -33,9 +34,12 @@ public class ReservationServiceTest {
     @Test
     void 예약을_생성한다() {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
-        Reservation reservation = new Reservation(51L, LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime()), createReservationRequest.getName(), DEFAULT_THEME);
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", "테마 이름");
+        Theme theme = new Theme(createReservationRequest.getThemeName(), "테마 설명", 29_000);
+        Reservation reservation = new Reservation(51L, LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime()), createReservationRequest.getName(), theme);
 
+        given(themeService.findThemeByName(createReservationRequest.getThemeName()))
+                .willReturn(theme);
         given(reservationRepository.existsByDateAndTime(LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime())))
                 .willReturn(false);
         given(reservationRepository.save(any(Reservation.class)))
@@ -51,8 +55,7 @@ public class ReservationServiceTest {
     @Test
     void 동일한_날짜와_시간의_예약을_생성할_경우_예외가_발생한다() {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
-        Reservation reservation = new Reservation(51L, LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime()), createReservationRequest.getName(), DEFAULT_THEME);
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", "테마 이름");
 
         given(reservationRepository.existsByDateAndTime(LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime())))
                 .willReturn(true);

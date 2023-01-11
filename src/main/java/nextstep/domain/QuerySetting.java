@@ -5,8 +5,8 @@ public class QuerySetting {
     public static class Reservation {
         public static final String TABLE_NAME = "RESERVATION";
         public static final String PK_NAME = "id";
-        public static final String INSERT = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-        public static final String SELECT_BY_ID = "SELECT * FROM reservation WHERE id = ?";
+        public static final String INSERT = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
+        public static final String SELECT_BY_ID = "SELECT r.id as r_id, r.date, r.time, r.name as r_name, t.name as t_name, t.desc, t.price FROM reservation r INNER JOIN theme t ON r.theme_id = t.id WHERE r.id = ?";
         public static final String SELECT_COUNT_BY_DATE_AND_TIME = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
         public static final String DELETE_BY_ID = "DELETE FROM reservation WHERE id = ?";
     }

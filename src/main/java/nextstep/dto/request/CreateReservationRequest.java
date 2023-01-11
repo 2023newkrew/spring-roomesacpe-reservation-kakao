@@ -8,11 +8,13 @@ public class CreateReservationRequest {
     private String date;
     private String time;
     private String name;
+    private String themeName;
 
-    public CreateReservationRequest(String date, String time, String name) {
+    public CreateReservationRequest(String date, String time, String name, String themeName) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeName = themeName;
     }
 
     public String getDate() {
@@ -25,6 +27,10 @@ public class CreateReservationRequest {
 
     public String getName() {
         return name;
+    }
+
+    public String getThemeName() {
+        return themeName;
     }
 
     public LocalDate parseDate() {

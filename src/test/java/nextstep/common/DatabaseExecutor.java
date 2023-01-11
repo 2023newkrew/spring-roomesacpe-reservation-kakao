@@ -12,7 +12,7 @@ public class DatabaseExecutor {
     private JdbcTemplate jdbcTemplate;
 
     public void createReservationTable() {
-        jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS RESERVATION(" +
                 "id bigint not null auto_increment," +
                 "date date," +
                 "time time," +
@@ -23,7 +23,7 @@ public class DatabaseExecutor {
     }
 
     public void createThemeTable() {
-        jdbcTemplate.execute("CREATE TABLE THEME(" +
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS THEME(" +
                 "id bigint not null auto_increment," +
                 "name varchar(20)," +
                 "desc varchar(255)," +

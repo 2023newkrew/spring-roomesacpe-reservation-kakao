@@ -3,7 +3,6 @@ package nextstep.service;
 import nextstep.domain.theme.Theme;
 import nextstep.domain.theme.repository.ThemeRepository;
 import nextstep.dto.request.CreateThemeRequest;
-import nextstep.dto.response.FindThemeResponse;
 import nextstep.error.ApplicationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,13 +64,11 @@ public class ThemeServiceTest {
                 .willReturn(Optional.of(savedTheme));
 
         // when
-        FindThemeResponse findThemeResponse = themeService.findThemeByName(themeName);
+        Theme findByName = themeService.findThemeByName(themeName);
 
         // then
-        assertThat(findThemeResponse).isNotNull();
-        assertThat(findThemeResponse.getName()).isEqualTo(savedTheme.getName());
-        assertThat(findThemeResponse.getDesc()).isEqualTo(savedTheme.getDesc());
-        assertThat(findThemeResponse.getPrice()).isEqualTo(savedTheme.getPrice());
+        assertThat(findByName).usingRecursiveComparison()
+                .isEqualTo(savedTheme);
     }
 
     @Test
