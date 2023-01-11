@@ -11,4 +11,9 @@ public class QuerySetting {
         public static final String DELETE_BY_ID = "DELETE FROM reservation WHERE id = ?";
     }
 
+    public static class Theme {
+        public static final String TABLE_NAME = "THEME";
+        public static final String PK_NAME = "id";
+    }
+
 }
