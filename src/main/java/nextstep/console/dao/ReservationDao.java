@@ -6,6 +6,7 @@ import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.repository.ReservationRepository;
 
 import java.sql.*;
+import java.util.NoSuchElementException;
 
 public class ReservationDao implements ReservationRepository {
 
@@ -41,7 +42,9 @@ public class ReservationDao implements ReservationRepository {
             String sql = "SELECT * FROM reservation WHERE ID = ?;";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
-            return Reservation.from(ps.executeQuery());
+            ResultSet resultSet = ps.executeQuery();
+            validateFindResult(resultSet);
+            return Reservation.from(resultSet);
         } catch (SQLException e) {
             throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
@@ -55,6 +58,12 @@ public class ReservationDao implements ReservationRepository {
             ps.execute();
         } catch (SQLException e) {
             throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
+        }
+    }
+
+    private void validateFindResult(ResultSet resultSet) throws SQLException {
+        if(!resultSet.next()) {
+            throw new NoSuchElementException();
         }
     }
 }
