@@ -21,11 +21,18 @@ public class RoomEscapeApplication {
     private static final String QUIT = "quit";
 
     public static void main(String[] args) {
+        startSpringBootApplication(args);
+        startConsoleApplication();
+    }
+
+    private static void startSpringBootApplication(String[] args) {
+        SpringApplication.run(RoomEscapeApplication.class, args);
+    }
+
+    private static void startConsoleApplication() {
         Scanner scanner = new Scanner(System.in);
         Theme theme = Themes.WANNA_GO_HOME;
         ReservationConsoleRepository reservationConsoleRepository = new ReservationConsoleRepository();
-
-        SpringApplication.run(RoomEscapeApplication.class, args);
 
         while (true) {
             System.out.println();
@@ -57,10 +64,8 @@ public class RoomEscapeApplication {
                     continue;
                 }
 
-                reservationConsoleRepository.insertReservation(reservation);
-
-                reservation = reservationConsoleRepository.getReservationByDateAndTime(date, time)
-                        .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
+                Long reservationId = reservationConsoleRepository.insertReservation(reservation);
+                reservation.setId(reservationId);
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());

@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public interface ReservationRepository {
-    void insertReservation(Reservation reservation);
+    Long insertReservation(Reservation reservation);
 
     Optional<Reservation> getReservation(Long id);
 

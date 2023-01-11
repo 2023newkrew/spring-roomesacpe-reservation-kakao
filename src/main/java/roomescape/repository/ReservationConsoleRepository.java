@@ -16,16 +16,22 @@ public class ReservationConsoleRepository implements ReservationRepository {
     private final String DB_PASSWORD = "";
 
     @Override
-    public void insertReservation(Reservation reservation) {
+    public Long insertReservation(Reservation reservation) {
+        ResultSet resultSet = null;
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                PreparedStatement ps = createInsertReservationPreparedStatement(con, reservation)
+                PreparedStatement ps = createInsertReservationPreparedStatement(con, reservation);
         ) {
             ps.executeUpdate();
+            resultSet = ps.getGeneratedKeys();
+            return resultSetToReservationId(resultSet);
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (resultSet != null) try { resultSet.close(); } catch (SQLException e) {}
         }
+        return -1L;
     }
 
     private PreparedStatement createInsertReservationPreparedStatement(
@@ -42,6 +48,13 @@ public class ReservationConsoleRepository implements ReservationRepository {
         ps.setInt(6, reservation.getTheme().getPrice());
 
         return ps;
+    }
+
+    private Long resultSetToReservationId(ResultSet resultSet) throws SQLException {
+        if (resultSet.next()) {
+            return resultSet.getLong("id");
+        }
+        return -1L;
     }
 
     @Override

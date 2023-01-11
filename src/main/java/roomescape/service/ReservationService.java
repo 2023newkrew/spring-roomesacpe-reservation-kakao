@@ -3,10 +3,10 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.controller.request.ReservationRequest;
+import roomescape.controller.response.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.Themes;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationWebRepository;
@@ -23,14 +23,12 @@ public class ReservationService {
     }
 
     @Transactional
-    public void createReservation(ReservationRequest reservationRequest) {
+    public Long createReservation(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
-        Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
-
         checkTimeDuplication(date, time);
-
-        reservationWebRepository.insertReservation(reservation);
+        Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
+        return reservationWebRepository.insertReservation(reservation);
     }
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {
@@ -40,15 +38,12 @@ public class ReservationService {
                 });
     }
 
-    @Transactional
     public ReservationResponse getReservation(Long reservationId) {
-        return ReservationResponse.fromEntity(
-                reservationWebRepository.getReservation(reservationId)
-                        .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND))
-        );
+        Reservation reservation = reservationWebRepository.getReservation(reservationId)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
+        return ReservationResponse.fromEntity(reservation);
     }
 
-    @Transactional
     public void deleteReservation(Long reservationId) {
         reservationWebRepository.deleteReservation(reservationId);
     }

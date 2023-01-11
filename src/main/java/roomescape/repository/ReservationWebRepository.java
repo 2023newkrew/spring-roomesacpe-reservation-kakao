@@ -2,10 +2,15 @@ package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -13,11 +18,6 @@ import java.util.Optional;
 @Repository
 public class ReservationWebRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
-
-    public ReservationWebRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getDate("date").toLocalDate(),
@@ -30,18 +30,25 @@ public class ReservationWebRepository implements ReservationRepository {
             )
     );
 
+    public ReservationWebRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
-    public void insertReservation(Reservation reservation) {
+    public Long insertReservation(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(
-                sql,
-                reservation.getDate(),
-                reservation.getTime(),
-                reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
-        );
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setString(4, reservation.getTheme().getName());
+            ps.setString(5, reservation.getTheme().getDesc());
+            ps.setInt(6, reservation.getTheme().getPrice());
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
