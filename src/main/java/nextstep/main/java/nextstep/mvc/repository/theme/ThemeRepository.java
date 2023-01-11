@@ -1,7 +1,7 @@
-package nextstep.main.java.nextstep.repository.theme;
+package nextstep.main.java.nextstep.mvc.repository.theme;
 
-import nextstep.main.java.nextstep.domain.theme.Theme;
-import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 
 import java.util.List;
 import java.util.Optional;

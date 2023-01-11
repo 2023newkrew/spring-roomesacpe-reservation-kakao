@@ -1,18 +1,5 @@
 package nextstep.main.java.nextstep.service;
 
-import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
-import nextstep.main.java.nextstep.global.exception.exception.DuplicateReservationException;
-import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
-import nextstep.main.java.nextstep.repository.reservation.MemoryReservationRepository;
-import nextstep.main.java.nextstep.service.reservation.ReservationService;
-import org.junit.jupiter.api.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import static org.assertj.core.api.Assertions.*;
-
 @Deprecated
 public class ReservationServiceTest {
 

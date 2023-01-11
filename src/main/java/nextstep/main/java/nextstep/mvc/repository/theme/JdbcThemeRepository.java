@@ -1,7 +1,7 @@
-package nextstep.main.java.nextstep.repository.theme;
+package nextstep.main.java.nextstep.mvc.repository.theme;
 
-import nextstep.main.java.nextstep.domain.theme.Theme;
-import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -40,7 +40,8 @@ public class JdbcThemeRepository implements ThemeRepository{
 
     @Override
     public Optional<Theme> findById(long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM theme WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, themeRowMapper, id));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.domain.theme;
+package nextstep.main.java.nextstep.mvc.domain.theme.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

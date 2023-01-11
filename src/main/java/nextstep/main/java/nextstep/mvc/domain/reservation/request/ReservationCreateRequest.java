@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.domain.reservation;
+package nextstep.main.java.nextstep.mvc.domain.reservation.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

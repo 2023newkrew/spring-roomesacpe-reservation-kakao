@@ -2,9 +2,9 @@ package nextstep.main.java.nextstep.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
-import nextstep.main.java.nextstep.service.reservation.ReservationService;
+import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

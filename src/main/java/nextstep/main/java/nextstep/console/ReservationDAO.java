@@ -1,9 +1,9 @@
 package nextstep.main.java.nextstep.console;
 
-import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
-import nextstep.main.java.nextstep.domain.theme.Theme;
-import nextstep.main.java.nextstep.repository.reservation.ReservationRepository;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.repository.reservation.ReservationRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -43,7 +43,7 @@ public class ReservationDAO implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findOne(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
 
         try (Connection connection = connect();

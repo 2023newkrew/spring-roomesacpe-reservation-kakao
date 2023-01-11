@@ -1,9 +1,9 @@
-package nextstep.main.java.nextstep.domain.reservation;
+package nextstep.main.java.nextstep.mvc.domain.reservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

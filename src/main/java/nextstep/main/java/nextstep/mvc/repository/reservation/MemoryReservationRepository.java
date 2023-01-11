@@ -1,7 +1,7 @@
-package nextstep.main.java.nextstep.repository.reservation;
+package nextstep.main.java.nextstep.mvc.repository.reservation;
 
-import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findOne(Long id) {
+    public Optional<Reservation> findById(Long id) {
         return Optional.ofNullable(reservationMap.get(id));
     }
 

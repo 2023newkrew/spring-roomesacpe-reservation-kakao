@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.console;
 
-import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.global.exception.exception.DuplicateReservationException;
 
 import java.time.LocalDate;
@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import static nextstep.main.java.nextstep.global.exception.exception.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 
+@Deprecated
 public class RoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
@@ -51,7 +52,7 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findOne(id).get();
+                Reservation reservation = reservationDAO.findById(id).get();
 
                 consoleView.printReservationInfo(reservation);
             }

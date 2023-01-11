@@ -1,10 +1,8 @@
-package nextstep.main.java.nextstep.controller.reservation;
+package nextstep.main.java.nextstep.mvc.controller.reservation;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
-import nextstep.main.java.nextstep.domain.reservation.ReservationFindResponse;
-import nextstep.main.java.nextstep.service.reservation.ReservationService;
-import nextstep.main.java.nextstep.service.theme.ThemeService;
+import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +13,6 @@ import java.net.URI;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final ThemeService themeService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ReservationCreateRequest request) {

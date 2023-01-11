@@ -1,9 +1,9 @@
 package nextstep.main.java.nextstep.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
-import nextstep.main.java.nextstep.service.reservation.ReservationService;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

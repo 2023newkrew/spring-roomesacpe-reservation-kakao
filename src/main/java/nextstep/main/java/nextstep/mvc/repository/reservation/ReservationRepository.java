@@ -1,7 +1,7 @@
-package nextstep.main.java.nextstep.repository.reservation;
+package nextstep.main.java.nextstep.mvc.repository.reservation;
 
-import nextstep.main.java.nextstep.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ReservationRepository {
     Long save(ReservationCreateRequest request);
 
-    Optional<Reservation> findOne(Long id);
+    Optional<Reservation> findById(Long id);
 
     void deleteOne(Long id);
 

@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.domain.theme;
+package nextstep.main.java.nextstep.mvc.domain.theme;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,5 +10,4 @@ public class Theme {
     private String name;
     private String desc;
     private Integer price;
-
 }

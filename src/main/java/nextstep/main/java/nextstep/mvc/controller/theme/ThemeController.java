@@ -1,13 +1,10 @@
-package nextstep.main.java.nextstep.controller.theme;
+package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequest;
-import nextstep.main.java.nextstep.service.theme.ThemeService;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -21,5 +18,10 @@ public class ThemeController {
     public ResponseEntity<?> create(@RequestBody ThemeCreateRequest request) {
         Long id = themeService.save(request);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> findOne(@PathVariable Long id) {
+        return ResponseEntity.ok(themeService.findById(id));
     }
 }

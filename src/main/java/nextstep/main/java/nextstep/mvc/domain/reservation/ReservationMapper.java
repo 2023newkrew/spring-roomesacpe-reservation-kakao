@@ -1,5 +1,6 @@
-package nextstep.main.java.nextstep.domain.reservation;
+package nextstep.main.java.nextstep.mvc.domain.reservation;
 
+import nextstep.main.java.nextstep.mvc.domain.reservation.response.ReservationFindResponse;
 import org.springframework.stereotype.Component;
 
 @Component
