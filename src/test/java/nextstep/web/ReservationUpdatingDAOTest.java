@@ -1,5 +1,7 @@
 package nextstep.web;
 
+import nextstep.dao.web.ReservationQueryingDAO;
+import nextstep.dao.web.ReservationUpdatingDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import org.junit.jupiter.api.BeforeEach;

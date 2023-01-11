@@ -1,4 +1,4 @@
-package nextstep.web;
+package nextstep.dao.web;
 
 import nextstep.domain.Reservation;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -4,8 +4,8 @@ import nextstep.domain.Reservation;
 import nextstep.domain.ReservationInfo;
 import nextstep.domain.Theme;
 import nextstep.exceptions.CustomException;
-import nextstep.web.ReservationQueryingDAO;
-import nextstep.web.ReservationUpdatingDAO;
+import nextstep.dao.web.ReservationQueryingDAO;
+import nextstep.dao.web.ReservationUpdatingDAO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

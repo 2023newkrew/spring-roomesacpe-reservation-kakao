@@ -1,4 +1,4 @@
-package nextstep.console;
+package nextstep.dao.console;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
@@ -11,9 +11,7 @@ import java.util.List;
 
 public class ReservationDAO {
     public void addReservation(Reservation reservation) {
-        Connection con = null;
-
-        con = getConnection(con);
+        Connection con = getConnection();
 
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
@@ -33,10 +31,8 @@ public class ReservationDAO {
     }
 
     public Reservation findReservation(Long id) {
-        Connection con = null;
+        Connection con = getConnection();
         Reservation reservation = null;
-
-        con = getConnection(con);
 
         try {
             String sql = "SELECT * FROM reservation WHERE id = ?";
@@ -68,10 +64,8 @@ public class ReservationDAO {
     }
 
     public List<Reservation> findReservationByDateAndTime(LocalDate localDate, LocalTime localTime) {
-        Connection con = null;
+        Connection con = getConnection();
         List<Reservation> reservations = new ArrayList<>();
-
-        con = getConnection(con);
 
         try {
             String sql = "SELECT * FROM reservation WHERE DATE = ? AND TIME = ?";
@@ -106,10 +100,8 @@ public class ReservationDAO {
     }
 
     public boolean deleteReservation(Long id) {
-        Connection con = null;
+        Connection con = getConnection();
         boolean deleted = false;
-
-        con = getConnection(con);
 
         try {
             String sql = "DELETE FROM reservation WHERE id = ?";
@@ -128,15 +120,16 @@ public class ReservationDAO {
     }
 
 
-    private static Connection getConnection(Connection con) {
+    private static Connection getConnection() {
+        Connection connection = null;
         try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            connection = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
-        return con;
+        return connection;
     }
 
     private static void closeConnection(Connection con) {
