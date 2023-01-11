@@ -10,6 +10,7 @@ import java.sql.*;
 /**
  * ReservationConsoleDao implements ReservationDao using spring-jdbc.<br>
  * Database is always cleared when you start console program.
+ * This class is not added to spring.
  */
 public class ReservationConsoleDao implements ReservationDao {
     public ReservationConsoleDao() {
