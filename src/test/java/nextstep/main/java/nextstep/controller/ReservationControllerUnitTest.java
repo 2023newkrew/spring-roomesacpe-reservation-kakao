@@ -78,7 +78,7 @@ public class ReservationControllerUnitTest {
     @Test
     @DisplayName("컨트롤러 delete() 테스트")
     void delete() throws Exception {
-        doNothing().when(reservationService).deleteOneById(1L);
+        doNothing().when(reservationService).deleteById(1L);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/reservations/1"))

@@ -61,7 +61,7 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                reservationDAO.deleteOne(id);
+                reservationDAO.deleteById(id);
 
                 consoleView.printCancelReservation();
             }

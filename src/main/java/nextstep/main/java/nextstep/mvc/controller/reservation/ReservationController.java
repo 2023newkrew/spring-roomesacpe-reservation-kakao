@@ -21,13 +21,13 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findOne(@PathVariable Long id) {
+    public ResponseEntity<?> find(@PathVariable Long id) {
         return ResponseEntity.ok(reservationService.findOneById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        reservationService.deleteOneById(id);
+        reservationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

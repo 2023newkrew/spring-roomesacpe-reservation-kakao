@@ -28,7 +28,7 @@ public class ReservationService {
         );
     }
 
-    public void deleteOneById(Long id) {
-        reservationRepository.deleteOne(id);
+    public void deleteById(Long id) {
+        reservationRepository.deleteById(id);
     }
 }

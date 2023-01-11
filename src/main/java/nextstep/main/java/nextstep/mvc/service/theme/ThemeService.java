@@ -39,4 +39,8 @@ public class ThemeService {
                 .map(themeMapper::themeToFindResponse)
                 .collect(Collectors.toList());
     }
+
+    public void deleteById(Long id) {
+        themeRepository.deleteById(id);
+    }
 }

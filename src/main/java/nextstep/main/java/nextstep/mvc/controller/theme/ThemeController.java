@@ -26,7 +26,13 @@ public class ThemeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> findOne(@PathVariable Long id) {
+    public ResponseEntity<?> find(@PathVariable Long id) {
         return ResponseEntity.ok(themeService.findById(id));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        themeService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
