@@ -1,28 +1,24 @@
 package roomescape.dto;
 
 import roomescape.model.Reservation;
+import roomescape.model.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationResponseDto {
-    private Long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private String themeName;
-    private String themeDesc;
-    private Integer themePrice;
-
+    private final Long id;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final Theme theme;
 
     public ReservationResponseDto(Reservation reservation) {
         this.id = reservation.getId();
         this.date = reservation.getDate();
         this.time = reservation.getTime();
         this.name = reservation.getName();
-        this.themeName = "워너고홈";
-        this.themeDesc = "병맛 어드벤처 회사 코믹물";
-        this.themePrice = 29000;
+        this.theme = reservation.getTheme();
     }
 
     public Long getId() {
@@ -42,14 +38,14 @@ public class ReservationResponseDto {
     }
 
     public String getThemeName() {
-        return themeName;
+        return theme.getName();
     }
 
     public String getThemeDesc() {
-        return themeDesc;
+        return theme.getDesc();
     }
 
     public Integer getThemePrice() {
-        return themePrice;
+        return theme.getPrice();
     }
 }
