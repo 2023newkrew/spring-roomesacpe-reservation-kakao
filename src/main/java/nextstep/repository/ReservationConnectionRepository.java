@@ -4,6 +4,7 @@ import nextstep.dto.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public class ReservationConnectionRepository implements ReservationRepository {
         this.connectionHandler = new ConnectionHandler();
     }
 
+    @Transactional
     @Override
     public Long save(ReservationRequestDTO reservationRequestDTO) throws SQLException {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
