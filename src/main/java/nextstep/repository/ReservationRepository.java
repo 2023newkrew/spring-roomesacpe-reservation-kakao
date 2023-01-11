@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.Optional;
 
-public interface ReservationRepo {
+public interface ReservationRepository {
     Optional<Reservation> findById(long id);
 
     long add(Reservation reservation);

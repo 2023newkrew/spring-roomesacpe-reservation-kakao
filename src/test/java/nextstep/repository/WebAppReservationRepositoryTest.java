@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class WebAppReservationRepositoryTest {
     @Autowired
-    private ReservationRepo webAppReservationRepo;
+    private ReservationRepository webAppReservationRepository;
 
     @DisplayName("reservation test")
     @Test
@@ -31,19 +31,19 @@ public class WebAppReservationRepositoryTest {
         );
 
         // 추가
-        long id = webAppReservationRepo.add(newReservation);
-        Reservation reservation = webAppReservationRepo.findById(id).orElseThrow();
+        long id = webAppReservationRepository.add(newReservation);
+        Reservation reservation = webAppReservationRepository.findById(id).orElseThrow();
         assertThat(reservation).isEqualTo(newReservation);
 
         // 예약 시간 중복
-        int countSameDateAndTime = webAppReservationRepo.countByDateAndTime(
+        int countSameDateAndTime = webAppReservationRepository.countByDateAndTime(
                 Date.valueOf(reservation.getDate()),
                 Time.valueOf(reservation.getTime()));
         assertThat(countSameDateAndTime > 0).isTrue();
 
         // 삭제
-        webAppReservationRepo.delete(id);
-        Reservation reservation2 = webAppReservationRepo.findById(id).orElse(null);
+        webAppReservationRepository.delete(id);
+        Reservation reservation2 = webAppReservationRepository.findById(id).orElse(null);
         assertThat(reservation2).isNull();
     }
 }

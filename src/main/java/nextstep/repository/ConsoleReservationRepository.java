@@ -6,7 +6,7 @@ import nextstep.domain.reservation.Reservation;
 import java.sql.*;
 import java.util.Optional;
 
-public class ConsoleReservationRepository implements ReservationRepo {
+public class ConsoleReservationRepository implements ReservationRepository {
 
     public Optional<Reservation> findById(long id) {
         Connection con = ConnectionManager.getConnection();

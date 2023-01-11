@@ -14,7 +14,7 @@ import java.sql.Time;
 import java.util.Optional;
 
 @Repository
-public class WebAppReservationRepository implements ReservationRepo {
+public class WebAppReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

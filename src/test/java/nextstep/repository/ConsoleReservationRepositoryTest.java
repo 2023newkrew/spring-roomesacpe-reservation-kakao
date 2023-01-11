@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class ConsoleReservationRepositoryTest {
-    private final ReservationRepo consoleReservationRepo = new ConsoleReservationRepository();
+    private final ReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
 
     @DisplayName("reservation test")
     @Test
@@ -27,19 +27,19 @@ public class ConsoleReservationRepositoryTest {
         );
 
         // 추가
-        long id = consoleReservationRepo.add(newReservation);
-        Reservation reservation = consoleReservationRepo.findById(id).orElseThrow();
+        long id = consoleReservationRepository.add(newReservation);
+        Reservation reservation = consoleReservationRepository.findById(id).orElseThrow();
         assertThat(reservation).isEqualTo(newReservation);
 
         // 예약 시간 중복
-        int countSameDateAndTime = consoleReservationRepo.countByDateAndTime(
+        int countSameDateAndTime = consoleReservationRepository.countByDateAndTime(
                 Date.valueOf(reservation.getDate()),
                 Time.valueOf(reservation.getTime()));
         assertThat(countSameDateAndTime > 0).isTrue();
 
         // 삭제
-        consoleReservationRepo.delete(id);
-        Reservation reservation2 = consoleReservationRepo.findById(id).orElse(null);
+        consoleReservationRepository.delete(id);
+        Reservation reservation2 = consoleReservationRepository.findById(id).orElse(null);
         assertThat(reservation2).isNull();
     }
 }
