@@ -85,14 +85,26 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 날짜와_시간이_같은_예약을_조회한다() {
+    void 테마와_날짜와_시간이_같은_예약을_조회한다() {
         // given
         Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
         Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme);
         reservationRepository.save(reservation);
 
         // when, then
-        assertThat(reservationRepository.existsByDateAndTime(reservation.getDate(), reservation.getTime())).isTrue();
+        assertThat(reservationRepository.existsByThemeIdAndDateAndTime(theme.getId(), reservation.getDate(), reservation.getTime())).isTrue();
+    }
+
+    @Test
+    void 테마와_날짜와_시간이_모두_같은_예약이_존재하지_않아_조회에_실패한다() {
+        // given
+        Theme theme = themeRepository.save(new Theme("베니스 상인의 저택", "테마 설명", 25_000));
+        Theme anotherTheme = themeRepository.save(new Theme("혜화 잡화점", "테마 설명", 21_000));
+        Reservation reservation = new Reservation(LocalDate.parse("2023-01-09"), LocalTime.parse("13:00"), "eddie-davi", theme);
+        reservationRepository.save(reservation);
+
+        // when, then
+        assertThat(reservationRepository.existsByThemeIdAndDateAndTime(anotherTheme.getId(), reservation.getDate(), reservation.getTime())).isFalse();
     }
 
     @Test

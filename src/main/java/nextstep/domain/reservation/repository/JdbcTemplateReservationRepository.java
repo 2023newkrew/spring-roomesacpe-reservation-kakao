@@ -64,8 +64,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_DATE_AND_TIME, Integer.class, Date.valueOf(date), Time.valueOf(time)) > 0;
+    public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return jdbcTemplate.queryForObject(
+                SELECT_COUNT_BY_THEME_ID_AND_DATE_AND_TIME,
+                Integer.class,
+                themeId, Date.valueOf(date), Time.valueOf(time)) > 0;
     }
 
     @Override

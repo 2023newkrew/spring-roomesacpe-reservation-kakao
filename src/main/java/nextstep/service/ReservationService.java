@@ -32,7 +32,7 @@ public class ReservationService {
         LocalTime time = createReservationRequest.parseTime();
         Theme theme = themeService.findThemeByName(createReservationRequest.getThemeName());
 
-        if (reservationRepository.existsByDateAndTime(date, time)) {
+        if (reservationRepository.existsByThemeIdAndDateAndTime(theme.getId(), date, time)) {
             throw new ApplicationException(DUPLICATE_RESERVATION);
         }
 

@@ -35,9 +35,9 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+    public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
         return reservations.stream()
-                .anyMatch(reservation -> reservation.isSameDateAndTime(date, time));
+                .anyMatch(reservation -> reservation.isSameThemeAndDateAndTime(themeId, date, time));
     }
 
     @Override

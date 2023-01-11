@@ -56,10 +56,11 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return execute(SELECT_COUNT_BY_DATE_AND_TIME, (pstmt, rs) -> {
-            pstmt.setDate(1, Date.valueOf(date));
-            pstmt.setTime(2, Time.valueOf(time));
+    public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return execute(SELECT_COUNT_BY_THEME_ID_AND_DATE_AND_TIME, (pstmt, rs) -> {
+            pstmt.setLong(1, themeId);
+            pstmt.setDate(2, Date.valueOf(date));
+            pstmt.setTime(3, Time.valueOf(time));
             rs = pstmt.executeQuery();
 
             rs.next();

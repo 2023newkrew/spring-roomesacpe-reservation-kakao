@@ -30,8 +30,8 @@ public class Reservation {
     }
 
     @Deprecated
-    public boolean isSameDateAndTime(LocalDate date, LocalTime time) {
-        return this.date.equals(date) && this.time.equals(time);
+    public boolean isSameThemeAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return Objects.equals(theme.getId(), themeId) && this.date.equals(date) && this.time.equals(time);
     }
 
     @Deprecated
