@@ -64,4 +64,10 @@ public class JdbcThemeRepository implements ThemeRepository{
                 "WHERE id = ?";
         jdbcTemplate.update(sql, request.getName(), request.getDesc(), request.getPrice(), id);
     }
+
+    @Override
+    public Boolean existsById(Long id) {
+        String sql = "SELECT EXISTS(SELECT * FROM theme WHERE id = ?)";
+        return jdbcTemplate.queryForObject(sql ,new Object[] {id}, Boolean.class);
+    }
 }

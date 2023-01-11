@@ -2,7 +2,6 @@ package nextstep.main.java.nextstep.mvc.service.theme;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
-import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static nextstep.main.java.nextstep.global.constant.ExceptionMessage.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +39,17 @@ public class ThemeService {
     }
 
     public void deleteById(Long id) {
+        checkIsExists(id);
         themeRepository.deleteById(id);
     }
 
     public void update(Long id, ThemeUpdateRequest request) {
         themeRepository.update(id, request);
+    }
+
+    private void checkIsExists(Long id) {
+        if (!themeRepository.existsById(id)) {
+            throw new NoSuchThemeException();
+        }
     }
 }

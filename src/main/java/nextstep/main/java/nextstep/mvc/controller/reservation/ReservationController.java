@@ -22,7 +22,7 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> find(@PathVariable Long id) {
-        return ResponseEntity.ok(reservationService.findOneById(id));
+        return ResponseEntity.ok(reservationService.findById(id));
     }
 
     @DeleteMapping("/{id}")

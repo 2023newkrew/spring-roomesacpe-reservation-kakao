@@ -13,6 +13,6 @@ public class NoSuchThemeException extends ApiException{
 
     @Override
     public ErrorCode getError() {
-        return null;
+        return ErrorCode.NO_SUCH_THEME_ERROR;
     }
 }

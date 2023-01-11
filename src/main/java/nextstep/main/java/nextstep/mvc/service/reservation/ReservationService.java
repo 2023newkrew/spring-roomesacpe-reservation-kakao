@@ -22,13 +22,20 @@ public class ReservationService {
         return reservationRepository.save(request);
     }
 
-    public ReservationFindResponse findOneById(Long id) {
+    public ReservationFindResponse findById(Long id) {
         return reservationMapper.reservationToFindResponse(
                 reservationRepository.findById(id).orElseThrow(NoSuchReservationException::new)
         );
     }
 
     public void deleteById(Long id) {
+        checkIsExists(id);
         reservationRepository.deleteById(id);
+    }
+
+    private void checkIsExists(Long id) {
+        if (!reservationRepository.existsById(id)) {
+            throw new NoSuchReservationException();
+        }
     }
 }

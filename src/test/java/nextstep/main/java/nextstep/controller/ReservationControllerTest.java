@@ -80,7 +80,7 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThatThrownBy(() -> reservationService.findOneById(1L)).isInstanceOf(NoSuchReservationException.class);
+        assertThatThrownBy(() -> reservationService.findById(1L)).isInstanceOf(NoSuchReservationException.class);
     }
 
 }

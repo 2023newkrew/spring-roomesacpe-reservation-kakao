@@ -36,4 +36,9 @@ public class MemoryReservationRepository implements ReservationRepository {
         return reservationMap.values().stream()
                 .anyMatch(x -> x.getDate().equals(date) && x.getTime().equals(time));
     }
+
+    @Override
+    public Boolean existsById(Long id) {
+        return null;
+    }
 }

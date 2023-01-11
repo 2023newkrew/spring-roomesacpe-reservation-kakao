@@ -13,4 +13,5 @@ public interface ThemeRepository {
     List<Theme> findAll();
     void deleteById(long id);
     void update(Long id, ThemeUpdateRequest request);
+    Boolean existsById(Long id);
 }
