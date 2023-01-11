@@ -12,7 +12,7 @@ public interface ReservationRepo {
 
     public int delete(long id);
 
-    public int countByDateAndTime(Date date, Time time);
+    public int countWhenDateAndTimeMatch(Date date, Time time);
 
     public int reset();
 

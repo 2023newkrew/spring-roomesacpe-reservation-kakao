@@ -35,7 +35,7 @@ public class WebAppReservationRepoTest {
         Reservation reservation = webAppReservationRepo.findById(id);
         assertThat(reservation).isEqualTo(newReservation);
 
-        int countSameDateAndTime = webAppReservationRepo.countByDateAndTime(
+        int countSameDateAndTime = webAppReservationRepo.countWhenDateAndTimeMatch(
                 Date.valueOf(reservation.getDate()),
                 Time.valueOf(reservation.getTime()));
         assertThat(countSameDateAndTime > 0).isTrue();

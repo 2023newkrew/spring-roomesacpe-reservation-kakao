@@ -2,9 +2,7 @@ package nextstep.repository;
 
 import nextstep.Theme;
 import nextstep.domain.reservation.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -64,7 +62,7 @@ public class WebAppReservationRepo implements ReservationRepo{
         return jdbcTemplate.update(sql, id);
     }
 
-    public int countByDateAndTime(Date date, Time time) {
+    public int countWhenDateAndTimeMatch(Date date, Time time) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }

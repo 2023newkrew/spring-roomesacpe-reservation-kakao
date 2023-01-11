@@ -31,7 +31,7 @@ public class ReservationController {
                 reservationDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
-        if (webAppReservationRepo.countByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
+        if (webAppReservationRepo.countWhenDateAndTimeMatch(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
             return ResponseEntity.badRequest().build();
         }
         long id = webAppReservationRepo.add(reservation);

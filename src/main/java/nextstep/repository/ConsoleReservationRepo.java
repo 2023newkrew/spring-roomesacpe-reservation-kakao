@@ -6,6 +6,10 @@ import nextstep.domain.reservation.Reservation;
 import java.sql.*;
 
 public class ConsoleReservationRepo implements ReservationRepo {
+    private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
+    private static final String USER = "sa";
+    private static final String PW = "";
+
     public Reservation findById(long id) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -15,7 +19,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         Reservation reservation = null;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -54,7 +58,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         Long id = null;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
@@ -90,7 +94,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         int result = 0;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             result = ps.executeUpdate();
@@ -107,7 +111,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         return result;
     }
 
-    public int countByDateAndTime(Date date, Time time) {
+    public int countWhenDateAndTimeMatch(Date date, Time time) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -116,7 +120,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         int count = 0;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             ps.setDate(1, date);
             ps.setTime(2, time);
@@ -146,7 +150,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         int result = 0;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             result = ps.executeUpdate();
 
