@@ -23,7 +23,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     public ReservationJdbcRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
-                .withTableName("RESERVATION")
+                .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS RESERVATION
+CREATE TABLE IF NOT EXISTS reservation
 (
     id          bigint not null auto_increment,
     date        date,
