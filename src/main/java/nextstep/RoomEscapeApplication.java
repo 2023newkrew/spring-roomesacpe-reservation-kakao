@@ -1,8 +1,8 @@
 package nextstep;
 
-import nextstep.dao.ReservationDAO;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
+import nextstep.repository.ReservationConnectionRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -26,7 +26,7 @@ public class RoomEscapeApplication {
         SpringApplication.run(RoomEscapeApplication.class, args);
         Scanner scanner = new Scanner(System.in);
 
-        ReservationDAO reservationDAO = new ReservationDAO();
+        ReservationConnectionRepository reservationRepository = new ReservationConnectionRepository();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -42,22 +42,23 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
-                Reservation reservation = reservationDAO.addReservation(
+
+                Long reservationId = reservationRepository.save(
                         new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name));
 
 
                 System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
+                System.out.println("예약 번호: " + reservationId);
+                System.out.println("예약 날짜: " + date);
+                System.out.println("예약 시간: " + time);
+                System.out.println("예약자 이름: " + name);
             }
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = reservationDAO.findById(id);
+                Reservation reservation = reservationRepository.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -72,12 +73,12 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                reservationDAO.deleteById(id);
+                reservationRepository.deleteById(id);
 
             }
 
             if (input.equals(QUIT)) {
-                reservationDAO.releaseConnection();
+                reservationRepository.releaseConnection();
                 break;
             }
         }

@@ -21,18 +21,18 @@ import java.util.Map;
 import static nextstep.entity.ThemeConstants.*;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class ReservationJDBCRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ReservationRepositoryImpl(DataSource dataSource) {
+    public ReservationJDBCRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Transactional
     @Override
-    public Long save(ReservationRequestDTO reservationRequestDTO) {
+    public Long save(ReservationRequestDTO reservationRequestDTO) throws DataAccessException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("date", Date.valueOf(reservationRequestDTO.getDate()));
         parameters.put("time", Time.valueOf(reservationRequestDTO.getTime()));
