@@ -11,8 +11,8 @@ public class DatabaseExecutor {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void createTable(String tableName) {
-        jdbcTemplate.execute("CREATE TABLE " + tableName + "(" +
+    public void createReservationTable() {
+        jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
                 "id bigint not null auto_increment," +
                 "date date," +
                 "time time," +
@@ -20,6 +20,16 @@ public class DatabaseExecutor {
                 "theme_name  varchar(20)," +
                 "theme_desc  varchar(255)," +
                 "theme_price int," +
+                "primary key (id)" +
+                ");");
+    }
+
+    public void createThemeTable() {
+        jdbcTemplate.execute("CREATE TABLE THEME(" +
+                "id bigint not null auto_increment," +
+                "name varchar(20)," +
+                "desc varchar(255)," +
+                "price int," +
                 "primary key (id)" +
                 ");");
     }

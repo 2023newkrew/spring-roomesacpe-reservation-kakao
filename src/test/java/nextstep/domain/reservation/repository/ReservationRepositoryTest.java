@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static nextstep.domain.QuerySetting.Reservation.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest(includeFilters = {
@@ -32,7 +31,7 @@ public class ReservationRepositoryTest {
 
     @BeforeAll
     static void createTable(@Autowired DatabaseExecutor databaseExecutor) {
-        databaseExecutor.createTable(TABLE_NAME);
+        databaseExecutor.createReservationTable();
     }
 
     @Test
