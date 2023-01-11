@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Objects;
@@ -21,14 +20,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Component
 public class JdbcReservationDAO implements ReservationDAO {
-
-    private static final String SELECT_BY_DATE_AND_TIME_SQL = "SELECT count(*) FROM reservation WHERE date = ? AND time = ? LIMIT 1";
-
-    private static final String INSERT_IF_NOT_EXISTS_DATE_TIME_SQL = "INSERT INTO reservation(date,time,name,theme_name,theme_desc,theme_price) VALUES(?,?,?,?,?,?)";
-
-    private static final String SELECT_BY_ID_SQL = "SELECT * FROM reservation WHERE id = ?";
-
-    private static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
     private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
             (resultSet, rowNum) -> {
@@ -49,7 +40,7 @@ public class JdbcReservationDAO implements ReservationDAO {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Boolean existsByDateAndTime(Date date, Time time) {
+    public Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException {
         return jdbcTemplate.queryForObject(SELECT_BY_DATE_AND_TIME_SQL, (r, ignore) -> r.getInt(1) > 0, date, time);
     }
 
@@ -67,7 +58,7 @@ public class JdbcReservationDAO implements ReservationDAO {
     }
 
     private PreparedStatement getPrepareStatement(Connection connection, ReservationDTO dto) throws SQLException {
-        var ps = connection.prepareStatement(INSERT_IF_NOT_EXISTS_DATE_TIME_SQL, new String[]{"id"});
+        var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
         Date date = Date.valueOf(dto.getDate());
         Time time = Time.valueOf(dto.getTime());
         ThemeDTO theme = dto.getTheme();
