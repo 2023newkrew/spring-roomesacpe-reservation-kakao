@@ -43,14 +43,14 @@ public class RepositoryTest {
     @Test
     @DisplayName("예약 생성이 되어야 한다.")
     void save() {
-         Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+         Long id = reservationJdbcTemplateRepository.saveReservation(makeReservationBeforeStore(requestReservation, theme));
          assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("생성된 예약을 조회할 수 있어야 한다.")
     void find() {
-        Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+        Long id = reservationJdbcTemplateRepository.saveReservation(makeReservationBeforeStore(requestReservation, theme));
         Reservation reservation = reservationJdbcTemplateRepository.findReservationById(id);
         assertThat(reservation.getTheme()).isEqualTo(theme);
     }
@@ -58,7 +58,7 @@ public class RepositoryTest {
     @Test
     @DisplayName("생성된 예약을 취소할 수 있어야 한다.")
     void delete() {
-        Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+        Long id = reservationJdbcTemplateRepository.saveReservation(makeReservationBeforeStore(requestReservation, theme));
         int rowCount = reservationJdbcTemplateRepository.deleteReservationById(id);
         assertThat(rowCount).isEqualTo(1);
     }
@@ -66,8 +66,12 @@ public class RepositoryTest {
     @Test
     @DisplayName("시간과 날짜가 중복되는 예약은 불가능하다.")
     void duplicate(){
-        Long id = reservationJdbcTemplateRepository.saveReservation(requestReservation, theme);
+        Long id = reservationJdbcTemplateRepository.saveReservation(makeReservationBeforeStore(requestReservation, theme));
         assertThat(reservationJdbcTemplateRepository.existByDateTime(requestReservation.getDate(), requestReservation.getTime()))
                 .isTrue();
+    }
+
+    private Reservation makeReservationBeforeStore(RequestReservation req, Theme theme) {
+        return new Reservation(0L, req.getDate(), req.getTime(), req.getName(), theme);
     }
 }

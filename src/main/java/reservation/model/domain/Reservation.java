@@ -1,5 +1,7 @@
 package reservation.model.domain;
 
+import reservation.model.dto.RequestReservation;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
