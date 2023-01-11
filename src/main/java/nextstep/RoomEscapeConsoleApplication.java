@@ -1,17 +1,34 @@
 package nextstep;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import roomescape.model.Reservation;
+import roomescape.model.Theme;
+import roomescape.repository.ReservationJdbcRepository;
+import roomescape.repository.ReservationRepository;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class RoomEscapeApplication {
+@Service
+public class RoomEscapeConsoleApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final ReservationJdbcRepository reservationRepository = new ReservationJdbcRepository();
+    private final ReservationRepository reservationRepository;
+//    private final ThemeRepository themeRepository;
 
-    public static void main(String[] args) {
+    public RoomEscapeConsoleApplication(ReservationJdbcRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+//        this.themeRepository = themeRepository;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void run() {
         Scanner scanner = new Scanner(System.in);
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -49,12 +66,13 @@ public class RoomEscapeApplication {
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = reservationRepository.findOneById(id);
+                Optional<Reservation> optionalReservation = reservationRepository.findOneById(id);
 
-                if (reservation == null) {
+                if (optionalReservation.isEmpty()) {
                     System.out.println("예약 조회에 실패하였습니다.");
                     continue;
                 }
+                Reservation reservation = optionalReservation.get();
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
@@ -69,14 +87,13 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
                 Integer delCount = reservationRepository.delete(id);
-                System.out.println("cnt " + delCount);
 
                 if (delCount == null) {
                     System.out.println("예약 취소에 실패하였습니다.");
                     continue;
                 }
                 if (delCount > 0) {
-                    System.out.println("예약이 취소되었습니다.");
+                System.out.println("예약이 취소되었습니다.");
                 }
             }
 

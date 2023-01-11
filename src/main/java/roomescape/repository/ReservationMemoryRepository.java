@@ -15,7 +15,7 @@ public class ReservationMemoryRepository implements ReservationRepository{
     private static Long reservationIdIndex = 0L;
 
     @Override
-    public long save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         reservation.setId(reservationIdIndex);
         reservations.put(reservationIdIndex, reservation);
         return reservationIdIndex++;
@@ -27,8 +27,9 @@ public class ReservationMemoryRepository implements ReservationRepository{
     }
 
     @Override
-    public void delete(long reservationId) {
+    public Integer delete(long reservationId) {
         reservations.remove(reservationId);
+        return 1;
     }
 
     @Override

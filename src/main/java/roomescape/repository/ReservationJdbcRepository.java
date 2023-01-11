@@ -8,7 +8,6 @@ import roomescape.model.Reservation;
 import roomescape.model.Theme;
 
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     };
 
     @Override
-    public long save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("date", reservation.getDate().toString());
         parameters.put("time", reservation.getTime().toString());
@@ -62,9 +61,9 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(long reservationId) {
+    public Integer delete(long reservationId) {
         String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, reservationId);
+        return jdbcTemplate.update(sql, reservationId);
     }
 
     @Override
