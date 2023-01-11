@@ -1,9 +1,12 @@
-package nextstep.reservation;
+package nextstep.reservation.repository;
 
+import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.CreateReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,10 +16,13 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+
+import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
 
 @Repository
 @Primary
-public class JdbcReservationRepository implements ReservationRepository{
+public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -28,7 +34,7 @@ public class JdbcReservationRepository implements ReservationRepository{
     public Reservation create(Reservation reservation) {
         Theme theme = reservation.getTheme();
         if (findByDateTime(reservation.getDate(), reservation.getTime())) {
-            throw new CreateReservationException();
+            throw new CreateReservationException(DUPLICATE_TIME_RESERVATION);
         }
         String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) values(?,?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -50,20 +56,11 @@ public class JdbcReservationRepository implements ReservationRepository{
     @Override
     public Reservation findById(long id) {
         String sql = "select * from reservation where id= ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime(),
-                            resultSet.getString("name"),
-                            new Theme(resultSet.getString("theme_name"),
-                                    resultSet.getString("theme_desc"),
-                                    resultSet.getInt("theme_price"))
-                    );
-                    return reservation;
-                }, id);
+        List<Reservation> reservationList = jdbcTemplate.query(
+                sql, reservationRowMapper()
+                , id);
+
+        return reservationList.stream().findAny().orElse(null);
     }
 
     @Override
@@ -75,13 +72,25 @@ public class JdbcReservationRepository implements ReservationRepository{
     @Override
     public Boolean delete(long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, Long.valueOf(id)) == 1 ;
+        return jdbcTemplate.update(sql, id) == 1;
     }
 
     @Override
     public void clear() {
         String sql = "delete from reservation";
         jdbcTemplate.update(sql);
+    }
+
+    public RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getTime("time").toLocalTime(),
+                resultSet.getString("name"),
+                new Theme(resultSet.getString("theme_name"),
+                        resultSet.getString("theme_desc"),
+                        resultSet.getInt("theme_price"))
+        );
     }
 
 }

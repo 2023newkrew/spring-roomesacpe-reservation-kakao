@@ -1,5 +1,7 @@
-package nextstep.reservation;
+package nextstep.reservation.service;
 
+import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,9 @@ public class ReservationService {
 
     public Boolean delete(long id) {
         return reservationRepository.delete(id);
+    }
+
+    public void clear() {
+        reservationRepository.clear();
     }
 }

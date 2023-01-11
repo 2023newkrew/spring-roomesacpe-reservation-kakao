@@ -1,5 +1,9 @@
 package nextstep.reservation;
 
+import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.entity.Theme;
+import nextstep.reservation.repository.JdbcReservationRepository;
+import nextstep.reservation.service.ReservationService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -55,7 +59,7 @@ public class RoomEscapeApplication {
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-                Long id = Long.parseLong(params.split(",")[0]);
+                long id = Long.parseLong(params.split(",")[0]);
                 Reservation reservation = reservationService.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
@@ -70,7 +74,7 @@ public class RoomEscapeApplication {
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
 
-                Long id = Long.parseLong(params.split(",")[0]);
+                long id = Long.parseLong(params.split(",")[0]);
 
                 if (reservationService.delete(id)) {
                     System.out.println("예약이 취소되었습니다.");

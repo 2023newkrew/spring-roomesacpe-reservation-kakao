@@ -1,4 +1,4 @@
-package nextstep.reservation;
+package nextstep.reservation.entity;
 
 import org.springframework.lang.Nullable;
 
