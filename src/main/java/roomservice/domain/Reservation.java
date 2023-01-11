@@ -1,8 +1,12 @@
-package nextstep;
+package roomservice.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class Reservation {
     private Long id;
     private LocalDate date;
@@ -16,25 +20,5 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.theme = theme;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Theme getTheme() {
-        return theme;
     }
 }
