@@ -41,13 +41,19 @@ public class ReservationController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
         Reservation reservation = webAppReservationRepo.findById(id);
+        if (reservation == null) {
+            return ResponseEntity.badRequest().build();
+        }
         GetReservationDTO getReservationDTO = new GetReservationDTO(reservation);
         return ResponseEntity.ok().body(getReservationDTO);
     }
 
     @DeleteMapping( "/{id}")
     public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
-        webAppReservationRepo.delete(id);
+        int result = webAppReservationRepo.delete(id);
+        if (result == 0) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
