@@ -3,10 +3,12 @@ package roomservice.controller;
 import io.restassured.RestAssured;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 import roomservice.domain.Reservation;
 
@@ -21,17 +23,30 @@ import static org.hamcrest.core.Is.is;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReservationTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
+    private final static LocalTime testTime = LocalTime.of(13, 00);
     private Reservation reservation = new Reservation();
     private RestTemplate restTemplate = new RestTemplate();
     private String baseUrl;
-
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("DROP TABLE RESERVATION IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
+                "    id          bigint not null auto_increment,\n" +
+                "    date        date,\n" +
+                "    time        time,\n" +
+                "    name        varchar(20),\n" +
+                "    theme_name  varchar(20),\n" +
+                "    theme_desc  varchar(255),\n" +
+                "    theme_price int,\n" +
+                "    primary key (id)\n)");
         RestAssured.port = port;
         reservation.setDate(testDate);
+        reservation.setTime(testTime);
         reservation.setName("hi");
         baseUrl = "http://localhost:" + port;
     }
@@ -40,7 +55,6 @@ public class ReservationTest {
     @Test
     @Order(1)
     void createReservation() {
-        reservation.setTime(LocalTime.of(1, 0));
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
@@ -53,7 +67,6 @@ public class ReservationTest {
     @DisplayName("Http Method - POST Exception")
     @Test
     void createReservationDuplicateException() {
-        reservation.setTime(LocalTime.of(2, 0));
         restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +80,6 @@ public class ReservationTest {
     @DisplayName("Http Method - GET")
     @Test
     void showReservation() {
-        reservation.setTime(LocalTime.of(3, 0));
         URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
                 .getHeaders().getLocation();
         RestAssured.given().log().all()
@@ -89,11 +101,9 @@ public class ReservationTest {
                 .body(is("존재하지 않는 예약 id입니다."));
     }
 
-
     @DisplayName("Http Method - DELETE")
     @Test
     void deleteReservation() {
-        reservation.setTime(LocalTime.of(4, 0));
         URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
                 .getHeaders().getLocation();
         RestAssured.given().log().all()

@@ -12,18 +12,13 @@ import roomservice.exceptions.exception.DuplicatedReservationException;
 import roomservice.exceptions.exception.NonExistentReservationException;
 
 import java.sql.PreparedStatement;
-import java.util.HashMap;
-import java.util.Map;
 
 @Repository
 public class ReservationDao {
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final Map<Long, Reservation> cache = new HashMap<>();
-    private long id = 1L;
 
     @Autowired
-    public ReservationDao(JdbcTemplate jdbcTemplate){
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -41,11 +36,6 @@ public class ReservationDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
-
-//        validateDuplication(reservation);
-//        reservation.setId(id);
-//        cache.put(id, reservation);
-//        return id++;
     }
 
     public Reservation selectReservation(long id) {
@@ -69,40 +59,20 @@ public class ReservationDao {
         } catch (IncorrectResultSizeDataAccessException error) {
             throw new NonExistentReservationException();
         }
-        //        validateExistence(id);
-//        return cache.get(id);
     }
 
     public void deleteReservation(long id) {
         String sql = "delete from RESERVATION where id = ?";
         if (jdbcTemplate.update(sql, Long.valueOf(id)) == 0) {
             throw new NonExistentReservationException();
-        };
-//        validateExistence(id);
-//        cache.remove(id);
+        }
     }
 
     private void validateDuplication(Reservation reservation) {
         String sql = "select count(*) from RESERVATION WHERE date =  ? and time = ?";
         if (jdbcTemplate.queryForObject(sql, Integer.class,
-                reservation.getDate(), reservation.getTime()) > 0){
+                reservation.getDate(), reservation.getTime()) > 0) {
             throw new DuplicatedReservationException();
-        }
-//        for (Reservation cachedReservation : cache.values()) {
-//            validateDuplicationForSingleReservation(reservation, cachedReservation);
-//        }
-    }
-
-//    private void validateDuplicationForSingleReservation(Reservation reservation, Reservation cachedReservation) {
-//        if (reservation.getTime().equals(cachedReservation.getTime()) &&
-//                reservation.getDate().equals(cachedReservation.getDate())) {
-//            throw new DuplicatedReservationException();
-//        }
-//    }
-
-    private void validateExistence(long id) {
-        if (!cache.containsKey(id)) {
-            throw new NonExistentReservationException();
         }
     }
 }

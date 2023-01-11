@@ -38,8 +38,6 @@ public class ReservationDaoTest {
                 "    theme_desc  varchar(255),\n" +
                 "    theme_price int,\n" +
                 "    primary key (id)\n)");
-//        jdbcTemplate.execute("DELETE FROM RESERVATION");
-
         testReservation = new Reservation();
         testReservation.setDate(testDate);
         testReservation.setTime(testTime);
@@ -61,9 +59,9 @@ public class ReservationDaoTest {
 
     @Test
     void showTest() {
-        reservationDao.insertReservation(testReservation);
-        testReservation.setId(1L);
-        assertThat(reservationDao.selectReservation(1L)).isEqualTo(testReservation);
+        long id = reservationDao.insertReservation(testReservation);
+        testReservation.setId(id);
+        assertThat(reservationDao.selectReservation(id)).isEqualTo(testReservation);
     }
 
     @Test
@@ -79,12 +77,12 @@ public class ReservationDaoTest {
 
     @Test
     void deleteTest() {
-        reservationDao.insertReservation(testReservation);
-        testReservation.setId(1L);
-        reservationDao.deleteReservation(1L);
+        long id = reservationDao.insertReservation(testReservation);
+        testReservation.setId(id);
+        reservationDao.deleteReservation(id);
 
         assertThatThrownBy(() -> {
-            reservationDao.selectReservation(1L);
+            reservationDao.selectReservation(id);
         }).isInstanceOf(NonExistentReservationException.class);
     }
 }
