@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.exceptions.exception.ReservationNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,6 +11,43 @@ import java.time.LocalTime;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
+
+    public ReservationJdbcRepository() {
+        Connection con = null;
+        // 드라이버 연결
+        try {
+            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            System.out.println("정상적으로 연결되었습니다.");
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            con.prepareStatement("DROP TABLE reservation IF EXISTS").execute();
+            con.prepareStatement("CREATE TABLE RESERVATION" +
+                    "(" +
+                    "    id          bigint not null auto_increment," +
+                    "    date        date," +
+                    "    time        time," +
+                    "    name        varchar(20)," +
+                    "    theme_name  varchar(20)," +
+                    "    theme_desc  varchar(255)," +
+                    "    theme_price int," +
+                    "    primary key (id)" +
+                    ");").executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            if (con != null)
+                con.close();
+        } catch (
+                SQLException e) {
+            System.err.println("con 오류:" + e.getMessage());
+        }
+    }
 
     public Long save(Reservation reservation) {
         Connection con = null;
@@ -124,12 +162,11 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     private static Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
-        Reservation reservation;
         if (!rs.next()) {
-            System.out.println("해당 예약은 존재하지 않습니다.");
-            return null;
+            throw new ReservationNotFoundException();
         }
-        reservation = new Reservation(
+
+        Reservation reservation = new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),

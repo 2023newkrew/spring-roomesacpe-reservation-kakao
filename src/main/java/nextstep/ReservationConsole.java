@@ -3,6 +3,7 @@ package nextstep;
 import nextstep.dto.ReservationRequestDto;
 import nextstep.dto.ReservationResponseDto;
 import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.exceptions.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationJdbcRepository;
 import nextstep.service.ReservationService;
 
@@ -58,8 +59,8 @@ public class ReservationConsole {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                ReservationResponseDto reservationDto = reservationService.retrieve(id);
-                if (reservationDto != null) {
+                try {
+                    ReservationResponseDto reservationDto = reservationService.retrieve(id);
                     System.out.println("예약 번호: " + reservationDto.getId());
                     System.out.println("예약 날짜: " + reservationDto.getDate());
                     System.out.println("예약 시간: " + reservationDto.getTime());
@@ -67,9 +68,10 @@ public class ReservationConsole {
                     System.out.println("예약 테마 이름: " + reservationDto.getThemeName());
                     System.out.println("예약 테마 설명: " + reservationDto.getThemeDesc());
                     System.out.println("예약 테마 가격: " + reservationDto.getThemePrice());
+                } catch (ReservationNotFoundException e) {
+                    System.out.println("해당 예약은 존재하지 않습니다.");
                 }
             }
-
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
 

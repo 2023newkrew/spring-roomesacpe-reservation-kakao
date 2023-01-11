@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.exceptions.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -64,7 +65,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
                                     rs.getInt("theme_price"))
                     ), id);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new ReservationNotFoundException();
         }
     }
 
