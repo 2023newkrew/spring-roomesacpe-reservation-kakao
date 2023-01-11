@@ -1,6 +1,8 @@
 package nextstep.main.java.nextstep.repository.reservation;
 
 import nextstep.main.java.nextstep.domain.reservation.Reservation;
+import nextstep.main.java.nextstep.domain.reservation.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.domain.theme.Theme;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -10,14 +12,14 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@Deprecated(forRemoval = true)
 public class MemoryReservationRepository implements ReservationRepository {
     public static Map<Long, Reservation> reservationMap = new HashMap<>();
     private static Long count = 1L;
 
     @Override
-    public Reservation save(Reservation reservation) {
-        reservationMap.put(count, reservation);
-        return new Reservation(count++, reservation);
+    public Long save(ReservationCreateRequestDto request) {
+        return null;
     }
 
     @Override

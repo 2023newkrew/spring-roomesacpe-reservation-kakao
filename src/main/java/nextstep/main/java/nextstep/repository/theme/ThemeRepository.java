@@ -11,6 +11,8 @@ public interface ThemeRepository {
     Long save(ThemeCreateRequestDto request);
     Optional<Theme> findById(long id);
 
+    Optional<Theme> findByName(String name);
+
     List<Theme> findAll();
 
     void deleteById(long id);

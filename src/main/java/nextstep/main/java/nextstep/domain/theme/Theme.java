@@ -1,25 +1,14 @@
 package nextstep.main.java.nextstep.domain.theme;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class Theme {
-    private final String name;
-    private final String desc;
-    private final Integer price;
+    private Long id;
+    private String name;
+    private String desc;
+    private Integer price;
 
-    public Theme(String name, String desc, Integer price) {
-        this.name = name;
-        this.desc = desc;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
 }

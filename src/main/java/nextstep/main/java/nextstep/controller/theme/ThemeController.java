@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.controller.theme;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.domain.theme.ThemeCreateRequestDto;
+import nextstep.main.java.nextstep.service.reservation.ReservationService;
 import nextstep.main.java.nextstep.service.theme.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

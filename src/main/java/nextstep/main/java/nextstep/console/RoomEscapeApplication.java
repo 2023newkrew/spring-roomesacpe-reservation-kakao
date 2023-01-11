@@ -20,7 +20,7 @@ public class RoomEscapeApplication {
         Scanner scanner = new Scanner(System.in);
         ConsoleView consoleView = new ConsoleView();
         ReservationDAO reservationDAO = new ReservationDAO();
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             consoleView.printCommand();
@@ -43,8 +43,7 @@ public class RoomEscapeApplication {
                 if (reservationDAO.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time))) {
                     throw new DuplicateReservationException(DUPLICATE_RESERVATION_MESSAGE);
                 }
-
-                consoleView.printRegisteredReservationInfo(reservationDAO.save(reservation));
+                consoleView.printRegisteredReservationInfo(reservation);
             }
 
             if (input.startsWith(FIND)) {
