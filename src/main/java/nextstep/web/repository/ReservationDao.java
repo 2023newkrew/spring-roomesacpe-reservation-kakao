@@ -17,7 +17,7 @@ import java.util.Map;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-public class ReservationDao implements ReservationRepository {
+public class ReservationDao implements RoomEscapeRepository<Reservation> {
 
     public static final String TABLE_NAME = "reservation";
     public static final String KEY_COLUMN_NAME = "id";
@@ -53,7 +53,7 @@ public class ReservationDao implements ReservationRepository {
         }
     }
 
-    private static Map<String, Object> prepareParams(Reservation reservation) {
+    private Map<String, Object> prepareParams(Reservation reservation) {
         Theme theme = reservation.getTheme();
 
         return Map.of(

@@ -20,7 +20,7 @@ public class FindReservationResponseDto {
     private String name;
     private Theme theme;
 
-    public static FindReservationResponseDto from(Reservation reservation) {
+    public static FindReservationResponseDto of(Reservation reservation) {
         return new FindReservationResponseDto(
                 reservation.getId(),
                 reservation.getDate(),

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Repository
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationMemoryRepository implements ReservationRepository {
+public class ReservationMemoryRepository implements RoomEscapeRepository<Reservation> {
 
     private final List<Reservation> reservations = new ArrayList<>();
 

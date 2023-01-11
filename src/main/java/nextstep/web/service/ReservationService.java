@@ -4,7 +4,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.web.dto.CreateReservationRequestDto;
 import nextstep.web.dto.FindReservationResponseDto;
-import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.RoomEscapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private final RoomEscapeRepository<Reservation> reservationRepository;
 
     @Autowired
-    public ReservationService(@Qualifier("reservationDao") ReservationRepository reservationRepository) {
+    public ReservationService(@Qualifier("reservationDao") RoomEscapeRepository<Reservation> reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -33,7 +33,7 @@ public class ReservationService {
     public FindReservationResponseDto findReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id);
 
-        return FindReservationResponseDto.from(reservation);
+        return FindReservationResponseDto.of(reservation);
     }
 
     public void deleteReservation(Long id) {
