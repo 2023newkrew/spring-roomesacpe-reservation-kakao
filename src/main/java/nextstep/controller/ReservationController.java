@@ -4,7 +4,6 @@ import nextstep.Theme;
 import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.dto.CreateReservationDTO;
-import nextstep.domain.reservation.Reservations;
 import nextstep.repository.WebAppReservationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

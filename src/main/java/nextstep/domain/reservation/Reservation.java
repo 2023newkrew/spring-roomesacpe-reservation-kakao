@@ -14,13 +14,6 @@ public class Reservation {
     private final String name;
     private final Theme theme;
 
-    public Reservation(Long id, String date, String time, String name, Theme theme) {
-        this.id = id;
-        this.date = LocalDate.parse(date);
-        this.time = LocalTime.parse(time);
-        this.name = name;
-        this.theme = theme;
-    }
 
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = null;

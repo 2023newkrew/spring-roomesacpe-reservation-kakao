@@ -1,7 +1,6 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.Theme;
 import nextstep.domain.dto.CreateReservationDTO;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +9,18 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.hamcrest.core.Is.is;
 
-import static org.assertj.core.api.Assertions.*;
-
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
     @LocalServerPort
     int port;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
