@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS RESERVATION;
-
-CREATE TABLE RESERVATION
+CREATE TABLE IF NOT EXISTS RESERVATION
 (
     id          bigint not null auto_increment,
     date        date,

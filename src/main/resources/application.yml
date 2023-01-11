@@ -4,8 +4,8 @@ spring:
       enabled: true
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:~/roomescape
-    username: kakao
+    url: jdbc:h2:~/workspace/kakao/spring-roomesacpe-reservation-kakao/room-escape
+    username: sa
     password:
   sql:
     init:

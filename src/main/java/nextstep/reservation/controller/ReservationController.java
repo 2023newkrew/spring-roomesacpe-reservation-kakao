@@ -20,13 +20,11 @@ public class ReservationController {
         reservationService.addReservation(requestDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/reservations/1");
-
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable Long id) {
-
         return ResponseEntity.ok().body(reservationService.getReservation(id));
     }
 

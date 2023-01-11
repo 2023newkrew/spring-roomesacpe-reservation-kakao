@@ -9,8 +9,8 @@ import java.sql.*;
 
 public class ConsoleReservationRepository {
 
-    private final String url = "jdbc:h2:~/roomescape;AUTO_SERVER=true";
-    private final String user = "kakao";
+    private final String url = "jdbc:h2:~/workspace/kakao/spring-roomesacpe-reservation-kakao/room-escape";
+    private final String user = "sa";
 
     private final String password = "";
 
