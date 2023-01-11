@@ -2,13 +2,11 @@ package nextstep.main.java.nextstep.repository;
 
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.Theme;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,6 +32,11 @@ public class JdbcReservationRepositoryTest {
         repository = new JdbcReservationRepository(jdbcTemplate);
     }
 
+    @AfterEach
+    void tearDown() {
+
+    }
+
     @DisplayName("예약 생성 기능 테스트")
     @Test
     public void saveTest() {
@@ -48,14 +51,14 @@ public class JdbcReservationRepositoryTest {
     @DisplayName("예약 단건 조회 기능 테스트")
     @Test
     public void findOneTest() {
-        Reservation reservation = new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme);
-        repository.save(reservation);
+        Reservation savedReservation = repository.save(new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme));
 
-        assertThat(repository.findOne(1L)
+        assertThat(repository.findOne(savedReservation.getId())
                 .get())
-                .isEqualTo(reservation);
+                .isEqualTo(savedReservation);
 
-        assertThat(repository.findOne(2L)
+        Long nonExistReservationId = 0L;
+        assertThat(repository.findOne(nonExistReservationId)
                 .isEmpty())
                 .isTrue();
     }
@@ -63,14 +66,14 @@ public class JdbcReservationRepositoryTest {
     @DisplayName("예약 단건 삭제 기능 테스트")
     @Test
     public void deleteOneTest() {
-        Reservation reservation = new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme);
-        repository.save(reservation);
-
-        assertThat(repository.findOne(1L)
+        Reservation savedReservation = repository.save(new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", defaultTheme));
+        Long savedReservationId = savedReservation.getId();
+        assertThat(repository.findOne(savedReservationId)
                 .get())
-                .isEqualTo(reservation);
-        assertThat(repository.deleteOne(1L)).isTrue();
-        assertThat(repository.findOne(1L)
+                .isEqualTo(savedReservation);
+
+        assertThat(repository.deleteOne(savedReservationId)).isTrue();
+        assertThat(repository.findOne(savedReservationId)
                 .isEmpty())
                 .isTrue();
     }
