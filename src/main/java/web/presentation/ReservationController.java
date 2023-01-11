@@ -80,15 +80,7 @@ public class ReservationController {
     private Reservation getReservationById(final Long id) throws NoSuchReservationException {
         String selectSql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
 
-        List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime(),
-                rs.getString("name"),
-                new Theme(rs.getString("theme_name"),
-                        rs.getString("theme_desc"),
-                        rs.getInt("theme_price")
-                ))), id);
+        List<Reservation> reservations = jdbcTemplate.query(selectSql, (rs, rowNum) -> Reservation.from(rs), id);
 
         if (reservations.isEmpty()) {
             throw new NoSuchReservationException();

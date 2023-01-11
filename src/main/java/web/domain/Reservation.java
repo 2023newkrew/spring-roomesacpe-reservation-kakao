@@ -1,9 +1,12 @@
 package web.domain;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Builder;
 
 public class Reservation {
 
@@ -13,6 +16,7 @@ public class Reservation {
     private String name;
     private Theme theme;
 
+    @Builder
     public Reservation(Long id, LocalDate date, LocalTime time, String name, web.domain.Theme theme) {
         this.id = id;
         this.date = date;
@@ -51,5 +55,15 @@ public class Reservation {
         params.put("theme_price", this.theme.getPrice());
 
         return params;
+    }
+
+    public static Reservation from(ResultSet rs) throws SQLException {
+        return Reservation.builder()
+                .id(rs.getLong("id"))
+                .date(rs.getDate("date").toLocalDate())
+                .time(rs.getTime("time").toLocalTime())
+                .name(rs.getString("name"))
+                .theme(Theme.from(rs))
+                .build();
     }
 }
