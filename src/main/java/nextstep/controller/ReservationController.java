@@ -40,14 +40,14 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity showReservation(@PathVariable Long id) {
+    public ResponseEntity lookupReservation(@PathVariable Long id) {
         Reservation reservation = reservationQueryingDAO.findReservationById(id);
         ReservationInfo reservationInfo = new ReservationInfo(reservation);
         return ResponseEntity.ok().body(reservationInfo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable Long id) {
+    public ResponseEntity cancelReservation(@PathVariable Long id) {
         reservationUpdatingDAO.delete(id);
         return ResponseEntity.noContent().build();
     }
