@@ -1,7 +1,5 @@
 package nextstep.domain.reservation;
 
-import nextstep.domain.theme.Theme;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -11,22 +9,22 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this(null, date, time, name, theme);
+    public Reservation(LocalDate date, LocalTime time, String name, Long themeId) {
+        this(null, date, time, name, themeId);
     }
 
     public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        this(id, reservation.date, reservation.time, reservation.name, reservation.themeId);
     }
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = themeId;
     }
 
     @Deprecated
@@ -55,8 +53,8 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Long getThemeId() {
+        return themeId;
     }
 
     @Deprecated
