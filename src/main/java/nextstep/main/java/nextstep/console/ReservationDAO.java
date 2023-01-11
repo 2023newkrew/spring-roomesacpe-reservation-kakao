@@ -1,7 +1,6 @@
 package nextstep.main.java.nextstep.console;
 
 import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import nextstep.main.java.nextstep.repositoryUtil.ReservationPreparedStatementCreator;
 
@@ -39,19 +38,7 @@ public class ReservationDAO implements ReservationRepository {
             ps.setLong(1, id);
             rs = ps.executeQuery();
             rs.first();
-            return Optional.of(
-                    new Reservation(rs.getLong("id"),
-                            rs.getDate("date")
-                                    .toLocalDate(),
-                            rs.getTime("time")
-                                    .toLocalTime(),
-                            rs.getString("name"),
-                            new Theme(
-                                    rs.getString("theme_name"),
-                                    rs.getString("theme_desc"),
-                                    rs.getInt("theme_price")
-                            ))
-            );
+            return Optional.of(Reservation.of(rs));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
