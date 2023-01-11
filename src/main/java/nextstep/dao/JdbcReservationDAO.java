@@ -13,36 +13,28 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Component
 public class JdbcReservationDAO implements ReservationDAO {
 
-    private static final String INSERT_IF_NOT_EXISTS_DATE_TIME_SQL =
-            "INSERT INTO reservation(date,time,name,theme_name,theme_desc,theme_price)" +
-                    "VALUES(?,?,?,?,?,?)" +
-                    "IF NOT EXISTS (" +
-                    "   SELECT * " +
-                    "   FROM reservation" +
-                    "   WHERE date = ? AND time = ?" +
-                    ")";
+    private static final String SELECT_BY_DATE_AND_TIME_SQL = "SELECT count(*) FROM reservation WHERE date = ? AND time = ? LIMIT 1";
 
-    private static final String SELECT_BY_ID_SQL =
-            "SELECT * " +
-                    "FROM reserevation " +
-                    "WHERE id = ?";
+    private static final String INSERT_IF_NOT_EXISTS_DATE_TIME_SQL = "INSERT INTO reservation(date,time,name,theme_name,theme_desc,theme_price) VALUES(?,?,?,?,?,?)";
 
-    private static final String DELETE_BY_ID_SQL = "DELETE " +
-            "FROM reservation " +
-            "WHERE id = ?";
+    private static final String SELECT_BY_ID_SQL = "SELECT * FROM reservation WHERE id = ?";
+
+    private static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
     private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
             (resultSet, rowNum) -> {
                 ThemeDTO theme = new ThemeDTO(
                         resultSet.getString("theme_name"),
-                        resultSet.getString("them_desc"),
+                        resultSet.getString("theme_desc"),
                         resultSet.getInt("theme_price")
                 );
                 return new ReservationDTO(
@@ -56,14 +48,18 @@ public class JdbcReservationDAO implements ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
+    @Override
+    public Boolean existsByDateAndTime(Date date, Time time) {
+        return jdbcTemplate.queryForObject(SELECT_BY_DATE_AND_TIME_SQL, (r, ignore) -> r.getInt(1) > 0, date, time);
+    }
 
     @Override
-    public Long insertIfNotExistsDateTime(ReservationDTO dto) {
+    public Long insert(ReservationDTO dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(getPreparedStatementCreator(dto), keyHolder);
         Number key = keyHolder.getKey();
 
-        return key.longValue();
+        return Objects.requireNonNull(key).longValue();
     }
 
     private PreparedStatementCreator getPreparedStatementCreator(ReservationDTO dto) {
@@ -81,14 +77,16 @@ public class JdbcReservationDAO implements ReservationDAO {
         ps.setString(4, theme.getName());
         ps.setString(5, theme.getDesc());
         ps.setInt(6, theme.getPrice());
-        ps.setDate(7, date);
-        ps.setTime(8, time);
         return ps;
     }
 
     @Override
     public ReservationDTO getById(Long id) {
-        return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, RESERVATION_DTO_ROW_MAPPER, id);
+        try {
+            return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, RESERVATION_DTO_ROW_MAPPER, id);
+        } catch (Exception ignore) {
+            return null;
+        }
     }
 
     @Override

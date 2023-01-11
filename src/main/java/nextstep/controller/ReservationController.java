@@ -20,8 +20,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationRequest request) {
-        Reservation created = service.create(request);
-        URI location = URI.create(RESERVATION_PATH + "/" + created.getId());
+        URI location = URI.create(RESERVATION_PATH + "/" + service.create(request));
 
         return ResponseEntity.created(location)
                 .build();
