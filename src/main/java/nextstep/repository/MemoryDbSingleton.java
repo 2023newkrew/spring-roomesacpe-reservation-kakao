@@ -1,4 +1,6 @@
-package nextstep;
+package nextstep.repository;
+
+import nextstep.domain.Reservation;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -58,14 +58,14 @@ public class JdbcReservationRepository implements ReservationRepository {
         String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
 
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
-            PreparedStatement prepareStatement = connection.prepareStatement(sql, new String[]{"id"});
-            prepareStatement.setDate(1, Date.valueOf(date));
-            prepareStatement.setTime(2, Time.valueOf(time));
-            prepareStatement.setString(3, name);
-            prepareStatement.setString(4, theme.getName());
-            prepareStatement.setString(5, theme.getDesc());
-            prepareStatement.setInt(6, theme.getPrice());
-            return prepareStatement;
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
+            ps.setString(3, name);
+            ps.setString(4, theme.getName());
+            ps.setString(5, theme.getDesc());
+            ps.setInt(6, theme.getPrice());
+            return ps;
         };
 
         jdbcTemplate.update(preparedStatementCreator, keyHolder);

@@ -1,5 +1,7 @@
 package nextstep;
 
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.repository.ConsoleReservationRepository;
 import nextstep.service.ReservationService;
 import org.springframework.boot.SpringApplication;

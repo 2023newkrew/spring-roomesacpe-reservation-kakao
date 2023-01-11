@@ -1,7 +1,5 @@
 package nextstep.dto;
 
-import nextstep.Reservation;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 

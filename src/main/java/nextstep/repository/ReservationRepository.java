@@ -1,7 +1,7 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

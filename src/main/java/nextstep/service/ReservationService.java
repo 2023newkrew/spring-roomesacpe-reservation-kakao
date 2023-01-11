@@ -1,7 +1,7 @@
 package nextstep.service;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

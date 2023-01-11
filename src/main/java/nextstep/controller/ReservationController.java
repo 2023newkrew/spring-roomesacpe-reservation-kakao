@@ -1,7 +1,7 @@
 package nextstep.controller;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservation;
 import nextstep.service.ReservationService;
