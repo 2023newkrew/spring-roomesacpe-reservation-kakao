@@ -7,10 +7,14 @@ import roomservice.exceptions.exception.NonExistentReservationException;
 
 import java.sql.*;
 
-public class ReservationConsoleDao implements ReservationDao{
-    public ReservationConsoleDao(){
+/**
+ * ReservationConsoleDao implements ReservationDao using spring-jdbc.<br>
+ * Database is always cleared when you start console program.
+ */
+public class ReservationConsoleDao implements ReservationDao {
+    public ReservationConsoleDao() {
         String dropSql = "DROP TABLE RESERVATION IF EXISTS";
-        String createSql =  "CREATE TABLE RESERVATION(" +
+        String createSql = "CREATE TABLE RESERVATION(" +
                 "    id          bigint not null auto_increment,\n" +
                 "    date        date,\n" +
                 "    time        time,\n" +
@@ -22,33 +26,34 @@ public class ReservationConsoleDao implements ReservationDao{
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement dropPstmt = con.prepareStatement(dropSql);
              PreparedStatement createPstmt = con.prepareStatement(createSql)
-        ){
+        ) {
             dropPstmt.executeUpdate();
             createPstmt.executeUpdate();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     public long insertReservation(Reservation reservation) {
         validateDuplication(reservation);
         String sql = "INSERT INTO RESERVATION(date, time, name) VALUES (?, ?, ?)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-                PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, reservation.getDate().toString());
             pstmt.setString(2, reservation.getTime().toString());
             pstmt.setString(3, reservation.getName());
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()){
+            if (rs.next()) {
                 return rs.getLong("id");
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1L;
     }
 
-    public Reservation selectReservation(long id){
+    public Reservation selectReservation(long id) {
         String sql = "SELECT * FROM RESERVATION WHERE id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -77,12 +82,12 @@ public class ReservationConsoleDao implements ReservationDao{
     public void deleteReservation(long id) {
         String sql = "DELETE FROM RESERVATION WHERE id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-             PreparedStatement pstmt = con.prepareStatement(sql)){
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setLong(1, id);
             if (pstmt.executeUpdate() == 0) {
                 throw new NonExistentReservationException();
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

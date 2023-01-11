@@ -1,17 +1,19 @@
 package roomservice;
 
 import roomservice.domain.Reservation;
-import roomservice.domain.Theme;
 import roomservice.repository.ReservationConsoleDao;
 import roomservice.repository.ReservationDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * ConsoleApplication Class is reservation system
+ * operating on console system,
+ * which is already made by instructor.<br>
+ * I did not refactor this source, just little changes related to repository(connecting to DB).
+ */
 public class ConsoleApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
@@ -19,11 +21,15 @@ public class ConsoleApplication {
     private static final String QUIT = "quit";
 
     private static final ReservationDao reservationDao = new ReservationConsoleDao();
+
+    // 처음부터 강의자로부터 만들어져 있던 소스였습니다.
+    // 단순히 콘솔에서 예약 관련 기능을 실행할 수 있는 소스입니다.
+    // database 연동을 제외한 부분은 거의 건들이지 않았습니다.
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        //Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
+        // 테마 관련한 것은 다음 리뷰 요청 때 구현 예정
+        // Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();

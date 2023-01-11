@@ -12,8 +12,11 @@ import roomservice.exceptions.exception.NonExistentReservationException;
 
 import java.sql.PreparedStatement;
 
+/**
+ * ReservationSpringDao implements ReservationDao using spring-jdbc.
+ */
 @Repository
-public class ReservationSpringDao implements ReservationDao{
+public class ReservationSpringDao implements ReservationDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -24,7 +27,6 @@ public class ReservationSpringDao implements ReservationDao{
     public long insertReservation(Reservation reservation) {
         validateDuplication(reservation);
         String sql = "insert into RESERVATION (date, time, name) values (?, ?, ?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -33,7 +35,6 @@ public class ReservationSpringDao implements ReservationDao{
             ps.setString(3, reservation.getName());
             return ps;
         }, keyHolder);
-
         return keyHolder.getKey().longValue();
     }
 
@@ -48,11 +49,13 @@ public class ReservationSpringDao implements ReservationDao{
                         reservation.setName(resultSet.getString("name"));
                         reservation.setDate(resultSet.getDate("date").toLocalDate());
                         reservation.setTime(resultSet.getTime("time").toLocalTime());
+//                        테마 관련 - 다음 리뷰 요청 때 구현
 //                        reservation.setTheme(new Theme(
 //                                resultSet.getString("theme_name"),
 //                                resultSet.getString("theme_desc"),
 //                                resultSet.getInt("theme_price")
 //                        ));
+
                         return reservation;
                     }, id);
         } catch (IncorrectResultSizeDataAccessException error) {
@@ -68,7 +71,7 @@ public class ReservationSpringDao implements ReservationDao{
     }
 
     private void validateDuplication(Reservation reservation) {
-        String sql = "select count(*) from RESERVATION WHERE date =  ? and time = ?";
+        String sql = "select count(*) from RESERVATION WHERE date = ? and time = ?";
         if (jdbcTemplate.queryForObject(sql, Integer.class,
                 reservation.getDate(), reservation.getTime()) > 0) {
             throw new DuplicatedReservationException();

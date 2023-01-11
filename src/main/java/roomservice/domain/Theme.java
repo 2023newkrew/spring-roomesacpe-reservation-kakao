@@ -2,6 +2,9 @@ package roomservice.domain;
 
 import lombok.Data;
 
+/**
+ * Theme class is DTO class, containing room-escape theme information such as name, description, price.
+ */
 @Data
 public class Theme {
     private String name;

@@ -11,10 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomservice.domain.Reservation;
 import roomservice.exceptions.exception.DuplicatedReservationException;
 import roomservice.exceptions.exception.NonExistentReservationException;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ReservationSpringDaoTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
     private final static LocalTime testTime = LocalTime.of(13, 0);
