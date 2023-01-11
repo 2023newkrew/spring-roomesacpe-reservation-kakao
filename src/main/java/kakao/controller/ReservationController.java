@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController()
-@RequestMapping("/reservation")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -18,10 +18,10 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Long> createReservation(@RequestBody CreateReservationRequest request) {
         long generatedId = reservationService.createReservation(request);
-        return ResponseEntity.created(URI.create("/reservation/" + generatedId)).body(generatedId);
+        return ResponseEntity.created(URI.create("/reservations/" + generatedId)).body(generatedId);
     }
 
     @GetMapping("/{id}")

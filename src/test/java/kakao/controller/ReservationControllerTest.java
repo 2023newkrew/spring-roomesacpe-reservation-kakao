@@ -26,6 +26,8 @@ public class ReservationControllerTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    private final String path = "reservations";
+
     private final CreateReservationRequest request = new CreateReservationRequest(
             LocalDate.of(2022, 10, 13),
             LocalTime.of(13, 00),
@@ -46,10 +48,10 @@ public class ReservationControllerTest {
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("reservation")
+                .when().post(path)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservation/1");
+                .header("Location", "/reservations/1");
     }
 
     @DisplayName("중복된 예약이 발생하면 400 status를 반환한다")
@@ -58,27 +60,27 @@ public class ReservationControllerTest {
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .post("reservation");
+                .post(path);
 
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("reservation")
+                .when().post("reservations")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("reservation/{id}로 reservation을 조회하면 200 status와 해당되는 reservation의 response를 응답으로 반환한다")
+    @DisplayName("reservations/{id}로 reservation을 조회하면 200 status와 해당되는 reservation의 response를 응답으로 반환한다")
     @Test
     void getReservation() {
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .post("reservation");
+                .post(path);
 
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("reservation/1")
+                .when().get(path + "/1")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", is(request.name))
@@ -87,12 +89,12 @@ public class ReservationControllerTest {
                 .body("id", is(1));
     }
 
-    @DisplayName("reservation/{id}로 존재하지 않는 reservation ID를 조회하면 400 status를 반환한다")
+    @DisplayName("reservations/{id}로 존재하지 않는 reservation ID를 조회하면 400 status를 반환한다")
     @Test
     void getNoReservation() {
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("reservation/100")
+                .when().get(path + "/100")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
