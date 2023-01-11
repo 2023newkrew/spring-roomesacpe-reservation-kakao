@@ -21,5 +21,5 @@ public interface ReservationDAO {
 
     ReservationDTO getById(Long id);
 
-    void deleteById(Long id);
+    Boolean deleteById(Long id);
 }

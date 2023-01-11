@@ -1,10 +1,6 @@
 package nextstep.repository;
 
-import lombok.AllArgsConstructor;
 import nextstep.Reservation;
-import nextstep.dao.ReservationDAO;
-import nextstep.dto.ReservationDTO;
-import org.springframework.stereotype.Repository;
 
 public interface ReservationRepository {
 
@@ -12,5 +8,5 @@ public interface ReservationRepository {
 
     Reservation getById(Long id);
 
-    void deleteById(Long id);
+    boolean deleteById(Long id);
 }

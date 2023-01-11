@@ -3,19 +3,14 @@ package nextstep.dao;
 import nextstep.dto.ReservationDTO;
 import nextstep.dto.ThemeDTO;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.*;
 
-public class SimpleReservationDAO implements ReservationDAO{
+public class SimpleReservationDAO implements ReservationDAO {
 
     private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
             (resultSet, rowNum) -> {
-                if (rowNum == 0) {
+                if (!resultSet.next()) {
                     return null;
                 }
                 ThemeDTO theme = new ThemeDTO(
@@ -34,13 +29,15 @@ public class SimpleReservationDAO implements ReservationDAO{
 
     @Override
     public Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(SELECT_BY_DATE_AND_TIME_SQL);
-            ps.setDate(1,date);
-            ps.setTime(2,time);
+            ps.setDate(1, date);
+            ps.setTime(2, time);
             var rs = ps.executeQuery();
-            return rs.getInt(1)>0;
-        } catch (SQLException e) {
+            rs.next();
+            return rs.getInt(1) > 0;
+        }
+        catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -49,7 +46,7 @@ public class SimpleReservationDAO implements ReservationDAO{
 
     @Override
     public Long insert(ReservationDTO dto) {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
             Date date = Date.valueOf(dto.getDate());
             Time time = Time.valueOf(dto.getTime());
@@ -62,8 +59,10 @@ public class SimpleReservationDAO implements ReservationDAO{
             ps.setInt(6, theme.getPrice());
             ps.executeUpdate();
             var rs = ps.getGeneratedKeys();
+            rs.next();
             return rs.getLong(1);
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -72,12 +71,13 @@ public class SimpleReservationDAO implements ReservationDAO{
 
     @Override
     public ReservationDTO getById(Long id) {
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(SELECT_BY_ID_SQL);
-            ps.setLong(1,id);
+            ps.setLong(1, id);
             var rs = ps.executeQuery();
-            return RESERVATION_DTO_ROW_MAPPER.mapRow(rs,0);
-        } catch (SQLException e) {
+            return RESERVATION_DTO_ROW_MAPPER.mapRow(rs, 0);
+        }
+        catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -85,11 +85,12 @@ public class SimpleReservationDAO implements ReservationDAO{
     }
 
     @Override
-    public void deleteById(Long id) {
-        try(Connection connection = getConnection()) {
+    public Boolean deleteById(Long id) {
+        try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(DELETE_BY_ID_SQL);
-            ps.setLong(1,id);
-            ps.executeUpdate();
+            ps.setLong(1, id);
+            var rs = ps.executeUpdate();
+            return rs == 1;
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());

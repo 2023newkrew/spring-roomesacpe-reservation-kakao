@@ -36,7 +36,7 @@ public class ReservationRepositoryImpl implements ReservationRepository{
     }
 
     @Override
-    public void deleteById(Long id){
-        dao.deleteById(id);
+    public boolean deleteById(Long id) {
+        return dao.deleteById(id);
     }
 }

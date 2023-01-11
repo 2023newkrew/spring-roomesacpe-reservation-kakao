@@ -10,11 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.*;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -30,8 +26,10 @@ public class JdbcReservationDAO implements ReservationDAO {
                 );
                 return new ReservationDTO(
                         resultSet.getLong("id"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime(),
+                        resultSet.getDate("date")
+                                .toLocalDate(),
+                        resultSet.getTime("time")
+                                .toLocalTime(),
                         resultSet.getString("name"),
                         theme
                 );
@@ -50,7 +48,8 @@ public class JdbcReservationDAO implements ReservationDAO {
         jdbcTemplate.update(getPreparedStatementCreator(dto), keyHolder);
         Number key = keyHolder.getKey();
 
-        return Objects.requireNonNull(key).longValue();
+        return Objects.requireNonNull(key)
+                .longValue();
     }
 
     private PreparedStatementCreator getPreparedStatementCreator(ReservationDTO dto) {
@@ -75,13 +74,14 @@ public class JdbcReservationDAO implements ReservationDAO {
     public ReservationDTO getById(Long id) {
         try {
             return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, RESERVATION_DTO_ROW_MAPPER, id);
-        } catch (Exception ignore) {
+        }
+        catch (Exception ignore) {
             return null;
         }
     }
 
     @Override
-    public void deleteById(Long id) {
-        jdbcTemplate.update(DELETE_BY_ID_SQL, id);
+    public Boolean deleteById(Long id) {
+        return jdbcTemplate.queryForObject(DELETE_BY_ID_SQL, (r, rowNum) -> rowNum == 1, id);
     }
 }
