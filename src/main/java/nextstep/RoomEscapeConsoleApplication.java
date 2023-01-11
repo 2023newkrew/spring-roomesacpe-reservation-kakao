@@ -92,6 +92,9 @@ public class RoomEscapeConsoleApplication {
                     System.out.println("예약 취소에 실패하였습니다.");
                     continue;
                 }
+                if (delCount == 0) {
+                    System.out.println("해당 예약이 존재하지 않습니다.");
+                }
                 if (delCount > 0) {
                 System.out.println("예약이 취소되었습니다.");
                 }
