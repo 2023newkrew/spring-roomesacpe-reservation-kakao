@@ -5,7 +5,6 @@ import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -13,9 +12,8 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ConsoleReservationRepoTest {
-    private ReservationRepo consoleReservationRepo = new ConsoleReservationRepo();
+    private ConsoleReservationRepo consoleReservationRepo = new ConsoleReservationRepo();
     private Reservation testReservation = new Reservation(
             LocalDate.parse("2000-01-01"),
             LocalTime.parse("00:00"),
