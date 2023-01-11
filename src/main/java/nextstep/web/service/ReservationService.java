@@ -20,7 +20,7 @@ public class ReservationService {
     }
 
     public Long createReservation(ReservationRequestDto requestDto) {
-        Reservation reservation = new Reservation(
+        Reservation reservation = Reservation.of(
                 requestDto.getDate(),
                 requestDto.getTime(),
                 requestDto.getName(),

@@ -19,11 +19,15 @@ public class Reservation {
     private String name;
     private Theme theme;
 
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+    private Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.date = date;
         this.time = time;
         this.name = name;
         this.theme = theme;
+    }
+
+    public static Reservation of(LocalDate date, LocalTime time, String name, Theme theme) {
+        return new Reservation(date, time, name, theme);
     }
 
     public static Reservation from(ResultSet rs) throws SQLException {

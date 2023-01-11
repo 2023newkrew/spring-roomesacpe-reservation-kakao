@@ -38,7 +38,7 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
+                Reservation reservation = Reservation.of(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
