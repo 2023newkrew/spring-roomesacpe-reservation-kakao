@@ -1,4 +1,4 @@
-package nextstep.domain.repository;
+package nextstep.repository;
 
 public class Queries {
 

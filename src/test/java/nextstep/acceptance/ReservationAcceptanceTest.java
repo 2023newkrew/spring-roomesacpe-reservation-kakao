@@ -3,7 +3,7 @@ package nextstep.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.domain.repository.ReservationRepository;
+import nextstep.repository.ReservationRepository;
 import nextstep.dto.CreateReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
