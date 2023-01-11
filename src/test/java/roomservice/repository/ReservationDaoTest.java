@@ -19,14 +19,27 @@ public class ReservationDaoTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
     private final static LocalTime testTime = LocalTime.of(13, 0);
 
-//    @Autowired
-//    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private ReservationDao reservationDao;
     private Reservation testReservation;
 
     @BeforeEach
     void setUp() {
-        reservationDao = new ReservationDao();
+        reservationDao = new ReservationDao(jdbcTemplate);
+        jdbcTemplate.execute("DROP TABLE RESERVATION IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
+                "    id          bigint not null auto_increment,\n" +
+                "    date        date,\n" +
+                "    time        time,\n" +
+                "    name        varchar(20),\n" +
+                "    theme_name  varchar(20),\n" +
+                "    theme_desc  varchar(255),\n" +
+                "    theme_price int,\n" +
+                "    primary key (id)\n)");
+//        jdbcTemplate.execute("DELETE FROM RESERVATION");
+
         testReservation = new Reservation();
         testReservation.setDate(testDate);
         testReservation.setTime(testTime);
