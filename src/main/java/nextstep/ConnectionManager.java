@@ -13,8 +13,12 @@ public class ConnectionManager {
     }
 
     public Connection get() {
-        if (Objects.isNull(con)) {
-            create();
+        try {
+            if (Objects.isNull(con) || con.isClosed()) {
+                create();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return con;
     }
@@ -32,7 +36,6 @@ public class ConnectionManager {
         try {
             con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
             assert con != null;
-            System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException | AssertionError e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();

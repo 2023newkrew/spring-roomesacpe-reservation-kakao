@@ -1,5 +1,8 @@
 package nextstep;
 
+import reservation.domain.Reservation;
+import reservation.domain.Theme;
+
 import java.sql.*;
 
 public class ConsoleRepository {
