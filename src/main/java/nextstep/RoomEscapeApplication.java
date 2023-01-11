@@ -7,8 +7,6 @@ import nextstep.repository.ReservationH2Repository;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.RoomEscapeService;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -23,15 +21,8 @@ public class RoomEscapeApplication {
         ReservationRepository repository = new ReservationH2Repository();
         RoomEscapeService roomEscapeService = new RoomEscapeService(repository);
 
-
         while (true) {
-            System.out.println();
-            System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
-            System.out.println("- 예약조회: find {id} ex) find 1");
-            System.out.println("- 예약취소: delete {id} ex) delete 1");
-            System.out.println("- 종료: quit");
-
+            Printer.printGuideMessage();
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
@@ -39,36 +30,25 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                CreateReservationRequest reservationRequest = new CreateReservationRequest(date, time, name);
 
                 try {
-                    Reservation reservation = roomEscapeService.add(new CreateReservationRequest(date, time, name));
-                    System.out.println("예약이 등록되었습니다.");
-                    System.out.println("예약 번호: " + reservation.getId());
-                    System.out.println("예약 날짜: " + reservation.getDate());
-                    System.out.println("예약 시간: " + reservation.getTime());
-                    System.out.println("예약자 이름: " + reservation.getName());
+                    Reservation reservation = roomEscapeService.add(reservationRequest);
+                    Printer.printReservationConfirmMessage(reservation);
                 } catch (DuplicateReservationException e) {
                     System.out.println(e.getMessage());
                 }
-
 
             }
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
 
-                Long id = Long.parseLong(params.split(",")[0]);
+                Long roomId = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    Reservation reservation = roomEscapeService.get(id);
-
-                    System.out.println("예약 번호: " + reservation.getId());
-                    System.out.println("예약 날짜: " + reservation.getDate());
-                    System.out.println("예약 시간: " + reservation.getTime());
-                    System.out.println("예약자 이름: " + reservation.getName());
-                    System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                    System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                    System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                    Reservation reservation = roomEscapeService.get(roomId);
+                    Printer.printReservationInfo(reservation);
                 } catch (ReservationNotFoundException e) {
                     System.out.println(e.getMessage());
                 }
@@ -77,11 +57,11 @@ public class RoomEscapeApplication {
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
 
-                Long id = Long.parseLong(params.split(",")[0]);
+                Long roomId = Long.parseLong(params.split(",")[0]);
 
-                roomEscapeService.delete(id);
+                roomEscapeService.delete(roomId);
 
-                System.out.println("예약이 취소되었습니다.");
+                Printer.printReservationCancelMessage();
             }
 
             if (input.equals(QUIT)) {
