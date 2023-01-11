@@ -32,6 +32,7 @@ dependencies {
 
     // lombok
     implementation 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor('org.projectlombok:lombok')
 
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

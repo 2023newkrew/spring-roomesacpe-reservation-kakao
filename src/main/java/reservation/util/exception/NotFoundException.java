@@ -1,17 +1,15 @@
 package reservation.util.exception;
 
-import reservation.util.ErrorStatus;
+import org.springframework.http.HttpStatus;
 
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends RestAPIException {
 
-    private ErrorStatus errorStatus;
 
-    public NotFoundException(ErrorStatus errorStatus){
-        super(errorStatus.getMessage());
-        this.errorStatus = errorStatus;
+    public NotFoundException(String errorMessage){
+        super(errorMessage);
     }
-
-    public ErrorStatus getErrorStatus() {
-        return errorStatus;
+    @Override
+    public HttpStatus getHttpStatus(){
+        return HttpStatus.NOT_FOUND;
     }
 }

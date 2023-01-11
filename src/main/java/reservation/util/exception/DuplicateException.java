@@ -1,17 +1,15 @@
 package reservation.util.exception;
 
-import reservation.util.ErrorStatus;
+import org.springframework.http.HttpStatus;
 
-public class DuplicateException extends RuntimeException{
+public class DuplicateException extends RestAPIException{
 
-    private ErrorStatus errorStatus;
-
-    public DuplicateException(ErrorStatus errorStatus){
-        super(errorStatus.getMessage());
-        this.errorStatus = errorStatus;
+    public DuplicateException(String errorMessage){
+        super(errorMessage);
     }
 
-    public ErrorStatus getErrorStatus() {
-        return errorStatus;
+    @Override
+    public HttpStatus getHttpStatus(){
+        return HttpStatus.BAD_REQUEST;
     }
 }

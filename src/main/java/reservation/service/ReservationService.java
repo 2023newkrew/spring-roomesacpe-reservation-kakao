@@ -8,8 +8,8 @@ import reservation.util.exception.DuplicateException;
 import reservation.respository.ReservationJdbcTemplateRepository;
 import reservation.util.exception.NotFoundException;
 
-import static reservation.util.ErrorStatus.RESERVATION_DUPLICATED;
-import static reservation.util.ErrorStatus.RESERVATION_NOT_FOUND;
+import static reservation.util.exception.ErrorMessages.RESERVATION_DUPLICATED;
+import static reservation.util.exception.ErrorMessages.RESERVATION_NOT_FOUND;
 
 @Service
 public class ReservationService {
