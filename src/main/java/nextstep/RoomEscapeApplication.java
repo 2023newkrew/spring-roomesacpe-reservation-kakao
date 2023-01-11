@@ -1,11 +1,13 @@
 package nextstep;
 
-import nextstep.dto.CreateReservationRequest;
+import nextstep.console.Printer;
+import nextstep.domain.Reservation;
+import nextstep.dto.ReservationCreateRequest;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationH2Repository;
 import nextstep.repository.ReservationRepository;
-import nextstep.service.RoomEscapeService;
+import nextstep.service.ReservationService;
 
 import java.util.Scanner;
 
@@ -19,7 +21,7 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationRepository repository = new ReservationH2Repository();
-        RoomEscapeService roomEscapeService = new RoomEscapeService(repository);
+        ReservationService reservationService = new ReservationService(repository);
 
         while (true) {
             Printer.printGuideMessage();
@@ -30,10 +32,10 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
-                CreateReservationRequest reservationRequest = new CreateReservationRequest(date, time, name);
+                ReservationCreateRequest reservationRequest = new ReservationCreateRequest(date, time, name);
 
                 try {
-                    Reservation reservation = roomEscapeService.add(reservationRequest);
+                    Reservation reservation = reservationService.add(reservationRequest);
                     Printer.printReservationConfirmMessage(reservation);
                 } catch (DuplicateReservationException e) {
                     System.out.println(e.getMessage());
@@ -47,7 +49,7 @@ public class RoomEscapeApplication {
                 Long roomId = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    Reservation reservation = roomEscapeService.get(roomId);
+                    Reservation reservation = reservationService.findById(roomId);
                     Printer.printReservationInfo(reservation);
                 } catch (ReservationNotFoundException e) {
                     System.out.println(e.getMessage());
@@ -59,7 +61,7 @@ public class RoomEscapeApplication {
 
                 Long roomId = Long.parseLong(params.split(",")[0]);
 
-                roomEscapeService.delete(roomId);
+                reservationService.deleteById(roomId);
 
                 Printer.printReservationCancelMessage();
             }

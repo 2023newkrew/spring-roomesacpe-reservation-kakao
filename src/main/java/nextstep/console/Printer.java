@@ -1,4 +1,6 @@
-package nextstep;
+package nextstep.console;
+
+import nextstep.domain.Reservation;
 
 public class Printer {
 

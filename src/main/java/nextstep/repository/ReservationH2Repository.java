@@ -1,7 +1,7 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.exception.ReservationNotFoundException;
 
 import java.sql.*;
@@ -40,7 +40,7 @@ public class ReservationH2Repository implements ReservationRepository{
     }
 
     @Override
-    public Reservation get(Long id) throws ReservationNotFoundException {
+    public Reservation findById(Long id) throws ReservationNotFoundException {
         Connection con = getConnection();
         Reservation result = null;
 
@@ -74,7 +74,7 @@ public class ReservationH2Repository implements ReservationRepository{
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Connection con = getConnection();
 
         try {

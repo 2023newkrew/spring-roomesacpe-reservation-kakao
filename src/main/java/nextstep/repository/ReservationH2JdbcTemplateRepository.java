@@ -1,7 +1,7 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -46,7 +46,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public Reservation get(Long id)  throws ReservationNotFoundException {
+    public Reservation findById(Long id)  throws ReservationNotFoundException {
         String sql = "SELECT * FROM reservation where id = ?";
         try {
             return jdbcTemplate.queryForObject(
@@ -69,7 +69,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM reservation where id = ?";
         jdbcTemplate.update(sql, id);
     }

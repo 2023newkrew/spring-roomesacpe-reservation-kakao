@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,7 +23,7 @@ public class Reservation {
         this(null, date, time, name, theme);
     }
 
-    public boolean isAtDateTime(LocalDate date, LocalTime time) {
+    public boolean startsAt(LocalDate date, LocalTime time) {
         return Objects.equals(this.date, date) && Objects.equals(this.time, time);
     }
 

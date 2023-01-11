@@ -1,13 +1,15 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
-import nextstep.service.RoomEscapeService;
+import nextstep.domain.Reservation;
+import nextstep.exception.ReservationNotFoundException;
+import nextstep.service.ReservationService;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class ReservationMemoryRepositoryTest {
@@ -19,7 +21,7 @@ class ReservationMemoryRepositoryTest {
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
-                RoomEscapeService.DEFAULT_THEME
+                ReservationService.DEFAULT_THEME
         );
     }
 
@@ -30,11 +32,11 @@ class ReservationMemoryRepositoryTest {
         Reservation addedReservation = repository.add(reservation);
 
         Reservation expected = new Reservation(
-                0L,
+                1L,
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
-                RoomEscapeService.DEFAULT_THEME
+                ReservationService.DEFAULT_THEME
         );
         assertThat(addedReservation).isEqualTo(expected);
     }
@@ -43,14 +45,14 @@ class ReservationMemoryRepositoryTest {
     public void should_findRightReservation_when_findRequestGiven() {
         repository.add(getReservationToAdd());
 
-        Reservation addedReservation = repository.get(0L);
+        Reservation addedReservation = repository.findById(1L);
 
         Reservation expected = new Reservation(
-                0L,
+                1L,
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"),
                 "jin",
-                RoomEscapeService.DEFAULT_THEME
+                ReservationService.DEFAULT_THEME
         );
         assertThat(addedReservation).isEqualTo(expected);
     }
@@ -59,8 +61,9 @@ class ReservationMemoryRepositoryTest {
     public void should_deleteReservation_when_deleteRequestGiven() {
         repository.add(getReservationToAdd());
 
-        repository.delete(0L);
+        repository.deleteById(1L);
 
-        assertThat(repository.get(0L)).isNull();
+        assertThatThrownBy(() -> repository.findById(1L))
+                .isInstanceOf(ReservationNotFoundException.class);
     }
 }

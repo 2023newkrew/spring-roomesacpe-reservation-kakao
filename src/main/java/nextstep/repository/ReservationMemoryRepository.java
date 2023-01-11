@@ -1,6 +1,6 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.exception.ReservationNotFoundException;
 
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
-    private Long reservationIdIndex = 0L;
+    private Long reservationIdIndex = 1L;
 
 
 
@@ -24,11 +24,11 @@ public class ReservationMemoryRepository implements ReservationRepository {
     @Override
     public boolean hasReservationAt(LocalDate date, LocalTime time) {
         return reservations.values().stream()
-                .anyMatch(reservation -> reservation.isAtDateTime(date, time));
+                .anyMatch(reservation -> reservation.startsAt(date, time));
     }
 
     @Override
-    public Reservation get(Long id)  throws ReservationNotFoundException {
+    public Reservation findById(Long id)  throws ReservationNotFoundException {
         Reservation reservation = reservations.get(id);
 
         if (reservation == null) {
@@ -39,7 +39,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         reservations.remove(id);
     }
 }
