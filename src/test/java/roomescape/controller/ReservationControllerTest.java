@@ -26,10 +26,9 @@ public class ReservationControllerTest {
         RestAssured.port = port;
     }
 
-
     @DisplayName("예약 생성 성공 테스트")
     @Test
-    void reservationSuccessTest() {
+    void createReservationSuccessTest() {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         String name = "tester";
@@ -41,5 +40,15 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", res -> startsWith("/reservations/"));
+    }
+
+    @DisplayName("예약 조회 성공 테스트")
+    @Test
+    void findReservationSuccessTest() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }
