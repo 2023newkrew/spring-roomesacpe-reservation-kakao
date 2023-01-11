@@ -1,9 +1,9 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.dto.ReservationRequestDto;
-import nextstep.repository.ReservationJdbcTemplateRepository;
-import nextstep.service.ReservationService;
+import nextstep.domain.reservation.dto.ReservationRequestDto;
+import nextstep.domain.reservation.repository.ReservationJdbcTemplateRepository;
+import nextstep.domain.reservation.service.ReservationService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

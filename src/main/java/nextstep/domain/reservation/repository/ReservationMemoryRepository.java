@@ -1,6 +1,6 @@
-package nextstep.repository;
+package nextstep.domain.reservation.repository;
 
-import nextstep.domain.Reservation;
+import nextstep.domain.reservation.domain.Reservation;
 import nextstep.exceptions.exception.ReservationNotFoundException;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package nextstep.repository;
+package nextstep.domain.reservation.repository;
 
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.reservation.domain.Reservation;
+import nextstep.domain.theme.domain.Theme;
 import nextstep.exceptions.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

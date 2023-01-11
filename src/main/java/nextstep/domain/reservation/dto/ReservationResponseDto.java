@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.domain.reservation.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

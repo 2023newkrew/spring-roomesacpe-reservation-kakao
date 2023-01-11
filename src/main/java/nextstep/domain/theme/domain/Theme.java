@@ -1,4 +1,4 @@
-package nextstep.domain;
+package nextstep.domain.theme.domain;
 
 public class Theme {
     private String name;

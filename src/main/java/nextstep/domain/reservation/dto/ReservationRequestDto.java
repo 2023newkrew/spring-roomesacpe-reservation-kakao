@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.domain.reservation.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
