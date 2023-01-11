@@ -32,7 +32,7 @@ public class SpringReservationDAO extends ReservationDAO {
     @Override
     protected boolean existReservation(LocalDate date, LocalTime time) {
         List<Boolean> result = jdbcTemplate.query(
-                new ExistReservationPreparedStatementCreator(date, time),existRowMapper);
+                new ExistReservationPreparedStatementCreator(date, time), getExistRowMapper());
         validateResult(result);
         return result.get(0);
     }
@@ -49,7 +49,7 @@ public class SpringReservationDAO extends ReservationDAO {
     @Override
     public Reservation findReservation(Long id) {
         List<Reservation> result = jdbcTemplate.query(
-                new FindReservationPreparedStatementCreator(id), reservationRowMapper);
+                new FindReservationPreparedStatementCreator(id), getReservationRowMapper());
         validateResult(result);
         return result.get(0);
     }

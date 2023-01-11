@@ -94,7 +94,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
 
     private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
         validateResultSet(resultSet);
-        return reservationRowMapper.mapRow(resultSet, 1);
+        return getReservationRowMapper().mapRow(resultSet, 1);
     }
 
     private boolean parseExistResultSet(ResultSet resultSet) throws SQLException {

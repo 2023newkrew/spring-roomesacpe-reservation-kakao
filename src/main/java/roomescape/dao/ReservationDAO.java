@@ -9,16 +9,15 @@ import roomescape.exception.BadRequestException;
 
 public abstract class ReservationDAO {
 
-    String ID_TABLE = "id";
-    String DATE_TABLE = "date";
-    String TIME_TABLE = "time";
-    String NAME_TABLE = "name";
-    String THEME_NAME_TABLE = "theme_name";
-    String THEME_DESC_TABLE = "theme_desc";
-    String THEME_PRICE_TABLE = "theme_price";
+    private static final String ID_TABLE = "id";
+    private static final String DATE_TABLE = "date";
+    private static final String TIME_TABLE = "time";
+    private static final String NAME_TABLE = "name";
+    private static final String THEME_NAME_TABLE = "theme_name";
+    private static final String THEME_DESC_TABLE = "theme_desc";
+    private static final String THEME_PRICE_TABLE = "theme_price";
 
-
-    RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+    private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong(ID_TABLE),
             resultSet.getDate(DATE_TABLE).toLocalDate(),
             resultSet.getTime(TIME_TABLE).toLocalTime(),
@@ -27,7 +26,7 @@ public abstract class ReservationDAO {
                     resultSet.getString(THEME_NAME_TABLE),
                     resultSet.getString(THEME_DESC_TABLE),
                     resultSet.getInt(THEME_PRICE_TABLE)));
-    RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean("result");
+    private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean("result");
 
     protected void validateReservation(Reservation reservation) {
         if (!reservation.isValid()) {
@@ -36,6 +35,14 @@ public abstract class ReservationDAO {
         if (existReservation(reservation.getDate(), reservation.getTime())) {
             throw new BadRequestException();
         }
+    }
+
+    protected static RowMapper<Reservation> getReservationRowMapper() {
+        return reservationRowMapper;
+    }
+
+    protected static RowMapper<Boolean> getExistRowMapper() {
+        return existRowMapper;
     }
 
     protected abstract boolean existReservation(LocalDate date, LocalTime time);
