@@ -3,11 +3,10 @@ package kakao.error.exception;
 import kakao.error.ErrorCode;
 
 public class DuplicatedReservationException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final ErrorCode errorCode = ErrorCode.DUPLICATE_RESERVATION;
 
-    public DuplicatedReservationException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public DuplicatedReservationException() {
+        super(ErrorCode.DUPLICATE_RESERVATION.getMessage());
     }
 
     public ErrorCode getErrorCode() {

@@ -24,7 +24,7 @@ public class ReservationService {
     public long createReservation(CreateReservationRequest request) {
         boolean isDuplicate = reservationJDBCRepository.findByDateAndTime(request.date, request.time).size() > 0;
         if (isDuplicate) {
-            throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
+            throw new DuplicatedReservationException();
         }
         Reservation reservation = new Reservation(request.date, request.time, request.name, ThemeRepository.theme);
         return reservationJDBCRepository.save(reservation);
