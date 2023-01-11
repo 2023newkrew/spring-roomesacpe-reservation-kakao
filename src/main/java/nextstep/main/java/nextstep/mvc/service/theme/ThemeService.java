@@ -8,6 +8,9 @@ import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
 import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ThemeService {
@@ -28,5 +31,12 @@ public class ThemeService {
             themeRepository.findById(id)
                 .orElseThrow(RuntimeException::new)
         );
+    }
+
+    public List<ThemeFindResponse> findAll() {
+        return themeRepository.findAll()
+                .stream()
+                .map(themeMapper::themeToFindResponse)
+                .collect(Collectors.toList());
     }
 }

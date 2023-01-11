@@ -52,7 +52,8 @@ public class JdbcThemeRepository implements ThemeRepository{
 
     @Override
     public List<Theme> findAll() {
-        return null;
+        String sql = "SELECT * FROM theme";
+        return jdbcTemplate.query(sql, themeRowMapper);
     }
 
     @Override

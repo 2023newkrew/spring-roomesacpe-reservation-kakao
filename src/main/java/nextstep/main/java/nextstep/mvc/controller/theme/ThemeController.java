@@ -20,6 +20,11 @@ public class ThemeController {
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
 
+    @GetMapping
+    public ResponseEntity<?> findALl() {
+        return ResponseEntity.ok(themeService.findAll());
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
         return ResponseEntity.ok(themeService.findById(id));
