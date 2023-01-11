@@ -18,10 +18,8 @@ public class RoomEscapeApplication {
         List<Reservation> reservations = new ArrayList<>();
         Long reservationIdIndex = 0L;
         ReservationDAO reservationDAO = new ReservationDAO();
-
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
-
+        reservationDAO.makeConnection();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -49,7 +47,6 @@ public class RoomEscapeApplication {
 
                 reservations.add(reservation);
                 reservationDAO.addReservation(reservation);
-
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -66,7 +63,7 @@ public class RoomEscapeApplication {
                         .filter(it -> Objects.equals(it.getId(), id))
                         .findFirst()
                         .orElseThrow(RuntimeException::new);
-
+                reservationDAO.lookUpReservation(id);
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
@@ -90,5 +87,6 @@ public class RoomEscapeApplication {
                 break;
             }
         }
+        reservationDAO.disconnection();
     }
 }

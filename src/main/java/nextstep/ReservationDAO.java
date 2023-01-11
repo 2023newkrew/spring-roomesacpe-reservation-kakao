@@ -1,25 +1,36 @@
 package nextstep;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ReservationDAO {
-    public void addReservation(Reservation reservation) {
-        Connection con = null;
-
-        // 드라이버 연결
+    Connection con;
+    PreparedStatement pstmt;
+    ResultSet rs;
+    public void makeConnection(){
+        con = null;
+        pstmt = null;
         try {
-            con = DriverManager.getConnection("jdbc:h2:mem:testdb;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
+    }
 
+    public void disconnection(){
+        try {
+            if (con != null)
+                con.close();
+        } catch (SQLException e) {
+            System.err.println("con 오류:" + e.getMessage());
+        }
+    }
+
+    public void addReservation(Reservation reservation) {
+        // 드라이버 연결
         try {
             String sql = "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
@@ -33,12 +44,30 @@ public class ReservationDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
+    public Reservation lookUpReservation(Long sid){
+        try{
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT * FROM RESERVATION WHERE id=?");
+
+            pstmt = con.prepareStatement(sql.toString());
+            pstmt.setString(1, String.valueOf(sid));
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Long id = rs.getLong("id");
+                LocalDate date = LocalDate.parse(rs.getString("date"));
+                LocalTime time = LocalTime.parse(rs.getString("time"));
+                String name = rs.getString("name");
+                String themeName = rs.getString("Theme_name");
+                String themeDesc = rs.getString("Theme_desc");
+                Integer themePrice = rs.getInt("Theme_price");
+                Theme theme = new Theme(themeName, themeDesc, themePrice);
+                return new Reservation(id, date, time, name, theme);
+            }
+        } catch (SQLException e){
+            throw new RuntimeException(e);
         }
+        return new Reservation(null,null,null,null,null);
     }
 }
