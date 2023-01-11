@@ -40,6 +40,13 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("조회 실패 시 예외 발생 테스트")
+    void findOneByIdNoSuchReservationExceptionTest() {
+        Long nonExistReservationId = 0L;
+        assertThatCode(() -> service.findOneById(nonExistReservationId)).isInstanceOf(NoSuchReservationException.class);
+    }
+
+    @Test
     @DisplayName("예약 단건 삭제 테스트")
     void deleteOneByIdTest() {
         assertThatCode(() -> service.findOneById(1L)).doesNotThrowAnyException();
@@ -51,8 +58,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("존재하지 않는 예외 삭제시 에외 발생 테스트")
     void deleteOneByIdNoSuchReservationExceptionTest() {
-        Long nonExistReservation = 0L;
-        assertThatCode(() -> service.deleteOneById(nonExistReservation)).isInstanceOf(NoSuchReservationException.class);
+        Long nonExistReservationId = 0L;
+        assertThatCode(() -> service.deleteOneById(nonExistReservationId)).isInstanceOf(NoSuchReservationException.class);
     }
 
     @Test
