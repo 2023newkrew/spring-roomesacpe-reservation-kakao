@@ -35,7 +35,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
             resultSet.next();
             return Reservation.from(resultSet);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("예약 내역을 찾을 수 없습니다.");
         }
     }
 
@@ -58,8 +58,39 @@ public class ConsoleReservationRepository implements ReservationRepository {
             ResultSet generatedKeys = ps.getGeneratedKeys();
             generatedKeys.next();
             return generatedKeys.getLong("id");
+        } catch (SQLException | IllegalArgumentException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void createTable() throws SQLException {
+        Statement statement = con.createStatement();
+        statement.execute(createTableSql);
+    }
+
+    @Override
+    public void dropTable() throws SQLException {
+        Statement statement = con.createStatement();
+        statement.execute(dropTableSql);
+    }
+
+    private void validateReservation(LocalDate date, LocalTime time) throws SQLException {
+        try {
+            PreparedStatement ps = con.prepareStatement(checkDuplicationSql, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+            int row = resultSet.getInt("total_rows");
+            if (row > 0) {
+                throw new IllegalArgumentException("이미 예약이 존재합니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("이미 예약이 존재합니다.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new SQLException("SQL 오류");
         }
     }
 }

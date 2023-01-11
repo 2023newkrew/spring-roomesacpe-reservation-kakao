@@ -60,7 +60,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private void validateReservation(LocalDate date, LocalTime time) {
-        String sql = "select count(*) from reservation where date = ? and time = ?";
+        String sql = checkDuplicationSql;
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, time);
         if (count > 0) throw new IllegalArgumentException("이미 예약된 일시에는 예약이 불가능합니다.");
     }

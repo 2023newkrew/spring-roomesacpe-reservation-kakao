@@ -53,7 +53,7 @@ public class RoomEscapeApplication {
                     System.out.println("예약 날짜: " + reservation.getDate());
                     System.out.println("예약 시간: " + reservation.getTime());
                     System.out.println("예약자 이름: " + reservation.getName());
-                } catch (IllegalArgumentException e) {
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -62,15 +62,19 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationService.findById(id);
+                try {
+                    Reservation reservation = reservationService.findById(id);
 
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                    System.out.println("예약 번호: " + reservation.getId());
+                    System.out.println("예약 날짜: " + reservation.getDate());
+                    System.out.println("예약 시간: " + reservation.getTime());
+                    System.out.println("예약자 이름: " + reservation.getName());
+                    System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
+                    System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
+                    System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
             if (input.startsWith(DELETE)) {
