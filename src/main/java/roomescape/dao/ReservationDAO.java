@@ -16,13 +16,13 @@ import roomescape.dto.Theme;
 @Repository
 public class ReservationDAO {
 
-    public static final String ID_TABLE = "id";
-    public static final String DATE_TABLE = "date";
-    public static final String TIME_TABLE = "time";
-    public static final String NAME_TABLE = "name";
-    public static final String THEME_NAME_TABLE = "theme_name";
-    public static final String THEME_DESC_TABLE = "theme_desc";
-    public static final String THEME_PRICE_TABLE = "theme_price";
+    private static final String ID_TABLE = "id";
+    private static final String DATE_TABLE = "date";
+    private static final String TIME_TABLE = "time";
+    private static final String NAME_TABLE = "name";
+    private static final String THEME_NAME_TABLE = "theme_name";
+    private static final String THEME_DESC_TABLE = "theme_desc";
+    private static final String THEME_PRICE_TABLE = "theme_price";
 
     private static final String FIND_SQL = String.format(
             "SELECT * FROM reservation WHERE %s = :%s",
@@ -33,8 +33,10 @@ public class ReservationDAO {
     private static final String ADD_SQL = String.format(
             "INSERT INTO reservation(%s, %s, %s, %s, %s, %s) "
                     + "VALUES (:%s, :%s, :%s, :%s, :%s, :%s)",
-            DATE_TABLE, TIME_TABLE, NAME_TABLE, THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE,
-            DATE_TABLE, TIME_TABLE, NAME_TABLE, THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE);
+            DATE_TABLE, TIME_TABLE, NAME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE,
+            DATE_TABLE, TIME_TABLE, NAME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE);
     private static final String DELETE_SQL = String.format(
             "DELETE FROM reservation where %s = :%s",
             ID_TABLE, ID_TABLE);
@@ -73,7 +75,8 @@ public class ReservationDAO {
     public Reservation findReservation(long id) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource(
                 ID_TABLE, id);
-        return namedParameterJdbcTemplate.queryForObject(FIND_SQL, sqlParameterSource, actorRowMapper);
+        return namedParameterJdbcTemplate.queryForObject(
+                FIND_SQL, sqlParameterSource, actorRowMapper);
     }
 
     public Long findCountReservationByDateTime(LocalDate date, LocalTime time) {
@@ -81,7 +84,8 @@ public class ReservationDAO {
                 Map.of(
                         DATE_TABLE, date,
                         TIME_TABLE, time));
-        return namedParameterJdbcTemplate.queryForObject(FIND_BY_DATETIME_SQL,sqlParameterSource, Long.class);
+        return namedParameterJdbcTemplate.queryForObject(
+                FIND_BY_DATETIME_SQL,sqlParameterSource, Long.class);
     }
 
     public void deleteReservation(long id) {

@@ -12,9 +12,25 @@ import roomescape.dto.Theme;
 
 public class ReservationDAO {
 
-    private static final String ADD_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-    private static final String FIND_SQL = "SELECT * FROM reservation WHERE id=?;";
-    private static final String DELETE_SQL = "DELETE FROM reservation WHERE id=?;";
+    private static final String ID_TABLE = "id";
+    private static final String DATE_TABLE = "date";
+    private static final String TIME_TABLE = "time";
+    private static final String NAME_TABLE = "name";
+    private static final String THEME_NAME_TABLE = "theme_name";
+    private static final String THEME_DESC_TABLE = "theme_desc";
+    private static final String THEME_PRICE_TABLE = "theme_price";
+
+    private static final String ADD_SQL = String.format(
+            "INSERT INTO reservation(%s, %s, %s, %s, %s, %s) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)",
+            DATE_TABLE, TIME_TABLE, NAME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE);
+    private static final String FIND_SQL = String.format(
+            "SELECT * FROM reservation WHERE %s=?;",
+            ID_TABLE);
+    private static final String DELETE_SQL = String.format(
+            "DELETE FROM reservation WHERE %s=?;",
+            ID_TABLE);
 
     private final String url;
     private final String user;

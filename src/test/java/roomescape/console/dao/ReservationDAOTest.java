@@ -22,26 +22,46 @@ public class ReservationDAOTest {
     private static final String USER = "";
     private static final String PASSWORD = "";
 
-    private static final LocalDate DATE1 = LocalDate.parse("2022-08-01");
-    private static final LocalDate DATE2 = LocalDate.parse("2022-08-02");
-    private static final LocalTime TIME = LocalTime.parse("13:00");
-    private static final String NAME = "test";
-    private static final String THEME_NAME = "워너고홈";
-    private static final String THEME_DESC = "병맛 어드벤처 회사 코믹물";
-    private static final Integer THEME_PRICE = 29000;
+    private static final String ID_TABLE = "id";
+    private static final String DATE_TABLE = "date";
+    private static final String TIME_TABLE = "time";
+    private static final String NAME_TABLE = "name";
+    private static final String THEME_NAME_TABLE = "theme_name";
+    private static final String THEME_DESC_TABLE = "theme_desc";
+    private static final String THEME_PRICE_TABLE = "theme_price";
 
-    private static final Theme THEME = new Theme(THEME_NAME, THEME_DESC, THEME_PRICE);
+    private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
+    private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
+    private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
+    private static final String NAME_DATA = "test";
+    private static final String THEME_NAME_DATA = "워너고홈";
+    private static final String THEME_DESC_DATA = "병맛 어드벤처 회사 코믹물";
+    private static final Integer THEME_PRICE_DATA = 29000;
 
-    private static final String DROP_TABLE = "DROP TABLE IF EXISTS RESERVATION";
-    private static final String CREATE_TABLE = "CREATE TABLE RESERVATION "
-            + "(id bigint not null auto_increment, date date, time time, name varchar(20),"
-            + " theme_name varchar(20), theme_desc  varchar(255), theme_price int,"
-            + " primary key (id));";
+    private static final Theme THEME_DATA = new Theme(
+            THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA);
+
+    private static final String DROP_TABLE = "DROP TABLE IF EXISTS reservation";
+    private static final String CREATE_TABLE = String.format(
+            "CREATE TABLE reservation "
+                    + "(%s bigint not null auto_increment,"
+                    + " %s date, %s time,"
+                    + " %s varchar(20),"
+                    + " %s varchar(20),"
+                    + " %s varchar(20),"
+                    + " %s int,"
+                    + " primary key (%s)",
+            ID_TABLE, DATE_TABLE, TIME_TABLE, NAME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_DATA,
+            ID_TABLE);
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
-    private static final String ADD_DATE1_SQL =
-            "INSERT INTO RESERVATION (name, date, time, theme_name, theme_desc, theme_price) VALUES ('"
-                    + NAME + "', '" + DATE1 + "', '" + TIME + "', '" + THEME_NAME + "', '"
-                    + THEME_DESC + "', " + THEME_PRICE + ")";
+    private static final String ADD_DATE1_SQL =String.format(
+            "INSERT INTO reservation (%s, %s, %s, %s, %s, %s) "
+                    + "VALUES (%s, %s, %s, %s, %s, %s)",
+            NAME_TABLE, DATE_TABLE, TIME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE,
+            NAME_DATA, DATE_DATA1, TIME_DATA,
+            THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA);
 
     private final ReservationDAO reservationDAO = new ReservationDAO(URL, USER, PASSWORD);
     private Connection con;
@@ -65,7 +85,7 @@ public class ReservationDAOTest {
     @DisplayName("예약 생성")
     @Test
     void addReservation() throws SQLException {
-        Reservation reservation = new Reservation(null, DATE2, TIME, NAME, THEME);
+        Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_DATA);
 
         reservationDAO.addReservation(reservation);
         ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
@@ -77,12 +97,12 @@ public class ReservationDAOTest {
     @Test
     void findReservation() {
         Reservation reservation = reservationDAO.findReservation(1L);
-        assertThat(reservation.getName()).isEqualTo(NAME);
-        assertThat(reservation.getDate()).isEqualTo(DATE1);
-        assertThat(reservation.getTime()).isEqualTo(TIME);
-        assertThat(reservation.getTheme().getName()).isEqualTo(THEME_NAME);
-        assertThat(reservation.getTheme().getDesc()).isEqualTo(THEME_DESC);
-        assertThat(reservation.getTheme().getPrice()).isEqualTo(THEME_PRICE);
+        assertThat(reservation.getName()).isEqualTo(NAME_DATA);
+        assertThat(reservation.getDate()).isEqualTo(DATE_DATA1);
+        assertThat(reservation.getTime()).isEqualTo(TIME_DATA);
+        assertThat(reservation.getTheme().getName()).isEqualTo(THEME_NAME_DATA);
+        assertThat(reservation.getTheme().getDesc()).isEqualTo(THEME_DESC_DATA);
+        assertThat(reservation.getTheme().getPrice()).isEqualTo(THEME_PRICE_DATA);
     }
 
     @DisplayName("예약 삭제")

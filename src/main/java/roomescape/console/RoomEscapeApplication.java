@@ -40,8 +40,8 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(null, LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"), name, theme);
+                Reservation reservation = new Reservation(
+                        LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
                 dao.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");

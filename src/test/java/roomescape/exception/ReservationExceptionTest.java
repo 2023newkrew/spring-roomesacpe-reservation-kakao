@@ -22,24 +22,44 @@ import roomescape.dto.Theme;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationExceptionTest {
 
-    private static final LocalDate DATE = LocalDate.parse("2022-08-01");
-    private static final LocalTime TIME = LocalTime.parse("13:00");
-    private static final String NAME = "test";
-    private static final String THEME_NAME = "워너고홈";
-    private static final String THEME_DESC = "병맛 어드벤처 회사 코믹물";
-    private static final int THEME_PRICE = 29000;
+    private static final String ID_TABLE = "id";
+    private static final String DATE_TABLE = "date";
+    private static final String TIME_TABLE = "time";
+    private static final String NAME_TABLE = "name";
+    private static final String THEME_NAME_TABLE = "theme_name";
+    private static final String THEME_DESC_TABLE = "theme_desc";
+    private static final String THEME_PRICE_TABLE = "theme_price";
 
-    private static final Theme THEME = new Theme(THEME_NAME, THEME_DESC, THEME_PRICE);
+    private static final LocalDate DATE_DATA = LocalDate.parse("2022-08-01");
+    private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
+    private static final String NAME_DATA = "test";
+    private static final String THEME_NAME_DATA = "워너고홈";
+    private static final String THEME_DESC_DATA = "병맛 어드벤처 회사 코믹물";
+    private static final int THEME_PRICE_DATA = 29000;
+
+    private static final Theme THEME_DATA = new Theme(
+            THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA);
 
     private static final String RESERVATIONS_PATH = "/reservations";
 
-    private static final String DROP_TABLE = "DROP TABLE IF EXISTS RESERVATION";
-    private static final String CREATE_TABLE = "CREATE TABLE RESERVATION "
-            + "(id bigint not null auto_increment, date date, time time, name varchar(20),"
-            + " theme_name varchar(20), theme_desc  varchar(255), theme_price int,"
-            + " primary key (id));";
-    private static final String ADD_SQL = "INSERT INTO reservation (date, time, name,"
-            + " theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String DROP_TABLE = "DROP TABLE IF EXISTS reservation";
+    private static final String CREATE_TABLE = String.format(
+            "CREATE TABLE reservation "
+                    + "(%s bigint not null auto_increment,"
+                    + " %s date, %s time,"
+                    + " %s varchar(20),"
+                    + " %s varchar(20),"
+                    + " %s varchar(20),"
+                    + " %s int,"
+                    + " primary key (%s)",
+            ID_TABLE, DATE_TABLE, TIME_TABLE, NAME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE,
+            ID_TABLE);
+    private static final String ADD_SQL =String.format(
+            "INSERT INTO reservation (%s, %s, %s, %s, %s, %s) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)",
+            NAME_TABLE, DATE_TABLE, TIME_TABLE,
+            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE);
 
     @LocalServerPort
     private int port;
@@ -55,7 +75,8 @@ public class ReservationExceptionTest {
         jdbcTemplate.execute(CREATE_TABLE);
 
         List<Object[]> split = List.<Object[]>of(
-                new Object[]{DATE, TIME, NAME, THEME_NAME, THEME_DESC, THEME_PRICE});
+                new Object[]{DATE_DATA, TIME_DATA, NAME_DATA,
+                        THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA});
 
         jdbcTemplate.batchUpdate(ADD_SQL, split);
     }
@@ -74,7 +95,7 @@ public class ReservationExceptionTest {
     @DisplayName("예약 생성) 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.")
     @Test
     void failToCreateReservationAlreadyExist() {
-        Reservation reservation = new Reservation(null, DATE, TIME, NAME, THEME);
+        Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_DATA);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
