@@ -92,6 +92,16 @@ public class ConsoleReservationDAO extends ReservationDAO {
         return resultSet.getLong(1);
     }
 
+    private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
+        validateResultSet(resultSet);
+        return reservationRowMapper.mapRow(resultSet, 1);
+    }
+
+    private boolean parseExistResultSet(ResultSet resultSet) throws SQLException {
+        validateResultSet(resultSet);
+        return resultSet.getBoolean("result");
+    }
+
     private Long executeAddConnection(Connection con, Reservation reservation) {
         try {
             PreparedStatement ps = createAddReservationPreparedStatement(con, reservation);
@@ -100,11 +110,6 @@ public class ConsoleReservationDAO extends ReservationDAO {
         } catch (SQLException e) {
             throw new BadRequestException();
         }
-    }
-
-    private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
-        validateResultSet(resultSet);
-        return reservationRowMapper.mapRow(resultSet, 1);
     }
 
     private Reservation executeFindConnection(Connection con, Long id) {
@@ -124,11 +129,6 @@ public class ConsoleReservationDAO extends ReservationDAO {
         } catch (SQLException e) {
             throw new BadRequestException();
         }
-    }
-
-    private boolean parseExistResultSet(ResultSet resultSet) throws SQLException {
-        validateResultSet(resultSet);
-        return resultSet.getBoolean("result");
     }
 
     private boolean executeExistConnection(Connection con, LocalDate date, LocalTime time) {
@@ -151,6 +151,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
 
     @Override
     public Long addReservation(Reservation reservation) {
+        validateReservation(reservation);
         Connection con = openConnection();
         Long id = executeAddConnection(con, reservation);
         closeConnection(con);
