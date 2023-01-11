@@ -1,12 +1,24 @@
 package nextstep;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+
 import java.sql.*;
 
+@Repository
 public class ReservationJdbcRepository {
+
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+
     public Long save(Reservation reservation) {
         Connection con;
         try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
@@ -30,7 +42,7 @@ public class ReservationJdbcRepository {
     public Reservation findOneById(Long reservationId) {
         Connection con;
         try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
@@ -57,7 +69,7 @@ public class ReservationJdbcRepository {
     public Integer delete(Long reservationId) {
         Connection con;
         try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
