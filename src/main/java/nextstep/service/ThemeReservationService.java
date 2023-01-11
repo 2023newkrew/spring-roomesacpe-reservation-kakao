@@ -3,11 +3,13 @@ package nextstep.service;
 import nextstep.dto.ReservationDetail;
 import nextstep.dto.ReservationDto;
 
+import java.sql.SQLException;
+
 public interface ThemeReservationService {
 
-    public Long reserve(ReservationDto reservationDto);
+    Long reserve(ReservationDto reservationDto) throws SQLException;
 
-    public void cancelById(Long id);
+    void cancelById(Long id) throws SQLException;
 
     ReservationDetail findById(Long id) throws SQLException;
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,7 +25,7 @@ class ThemeReservationServiceTest {
 
     @Test
     @DisplayName("방탈출 예약하기")
-    void test1(){
+    void test1() throws SQLException{
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:01");
 
         Long reservationId = themeReservationService.reserve(reservationDto);
@@ -34,7 +35,7 @@ class ThemeReservationServiceTest {
 
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
-    void test2(){
+    void test2() throws SQLException{
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:02");
         Long reservationId = themeReservationService.reserve(reservationDto);
 
@@ -52,7 +53,7 @@ class ThemeReservationServiceTest {
 
     @Test
     @DisplayName("예약된 방을 조회한다.")
-    void test4() {
+    void test4() throws SQLException{
         ReservationDto randomReservation = makeRandomReservationDto(RESERVATION_DATE, "13:04");
         Long reservationId = themeReservationService.reserve(randomReservation);
         ReservationDetail reservationDetail = themeReservationService.findById(reservationId);
@@ -70,7 +71,7 @@ class ThemeReservationServiceTest {
 
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
-    void test7() {
+    void test7() throws SQLException {
         ReservationDto reservation1 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
         ReservationDto reservation2 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
 

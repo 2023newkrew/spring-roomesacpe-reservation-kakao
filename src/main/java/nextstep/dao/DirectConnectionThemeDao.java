@@ -1,8 +1,10 @@
 package nextstep.dao;
 
+import lombok.RequiredArgsConstructor;
 import nextstep.entity.Theme;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +61,7 @@ public class DirectConnectionThemeDao implements ThemeDao {
         }finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }
-        return themeId;
+        return insertCount;
     }
 
     private static List<Theme> getTheme(Long id, ResultSet resultSet) throws SQLException {

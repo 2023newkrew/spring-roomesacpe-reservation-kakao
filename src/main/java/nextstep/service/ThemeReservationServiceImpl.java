@@ -9,6 +9,8 @@ import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+
 @Service
 @RequiredArgsConstructor
 public class ThemeReservationServiceImpl implements ThemeReservationService {
@@ -19,14 +21,19 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     private static final Long DEFAULT_THEME_ID = 1L;
 
     @Override
-    public Long reserve(ReservationDto reservationDto) {
+    public Long reserve(ReservationDto reservationDto) throws SQLException {
         reservationDto.setThemeId(DEFAULT_THEME_ID);
-        return themeReservationDao.createReservation(ReservationDto.from(reservationDto));
+        Reservation reservation = ReservationDto.from(reservationDto);
+        themeReservationDao.insert(reservation);
+        return reservation.getId();
     }
 
     @Override
-    public void cancelById(Long id) {
-        themeReservationDao.deleteReservation(id);
+    public void cancelById(Long id) throws SQLException{
+        int deleteCount = themeReservationDao.deleteReservation(id);
+        if(deleteCount == 0){
+            throw new SQLException();
+        }
     }
 
     @Override

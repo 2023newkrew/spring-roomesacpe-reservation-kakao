@@ -4,12 +4,13 @@ import nextstep.RoomEscapeWebApplication;
 import nextstep.entity.Reservation;
 import nextstep.dao.ThemeReservationDao;
 import nextstep.dto.ReservationDto;
-import org.assertj.core.api.Assertions;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -28,45 +29,46 @@ class ThemeReservationDaoTest {
 
     @Test
     @DisplayName("방탈출 예약하기")
-    void test1(){
-        Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:01", EXIST_THEME_ID);
+    void test1() throws SQLException{
+        Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:31", EXIST_THEME_ID);
 
-        Long reservationId = themeReservationDao.createReservation(reservation);
+        themeReservationDao.insert(reservation);
+        Long reservationId = reservation.getId();
         Reservation findReservation = themeReservationDao.findById(reservationId);
+        assertThat(reservationId).isNotNull();
         assertThat(findReservation).isNotNull();
     }
 
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
-    void test2(){
+    void test2() throws SQLException{
         Reservation reservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
-        Long reservationId = themeReservationDao.createReservation(reservation);
+        themeReservationDao.insert(reservation);
 
-        themeReservationDao.deleteReservation(reservationId);
-        assertThat(themeReservationDao.findById(reservationId)).isNull();
+        themeReservationDao.deleteReservation(reservation.getId());
+        assertThat(themeReservationDao.findById(reservation.getId())).isNull();
     }
 
     @Test
     @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
-    void test3(){
-        assertThatThrownBy(() -> themeReservationDao.deleteReservation(1000L))
-                .isInstanceOf(IllegalArgumentException.class);
+    void test3() throws SQLException{
+        assertThat(themeReservationDao.deleteReservation(NOT_EXIST_RESERVATION_ID)).isZero();
     }
 
     @Test
     @DisplayName("예약된 방을 조회한다.")
-    void test4() {
+    void test4() throws SQLException{
         Reservation randomReservation = makeRandomReservation(RESERVATION_DATE, "14:02", EXIST_THEME_ID);
-        long reservationId = themeReservationDao.createReservation(randomReservation);
-        Reservation findReservation = themeReservationDao.findById(reservationId);
+        themeReservationDao.insert(randomReservation);
+        Reservation findReservation = themeReservationDao.findById(randomReservation.getId());
 
         assertThat(findReservation.getName()).isEqualTo(randomReservation.getName());
     }
 
     @Test
     @DisplayName("예약되지 않은 방을 조회한다.")
-    void test5() {
-        Reservation findReservation = themeReservationDao.findById(100L);
+    void test5() throws SQLException{
+        Reservation findReservation = themeReservationDao.findById(1000000L);
 
         assertThat(findReservation).isNull();
     }
@@ -78,16 +80,15 @@ class ThemeReservationDaoTest {
         assertThatThrownBy(() -> themeReservationDao.insert(reservation)).isInstanceOf(SQLException.class);
     }
 
-
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
-    void test7() {
+    void test7() throws SQLException{
         Reservation reservation1 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
         Reservation reservation2 = makeRandomReservation(RESERVATION_DATE, "14:07", EXIST_THEME_ID);
 
-        themeReservationDao.createReservation(reservation1);
-        Assertions.assertThatThrownBy(() -> themeReservationDao.createReservation(reservation2))
-                .isInstanceOf(IllegalArgumentException.class);
+        themeReservationDao.insert(reservation1);
+        assertThatThrownBy(() -> themeReservationDao.insert(reservation2))
+                .isInstanceOf(JdbcSQLIntegrityConstraintViolationException.class);
     }
 
     Reservation makeRandomReservation(String date, String time, Long themeId){
