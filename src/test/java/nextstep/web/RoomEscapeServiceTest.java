@@ -20,14 +20,14 @@ class RoomEscapeServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ReservationRepository reservationRepository;
+    private JdbcTemplateReservationRepository repository;
 
     private RoomEscapeService roomEscapeService;
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationRepository(jdbcTemplate);
-        roomEscapeService = new RoomEscapeService(reservationRepository);
+        repository = new JdbcTemplateReservationRepository(jdbcTemplate);
+        roomEscapeService = new RoomEscapeService(repository);
     }
 
     @DisplayName("존재하지 않는 예약을 조회할 경우 예외가 발생한다")

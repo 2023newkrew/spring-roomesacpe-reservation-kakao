@@ -29,7 +29,7 @@ public class RoomEscapeControllerTest {
     private int port;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private JdbcTemplateReservationRepository repository;
 
     Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -40,7 +40,7 @@ public class RoomEscapeControllerTest {
 
     @AfterEach
     void tearDown() {
-        reservationRepository.deleteAll();
+        repository.deleteAll();
     }
 
     @DisplayName("예약을 생성한다")
@@ -63,7 +63,7 @@ public class RoomEscapeControllerTest {
         assertThat(response.header("Location")).isNotBlank();
 
         Long id = 생성된_예약_번호를_반환한다(response);
-        Reservation reservation = reservationRepository.findById(id).orElseThrow();
+        Reservation reservation = repository.findById(id).orElseThrow();
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
         assertThat(reservation.getName()).isEqualTo(name);
@@ -112,7 +112,7 @@ public class RoomEscapeControllerTest {
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(reservationRepository.findById(id)).isEmpty();
+        assertThat(repository.findById(id)).isEmpty();
     }
 
     private Long 생성된_예약_번호를_반환한다(ExtractableResponse<Response> response) {
