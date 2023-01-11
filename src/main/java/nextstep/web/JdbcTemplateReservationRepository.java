@@ -5,6 +5,7 @@ import nextstep.repository.ReservationConverter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -42,8 +43,9 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
     @Override
     public Optional<Reservation> findById(Long id) {
         try {
+            RowMapper<Reservation> rowMapper = (rs, rowNum) -> ReservationConverter.get(rs, rs.getLong("id"));
             String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> ReservationConverter.get(rs, rs.getLong("id")), id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
