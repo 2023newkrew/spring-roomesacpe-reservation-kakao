@@ -2,9 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -24,7 +22,7 @@ class ConsoleReservationRepositoryTest {
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
     }
 
-    @BeforeEach
+    @AfterEach
     void setUpTable() throws Exception {
         consoleReservationRepository.dropTable();
         consoleReservationRepository.createTable();

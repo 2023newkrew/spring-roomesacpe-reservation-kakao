@@ -56,7 +56,7 @@ class ReservationServiceTest {
     void 예약을_취소할_수_있다() {
         //given
         Reservation reservation = new Reservation(
-                2L, LocalDate.parse("2022-01-04"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-04"), LocalTime.parse("13:00"), "bryan", theme);
 
         Long savedId = reservationService.createReservation(
                 reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
@@ -77,7 +77,7 @@ class ReservationServiceTest {
     void 예약을_조회할_수_있다() {
         //given
         Reservation reservation = new Reservation(
-                2L, LocalDate.parse("2022-01-04"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-04"), LocalTime.parse("13:00"), "bryan", theme);
 
         Long savedId = reservationService.createReservation(
                 reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());

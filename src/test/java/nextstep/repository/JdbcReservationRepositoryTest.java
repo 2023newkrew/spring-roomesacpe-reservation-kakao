@@ -2,10 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +27,7 @@ class JdbcReservationRepositoryTest {
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
     }
 
-    @BeforeEach
+    @AfterEach
     void setUp() throws Exception {
         jdbcReservationRepository.dropTable();
         jdbcReservationRepository.createTable();
