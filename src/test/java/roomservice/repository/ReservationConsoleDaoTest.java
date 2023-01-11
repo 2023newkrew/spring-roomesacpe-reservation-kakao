@@ -29,44 +29,36 @@ public class ReservationConsoleDaoTest {
     }
 
     @Test
-    void createTest() {
-        assertThat(reservationDao.insertReservation(testReservation)).isEqualTo(1L);
+    void addTest() {
+        assertThat(reservationDao.add(testReservation)).isEqualTo(1L);
     }
 
     @Test
-    void throwExceptionWhenDuplicated() {
-        reservationDao.insertReservation(testReservation);
-        assertThatThrownBy(() -> {
-            reservationDao.insertReservation(testReservation);
-        }).isInstanceOf(DuplicatedReservationException.class);
+    void throwExceptionDuplicated() {
+        reservationDao.add(testReservation);
+        assertThatThrownBy(() -> reservationDao.add(testReservation)).isInstanceOf(DuplicatedReservationException.class);
     }
 
     @Test
-    void showTest() {
-        long id = reservationDao.insertReservation(testReservation);
+    void findTest() {
+        long id = reservationDao.add(testReservation);
         testReservation.setId(id);
-        assertThat(reservationDao.selectReservation(id)).isEqualTo(testReservation);
+        assertThat(reservationDao.findById(id)).isEqualTo(testReservation);
     }
 
     @Test
     void throwExceptionWhenReservationNotExist() {
-        assertThatThrownBy(() -> {
-            reservationDao.selectReservation(1L);
-        }).isInstanceOf(NonExistentReservationException.class);
+        assertThatThrownBy(() -> reservationDao.findById(1L)).isInstanceOf(NonExistentReservationException.class);
 
-        assertThatThrownBy(() -> {
-            reservationDao.deleteReservation(1L);
-        }).isInstanceOf(NonExistentReservationException.class);
+        assertThatThrownBy(() -> reservationDao.deleteById(1L)).isInstanceOf(NonExistentReservationException.class);
     }
 
     @Test
     void deleteTest() {
-        long id = reservationDao.insertReservation(testReservation);
+        long id = reservationDao.add(testReservation);
         testReservation.setId(id);
-        reservationDao.deleteReservation(id);
+        reservationDao.deleteById(id);
 
-        assertThatThrownBy(() -> {
-            reservationDao.selectReservation(id);
-        }).isInstanceOf(NonExistentReservationException.class);
+        assertThatThrownBy(() -> reservationDao.findById(id)).isInstanceOf(NonExistentReservationException.class);
     }
 }

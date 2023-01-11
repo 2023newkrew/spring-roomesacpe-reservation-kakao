@@ -29,7 +29,7 @@ public class ReservationConsoleDao implements ReservationDao{
             e.printStackTrace();
         }
     }
-    public long insertReservation(Reservation reservation) {
+    public long add(Reservation reservation) {
         validateDuplication(reservation);
         String sql = "INSERT INTO RESERVATION(date, time, name) VALUES (?, ?, ?)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
@@ -48,7 +48,7 @@ public class ReservationConsoleDao implements ReservationDao{
         return -1L;
     }
 
-    public Reservation selectReservation(long id){
+    public Reservation findById(long id){
         String sql = "SELECT * FROM RESERVATION WHERE id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -74,7 +74,7 @@ public class ReservationConsoleDao implements ReservationDao{
         }
     }
 
-    public void deleteReservation(long id) {
+    public void deleteById(long id) {
         String sql = "DELETE FROM RESERVATION WHERE id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)){

@@ -14,14 +14,14 @@ import java.sql.PreparedStatement;
 
 @Repository
 public class ReservationSpringDao implements ReservationDao{
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ReservationSpringDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long insertReservation(Reservation reservation) {
+    public long add(Reservation reservation) {
         validateDuplication(reservation);
         String sql = "insert into RESERVATION (date, time, name) values (?, ?, ?)";
 
@@ -37,7 +37,7 @@ public class ReservationSpringDao implements ReservationDao{
         return keyHolder.getKey().longValue();
     }
 
-    public Reservation selectReservation(long id) {
+    public Reservation findById(long id) {
         try {
             String sql = "select * from RESERVATION WHERE id = ?";
             return jdbcTemplate.queryForObject(
@@ -60,9 +60,9 @@ public class ReservationSpringDao implements ReservationDao{
         }
     }
 
-    public void deleteReservation(long id) {
+    public void deleteById(long id) {
         String sql = "delete from RESERVATION where id = ?";
-        if (jdbcTemplate.update(sql, Long.valueOf(id)) == 0) {
+        if (jdbcTemplate.update(sql, id) == 0) {
             throw new NonExistentReservationException();
         }
     }

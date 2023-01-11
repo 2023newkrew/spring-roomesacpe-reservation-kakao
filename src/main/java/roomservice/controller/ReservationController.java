@@ -1,6 +1,5 @@
 package roomservice.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomservice.domain.Reservation;
@@ -13,25 +12,24 @@ import java.net.URI;
 public class ReservationController {
     private final ReservationDao reservationDao;
 
-    @Autowired
     public ReservationController(ReservationDao reservationDao){
         this.reservationDao = reservationDao;
     }
 
     @PostMapping()
     public ResponseEntity<Void> createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationDao.insertReservation(reservation);
+        long id = reservationDao.add(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
-        return ResponseEntity.ok().body(reservationDao.selectReservation(id));
+    public ResponseEntity<Reservation> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(reservationDao.findById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationDao.deleteReservation(id);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        reservationDao.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

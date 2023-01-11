@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,9 +23,9 @@ import static org.hamcrest.core.Is.is;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReservationTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
-    private final static LocalTime testTime = LocalTime.of(13, 00);
-    private Reservation reservation = new Reservation();
-    private RestTemplate restTemplate = new RestTemplate();
+    private final static LocalTime testTime = LocalTime.of(13, 0);
+    private final Reservation reservation = new Reservation();
+    private final RestTemplate restTemplate = new RestTemplate();
     private String baseUrl;
     @Autowired
     private JdbcTemplate jdbcTemplate;

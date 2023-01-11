@@ -1,18 +1,14 @@
 package roomservice;
 
 import roomservice.domain.Reservation;
-import roomservice.domain.Theme;
 import roomservice.repository.ReservationConsoleDao;
 import roomservice.repository.ReservationDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
-public class ConsoleApplication {
+public class RoomEscapeConsoleApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
@@ -23,7 +19,6 @@ public class ConsoleApplication {
         Scanner scanner = new Scanner(System.in);
 
         //Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
 
         while (true) {
             System.out.println();
@@ -47,7 +42,7 @@ public class ConsoleApplication {
                 reservation.setDate(LocalDate.parse(date));
                 reservation.setName(name);
 
-                reservation.setId(reservationDao.insertReservation(reservation));
+                reservation.setId(reservationDao.add(reservation));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -59,9 +54,9 @@ public class ConsoleApplication {
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
 
-                Long id = Long.parseLong(params.split(",")[0]);
+                long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDao.selectReservation(id);
+                Reservation reservation = reservationDao.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -75,9 +70,9 @@ public class ConsoleApplication {
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
 
-                Long id = Long.parseLong(params.split(",")[0]);
+                long id = Long.parseLong(params.split(",")[0]);
 
-                reservationDao.deleteReservation(id);
+                reservationDao.deleteById(id);
                 System.out.println("예약이 취소되었습니다.");
             }
 
