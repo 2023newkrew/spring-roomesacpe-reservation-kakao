@@ -36,6 +36,6 @@ public class ReservationController {
     public Response<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
 
-        return new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), null);
+        return new Response<>(HttpStatus.OK.value(), HttpStatus.NO_CONTENT.name(), null);
     }
 }
