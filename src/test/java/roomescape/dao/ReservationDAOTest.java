@@ -19,14 +19,6 @@ import roomescape.dto.Theme;
 @JdbcTest
 public class ReservationDAOTest {
 
-    private static final String ID_TABLE = "id";
-    private static final String DATE_TABLE = "date";
-    private static final String TIME_TABLE = "time";
-    private static final String NAME_TABLE = "name";
-    private static final String THEME_NAME_TABLE = "theme_name";
-    private static final String THEME_DESC_TABLE = "theme_desc";
-    private static final String THEME_PRICE_TABLE = "theme_price";
-
     private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
@@ -40,23 +32,19 @@ public class ReservationDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS RESERVATION";
-    private static final String CREATE_TABLE = String.format(
+    private static final String CREATE_TABLE =
             "CREATE TABLE reservation "
-                    + "(%s bigint not null auto_increment,"
-                    + " %s date, %s time,"
-                    + " %s varchar(20),"
-                    + " %s varchar(20),"
-                    + " %s varchar(20),"
-                    + " %s int,"
-                    + " primary key (%s)",
-            ID_TABLE, DATE_TABLE, TIME_TABLE, NAME_TABLE,
-            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE,
-            ID_TABLE);
-    private static final String ADD_SQL =String.format(
-            "INSERT INTO reservation (%s, %s, %s, %s, %s, %s) "
-                    + "VALUES (?, ?, ?, ?, ?, ?)",
-            NAME_TABLE, DATE_TABLE, TIME_TABLE,
-            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE);
+                    + "(id bigint not null auto_increment,"
+                    + " date date,"
+                    + " time time,"
+                    + " name varchar(20),"
+                    + " theme_name varchar(20),"
+                    + " theme_desc varchar(20),"
+                    + " theme_price int,"
+                    + " primary key (id));";
+    private static final String ADD_SQL =
+            "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) "
+                    + "VALUES (?, ?, ?, ?, ?, ?);";
 
     private ReservationDAO reservationDAO;
 

@@ -24,22 +24,15 @@ public class ReservationDAO {
     private static final String THEME_DESC_TABLE = "theme_desc";
     private static final String THEME_PRICE_TABLE = "theme_price";
 
-    private static final String FIND_SQL = String.format(
-            "SELECT * FROM reservation WHERE %s = :%s",
-            ID_TABLE, ID_TABLE);
-    private static final String FIND_BY_DATETIME_SQL = String.format(
-            "SELECT count(*) FROM reservation WHERE %s = :%s and %s = :%s",
-            DATE_TABLE, DATE_TABLE, TIME_TABLE, TIME_TABLE);
-    private static final String ADD_SQL = String.format(
-            "INSERT INTO reservation(%s, %s, %s, %s, %s, %s) "
-                    + "VALUES (:%s, :%s, :%s, :%s, :%s, :%s)",
-            DATE_TABLE, TIME_TABLE, NAME_TABLE,
-            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE,
-            DATE_TABLE, TIME_TABLE, NAME_TABLE,
-            THEME_NAME_TABLE, THEME_DESC_TABLE, THEME_PRICE_TABLE);
-    private static final String DELETE_SQL = String.format(
-            "DELETE FROM reservation where %s = :%s",
-            ID_TABLE, ID_TABLE);
+    private static final String FIND_SQL =
+            "SELECT * FROM reservation WHERE id = :id;";
+    private static final String FIND_BY_DATETIME_SQL =
+            "SELECT count(*) FROM reservation WHERE date = :date and time = :time;";
+    private static final String ADD_SQL =
+            "INSERT INTO reservation( date, time, name, theme_name, theme_desc, theme_price) "
+                    + "VALUES (:date, :time, :name, :theme_name, :theme_desc, :theme_price);";
+    private static final String DELETE_SQL =
+            "DELETE FROM reservation where id = :id;";
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong(ID_TABLE),
