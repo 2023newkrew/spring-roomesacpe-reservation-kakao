@@ -5,6 +5,7 @@ import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.dto.CreateReservationDTO;
 import nextstep.repository.WebAppReservationRepo;
+import nextstep.service.WebAppReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,35 +20,26 @@ import java.time.LocalTime;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-
     @Autowired
-    private WebAppReservationRepo webAppReservationRepo;
+    private WebAppReservationService webAppReservationService;
 
     @PostMapping()
     public ResponseEntity createReservation(@RequestBody CreateReservationDTO reservationDto) {
-        Reservation reservation = new Reservation(
-                LocalDate.parse(reservationDto.getLocalDate()),
-                LocalTime.parse(reservationDto.getLocalTime()),
-                reservationDto.getName(),
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
-        );
-        if (webAppReservationRepo.countByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
+        long id = webAppReservationService.addReservation(reservationDto);
+        if (id == -1) {
             return ResponseEntity.badRequest().build();
         }
-        long id = webAppReservationRepo.add(reservation);
-        return ResponseEntity.created(URI.create("/reservations/"+id)).build();
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
-        Reservation reservation = webAppReservationRepo.findById(id).orElseThrow();
-        GetReservationDTO getReservationDTO = new GetReservationDTO(reservation);
-        return ResponseEntity.ok().body(getReservationDTO);
+        return ResponseEntity.ok().body(webAppReservationService.getReservation(id));
     }
 
-    @DeleteMapping( "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
-        webAppReservationRepo.delete(id);
+        webAppReservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 
