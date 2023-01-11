@@ -42,4 +42,7 @@ public class Reservation {
         return theme;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
