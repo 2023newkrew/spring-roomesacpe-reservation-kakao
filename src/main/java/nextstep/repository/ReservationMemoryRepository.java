@@ -2,12 +2,14 @@ package nextstep.repository;
 
 import nextstep.Reservation;
 import nextstep.exception.ReservationNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
     private Long reservationIdIndex = 0L;

@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.Reservation;
 import nextstep.exception.ReservationNotFoundException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +15,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Qualifier("jdbcTemplate")
 @Repository
 public class ReservationH2JdbcTemplateRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
