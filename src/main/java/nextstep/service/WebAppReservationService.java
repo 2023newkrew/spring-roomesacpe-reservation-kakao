@@ -40,4 +40,7 @@ public class WebAppReservationService {
         webAppReservationRepository.delete(id);
     }
 
+    public void deleteAllReservations() {
+        webAppReservationRepository.deleteAll();
+    }
 }

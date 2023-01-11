@@ -36,4 +36,10 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/all")
+    public ResponseEntity deleteAllReservations() {
+        webAppReservationService.deleteAllReservations();
+        return ResponseEntity.noContent().build();
+    }
+
 }

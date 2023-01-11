@@ -21,11 +21,15 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        RestAssured.given().log().all()
+                .when().delete("/reservations/all");
     }
 
     @DisplayName("create reservation test")
     @Test
     void createReservation() {
+
+
         CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:35", "name");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +68,9 @@ public class ReservationControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
-                .when().post("/reservations");
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

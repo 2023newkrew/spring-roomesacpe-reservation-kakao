@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionManager {
-    private static final String DB_CONNECTION_URL = "jdbc:h2:mem:test";
+    private static final String DB_CONNECTION_URL = "jdbc:h2:tcp://localhost/~/roomescape";
     private static final String DB_USER = "sa";
     private static final String DB_PASSWORD = "";
 
