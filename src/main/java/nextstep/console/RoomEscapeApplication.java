@@ -2,6 +2,7 @@ package nextstep.console;
 
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
+import nextstep.exception.RoomEscapeException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
@@ -39,7 +40,7 @@ public class RoomEscapeApplication {
                 if (input.equals(QUIT)) {
                     break;
                 }
-            } catch (RuntimeException e) {
+            } catch (RoomEscapeException e) {
                 System.err.println(e.getMessage());
             }
         }

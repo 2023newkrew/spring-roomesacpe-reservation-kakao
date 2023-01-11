@@ -4,7 +4,6 @@ import nextstep.model.Reservation;
 import nextstep.repository.ReservationConverter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -25,16 +24,14 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
 
     @Override
     public Reservation save(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        PreparedStatementCreator creator = con -> {
+        jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ReservationConverter.set(ps, reservation);
             return ps;
-        };
-
-        jdbcTemplate.update(creator, keyHolder);
+        }, keyHolder);
         Long id = keyHolder.getKey().longValue();
 
         return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
@@ -43,9 +40,9 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
     @Override
     public Optional<Reservation> findById(Long id) {
         try {
-            RowMapper<Reservation> rowMapper = (rs, rowNum) -> ReservationConverter.get(rs, rs.getLong("id"));
             String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            RowMapper<Reservation> rowMapper = (rs, rowNum) -> ReservationConverter.get(rs, rs.getLong("id"));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
