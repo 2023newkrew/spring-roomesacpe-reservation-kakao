@@ -68,7 +68,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "select * from reservation where date = ? and time = ?";
+        String sql = "select * from reservation where date = ? and time = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, date, time).size() > 0;
     }
 }
