@@ -7,7 +7,8 @@ import static nextstep.main.java.nextstep.global.constant.ExceptionMessage.*;
 public enum ErrorCode implements Error {
     NO_SUCH_RESERVATION_ERROR(404, HttpStatus.NOT_FOUND, NO_SUCH_RESERVATION_MESSAGE),
     NO_SUCH_THEME_ERROR(404, HttpStatus.NOT_FOUND, NO_SUCH_THEME_MESSAGE),
-    DUPLICATE_RESERVATION_ERROR(409, HttpStatus.CONFLICT, DUPLICATE_RESERVATION_MESSAGE);
+    DUPLICATE_RESERVATION_ERROR(409, HttpStatus.CONFLICT, DUPLICATE_RESERVATION_MESSAGE),
+    ALREADY_RESERVED_THEME_ERROR(409, HttpStatus.CONFLICT, ALREADY_RESERVED_THEME_MESSAGE);
 
     private final int errorCode;
     private final HttpStatus httpStatus;

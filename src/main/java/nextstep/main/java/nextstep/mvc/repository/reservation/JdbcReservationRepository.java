@@ -4,7 +4,6 @@ import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -83,7 +82,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT EXISTS(SELECT * FROM reservation WHERE data = ? AND time = ?)";
+        String sql = "SELECT EXISTS(SELECT * FROM reservation WHERE date = ? AND time = ?)";
         return EMPTY_SIZE != jdbcTemplate.queryForObject(sql, new Object[]{Date.valueOf(date), Time.valueOf(time)}, Integer.class);
     }
 
@@ -91,5 +90,11 @@ public class JdbcReservationRepository implements ReservationRepository {
     public Boolean existsById(Long id) {
         String sql = "SELECT EXISTS(SELECT * FROM reservation WHERE id = ?)";
         return jdbcTemplate.queryForObject(sql ,new Object[] {id}, Boolean.class);
+    }
+
+    @Override
+    public Boolean existsByThemeId(Long themeId) {
+        String sql = "SELECT EXISTS(SELECT * FROM reservation WHERE theme_id = ?)";
+        return jdbcTemplate.queryForObject(sql ,new Object[] {themeId}, Boolean.class);
     }
 }

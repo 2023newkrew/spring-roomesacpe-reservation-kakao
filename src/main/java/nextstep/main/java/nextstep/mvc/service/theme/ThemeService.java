@@ -1,6 +1,7 @@
 package nextstep.main.java.nextstep.mvc.service.theme;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.main.java.nextstep.global.exception.exception.AlreadyReservedThemeException;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
@@ -38,9 +39,16 @@ public class ThemeService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id, Boolean reserved) {
+        checkIsReserved(reserved);
         checkIsExists(id);
         themeRepository.deleteById(id);
+    }
+
+    private void checkIsReserved(Boolean reserved) {
+        if (reserved) {
+            throw new AlreadyReservedThemeException();
+        }
     }
 
     public void update(Long id, ThemeUpdateRequest request) {

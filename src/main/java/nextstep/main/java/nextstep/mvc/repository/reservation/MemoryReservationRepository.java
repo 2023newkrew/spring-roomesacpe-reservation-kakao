@@ -41,4 +41,10 @@ public class MemoryReservationRepository implements ReservationRepository {
     public Boolean existsById(Long id) {
         return null;
     }
+
+    @Override
+    public Boolean existsByThemeId(Long themeId) {
+
+        return null;
+    }
 }

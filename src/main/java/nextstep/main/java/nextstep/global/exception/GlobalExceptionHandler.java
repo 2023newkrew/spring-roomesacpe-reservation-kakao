@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         return handleExceptionInternal(exception.getError());
     }
 
-    protected ResponseEntity<Object> handleExceptionInternal(Error error) {
+    private ResponseEntity<Object> handleExceptionInternal(Error error) {
         return ResponseEntity.status(error.getHttpStatus())
                 .body(new ErrorResponse(error.getErrorCode(), error.getErrorMessage()));
     }

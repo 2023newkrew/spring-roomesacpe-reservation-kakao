@@ -17,4 +17,6 @@ public interface ReservationRepository {
     Boolean existsByDateAndTime(LocalDate date, LocalTime time);
 
     Boolean existsById(Long id);
+
+    Boolean existsByThemeId(Long themeId);
 }

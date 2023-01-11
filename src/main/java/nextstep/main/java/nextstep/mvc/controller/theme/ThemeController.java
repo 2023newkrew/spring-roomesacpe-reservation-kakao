@@ -1,8 +1,10 @@
 package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
+import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class ThemeController {
     private final ThemeService themeService;
+    private final ReservationService reservationService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ThemeCreateRequest request) {
@@ -33,7 +36,8 @@ public class ThemeController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        themeService.deleteById(id);
+        themeService.deleteById(id, reservationService.existsByThemeId(id));
+
         return ResponseEntity.noContent().build();
     }
 

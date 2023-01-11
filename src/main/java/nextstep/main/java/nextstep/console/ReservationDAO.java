@@ -104,6 +104,12 @@ public class ReservationDAO implements ReservationRepository {
         return null;
     }
 
+    @Override
+    public Boolean existsByThemeId(Long themeId) {
+
+        return null;
+    }
+
     private Long getGeneratedKey(PreparedStatement ps) throws SQLException {
         ResultSet generatedKeys = ps.getGeneratedKeys();
         generatedKeys.next();

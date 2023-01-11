@@ -28,6 +28,10 @@ public class ReservationService {
         );
     }
 
+    public Boolean existsByThemeId(Long themeId) {
+        return reservationRepository.existsByThemeId(themeId);
+    }
+
     public void deleteById(Long id) {
         checkIsExists(id);
         reservationRepository.deleteById(id);
