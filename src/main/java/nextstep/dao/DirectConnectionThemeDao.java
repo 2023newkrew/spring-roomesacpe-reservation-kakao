@@ -8,47 +8,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class DirectConnectionThemeDao implements ThemeDao{
+@RequiredArgsConstructor
+public class DirectConnectionThemeDao implements ThemeDao {
     private static final String FIND_BY_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
-    private static final String INSERT_SQL = "INSERT INTO THEME(ID, NAME, DESC, PRICE) VALUES(?, ?, ?, ?)";
+    private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
+
+    private final DataSource dataSource;
+
     @Override
-    public Theme findById(Long id) {
-        Connection con = DatabaseUtil.getConnection();
+    public Theme findById(Long id) throws SQLException{
+        Connection con = dataSource.getConnection();
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
         try{
             psmt = con.prepareStatement(FIND_BY_ID_SQL);
             psmt.setLong(1, id);
             resultSet = psmt.executeQuery();
-            getTheme(id, resultSet).get(0);
+            List<Theme> themes = getTheme(id, resultSet);
+            return (themes.size() > 0) ? themes.get(0) : null;
         }catch (SQLException sqlException){
             return null;
         }finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }
-        return null;
     }
 
     @Override
-    public Long insert(Theme theme) {
-        Connection con = DatabaseUtil.getConnection();
+    public int insert(Theme theme) throws SQLException{
+        Connection con = dataSource.getConnection();
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
         Long themeId = 0L;
+        int insertCount = 0;
         try{
             int parameterIndex = 1;
             psmt = con.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
-            psmt.setLong(parameterIndex++, theme.getId());
             psmt.setString(parameterIndex++, theme.getName());
             psmt.setString(parameterIndex++, theme.getDesc());
             psmt.setInt(parameterIndex++, theme.getPrice());
-            psmt.executeUpdate();
+
+            insertCount = psmt.executeUpdate();
             resultSet = psmt.getGeneratedKeys();
+
             while (resultSet.next()) {
                 themeId = resultSet.getLong(1);
             }
+            theme.setId(themeId);
         }catch (SQLException sqlException){
-            return null;
+            throw sqlException;
         }finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }
