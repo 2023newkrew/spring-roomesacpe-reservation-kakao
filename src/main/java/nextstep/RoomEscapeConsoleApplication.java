@@ -1,17 +1,12 @@
 package nextstep;
 
-import nextstep.controller.ReservationController;
 import nextstep.dto.Reservation;
-import nextstep.dto.Theme;
 import nextstep.repository.ReservationConnRepository;
 import nextstep.service.ReservationService;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeConsoleApplication {
@@ -49,7 +44,7 @@ public class RoomEscapeConsoleApplication {
                         name
                 );
 
-                reservation = service.reserve(reservation);
+                reservation = service.newReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());

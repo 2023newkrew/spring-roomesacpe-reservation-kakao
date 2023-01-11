@@ -32,6 +32,7 @@ public class ReservationConnRepository implements ReservationRepository {
             generatedKeys.next();
             long id = generatedKeys.getLong("id");
             reservation.setId(id);
+
             return reservation;
         } catch (SQLException e) {
             throw new RuntimeException(e);
