@@ -6,15 +6,10 @@ import reservation.model.domain.Theme;
 import java.sql.*;
 
 public class ConsoleRepository {
-    private Connection con;
 
-    public ConsoleRepository() {
-        this.con = null;
-    }
-
-    private void makeConnection(){
+    private Connection makeConnection(){
+        Connection con = null;
         try {
-            con = null;
             con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
             assert con != null;
             System.out.println("정상적으로 연결되었습니다.");
@@ -22,12 +17,11 @@ public class ConsoleRepository {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
+        return con;
     }
 
     public void saveReservation(Reservation reservation) {
-        makeConnection();
-
-        try {
+        try (Connection con = makeConnection()){
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             assert con != null;
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
@@ -42,19 +36,11 @@ public class ConsoleRepository {
         } catch (SQLException | AssertionError e) {
             throw new RuntimeException(e);
         }
-
-        try {
-            con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
     }
 
     public Reservation getReservation(Long id) {
-        makeConnection();
-
         Reservation reservation = null;
-        try {
+        try (Connection con = makeConnection()){
             String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?;";
             assert con != null;
             PreparedStatement ps = con.prepareStatement(sql);
@@ -79,23 +65,16 @@ public class ConsoleRepository {
             throw new RuntimeException(e);
         }
 
-        try {
-            con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
-
         if (reservation == null) {
             throw new RuntimeException();
         }
+
         return reservation;
     }
 
     public int deleteReservation(Long id) {
-        makeConnection();
-
         int row;
-        try {
+        try (Connection con = makeConnection()){
             String sql = "DELETE FROM reservation WHERE id = ?;";
             assert con != null;
             PreparedStatement ps = con.prepareStatement(sql);
@@ -105,13 +84,6 @@ public class ConsoleRepository {
         } catch (SQLException | AssertionError e) {
             throw new RuntimeException(e);
         }
-
-        try {
-            con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
-
         return row;
     }
 }
