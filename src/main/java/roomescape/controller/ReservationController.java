@@ -32,7 +32,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity cancelReservation(@PathVariable("id") Long reservationId) {
-        reservationService.deleteReservation(reservationId);
+        reservationService.cancelReservation(reservationId);
         return ResponseEntity.noContent().build();
     }
 }
