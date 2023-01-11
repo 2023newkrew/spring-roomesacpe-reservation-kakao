@@ -6,26 +6,26 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.springframework.http.HttpStatus;
 
-@JsonIgnoreProperties({"stackTrace", "suppressed", "cause", "message", "localizedMessage"})
+@JsonIgnoreProperties({"stackTrace", "suppressed", "cause", "localizedMessage"})
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 @JsonTypeName(value = "error")
 public class BaseException extends RuntimeException {
 
-    protected String message;
+    private final String message;
 
     @JsonIgnore
-    protected HttpStatus errorStatus;
+    private final HttpStatus httpStatus;
 
-    public BaseException(String message, HttpStatus errorStatus) {
+    public BaseException(String message, HttpStatus httpStatus) {
         this.message = message;
-        this.errorStatus = errorStatus;
+        this.httpStatus = httpStatus;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public HttpStatus getErrorStatus() {
-        return errorStatus;
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 }
