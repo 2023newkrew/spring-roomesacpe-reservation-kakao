@@ -2,7 +2,6 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,7 +10,7 @@ import java.time.LocalTime;
 
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
-    
+
     public Long save(Reservation reservation) {
         Connection con = null;
 
@@ -25,17 +24,8 @@ public class ReservationJdbcDao implements ReservationDao {
         }
         Long id = null;
         try {
-            String sql = "SELECT * FROM reservation WHERE date = ? and time = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                throw new DuplicatedDateAndTimeException();
-            }
-
-            sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            ps = con.prepareStatement(sql, new String[]{"id"});
+            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
@@ -44,15 +34,12 @@ public class ReservationJdbcDao implements ReservationDao {
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
 
-            rs = ps.getGeneratedKeys();
+            ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 id = rs.getLong(1);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (DuplicatedDateAndTimeException e) {
-            System.out.println("해당 날짜와 시간은 이미 예약되었습니다.");
         }
 
         try {
