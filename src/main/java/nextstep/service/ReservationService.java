@@ -45,6 +45,9 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
+        if (reservationDao.findById(id).isEmpty()) {
+            throw new InvalidInputException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
         reservationDao.delete(id);
     }
 }
