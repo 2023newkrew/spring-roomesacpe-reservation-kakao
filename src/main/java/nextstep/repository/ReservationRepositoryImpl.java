@@ -3,6 +3,8 @@ package nextstep.repository;
 import lombok.AllArgsConstructor;
 import nextstep.Reservation;
 import nextstep.dao.ReservationDAO;
+import nextstep.dto.ReservationDTO;
+import nextstep.mapper.ReservationMapper;
 import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
@@ -13,16 +15,20 @@ public class ReservationRepositoryImpl implements ReservationRepository{
 
     @Override
     public Long insertIfNotExistsDateTime(Reservation reservation){
-        return null;
+        ReservationDTO dto = ReservationMapper.INSTANCE.toDto(reservation);
+
+        return dao.insertIfNotExistsDateTime(dto);
     }
 
     @Override
     public Reservation getById(Long id){
-        return null;
+        ReservationDTO dto = dao.getById(id);
+        
+        return ReservationMapper.INSTANCE.fromDto(dto);
     }
 
     @Override
     public void deleteById(Long id){
-
+        dao.deleteById(id);
     }
 }
