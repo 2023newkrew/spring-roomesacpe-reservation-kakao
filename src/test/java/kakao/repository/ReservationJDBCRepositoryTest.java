@@ -18,10 +18,11 @@ public class ReservationJDBCRepositoryTest {
     @Autowired
     private ReservationJDBCRepository reservationJDBCRepository;
 
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private final Reservation reservation = Reservation.builder()
+    private Reservation reservation = Reservation.builder()
             .name("baker")
             .date(LocalDate.of(2022, 10, 13))
             .time(LocalTime.of(13, 00))
@@ -30,6 +31,12 @@ public class ReservationJDBCRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE theme");
+        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("insert into theme(name, desc, price)\nvalues ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+
         jdbcTemplate.execute("TRUNCATE TABLE reservation");
         jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
     }

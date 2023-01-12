@@ -21,9 +21,13 @@ public class CreateReservationRequest {
     @NonNull
     public String name;
 
-    public CreateReservationRequest(LocalDate date, LocalTime time, String name) {
+    @NonNull
+    public Long themeId;
+
+    public CreateReservationRequest(LocalDate date, LocalTime time, String name, Long themeId) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeId = themeId;
     }
 }

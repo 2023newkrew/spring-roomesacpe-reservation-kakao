@@ -1,11 +1,13 @@
 package domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@EqualsAndHashCode
 @Getter
 @Builder
 public class Reservation implements Comparable<Reservation> {
@@ -15,6 +17,10 @@ public class Reservation implements Comparable<Reservation> {
     private final LocalTime time;
     private final String name;
     private final Theme theme;
+
+    public Long getThemeId() {
+        return theme.getId();
+    }
 
     public String getThemeName() {
         return theme.getName();

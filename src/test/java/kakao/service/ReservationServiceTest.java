@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Transactional
 @SpringBootTest
 public class ReservationServiceTest {
 
@@ -26,6 +28,12 @@ public class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE theme");
+        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("insert into theme(name, desc, price)\nvalues ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        
         jdbcTemplate.execute("TRUNCATE TABLE reservation");
         jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
     }
@@ -33,7 +41,8 @@ public class ReservationServiceTest {
     private final CreateReservationRequest request = new CreateReservationRequest(
             LocalDate.of(2022, 10, 13),
             LocalTime.of(13, 00),
-            "baker"
+            "baker",
+            1L
     );
 
     @DisplayName("CreateRequest를 받아 해앋하는 새로운 예약을 생성해 데이터베이스에 저장한다")
@@ -74,7 +83,7 @@ public class ReservationServiceTest {
     @Test
     void delete() {
         reservationService.createReservation(request);
-        
+
         Assertions.assertThat(reservationService.deleteReservation(1L)).isOne();
         Assertions.assertThat(reservationService.deleteReservation(1L)).isZero();
     }
