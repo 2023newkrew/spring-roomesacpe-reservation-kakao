@@ -73,7 +73,27 @@ public class ConsoleThemeRepository implements ThemeRepository {
 
     @Override
     public int updateTheme(Theme theme) {
-        return 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        try {
+            String sql = "UPDATE THEME SET name = ?, desc = ?, price = ? WHERE id = ?;";
+            con = ConnectionManager.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, theme.getName());
+            ps.setString(2, theme.getDesc());
+            ps.setInt(3, theme.getPrice());
+            ps.setLong(4, theme.getId());
+
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(ps, con);
+        }
+
+        return result;
     }
 
     @Override

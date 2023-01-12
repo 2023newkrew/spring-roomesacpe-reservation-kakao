@@ -36,7 +36,7 @@ public class WebAppThemeRepositoryTest {
         assertThatNoException().isThrownBy(() -> webAppThemeRepository.add(newTheme));
     }
 
-    @DisplayName("3개의 테마 추가 후 전체 조회시 개수 일치 확인")
+    @DisplayName("3개의 테마 추가 후 전체 조회시 개수 일치 확인 (기존 1개 + 3개 추가)")
     @Test
     void findAllTheme() {
         // given
@@ -48,6 +48,21 @@ public class WebAppThemeRepositoryTest {
         List<Theme> themeList = webAppThemeRepository.findAll();
 
         // then
-        assertThat(themeList.size()).isEqualTo(3);
+        assertThat(themeList.size()).isEqualTo(4);
+    }
+
+    @DisplayName("예외 없이 정상적으로 테마 업데이트 확인")
+    @Test
+    void updateTheme() {
+        webAppThemeRepository.add(newTheme);
+
+        Theme updatedTheme = new Theme(
+                1l,
+                "작은 악마들2",
+                "잠실 롯데 타워 인근에서 발생한 사건 수사",
+                32000
+        );
+
+        assertThatNoException().isThrownBy(() -> webAppThemeRepository.updateTheme(updatedTheme));
     }
 }
