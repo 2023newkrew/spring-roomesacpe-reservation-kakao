@@ -26,13 +26,30 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation save(ReservationRequestDTO reservationRequestDTO) {
-        Reservation reservation = insertReservation(reservationRequestDTO);
+        Reservation reservation = null;
+        try {
+            String sql = ReservationJdbcSql.INSERT_INTO;
+            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservationRequestDTO.getDate()));
+            ps.setTime(2, Time.valueOf(reservationRequestDTO.getTime()));
+            ps.setString(3, reservationRequestDTO.getName());
+            ps.setString(4, THEME_NAME);
+            ps.setString(5, THEME_DESC);
+            ps.setInt(6, THEME_PRICE);
+            ps.executeUpdate();
+            ResultSet resultSet = ps.getGeneratedKeys();
+            if (resultSet.next()) {
+                reservation = getReservation(resultSet, reservationRequestDTO);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return reservation;
     }
 
     @Override
     public boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException {
-        String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
+        String sql = ReservationJdbcSql.FIND_BY_DATE_AND_TIME;
         PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));
@@ -42,19 +59,10 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation findById(Long id) {
-        Reservation reservation = findReservationById(id);
-        return reservation;
-    }
-
-    @Override
-    public int deleteById(Long id) {
-        return deleteReservationById(id);
-    }
-
-    private Reservation findReservationById(Long id) {
         Reservation reservation = null;
         try {
-            String sql = "SELECT * FROM RESERVATION WHERE ID = ?";
+            String sql = ReservationJdbcSql.FIND_BY_ID;
+
             PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -68,38 +76,16 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
         return reservation;
     }
 
-    private int deleteReservationById(Long id) {
+    @Override
+    public int deleteById(Long id) {
         try {
-            String sql = "DELETE FROM RESERVATION WHERE ID = ?";
+            String sql = ReservationJdbcSql.DELETE_BY_ID;
             PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             return ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Reservation insertReservation(ReservationRequestDTO requestDTO) {
-        Reservation reservation = null;
-        try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(requestDTO.getDate()));
-            ps.setTime(2, Time.valueOf(requestDTO.getTime()));
-            ps.setString(3, requestDTO.getName());
-            ps.setString(4, THEME_NAME);
-            ps.setString(5, THEME_DESC);
-            ps.setInt(6, THEME_PRICE);
-            ps.executeUpdate();
-            ResultSet resultSet = ps.getGeneratedKeys();
-            if (resultSet.next()) {
-                reservation = getReservation(resultSet, requestDTO);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return reservation;
     }
 
     private Reservation getReservation(ResultSet rs) throws SQLException {
