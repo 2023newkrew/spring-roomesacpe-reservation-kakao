@@ -2,32 +2,10 @@ package roomescape.repository;
 
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
-import roomescape.dto.ReservationRequest;
 
 import java.sql.*;
 
-public class ReservationConsoleRepository implements ReservationRepository {
-
-    private Connection getConnection() {
-        Connection con = null;
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-        return con;
-    }
-
-    private void close(Connection con) {
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
-    }
+public class ReservationConsoleRepository extends BaseConsoleRepository implements ReservationRepository {
 
     @Override
     public Long addReservation(Reservation reservation) {
@@ -57,8 +35,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         int count = 0;
         Connection con = getConnection();
         try {
-            String sql = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(CHECK_SCHEDULE_SQL);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
             ResultSet rs = ps.executeQuery();
@@ -77,8 +54,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         Reservation reservation = null;
         Connection con = getConnection();
         try {
-            String sql = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(FIND_RESERVATION_SQL);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -109,8 +85,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         int count = 0;
         Connection con = getConnection();
         try {
-            String sql = "DELETE FROM reservation WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(REMOVE_RESERVATION_SQL);
             ps.setLong(1, id);
             count = ps.executeUpdate();
         } catch (SQLException e) {

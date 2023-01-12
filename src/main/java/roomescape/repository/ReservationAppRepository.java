@@ -51,22 +51,19 @@ public class ReservationAppRepository implements ReservationRepository {
 
     @Override
     public int checkSchedule(String date, String time) {
-        String sql = "select count(*) from reservation where `date` = ? and `time` = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
+        return jdbcTemplate.queryForObject(CHECK_SCHEDULE_SQL, Integer.class, date, time);
     }
 
     @Override
     public Reservation findReservation(Long id) {
-        String sql = "select r.*, t.id as tid from reservation r, theme t where r.id = ? and r.theme_name = t.name";
-        return jdbcTemplate.query(sql, actorRowMapper, id).stream()
+        return jdbcTemplate.query(FIND_RESERVATION_SQL, actorRowMapper, id).stream()
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
     public int removeReservation(Long id) {
-        String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(REMOVE_RESERVATION_SQL, id);
     }
 
 }
