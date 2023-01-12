@@ -15,7 +15,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ThemeService themeService;
 
-
     public ReservationService(ReservationJdbcRepository reservationRepository, ThemeService themeService) {
         this.reservationRepository = reservationRepository;
         this.themeService = themeService;
@@ -42,14 +41,9 @@ public class ReservationService {
         return reservationRepository.delete(id) == 1;
     }
 
-    public Reservation getReservation(Long id) {
-        return reservationRepository
-                .find(id)
-                .orElseThrow(() -> {throw new NoSuchElementException("No Reservation by that ID");});
-    }
-
-    public ReservationResponseDto getReservationDto(Reservation reservation) {
-        Theme theme = themeService.getTheme(reservation.getThemeId());
-        return new ReservationResponseDto(reservation, theme);
+    Reservation getReservation(Long id) {
+        return reservationRepository.find(id).orElseThrow(() -> {
+            throw new NoSuchElementException("No Reservation by that ID");
+        });
     }
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class ReservationMemoryRepository implements ReservationRepository{
+public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations;
     private final AtomicLong reservationIdIndex;
 

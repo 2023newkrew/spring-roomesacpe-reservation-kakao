@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 @Component("consoleView")
 public class ConsoleView {
-
     private Scanner scanner;
 
     public ConsoleView() {

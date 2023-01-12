@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Controller
 public class ConsoleController {
-
     private final ReservationService reservationService;
 
     public ConsoleController(ReservationService reservationService) {

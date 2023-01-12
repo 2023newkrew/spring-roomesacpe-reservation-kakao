@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public class ThemeJdbcRepository implements ThemeRepository {
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 

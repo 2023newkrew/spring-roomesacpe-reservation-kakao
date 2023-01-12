@@ -15,8 +15,8 @@ public class ThemeService {
     }
 
     Theme getTheme(Long id) {
-        return themeRepository
-                .find(id)
-                .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that ID");});
+        return themeRepository.find(id).orElseThrow(() -> {
+            throw new NoSuchElementException("No Theme by that ID");
+        });
     }
 }

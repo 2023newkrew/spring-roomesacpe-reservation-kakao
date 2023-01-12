@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
-
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertActor;
 
@@ -27,13 +26,13 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> (
-        new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                resultSet.getLong("theme_id")
-        )
+            new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getDate("date").toLocalDate(),
+                    resultSet.getTime("time").toLocalTime(),
+                    resultSet.getString("name"),
+                    resultSet.getLong("theme_id")
+            )
     );
 
     @Override
