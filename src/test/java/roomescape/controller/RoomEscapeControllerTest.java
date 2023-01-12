@@ -1,89 +1,84 @@
 package roomescape.controller;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import org.springframework.test.context.TestExecutionListeners;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.hamcrest.core.Is.is;
-
 @DisplayName("Http Method")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class RoomEscapeControllerTest {
 
     @LocalServerPort
     int port;
 
     Reservation reservation;
+    @Autowired
+    RoomEscapeController roomEscapeController;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        reservation = new Reservation(1L,
-                LocalDate.of(2022,8,11),
-                LocalTime.of(13,0,0),
-                "name22",
-                new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
+        reservation = new Reservation(13131L,
+                LocalDate.of(2013,1,12),
+                LocalTime.of(14,0,0),
+                "name23",
+                new Theme("Theme2", "desc", 30000));
     }
 
-    /**
-     * RoomEscapeController > createReservation 메서드
-     */
-    @DisplayName("Http Method - POST")
+    @DisplayName("방탈출 예약이 가능함")
     @Test
-    void createReservation() {
+//    @Transactional
+    void createReservationTest() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .statusCode(HttpStatus.CREATED.value());
     }
 
-    /**
-     * RoomEscapeController > showReservation 메서드
-     */
-    @DisplayName("Http Method - GET")
+    @DisplayName("방탈출 예약이 되었다면 조회할 수 있음")
     @Test
-    void showReservation() {
-        createReservation();
-        RestAssured.given().log().all()
+    void showReservationTest() {
+        Long reserveId= roomEscapeController.createReservation(reservation).getBody();
+        RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", is(1));
+                .when().get("/reservations/" + reserveId)
+                .then()
+                .statusCode(HttpStatus.OK.value());
     }
 
-    /**
-     * RoomEscapeController > deleteReservation 메서드
-     */
-    @DisplayName("Http Method - DELETE")
+    @DisplayName("방탈출 예약이 되었다면 취소할 수 있음")
     @Test
-    void deleteReservation() {
-        createReservation();
+    void deleteReservationTest() {
+        Long deleteId = roomEscapeController.createReservation(reservation).getBody();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + deleteId)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생한다")
+    @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생")
     @Test
-    void duplicatedReservation(){
-//        createReservation();
-
+    void duplicatedReservationTest(){
+        roomEscapeController.createReservation(reservation);
+        Assertions.assertThrows(DuplicateRequestException.class, () ->
+            roomEscapeController.createReservation(reservation)
+        );
     }
 }
+

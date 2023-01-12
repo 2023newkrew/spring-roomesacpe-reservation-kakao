@@ -1,74 +1,50 @@
 package roomescape.controller;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
+import roomescape.repository.JdbcReservationRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.IllformedLocaleException;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RoomEscapeController {
-    List<Reservation> reservationList = new ArrayList<>();
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    JdbcReservationRepository jdbcReservationRepository;
 
     @PostMapping("/reservations")
-public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation){
-        Integer duplicatedRow = jdbcTemplate.queryForObject(
-                "select count(*) from RESERVATION where date = ? AND time = ?", Integer.class,
-                reservation.getDate(), reservation.getTime());
-        if (duplicatedRow == 1) {
-            System.out.println("ASASASS");
-            throw new IllformedLocaleException("TEST");
+        public ResponseEntity<Long> createReservation(@RequestBody @Valid Reservation reservation){
+        if (jdbcReservationRepository.findByDateAndTime(reservation) == 1) {
+            throw new DuplicateRequestException("요청 날짜/시간에 이미 예약이 있습니다.");
         }
-        jdbcTemplate.update(
-                "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)",
-                Date.valueOf(reservation.getDate()),
-                Time.valueOf(reservation.getTime()),
-                reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
-        );
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
+        Long reserve = jdbcReservationRepository.createReservation(reservation);
+        if (reserve > 0){
+            System.out.println("예약이 등록되었습니다." + reservation);
+        }
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reserve);
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<Reservation> lookUpReservation(@PathVariable("id") String reservationId) {
-        Reservation reservation = jdbcTemplate.queryForObject(
-                "select date, time, name, theme_name, theme_desc, theme_price from RESERVATION where id = ?",
-                new Object[]{reservationId},
-                new RowMapper<Reservation>() {
-                    public Reservation mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        LocalDate date = LocalDate.parse(rs.getString("date"));
-                        LocalTime time = LocalTime.parse(rs.getString("time"));
-                        String name = rs.getString("name");
-                        String themeName = rs.getString("Theme_name");
-                        String themeDesc = rs.getString("Theme_desc");
-                        Integer themePrice = rs.getInt("Theme_price");
-                        Theme theme = new Theme(themeName, themeDesc, themePrice);
-                        return new Reservation(Long.parseLong(reservationId), date, time, name, theme);
-                    }
-                });
-        return ResponseEntity.ok().body(reservation);
+    public ResponseEntity<Optional<Reservation>> lookUpReservation(@PathVariable("id") String reservationId) {
+        Optional<Reservation> reservation = jdbcReservationRepository.findById(Integer.parseInt(reservationId));
+        if (reservation.isPresent()) {
+            return ResponseEntity.ok().body(reservation);
+        }
+        return ResponseEntity.badRequest().body(null);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable("id") String id) {
-        jdbcTemplate.update("DELETE FROM RESERVATION WHERE id=?", id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> deleteReservation(@PathVariable("id") String deleteId) {
+        Integer deleteResult = jdbcReservationRepository.deleteReservation(Integer.parseInt(deleteId));
+        if (deleteResult == 1) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

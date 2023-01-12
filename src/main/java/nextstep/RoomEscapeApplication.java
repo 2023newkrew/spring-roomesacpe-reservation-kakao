@@ -2,9 +2,6 @@ package nextstep;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -15,7 +12,7 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Long reservationIdIndex = 0L;
+        long reservationIdIndex = 0L;
         ReservationDAO reservationDAO = new ReservationDAO();
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         reservationDAO.makeConnection();
