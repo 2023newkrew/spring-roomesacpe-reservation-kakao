@@ -25,6 +25,6 @@ public class ReservationRequestDto {
     private String name;
 
     public Reservation toEntity() {
-        return Reservation.of(date, time, name);
+        return Reservation.of(null, date, time, name);
     }
 }

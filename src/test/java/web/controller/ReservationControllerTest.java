@@ -175,6 +175,7 @@ public class ReservationControllerTest {
         void should_successfully_when_validRequest() throws Exception {
             ReservationResponseDto responseDto = ReservationResponseDto.of(1,
                     Reservation.of(
+                            1L,
                             LocalDate.of(2022, 8, 11),
                             LocalTime.of(13, 0),
                             "name"));

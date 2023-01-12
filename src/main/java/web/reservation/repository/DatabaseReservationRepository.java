@@ -53,6 +53,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
         Reservation findReservation;
         try {
             findReservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
+                    resultSet.getLong("ID"),
                     resultSet.getDate("DATE").toLocalDate(),
                     resultSet.getTime("TIME").toLocalTime(),
                     resultSet.getString("NAME")), reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
@@ -68,6 +69,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
         Reservation reservation;
         try {
             reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
+                    resultSet.getLong("ID"),
                     resultSet.getDate("DATE").toLocalDate(),
                     resultSet.getTime("TIME").toLocalTime(),
                     resultSet.getString("NAME")), reservationId);

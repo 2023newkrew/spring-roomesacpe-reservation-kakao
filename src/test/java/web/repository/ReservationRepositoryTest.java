@@ -40,7 +40,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            Reservation reservation = Reservation.of(null, today, now, name);
 
             long reservationId = reservationRepository.save(reservation);
 
@@ -55,7 +55,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            Reservation reservation = Reservation.of(null, today, now, name);
 
             reservationRepository.save(reservation);
 
@@ -72,7 +72,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            Reservation reservation = Reservation.of(null, today, now, name);
             long reservationId = reservationRepository.save(reservation);
 
             Reservation findReservation = reservationRepository.findById(reservationId)
@@ -97,7 +97,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            Reservation reservation = Reservation.of(null, today, now, name);
             long reservationId = reservationRepository.save(reservation);
 
             long deleteReservationCount = reservationRepository.delete(reservationId);
