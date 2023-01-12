@@ -133,40 +133,71 @@ class ReservationServiceTest {
         }
     }
 
-    @Test
-    @DisplayName("ID로 예약을 조회할 수 있다.")
-    public void testGetReservationById() {
-        //given
-        doReturn(reservation).when(reservationRepository).findById(reservation.getId());
+    @Nested
+    @DisplayName("예약 조회 테스트")
+    class GetReservationTest {
+        @Test
+        @DisplayName("ID로 예약을 조회할 수 있다.")
+        public void testGetReservationById() {
+            //given
+            doReturn(reservation).when(reservationRepository).findById(reservation.getId());
 
-        //when
-        ReservationResponse response = reservationService.getReservation(reservation.getId());
+            //when
+            ReservationResponse response = reservationService.getReservation(reservation.getId());
 
-        //then
-        verify(reservationRepository).findById(reservation.getId());
-        assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
-                .hasFieldOrPropertyWithValue("date", reservation.getDate())
-                .hasFieldOrPropertyWithValue("time", reservation.getTime())
-                .hasFieldOrPropertyWithValue("name", reservation.getName());
-        assertThat(response.theme).hasFieldOrPropertyWithValue("id", theme.getId())
-                .hasFieldOrPropertyWithValue("name", theme.getName())
-                .hasFieldOrPropertyWithValue("desc", theme.getDesc())
-                .hasFieldOrPropertyWithValue("price", theme.getPrice());
+            //then
+            verify(reservationRepository).findById(reservation.getId());
+            assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
+                    .hasFieldOrPropertyWithValue("date", reservation.getDate())
+                    .hasFieldOrPropertyWithValue("time", reservation.getTime())
+                    .hasFieldOrPropertyWithValue("name", reservation.getName());
+            assertThat(response.theme).hasFieldOrPropertyWithValue("id", theme.getId())
+                    .hasFieldOrPropertyWithValue("name", theme.getName())
+                    .hasFieldOrPropertyWithValue("desc", theme.getDesc())
+                    .hasFieldOrPropertyWithValue("price", theme.getPrice());
+        }
+
+        @Test
+        @DisplayName("잘못된 ID의 예약은 조회할 수 없다.")
+        public void testGetInvalidReservation() {
+            //given
+            doReturn(null).when(reservationRepository).findById(0L);
+
+            //when //then
+            assertThatThrownBy(() -> reservationService.getReservation(0L))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        }
     }
 
-    @Test
-    @DisplayName("ID로 예약을 삭제할 수 있다.")
-    public void testDeleteReservationById() {
-        //given
-        doReturn(1).when(reservationRepository).delete(reservation.getId());
+    @Nested
+    @DisplayName("예약 삭제 테스트")
+    public class testDeleteReservation {
+        @Test
+        @DisplayName("ID로 예약을 삭제할 수 있다.")
+        public void testDeleteReservationById() {
+            //given
+            doReturn(1).when(reservationRepository).delete(reservation.getId());
 
-        //when
-        int deletedCount = reservationService.deleteReservation(reservation.getId());
+            //when
+            int deletedCount = reservationService.deleteReservation(reservation.getId());
 
-        //then
-        verify(reservationRepository).delete(reservation.getId());
-        assertThat(deletedCount).isEqualTo(1);
+            //then
+            verify(reservationRepository).delete(reservation.getId());
+            assertThat(deletedCount).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 예약 삭제 시도 시 0을 반환한다.")
+        public void testDeleteInvalidReservationById() {
+            //given
+            doReturn(0).when(reservationRepository).delete(0L);
+
+            //when
+            int deletedCount = reservationService.deleteReservation(0L);
+
+            //then
+            assertThat(deletedCount).isEqualTo(0);
+        }
     }
-
-
 }
