@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
+    public ResponseEntity<Void> createReservation(@RequestBody @Valid ReservationRequestDTO reservationRequestDTO) {
         Long newReservationId = this.reservationService.save(reservationRequestDTO);
 
         return ResponseEntity.created(URI.create("/reservations/" + newReservationId)).build();

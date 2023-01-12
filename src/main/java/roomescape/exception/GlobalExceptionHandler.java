@@ -3,6 +3,7 @@ package roomescape.exception;
 import java.time.DateTimeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import roomescape.dto.response.ErrorResponseDTO;
@@ -26,5 +27,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> handleDuplicatedReservationException(DuplicatedReservationException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ErrorResponseDTO.from(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    private ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(e.getBindingResult().getFieldErrors());
     }
 }
