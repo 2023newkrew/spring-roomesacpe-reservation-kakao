@@ -37,8 +37,11 @@ public class ReservationService {
         return new ReservationResponseDto(reservation, theme);
     }
 
-    public Boolean cancelReservation(Long id) {
-        return reservationRepository.delete(id) == 1;
+    public void cancelReservation(Long id) {
+        Boolean isCanceled = reservationRepository.delete(id) == 1;
+        if (!isCanceled) {
+            throw new NoSuchElementException("No Reservation by that ID");
+        }
     }
 
     Reservation getReservation(Long id) {

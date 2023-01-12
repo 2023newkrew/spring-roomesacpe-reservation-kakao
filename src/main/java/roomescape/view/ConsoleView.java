@@ -52,12 +52,7 @@ public class ConsoleView {
         System.out.println("예약 테마 가격: " + res.getThemePrice());
     }
 
-    public void showCanceledCoReservationCount(Optional<Boolean> optionalRes) {
-        if (optionalRes.isEmpty()) {
-            System.out.println("예약 취소에 실패하였습니다.");
-            return;
-        }
-        Boolean success = optionalRes.get();
+    public void showIsCanceledReservation(Boolean success) {
         if (success) {
             System.out.println("예약이 취소되었습니다.");
         } else {

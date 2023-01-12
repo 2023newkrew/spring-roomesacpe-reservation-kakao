@@ -34,8 +34,11 @@ public class ThemeService {
         return new ThemesResponseDto(themes);
     }
 
-    public Boolean deleteTheme(Long id) {
-        return themeRepository.delete(id) == 1;
+    public void deleteTheme(Long id) {
+        Boolean isDeleted = themeRepository.delete(id) == 1;
+        if (!isDeleted) {
+            throw new NoSuchElementException("No Theme by that ID");
+        }
     }
 
     Theme getTheme(Long id) {

@@ -39,8 +39,8 @@ public class ConsoleApplication {
             }
             // 예약취소
             else if (input.startsWith(DELETE)) {
-                Optional<Boolean> res = consoleController.cancelReservation(input);
-                consoleView.showCanceledCoReservationCount(res);
+                Boolean res = consoleController.cancelReservation(input);
+                consoleView.showIsCanceledReservation(res);
             }
             // 종료
             else if (input.equals(QUIT)) {

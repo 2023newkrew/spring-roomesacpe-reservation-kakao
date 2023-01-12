@@ -46,19 +46,16 @@ public class ConsoleController {
         return res;
     }
 
-    public Optional<Boolean> cancelReservation(String input) {
+    public Boolean cancelReservation(String input) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
-        Optional<Boolean> res = Optional.empty();
+        Boolean res;
         try {
-            Boolean isCanceled = reservationService.cancelReservation(id);
-            if (isCanceled) {
-                res = Optional.of(true);
-            } else {
-                res = Optional.of(false);
-            }
+            reservationService.cancelReservation(id);
+            res = true;
         } catch (Exception e) {
             e.printStackTrace();
+            res = false;
         }
         return res;
     }
