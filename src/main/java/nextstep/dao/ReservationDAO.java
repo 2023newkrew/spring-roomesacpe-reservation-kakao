@@ -36,9 +36,7 @@ public class ReservationDAO {
         }
 
         try {
-            if (con != null) {
-                con.close();
-            }
+            con.close();
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
@@ -78,9 +76,7 @@ public class ReservationDAO {
         }
 
         try {
-            if (con != null) {
-                con.close();
-            }
+            con.close();
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
@@ -110,9 +106,7 @@ public class ReservationDAO {
         }
 
         try {
-            if (con != null) {
-                con.close();
-            }
+            con.close();
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
