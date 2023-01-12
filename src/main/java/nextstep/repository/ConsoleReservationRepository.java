@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.domain.repository.ReservationRepository;
 import nextstep.exception.JdbcException;
 import nextstep.utils.JdbcUtils;
 

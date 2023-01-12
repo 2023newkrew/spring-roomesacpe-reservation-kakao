@@ -2,7 +2,7 @@ package nextstep.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.repository.ReservationRepository;
+import nextstep.domain.repository.ReservationRepository;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
 import nextstep.exception.DuplicateReservationException;
