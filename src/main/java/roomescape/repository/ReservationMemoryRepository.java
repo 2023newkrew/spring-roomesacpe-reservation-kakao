@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public class ReservationMemoryRepository implements ReservationRepository{
     private final static Map<Long, Reservation> reservations = new HashMap<>();
     private static Long reservationIdIndex = 0L;
