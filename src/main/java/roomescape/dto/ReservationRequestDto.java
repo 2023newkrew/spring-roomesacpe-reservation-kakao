@@ -9,6 +9,8 @@ public class ReservationRequestDto {
     private String name;
     private Long themeId;
 
+    public ReservationRequestDto() {}
+
     public ReservationRequestDto(LocalDate date, LocalTime time, String name, Long themeId) {
         this.date = date;
         this.time = time;
