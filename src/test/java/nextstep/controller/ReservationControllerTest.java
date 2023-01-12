@@ -71,7 +71,7 @@ class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("CustomException"));
+                .body(is("ReservationException"));
     }
 
     @Order(4)

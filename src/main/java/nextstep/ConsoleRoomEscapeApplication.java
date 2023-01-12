@@ -1,9 +1,10 @@
 package nextstep;
 
-import nextstep.dao.console.ReservationDAO;
+import nextstep.dao.ConsoleReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exceptions.CustomException;
+import nextstep.exceptions.ErrorCode;
+import nextstep.exceptions.ReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +19,7 @@ public class ConsoleRoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationDAO reservationDAO = new ReservationDAO();
+        ConsoleReservationDAO reservationDAO = new ConsoleReservationDAO();
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -48,7 +49,7 @@ public class ConsoleRoomEscapeApplication {
                 List<Reservation> reservationsByDateAndTime = reservationDAO.findReservationByDateAndTime(
                         reservation.getDate(), reservation.getTime());
                 if (reservationsByDateAndTime.size() > 0) {
-                    throw new CustomException();
+                    throw new ReservationException(ErrorCode.ALREADY_RESERVATION_EXISTS);
                 }
 
                 reservationDAO.addReservation(reservation);

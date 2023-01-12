@@ -1,4 +1,4 @@
-package nextstep.dao.console;
+package nextstep.dao;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReservationDAO {
+public class ConsoleReservationDAO {
     public void addReservation(Reservation reservation) {
         Connection con = getConnection();
 
