@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JdbcThemeRepositoryTest {
 
     public static final Long NON_EXIST_THEME_ID = 0L;
+    private static final String NON_EXIST_THEME_NAME = "NONE_EXIST";
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private JdbcThemeRepository jdbcThemeRepository;
@@ -45,6 +46,16 @@ public class JdbcThemeRepositoryTest {
                 .get())
                 .isEqualTo(savedTheme);
         assertThat(jdbcThemeRepository.findById(NON_EXIST_THEME_ID)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("이름을 이용한 테마 조회 테스트")
+    void findByNameTest() {
+        Theme savedTheme = jdbcThemeRepository.save(new Theme("테마이름", "테마설명", 22000));
+        assertThat(jdbcThemeRepository.findByName(savedTheme.getName())
+                .get())
+                .isEqualTo(savedTheme);
+        assertThat(jdbcThemeRepository.findByName(NON_EXIST_THEME_NAME)).isEmpty();
     }
 
     @Test

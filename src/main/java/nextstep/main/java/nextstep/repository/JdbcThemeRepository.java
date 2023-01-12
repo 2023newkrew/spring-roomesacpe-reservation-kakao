@@ -38,6 +38,16 @@ public class JdbcThemeRepository implements ThemeRepository {
     }
 
     @Override
+    public Optional<Theme> findByName(String name) {
+        String sql = "SELECT * FROM theme WHERE name = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> Theme.of(rs), name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Theme> findAll() {
         String sql = "SELECT * FROM theme";
         return jdbcTemplate.query(sql, ((rs, rowNum) -> Theme.of(rs)));

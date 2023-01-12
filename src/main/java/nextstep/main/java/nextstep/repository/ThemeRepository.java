@@ -10,6 +10,8 @@ public interface ThemeRepository {
 
     Optional<Theme> findById(Long id);
 
+    Optional<Theme> findByName(String name);
+
     List<Theme> findAll();
 
     int update(Theme theme);
