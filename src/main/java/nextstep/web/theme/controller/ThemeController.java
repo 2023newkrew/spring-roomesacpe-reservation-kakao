@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.web.common.controller.Response;
 import nextstep.web.theme.dto.CreateThemeRequestDto;
 import nextstep.web.theme.dto.CreateThemeResponseDto;
+import nextstep.web.theme.dto.FindAllThemeResponseDto;
 import nextstep.web.theme.dto.FindThemeResponseDto;
 import nextstep.web.theme.service.ThemeService;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,13 @@ public class ThemeController {
     @GetMapping("{id}")
     public Response<FindThemeResponseDto> findTheme(@PathVariable Long id) {
         FindThemeResponseDto theme = themeService.findTheme(id);
+
+        return new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), theme);
+    }
+
+    @GetMapping
+    public Response<FindAllThemeResponseDto> findAllTheme() {
+        FindAllThemeResponseDto theme = themeService.findAllTheme();
 
         return new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), theme);
     }

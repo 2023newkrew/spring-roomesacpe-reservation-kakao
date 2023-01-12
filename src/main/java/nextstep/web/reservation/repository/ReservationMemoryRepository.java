@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,7 +17,7 @@ public class ReservationMemoryRepository implements RoomEscapeRepository<Reserva
 
     private final List<Reservation> reservations = new ArrayList<>();
 
-    private Long reservationIdIndex = 1L;
+    private final AtomicLong reservationIdIndex = new AtomicLong(1L);
 
     public Reservation findById(Long id) {
         return reservations.stream()
@@ -26,13 +27,16 @@ public class ReservationMemoryRepository implements RoomEscapeRepository<Reserva
     }
 
     public Long save(Reservation reservation) {
-        reservationIdIndex++;
         reservations.add(reservation);
         
-        return reservationIdIndex;
+        return reservationIdIndex.incrementAndGet();
     }
 
     public void deleteById(Long id) {
         reservations.removeIf(it -> Objects.equals(it.getId(), id));
+    }
+
+    public List<Reservation> findAll() {
+        return reservations;
     }
 }

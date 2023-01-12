@@ -61,4 +61,10 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
                 "theme_id", reservation.getThemeId()
         );
     }
+
+    public List<Reservation> findAll() {
+        String sql = "SELECT * FROM THEME;";
+
+        return jdbcTemplate.query(sql, reservationRowMapper);
+    }
 }
