@@ -60,8 +60,9 @@
   - [ ] 테스트 이름을 목적과 예상 결과를 포함하도록 수정
 
 
-- [ ] 콘솔 앱과 웹 앱이 같은 Service를 공유하도록 리팩토링
+- [x] 콘솔 앱과 웹 앱이 같은 Service를 공유하도록 리팩토링
 - [ ] Reservation 생성메서드 추가
 - [ ] 콘솔 앱 main 함수 메서드 분 
 - [ ] Service Test 추가
 - [ ] Repository Test 단위 테스트 적용
+- [ ] jdbc Repository의 자원 선언부 try 블럭으로 넣기

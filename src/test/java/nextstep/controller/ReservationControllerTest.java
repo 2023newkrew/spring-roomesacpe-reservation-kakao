@@ -1,17 +1,13 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.domain.dto.CreateReservationDTO;
-import nextstep.repository.WebAppReservationRepository;
+import nextstep.domain.dto.CreateReservationDto;
 import org.junit.jupiter.api.*;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.Is.is;
 
@@ -32,7 +28,7 @@ public class ReservationControllerTest {
     void createReservation() {
 
 
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:35", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:35", "name");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
@@ -45,14 +41,14 @@ public class ReservationControllerTest {
     @DisplayName("duplicate reservation test")
     @Test
     void sameTimeReservationTest() {
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
                 .when().post("/reservations");
 
-        CreateReservationDTO reservationDto2 = new CreateReservationDTO("2022-08-11", "13:30", "name2");
+        CreateReservationDto reservationDto2 = new CreateReservationDto("2022-08-11", "13:30", "name2");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +61,7 @@ public class ReservationControllerTest {
     @DisplayName("get reservation test")
     @Test
     void getReservation() {
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -92,7 +88,7 @@ public class ReservationControllerTest {
     @DisplayName("delete reservation test")
     @Test
     void deleteReservation() {
-        CreateReservationDTO reservationDto = new CreateReservationDTO("2022-08-11", "13:30", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

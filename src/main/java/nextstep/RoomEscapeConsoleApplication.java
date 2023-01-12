@@ -1,11 +1,15 @@
 package nextstep;
 
+import nextstep.domain.dto.CreateReservationDto;
+import nextstep.domain.dto.GetReservationDto;
 import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
+import nextstep.exception.DeleteReservationFailureException;
+import nextstep.exception.DuplicateTimeReservationException;
+import nextstep.exception.NoReservationException;
 import nextstep.repository.ConsoleReservationRepository;
+import nextstep.service.ReservationService;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RoomEscapeConsoleApplication {
@@ -14,7 +18,7 @@ public class RoomEscapeConsoleApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static final ConsoleReservationRepository CONSOLE_RESERVATION_REPOSITORY = new ConsoleReservationRepository();
+    private static final ReservationService reservationService = new ReservationService(new ConsoleReservationRepository());
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -37,14 +41,18 @@ public class RoomEscapeConsoleApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
-                long id = CONSOLE_RESERVATION_REPOSITORY.add(newReservation);
+                CreateReservationDto createReservationDto = new CreateReservationDto(date,time,name);
+                try {
+                    long id = reservationService.addReservation(createReservationDto);
 
-                System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + id);
-                System.out.println("예약 날짜: " + newReservation.getDate());
-                System.out.println("예약 시간: " + newReservation.getTime());
-                System.out.println("예약자 이름: " + newReservation.getName());
+                    System.out.println("예약이 등록되었습니다.");
+                    System.out.println("예약 번호: " + id);
+                    System.out.println("예약 날짜: " + date);
+                    System.out.println("예약 시간: " + time);
+                    System.out.println("예약자 이름: " + name);
+                } catch (DuplicateTimeReservationException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
 
             if (input.startsWith(FIND)) {
@@ -52,19 +60,20 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = CONSOLE_RESERVATION_REPOSITORY.findById(id).get();
-
-                if (reservation == null) {
-                    System.out.println("해당하는 예약이 없습니다");
-                    continue;
+                try {
+                    GetReservationDto getReservationDto = reservationService.getReservation(id);
+                    System.out.println("예약 번호: " + getReservationDto.getId());
+                    System.out.println("예약 날짜: " + getReservationDto.getDate());
+                    System.out.println("예약 시간: " + getReservationDto.getTime());
+                    System.out.println("예약자 이름: " + getReservationDto.getName());
+                    System.out.println("예약 테마 이름: " + getReservationDto.getThemeName());
+                    System.out.println("예약 테마 설명: " + getReservationDto.getThemeDesc());
+                    System.out.println("예약 테마 가격: " + getReservationDto.getThemePrice());
+                } catch (NoReservationException ex) {
+                    System.out.println(ex.getMessage());
                 }
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+
+
             }
 
             if (input.startsWith(DELETE)) {
@@ -72,8 +81,10 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (CONSOLE_RESERVATION_REPOSITORY.delete(id) == 1) {
-                    System.out.println("예약이 취소되었습니다.");
+                try {
+                    reservationService.deleteReservation(id);
+                } catch (DeleteReservationFailureException ex) {
+                    System.out.println(ex.getMessage());
                 }
             }
 

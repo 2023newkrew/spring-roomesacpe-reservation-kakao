@@ -2,7 +2,7 @@ package nextstep.domain.dto;
 
 import nextstep.domain.reservation.Reservation;
 
-public class GetReservationDTO {
+public class GetReservationDto {
 
     private final Long id;
     private final String date;
@@ -12,7 +12,7 @@ public class GetReservationDTO {
     private final String themeDesc;
     private final Integer themePrice;
 
-    public GetReservationDTO(Reservation reservation) {
+    public GetReservationDto(Reservation reservation) {
         this.id = reservation.getId();
         this.date = reservation.getDate().toString();
         this.time = reservation.getTime().toString();

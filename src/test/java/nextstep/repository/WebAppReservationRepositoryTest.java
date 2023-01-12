@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Sql(scripts = {"classpath:recreate.sql"})
 public class WebAppReservationRepositoryTest {
     private final ReservationRepository webAppReservationRepository;
 
