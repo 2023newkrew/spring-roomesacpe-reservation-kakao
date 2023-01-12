@@ -11,6 +11,6 @@ import java.time.LocalTime;
 public class RequestReservation {
     private LocalDate date;
     private LocalTime time;
-    private String username;
+    private String name;
     private Long themeId;
 }

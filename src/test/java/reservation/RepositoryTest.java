@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import reservation.model.domain.Reservation;
-import reservation.model.domain.Theme;
 import reservation.model.dto.RequestReservation;
 import reservation.respository.ReservationJdbcTemplateRepository;
 import java.time.LocalDate;
@@ -69,6 +68,6 @@ public class RepositoryTest {
     }
 
     private Reservation makeReservationBeforeStore(Long id, RequestReservation req) {
-        return new Reservation(id, req.getDate(), req.getTime(), req.getUsername(), 1L);
+        return new Reservation(id, req.getDate(), req.getTime(), req.getName(), 1L);
     }
 }
