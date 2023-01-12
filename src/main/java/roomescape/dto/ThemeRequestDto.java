@@ -1,7 +1,5 @@
 package roomescape.dto;
 
-import roomescape.model.Theme;
-
 public class ThemeRequestDto {
     private String name;
     private String desc;
@@ -9,10 +7,10 @@ public class ThemeRequestDto {
 
     public ThemeRequestDto() {}
 
-    public ThemeRequestDto(Theme theme) {
-        this.name = theme.getName();
-        this.desc = theme.getDesc();
-        this.price = theme.getPrice();
+    public ThemeRequestDto(String name, String desc, Integer price) {
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
     }
 
     public String getName() {
