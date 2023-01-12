@@ -34,7 +34,6 @@ public class ReservationTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Transactional
     @BeforeAll
     void setUp() throws Exception {
         RestAssured.port = port;
@@ -53,7 +52,6 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 생성 테스트")
-    @Transactional
     @Test
     void createReservation() {
         ReservationRequest reservationRequest = new ReservationRequest("2022-08-13", "13:00", "kayla", 1L);
@@ -68,7 +66,6 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 생성 거절 테스트")
-    @Transactional
     @Test
     void rejectCreateReservation() throws Exception {
         // Given
@@ -85,9 +82,8 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 조회 테스트")
-    @Transactional
     @Test
-    void showReservation() throws Exception {
+    void showReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
@@ -98,9 +94,8 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 조회 거절 테스트")
-    @Transactional
     @Test
-    void rejectShowReservation() throws Exception {
+    void rejectShowReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/10")
@@ -109,9 +104,8 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 삭제 테스트")
-    @Transactional
     @Test
-    void deleteReservation() throws Exception {
+    void deleteReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/2")
@@ -121,9 +115,8 @@ public class ReservationTest {
 
     @Disabled
     @DisplayName("예약 삭제 거절 테스트")
-    @Transactional
     @Test
-    void rejectDeleteReservation() throws Exception {
+    void rejectDeleteReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/20")
