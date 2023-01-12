@@ -9,6 +9,7 @@ import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationConsoleRepository;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -20,10 +21,21 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
+    private static ReservationConsoleRepository reservationConsoleRepository;
+    private final ReservationConsoleRepository repository;
+
+    @PostConstruct
+    void init(){
+        reservationConsoleRepository = repository;
+    }
+
+    public RoomEscapeApplication(ReservationConsoleRepository repository){
+        this.repository = repository;
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Theme theme = Themes.WANNA_GO_HOME;
-        ReservationConsoleRepository reservationConsoleRepository = new ReservationConsoleRepository();
 
         SpringApplication.run(RoomEscapeApplication.class, args);
 

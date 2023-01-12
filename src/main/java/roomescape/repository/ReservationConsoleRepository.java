@@ -1,5 +1,7 @@
 package roomescape.repository;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
@@ -8,11 +10,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
+@Repository
 public class ReservationConsoleRepository implements CrudRepository<Reservation, Long> {
 
-    private final String DB_URL = "jdbc:h2:mem:testdb;AUTO_SERVER=true";
-    private final String DB_USERNAME = "sa";
-    private final String DB_PASSWORD = "";
+    @Value("${spring.datasource.url}")
+    private String DB_URL; //= "jdbc:h2:mem:testdb;AUTO_SERVER=true";
+    @Value("${spring.datasource.username}")
+    private String DB_USERNAME;
+    @Value("${spring.datasource.password}")
+    private String DB_PASSWORD;
 
     @Override
     public Reservation save(Reservation reservation) {
