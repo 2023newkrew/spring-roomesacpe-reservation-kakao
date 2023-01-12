@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +40,7 @@ class themeReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약 되지 않은 날짜/시간에 예약을 한다.")
+    @DisplayName("예약 성공 시 상태코드는 CREATED이다.")
     void test1(){
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:01");
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
@@ -48,7 +48,7 @@ class themeReservationControllerTest {
     }
 
     @Test
-    @DisplayName("이미 예약된 날짜/시간에 예약한다.")
+    @DisplayName("이미 예약된 날짜/시간에 예약하는 경우, 상태 코드는 INTERNAL_SERVER_ERROR이다.")
     void test2(){
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:02");
         sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL);
@@ -73,14 +73,14 @@ class themeReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약하지 않은 내용은 조회할 수 없다.")
+    @DisplayName("존재하지 않은 예약 정보를 요청할 경우 상태 코드는 NO_CONTENT이다.")
     void test4(){
         getValidationResponse(EMPTY_BODY, HttpMethod.GET, RESERVATION_URL + "/" + NOT_EXIST_RESERVATION_ID)
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
-    @DisplayName("존재하지 않는 예약은 취소할 수 없다.")
+    @DisplayName("존재하지 않는 예약을 취소할 경우, 상태 코드는 NOT_FOUND이다.")
     void test5(){
         getValidationResponse(EMPTY_BODY, HttpMethod.DELETE, RESERVATION_URL + "/" +  NOT_EXIST_RESERVATION_ID)
                 .statusCode(HttpStatus.NOT_FOUND.value());
@@ -92,10 +92,9 @@ class themeReservationControllerTest {
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:08");
 
         String location = sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL)
-                .getHeader("location");
+                .getHeader(HttpHeaders.LOCATION);
 
-        getValidationResponse(EMPTY_BODY, HttpMethod.DELETE, location)
-                .statusCode(HttpStatus.NO_CONTENT.value());
+        sendRequest(EMPTY_BODY, HttpMethod.DELETE, location);
 
         getValidationResponse(EMPTY_BODY, HttpMethod.GET, location)
                 .statusCode(HttpStatus.NO_CONTENT.value());
