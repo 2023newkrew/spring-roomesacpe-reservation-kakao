@@ -3,17 +3,17 @@ package nextstep.repository;
 import nextstep.domain.Reservation;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ReservationMemoryRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> repository = new HashMap<>();
-    private Long id = 0L;
+    private final AtomicLong id = new AtomicLong(0L);
 
     @Override
     public Reservation save(Reservation reservation) {
-        id++;
-        repository.put(id, reservation);
-        reservation.setId(id);
+        repository.put(id.incrementAndGet(), reservation);
+        reservation.setId(id.get());
         return reservation;
     }
 
