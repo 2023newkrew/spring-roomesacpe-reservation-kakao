@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
@@ -9,14 +8,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-public class ReservationConsoleRepository implements ReservationRepository {
+public class ReservationConsoleRepository implements CrudRepository<Reservation, Long> {
 
     private final String DB_URL = "jdbc:h2:mem:testdb;AUTO_SERVER=true";
     private final String DB_USERNAME = "sa";
     private final String DB_PASSWORD = "";
 
     @Override
-    public void insertReservation(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement ps = createInsertReservationPreparedStatement(con, reservation)
@@ -26,6 +25,8 @@ public class ReservationConsoleRepository implements ReservationRepository {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
+
+        return null;
     }
 
     private PreparedStatement createInsertReservationPreparedStatement(
@@ -45,7 +46,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> getReservation(Long id) {
+    public Optional<Reservation> findOne(Long id) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement ps = createGetReservationPreparedStatement(con, id);
@@ -85,7 +86,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement ps = createDeleteReservationPreparedStatement(con, id)
@@ -105,8 +106,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         return ps;
     }
 
-    @Override
-    public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
+    public Optional<Reservation> findReservationByDateAndTime(LocalDate date, LocalTime time) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement ps = createGetReservationByDateAndTimePreparedStatement(con, date, time);

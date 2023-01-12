@@ -48,7 +48,7 @@ public class RoomEscapeApplication {
 
                 try {
                     reservation = new Reservation(date, time, name, theme);
-                    reservationConsoleRepository.getReservationByDateAndTime(date, time)
+                    reservationConsoleRepository.findReservationByDateAndTime(date, time)
                             .ifPresent((e) -> {
                                 throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
                             });
@@ -57,9 +57,9 @@ public class RoomEscapeApplication {
                     continue;
                 }
 
-                reservationConsoleRepository.insertReservation(reservation);
+                reservationConsoleRepository.save(reservation);
 
-                reservation = reservationConsoleRepository.getReservationByDateAndTime(date, time)
+                reservation = reservationConsoleRepository.findReservationByDateAndTime(date, time)
                         .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -75,7 +75,7 @@ public class RoomEscapeApplication {
                 Reservation reservation;
 
                 try {
-                    reservation = reservationConsoleRepository.getReservation(id)
+                    reservation = reservationConsoleRepository.findOne(id)
                             .orElseThrow(() -> {
                                 throw new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND);
                             });
@@ -98,8 +98,8 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationConsoleRepository.getReservation(id).isPresent()) {
-                    reservationConsoleRepository.deleteReservation(id);
+                if (reservationConsoleRepository.findOne(id).isPresent()) {
+                    reservationConsoleRepository.delete(id);
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

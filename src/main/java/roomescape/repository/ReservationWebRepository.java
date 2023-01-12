@@ -11,10 +11,10 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 @Repository
-public class ReservationWebRepository implements ReservationRepository {
+public class ReservationWebRepository implements CrudRepository<Reservation, Long>{
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationWebRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationWebRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -31,7 +31,7 @@ public class ReservationWebRepository implements ReservationRepository {
     );
 
     @Override
-    public void insertReservation(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql,
@@ -42,24 +42,25 @@ public class ReservationWebRepository implements ReservationRepository {
                 reservation.getTheme().getDesc(),
                 reservation.getTheme().getPrice()
         );
+        return null;
     }
 
     @Override
-    public Optional<Reservation> getReservation(Long id) {
+    public Optional<Reservation> findOne(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = (?)";
+
         return jdbcTemplate.query(sql, reservationRowMapper, id)
                 .stream()
                 .findAny();
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = (?)";
         jdbcTemplate.update(sql, id);
     }
 
-    @Override
-    public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
+    public Optional<Reservation> findReservationByDateAndTime(LocalDate date, LocalTime time){
         String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
         return jdbcTemplate.query(sql, reservationRowMapper, date, time)
                 .stream()

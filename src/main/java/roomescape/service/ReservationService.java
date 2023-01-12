@@ -30,11 +30,11 @@ public class ReservationService {
 
         checkTimeDuplication(date, time);
 
-        reservationWebRepository.insertReservation(reservation);
+        reservationWebRepository.save(reservation);
     }
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {
-        reservationWebRepository.getReservationByDateAndTime(date, time)
+        reservationWebRepository.findReservationByDateAndTime(date, time)
                 .ifPresent(reservation -> {
                     throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
                 });
@@ -43,13 +43,13 @@ public class ReservationService {
     @Transactional
     public ReservationResponse getReservation(Long reservationId) {
         return ReservationResponse.fromEntity(
-                reservationWebRepository.getReservation(reservationId)
+                reservationWebRepository.findOne(reservationId)
                         .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND))
         );
     }
 
     @Transactional
     public void deleteReservation(Long reservationId) {
-        reservationWebRepository.deleteReservation(reservationId);
+        reservationWebRepository.delete(reservationId);
     }
 }

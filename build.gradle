@@ -20,6 +20,11 @@ java {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
     runtimeOnly 'com.h2database:h2'
 }
 
