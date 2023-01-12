@@ -86,10 +86,7 @@ public class RoomEscapeApplication {
         Long id = Long.parseLong(params.split(",")[0]);
 
         Optional<Reservation> result = reservationRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new ReservationNotFoundException(id);
-        }
-        return result.get();
+        return result.orElseThrow(() -> new ReservationNotFoundException(id));
     }
 
     public static void deleteReservation(String input, ReservationRepository reservationRepository) {
