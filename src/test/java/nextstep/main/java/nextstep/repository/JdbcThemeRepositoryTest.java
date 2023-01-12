@@ -44,8 +44,7 @@ public class JdbcThemeRepositoryTest {
         assertThat(jdbcThemeRepository.findById(savedTheme.getId())
                 .get())
                 .isEqualTo(savedTheme);
-        assertThat(jdbcThemeRepository.findById(NON_EXIST_THEME_ID)
-                .isEmpty()).isTrue();
+        assertThat(jdbcThemeRepository.findById(NON_EXIST_THEME_ID)).isEmpty();
     }
 
     @Test
@@ -73,5 +72,14 @@ public class JdbcThemeRepositoryTest {
                 .get()).isNotEqualTo(savedTheme);
         assertThat(jdbcThemeRepository.findById(updatingTheme.getId())
                 .get()).isEqualTo(updatingTheme);
+    }
+
+    @Test
+    @DisplayName("테마 단건 삭제 기능 테스트")
+    void deleteByIdTest() {
+        Theme savedTheme = jdbcThemeRepository.save(new Theme("테마이름", "테마설명", 22000));
+        assertThat(jdbcThemeRepository.findById(savedTheme.getId())).isPresent();
+        jdbcThemeRepository.deleteById(savedTheme.getId());
+        assertThat(jdbcThemeRepository.findById(savedTheme.getId())).isEmpty();
     }
 }
