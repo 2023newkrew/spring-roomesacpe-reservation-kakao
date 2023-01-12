@@ -22,7 +22,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
         Long newReservationId = this.reservationService.save(reservationRequestDTO);
 
