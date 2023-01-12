@@ -1,4 +1,6 @@
+drop table if exists `RESERVATION` CASCADE;
 drop table if exists `THEME` CASCADE;
+
 CREATE TABLE `THEME`
 (
     `id`  BIGINT NOT NULL AUTO_INCREMENT,
@@ -9,7 +11,6 @@ CREATE TABLE `THEME`
     UNIQUE (NAME)
 );
 
-drop table if exists `RESERVATION` CASCADE;
 CREATE TABLE `RESERVATION`
 (
     `id`          bigint not null auto_increment,
@@ -21,4 +22,5 @@ CREATE TABLE `RESERVATION`
     FOREIGN KEY (theme_id) REFERENCES THEME(id),
     UNIQUE(date, time, theme_id)
 );
+
 

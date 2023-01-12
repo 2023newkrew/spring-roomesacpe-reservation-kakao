@@ -12,7 +12,9 @@ spring:
     url: jdbc:mysql://localhost:3306/prod?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: rootroot
-
+  sql:
+    init:
+      mode: always
 ---
 
 spring:
