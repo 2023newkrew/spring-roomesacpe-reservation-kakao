@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ThemeRequest;
 
@@ -33,6 +34,7 @@ public class ReservationTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Transactional
     @BeforeAll
     void setUp() throws Exception {
         RestAssured.port = port;
@@ -51,6 +53,7 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 생성 테스트")
+    @Transactional
     @Test
     void createReservation() {
         ReservationRequest reservationRequest = new ReservationRequest("2022-08-13", "13:00", "kayla", 1L);
@@ -64,8 +67,9 @@ public class ReservationTest {
                 .header("Location", "/reservations/3");
     }
 
-    @Test
     @DisplayName("예약 생성 거절 테스트")
+    @Transactional
+    @Test
     void rejectCreateReservation() throws Exception {
         // Given
         ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie", 1L);
@@ -81,6 +85,7 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 조회 테스트")
+    @Transactional
     @Test
     void showReservation() throws Exception {
         RestAssured.given().log().all()
@@ -93,6 +98,7 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 조회 거절 테스트")
+    @Transactional
     @Test
     void rejectShowReservation() throws Exception {
         RestAssured.given().log().all()
@@ -103,6 +109,7 @@ public class ReservationTest {
     }
 
     @DisplayName("예약 삭제 테스트")
+    @Transactional
     @Test
     void deleteReservation() throws Exception {
         RestAssured.given().log().all()
@@ -114,6 +121,7 @@ public class ReservationTest {
 
     @Disabled
     @DisplayName("예약 삭제 거절 테스트")
+    @Transactional
     @Test
     void rejectDeleteReservation() throws Exception {
         RestAssured.given().log().all()

@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeRequest;
 import roomescape.repository.ThemeRepository;
@@ -9,7 +8,6 @@ import roomescape.repository.ThemeRepository;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional
 public class ThemeService {
 
     private final ThemeRepository themeRepository;

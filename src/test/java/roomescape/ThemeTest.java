@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ThemeRequest;
@@ -41,12 +42,16 @@ public class ThemeTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)))
         );
+        this.mockMvc.perform(post("/theme")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(new ThemeRequest("해리포터", "코 없는 남성이 어린 소년에게 집착하는 호러물", 49000)))
+        );
     }
 
     @DisplayName("테마 생성 테스트")
     @Test
     void createTheme() {
-        ThemeRequest themeRequest = new ThemeRequest("해리포터", "코 없는 남성이 어린 소년에게 집착하는 호러물", 49000);
+        ThemeRequest themeRequest = new ThemeRequest("춘식이", "갈기 없는 사자와 고구마를 좋아하는 고양이의 깜찍한 동거 힐링물", 19000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -54,12 +59,12 @@ public class ThemeTest {
                 .when().post("/theme")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/theme/2");
+                .header("Location", "/theme/3");
     }
 
     @DisplayName("테마 조회 테스트")
     @Test
-    void showTheme() throws Exception {
+    void showTheme() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/theme/1")
@@ -71,7 +76,7 @@ public class ThemeTest {
 
     @DisplayName("테마 조회 거절 테스트")
     @Test
-    void rejectShowReservation() throws Exception {
+    void rejectShowReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/theme/10")
@@ -81,7 +86,7 @@ public class ThemeTest {
 
     @DisplayName("테마 수정 테스트")
     @Test
-    void updateTheme() throws Exception {
+    void updateTheme() {
         Theme modifiedTheme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 39000);
 
         RestAssured.given().log().all()
@@ -96,7 +101,7 @@ public class ThemeTest {
 
     @DisplayName("테마 수정 거절 테스트")
     @Test
-    void rejectUpdateTheme() throws Exception {
+    void rejectUpdateTheme() {
         Theme modifiedTheme = new Theme(10L, "워너고홈", "병맛 어드벤처 회사 코믹물", 39000);
 
         RestAssured.given().log().all()
@@ -109,10 +114,10 @@ public class ThemeTest {
 
     @DisplayName("테마 삭제 테스트")
     @Test
-    void deleteReservation() throws Exception {
+    void deleteReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/theme/1")
+                .when().delete("/theme/2")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

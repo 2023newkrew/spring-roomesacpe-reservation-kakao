@@ -33,16 +33,6 @@ public class ReservationRequest {
         );
     }
 
-    public Reservation toReservation(Theme theme, Long id) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date, DateTimeFormatter.ISO_DATE),
-                LocalTime.parse(time),
-                name,
-                theme
-        );
-    }
-
     public String getDate() {
         return date;
     }

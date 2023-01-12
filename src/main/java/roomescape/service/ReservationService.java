@@ -11,7 +11,6 @@ import roomescape.dto.ReservationRequest;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
