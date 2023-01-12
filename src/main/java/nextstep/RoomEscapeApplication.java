@@ -5,8 +5,8 @@ import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.exception.DatabaseException;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
-import nextstep.repository.ReservationH2Repository;
-import nextstep.repository.ReservationRepository;
+import nextstep.repository.reservation.ReservationH2Repository;
+import nextstep.repository.reservation.ReservationRepository;
 import nextstep.service.ReservationService;
 import java.util.Scanner;
 

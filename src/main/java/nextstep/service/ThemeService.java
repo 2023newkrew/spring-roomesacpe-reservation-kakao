@@ -3,7 +3,7 @@ package nextstep.service;
 import nextstep.domain.Theme;
 import nextstep.dto.request.CreateThemeRequest;
 import nextstep.dto.response.ThemeResponse;
-import nextstep.repository.ThemeRepository;
+import nextstep.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

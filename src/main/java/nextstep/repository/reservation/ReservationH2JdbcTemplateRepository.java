@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.exception.ReservationNotFoundException;

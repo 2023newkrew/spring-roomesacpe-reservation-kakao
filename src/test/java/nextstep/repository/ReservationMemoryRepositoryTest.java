@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.repository.reservation.ReservationMemoryRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

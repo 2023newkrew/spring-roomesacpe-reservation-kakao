@@ -6,7 +6,7 @@ import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.dto.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
-import nextstep.repository.ReservationRepository;
+import nextstep.repository.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
