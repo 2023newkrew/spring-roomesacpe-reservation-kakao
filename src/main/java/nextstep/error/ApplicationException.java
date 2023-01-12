@@ -5,6 +5,7 @@ public class ApplicationException extends RuntimeException {
     private ErrorType errorType;
 
     public ApplicationException(ErrorType errorType) {
+        super(errorType.getMessage());
         this.errorType = errorType;
     }
 

@@ -56,6 +56,16 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public boolean existsByThemeId(Long themeId) {
+        return execute(SELECT_COUNT_BY_THEME_ID, (pstmt, rs) -> {
+            pstmt.setLong(1, themeId);
+            rs = pstmt.executeQuery();
+
+            return rs.next() && rs.getInt(1) > 0;
+        });
+    }
+
+    @Override
     public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
         return execute(SELECT_COUNT_BY_THEME_ID_AND_DATE_AND_TIME, (pstmt, rs) -> {
             pstmt.setLong(1, themeId);
@@ -63,8 +73,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             pstmt.setTime(3, Time.valueOf(time));
             rs = pstmt.executeQuery();
 
-            rs.next();
-            return rs.getInt(1) > 0;
+            return rs.next() && rs.getInt(1) > 0;
         });
     }
 

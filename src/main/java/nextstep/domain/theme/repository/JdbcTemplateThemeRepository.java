@@ -57,6 +57,6 @@ public class JdbcTemplateThemeRepository implements ThemeRepository {
 
     @Override
     public void deleteById(Long id) {
-
+        jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }

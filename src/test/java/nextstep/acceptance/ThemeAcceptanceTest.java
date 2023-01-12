@@ -6,7 +6,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.common.DatabaseExecutor;
 import nextstep.common.fixture.ThemeProvider;
-import nextstep.domain.theme.Theme;
+import nextstep.domain.QuerySetting;
+import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.request.CreateThemeRequest;
 import nextstep.dto.response.FindThemeResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
-import static nextstep.domain.QuerySetting.Theme.*;
+import static nextstep.common.fixture.ReservationProvider.예약_생성을_요청한다;
+import static nextstep.domain.QuerySetting.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static nextstep.common.fixture.ThemeProvider.테마_생성을_요청한다;
@@ -43,7 +45,8 @@ public class ThemeAcceptanceTest {
     @BeforeEach
     void setPort() {
         RestAssured.port = port;
-        databaseExecutor.clearTable(TABLE_NAME);
+        databaseExecutor.clearTable(Theme.TABLE_NAME);
+        databaseExecutor.clearTable(Reservation.TABLE_NAME);
     }
 
     @Test
@@ -56,7 +59,7 @@ public class ThemeAcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header(HttpHeaders.LOCATION)).isEqualTo("/themes" + 1);
+        assertThat(response.header(HttpHeaders.LOCATION)).isEqualTo("/themes/" + 1);
     }
 
     @Nested
@@ -251,7 +254,40 @@ public class ThemeAcceptanceTest {
             .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+    }
 
+    @Test
+    void 테마_아이디로_테마를_삭제한다() {
+        // given
+        ExtractableResponse<Response> response = 테마_생성을_요청한다(new CreateThemeRequest("베니스 상인 저택", "테마 설명", 25_000));
+
+        given()
+
+        // when
+        .when()
+                .delete(response.header(HttpHeaders.LOCATION))
+
+        // then
+        .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void 삭제하려는_테마에_예약이_존재하면_삭제할_수_없다() {
+        // given
+        String themeName = "베니스 상인 저택";
+        ExtractableResponse<Response> response = 테마_생성을_요청한다(new CreateThemeRequest(themeName, "테마 설명", 25_000));
+        예약_생성을_요청한다(new CreateReservationRequest("2023-01-12", "13:00", "eddie", themeName));
+
+        given()
+
+        // when
+        .when()
+                .delete(response.header(HttpHeaders.LOCATION))
+
+        // then
+        .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
 }

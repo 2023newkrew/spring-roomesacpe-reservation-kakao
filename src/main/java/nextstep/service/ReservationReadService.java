@@ -26,4 +26,9 @@ public class ReservationReadService {
         return FindReservationResponse.from(reservation);
     }
 
+    @Transactional(readOnly = true)
+    public boolean existsByThemeId(Long themeId) {
+        return reservationRepository.existsByThemeId(themeId);
+    }
+
 }

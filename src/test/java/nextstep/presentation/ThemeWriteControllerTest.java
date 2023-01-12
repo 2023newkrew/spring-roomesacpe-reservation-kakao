@@ -58,7 +58,7 @@ public class ThemeWriteControllerTest {
         MockHttpServletResponse response = perform.andReturn().getResponse();
 
         perform.andExpect(status().isCreated());
-        assertThat(response.getHeader(HttpHeaders.LOCATION)).isEqualTo("/themes" + themeId);
+        assertThat(response.getHeader(HttpHeaders.LOCATION)).isEqualTo("/themes/" + themeId);
     }
 
     @Test

@@ -103,4 +103,16 @@ public class ThemeRepositoryTest {
         themes.forEach(theme -> assertThat(theme).isNotNull());
     }
 
+    @Test
+    void 테마_아이디로_테마를_삭제한다() {
+        // given
+        Theme savedTheme = themeRepository.save(new Theme("테마 제목", "테마 설명", 22_000));
+
+        // when
+        themeRepository.deleteById(savedTheme.getId());
+
+        // then
+        assertThat(themeRepository.findByName(savedTheme.getName())).isEqualTo(Optional.empty());
+    }
+
 }

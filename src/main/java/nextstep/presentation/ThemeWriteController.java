@@ -25,7 +25,7 @@ public class ThemeWriteController {
         themeRequestValidator.validateCreateRequest(createThemeRequest);
         Long themeId = themeWriteService.createTheme(createThemeRequest);
 
-        return ResponseEntity.created(URI.create("/themes" + themeId))
+        return ResponseEntity.created(URI.create("/themes/" + themeId))
                 .build();
     }
 

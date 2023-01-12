@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static nextstep.error.ErrorType.DUPLICATE_THEME;
+import static nextstep.error.ErrorType.THEME_REFERENTIAL_ERROR;
 
 @Service
 public class ThemeWriteService {
@@ -28,6 +29,15 @@ public class ThemeWriteService {
 
         Theme savedTheme = themeRepository.save(new Theme(createThemeRequest.getName(), createThemeRequest.getDesc(), createThemeRequest.getPrice()));
         return savedTheme.getId();
+    }
+
+    @Transactional
+    public void deleteThemeById(Long themeId) {
+        if (reservationReadService.existsByThemeId(themeId)) {
+            throw new ApplicationException(THEME_REFERENTIAL_ERROR);
+        }
+
+        themeRepository.deleteById(themeId);
     }
 
 }

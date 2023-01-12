@@ -64,6 +64,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
+    public boolean existsByThemeId(Long themeId) {
+        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_THEME_ID, Integer.class, themeId) > 0;
+    }
+
+    @Override
     public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
         return jdbcTemplate.queryForObject(
                 SELECT_COUNT_BY_THEME_ID_AND_DATE_AND_TIME,

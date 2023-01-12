@@ -22,6 +22,9 @@ public class ThemeWriteServiceTest {
     @Mock
     private ThemeRepository themeRepository;
 
+    @Mock
+    private ReservationReadService reservationReadService;
+
     @InjectMocks
     private ThemeWriteService themeWriteService;
 
@@ -55,5 +58,17 @@ public class ThemeWriteServiceTest {
                 .isInstanceOf(ApplicationException.class);
     }
 
+    @Test
+    void 테마와_관련된_예약이_있을_경우_테마를_삭제할_수_없다() {
+        // given
+        Long themeId = 62L;
+
+        given(reservationReadService.existsByThemeId(themeId))
+                .willReturn(true);
+
+        // when, then
+        assertThatThrownBy(() -> themeWriteService.deleteThemeById(themeId))
+                .isInstanceOf(ApplicationException.class);
+    }
 
 }
