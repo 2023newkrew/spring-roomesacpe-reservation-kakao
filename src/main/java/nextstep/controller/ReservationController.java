@@ -4,7 +4,7 @@ import nextstep.dao.ReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.ReservationInfo;
 import nextstep.domain.Theme;
-import nextstep.exceptions.CustomException;
+import nextstep.exceptions.DataConflictException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ public class ReservationController {
     public ResponseEntity createReservation(@RequestBody Reservation reservation) {
         List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(reservation.getDate(), reservation.getTime());
         if (reservationsByDateAndTime.size() > 0) {
-            throw new CustomException("동일한 시간대에 예약이 이미 존재합니다.");
+            throw new DataConflictException("동일한 시간대에 예약이 이미 존재합니다.");
         }
 
         Reservation newReservation = new Reservation(reservation.getDate(), reservation.getTime(), reservation.getName(), theme);

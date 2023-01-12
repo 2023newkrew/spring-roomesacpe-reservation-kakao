@@ -4,7 +4,7 @@ import nextstep.dao.ReservationDAO;
 import nextstep.dao.ReservationJdbcApiDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exceptions.CustomException;
+import nextstep.exceptions.DataConflictException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -51,7 +51,7 @@ public class ConsoleRoomEscapeApplication {
                 /* *************************************************** */
                 List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(reservation.getDate(), reservation.getTime());
                 if (reservationsByDateAndTime.size() > 0) {
-                    throw new CustomException("동일한 시간대에 예약이 이미 존재합니다.");
+                    throw new DataConflictException("동일한 시간대에 예약이 이미 존재합니다.");
                 }
 
                 reservationDAO.save(reservation);
