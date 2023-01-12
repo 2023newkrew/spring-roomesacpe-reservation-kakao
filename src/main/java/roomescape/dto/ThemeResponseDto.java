@@ -1,0 +1,33 @@
+package roomescape.dto;
+
+import roomescape.model.Theme;
+
+public class ThemeResponseDto {
+    private final Long id;
+    private final String name;
+    private final String desc;
+    private final Integer price;
+
+    public ThemeResponseDto(Theme theme) {
+        this.id = theme.getId();
+        this.name = theme.getName();
+        this.desc = theme.getDesc();
+        this.price = theme.getPrice();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+}
