@@ -56,7 +56,7 @@ public class ServiceTest {
     @DisplayName("날짜와 시간이 중복되는 예약 생성은 불가능하다.")
     void saveDuplicateTest(){
         // 무조건 중복되었다고 반환
-        given(reservationRepository.existByDateTime(any(), any()))
+        given(reservationRepository.existByDateTimeTheme(any(), any()))
                 .willReturn(true);
 
         // 중복 반환 시 DuplicateException 발생

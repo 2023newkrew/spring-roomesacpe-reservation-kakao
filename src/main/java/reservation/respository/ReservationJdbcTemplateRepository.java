@@ -63,10 +63,10 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         return this.jdbcTemplate.update(sql, reservationId);
     }
 
-    // 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
-    public boolean existByDateTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time = ?)";
-        return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, date, time));
+    // 예약 생성 시 같은 테마의 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
+    public boolean existByDateTimeTheme(LocalDate date, LocalTime time, Long themeId) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time = ? AND theme_id = ?)";
+        return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, date, time, themeId));
     }
 
     // 해당 id를 갖는 예약이 있는지 확인

@@ -66,7 +66,7 @@ public class RepositoryTest {
     @DisplayName("시간과 날짜가 중복되는 예약은 불가능하다.")
     void duplicate(){
         Long id = reservationJdbcTemplateRepository.save(makeReservationBeforeStore(requestReservation, theme));
-        assertThat(reservationJdbcTemplateRepository.existByDateTime(requestReservation.getDate(), requestReservation.getTime()))
+        assertThat(reservationJdbcTemplateRepository.existByDateTimeTheme(requestReservation.getDate(), requestReservation.getTime()))
                 .isTrue();
     }
 
