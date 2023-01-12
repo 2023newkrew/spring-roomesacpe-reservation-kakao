@@ -2,7 +2,9 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.Reservation;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,10 @@ import org.springframework.http.MediaType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class ReservationControllerTest {
     @LocalServerPort
     int port;
@@ -24,11 +26,14 @@ class ReservationControllerTest {
         RestAssured.port = port;
     }
 
-    @Order(1)
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
-        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+        Reservation reservation = new Reservation(
+                LocalDate.of(2022, 8, 11),
+                LocalTime.of(15, 0),
+                "name3"
+        );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -36,14 +41,17 @@ class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .header("Location", matchesPattern("/reservations/\\d+"));
     }
 
-    @Order(2)
     @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
     @Test
     void reservationException() {
-        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+        Reservation reservation = new Reservation(
+                LocalDate.of(2022, 8, 11),
+                LocalTime.of(13, 0),
+                "name4"
+        );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -54,7 +62,6 @@ class ReservationControllerTest {
                 .body(is("동일한 시간대에 예약이 이미 존재합니다."));
     }
 
-    @Order(3)
     @DisplayName("예약 조회")
     @Test
     void lookupReservation() {
@@ -72,12 +79,11 @@ class ReservationControllerTest {
                 .body("themePrice", is(29000));
     }
 
-    @Order(4)
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/2")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

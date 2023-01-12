@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class CustomAdvice {
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity handle(CustomException ex) {
+    @ExceptionHandler(DataConflictException.class)
+    public ResponseEntity handle(DataConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }

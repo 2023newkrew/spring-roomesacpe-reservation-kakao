@@ -1,9 +1,10 @@
 package nextstep;
 
-import nextstep.console.ReservationDAO;
+import nextstep.dao.ReservationDAO;
+import nextstep.dao.ReservationJdbcApiDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exceptions.CustomException;
+import nextstep.exceptions.DataConflictException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +20,7 @@ public class ConsoleRoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         /* *************************************************** */
-        ReservationDAO reservationDAO = new ReservationDAO();
+        ReservationDAO reservationDAO = new ReservationJdbcApiDAO();
         /* *************************************************** */
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -48,12 +49,12 @@ public class ConsoleRoomEscapeApplication {
                 );
 
                 /* *************************************************** */
-                List<Reservation> reservationsByDateAndTime = reservationDAO.findReservationByDateAndTime(reservation.getDate(), reservation.getTime());
+                List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(reservation.getDate(), reservation.getTime());
                 if (reservationsByDateAndTime.size() > 0) {
-                    throw new CustomException("동일한 시간대에 예약이 이미 존재합니다.");
+                    throw new DataConflictException("동일한 시간대에 예약이 이미 존재합니다.");
                 }
 
-                reservationDAO.addReservation(reservation);
+                reservationDAO.save(reservation);
                 /* *************************************************** */
 
                 System.out.println("예약이 등록되었습니다.");
@@ -69,7 +70,7 @@ public class ConsoleRoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 /* *************************************************** */
-                Reservation reservation = reservationDAO.findReservation(id);
+                Reservation reservation = reservationDAO.findById(id);
                 /* *************************************************** */
 
                 System.out.println("예약 번호: " + reservation.getId());
@@ -87,7 +88,7 @@ public class ConsoleRoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 /* *************************************************** */
-                if (reservationDAO.deleteReservation(id)) {
+                if (reservationDAO.deleteById(id) > 0) {
                     /* *************************************************** */
                     System.out.println("예약이 취소되었습니다.");
                 }
