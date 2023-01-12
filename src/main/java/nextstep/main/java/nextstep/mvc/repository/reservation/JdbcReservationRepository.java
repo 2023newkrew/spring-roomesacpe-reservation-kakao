@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-@Primary
 public class JdbcReservationRepository implements ReservationRepository {
     private static final int EMPTY_SIZE = 0;
 

@@ -1,8 +1,9 @@
-package nextstep.main.java.nextstep.mvc.controller.reservation;
+package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
+import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,34 +23,33 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
-@WebMvcTest(ReservationController.class)
-public class ReservationControllerUnitTest {
+@WebMvcTest(ThemeController.class)
+public class ThemeControllerUnitTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    ReservationService reservationService;
+    ThemeService themeService;
+
     @Test
-    @DisplayName("성공적으로 예약이 생성된다.")
+    @DisplayName("성공적으로 테마가 생성된다.")
     void createSuccess() throws Exception {
         // given
         Long id = 1L;
-        ReservationCreateRequest request = getCreateRequest();
+        ThemeCreateRequest request = ThemeCreateRequest.of("theme", "description of new theme", 10000);
         String content = objectMapper.writeValueAsString(request);
 
-        given(reservationService.save(any(ReservationCreateRequest.class)))
+        given(themeService.save(any(ThemeCreateRequest.class)))
                 .willReturn(id);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/reservations")
+        MockHttpServletResponse response = mockMvc.perform(post("/themes")
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn()
@@ -57,22 +57,22 @@ public class ReservationControllerUnitTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getHeader("Location")).isEqualTo("/reservations/" + id);
+        assertThat(response.getHeader("Location")).isEqualTo("/themes/" + id);
     }
 
     @ParameterizedTest
     @MethodSource({"provideRequest"})
-    @DisplayName("올바른 값이 들어오지 않을 경우 예약 생성에 실패한다.")
-    void create(ReservationCreateRequest request) throws Exception {
+    @DisplayName("올바른 값이 들어오지 않을 경우 테마 생성에 실패한다.")
+    void create(ThemeCreateRequest request) throws Exception {
         // given
         Long id = 1L;
         String content = objectMapper.writeValueAsString(request);
 
-        given(reservationService.save(any(ReservationCreateRequest.class)))
+        given(themeService.save(any(ThemeCreateRequest.class)))
                 .willReturn(id);
 
         // when
-        MvcResult result = mockMvc.perform(post("/reservations")
+        MvcResult result = mockMvc.perform(post("/themes")
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -83,28 +83,18 @@ public class ReservationControllerUnitTest {
     }
 
     static Stream<Arguments> provideRequest() {
-        LocalDate validDate = LocalDate.of(2024, 1, 1);
-        LocalDate invalidDate = LocalDate.of(2022, 1, 1);
+        String validName = "테마명";
 
-        LocalTime time = LocalTime.of(3, 30);
+        String validDesc = "테마의 설명은 10자 이상으로 정성적으로 작성해야 합니다.";
+        String invalidDesc = "테마 설명입니다.";
 
-        String validName = "name";
-        String invalidName = "n";
-
-        String themeName = "theme";
+        int validPrice = 5000;
+        int invalidPrice = 999;
 
         return Stream.of(
-                Arguments.arguments(ReservationCreateRequest.of(validDate, time, validName, "")),
-                Arguments.arguments(ReservationCreateRequest.of(validDate, time, invalidName, themeName)),
-                Arguments.arguments(ReservationCreateRequest.of(invalidDate, time, validName, themeName))
+                Arguments.arguments(ThemeCreateRequest.of(validName, validDesc, invalidPrice)),
+                Arguments.arguments(ThemeCreateRequest.of(validName, invalidDesc, validPrice)),
+                Arguments.arguments(ThemeCreateRequest.of("", validDesc, validPrice))
         );
-    }
-
-    private ReservationCreateRequest getCreateRequest() {
-        return ReservationCreateRequest.of(
-                LocalDate.of(2023, 1, 19),
-                LocalTime.of(3, 30),
-                "test",
-                "test");
     }
 }
