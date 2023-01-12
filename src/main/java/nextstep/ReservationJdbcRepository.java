@@ -5,8 +5,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
 import reservation.respository.ReservationRepository;
+import reservation.util.exception.ConnectionException;
+import reservation.util.exception.QueryException;
 
 import java.sql.*;
+
+import static reservation.util.exception.ErrorMessages.CONNECTION_ERROR;
+import static reservation.util.exception.ErrorMessages.QUERY_ERROR;
 
 public class ReservationJdbcRepository implements ReservationRepository {
 
@@ -15,24 +20,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
     private final String DB_PW = "";
 
     private Connection makeConnection(){
-
-//        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PW)){
-//            // SQL 실행
-//        } catch (SQLException | AssertionError e) {
-//            throw ConnectionException("연결 오류");
-//        }
-
-        Connection con = null;
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
+            Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PW);
             assert con != null;
             System.out.println("정상적으로 연결되었습니다.");
+            return con;
         } catch (SQLException | AssertionError e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
+            throw new ConnectionException(CONNECTION_ERROR);
         }
-
-        return con;
     }
 
     @Override
@@ -53,7 +48,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
             id = (long) keyHolder.getKey();
             ps.close();
         } catch (SQLException | AssertionError e) {
-            throw new RuntimeException(e);
+            throw new QueryException(QUERY_ERROR);
         }
         return id;
     }
@@ -83,7 +78,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
             rs.close();
             ps.close();
         } catch (SQLException | AssertionError e) {
-            throw new RuntimeException(e);
+            throw new QueryException(QUERY_ERROR);
         }
 
         if (reservation == null) {
@@ -104,7 +99,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
             row = ps.executeUpdate();
             ps.close();
         } catch (SQLException | AssertionError e) {
-            throw new RuntimeException(e);
+            throw new QueryException(QUERY_ERROR);
         }
         return row;
     }
