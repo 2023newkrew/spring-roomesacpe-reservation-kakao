@@ -2,7 +2,7 @@ package nextstep.main.java.nextstep.console;
 
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
-import nextstep.main.java.nextstep.repositoryUtil.ReservationPreparedStatementCreator;
+import nextstep.main.java.nextstep.repositoryUtil.CustomPreparedStatementCreator;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ public class ReservationDAO implements ReservationRepository {
     public Reservation save(Reservation reservation) {
         connect();
         try {
-            PreparedStatement preparedStatement = ReservationPreparedStatementCreator.insertReservationPreparedStatement(con, reservation);
+            PreparedStatement preparedStatement = CustomPreparedStatementCreator.insertReservationPreparedStatement(con, reservation);
             preparedStatement.executeUpdate();
             return new Reservation(getGeneratedKeys(preparedStatement), reservation);
         } catch (SQLException e) {

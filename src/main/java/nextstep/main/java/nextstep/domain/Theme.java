@@ -3,14 +3,26 @@ package nextstep.main.java.nextstep.domain;
 import java.util.Objects;
 
 public class Theme {
+    private Long id;
     private final String name;
     private final String desc;
     private final Integer price;
+
+    public Theme(Long id, String name, String desc, Integer price) {
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+        this.id = id;
+    }
 
     public Theme(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
+    }
+
+    public Theme(Long id, Theme theme) {
+        this(id, theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
     public String getName() {
@@ -35,6 +47,6 @@ public class Theme {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, desc, price);
+        return Objects.hash(id, name, desc, price);
     }
 }

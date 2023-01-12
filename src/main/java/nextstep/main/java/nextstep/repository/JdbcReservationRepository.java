@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.repository;
 
 import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.repositoryUtil.ReservationPreparedStatementCreator;
+import nextstep.main.java.nextstep.repositoryUtil.CustomPreparedStatementCreator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,7 +32,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update((connection) ->
-                        ReservationPreparedStatementCreator.insertReservationPreparedStatement(connection, reservation)
+                        CustomPreparedStatementCreator.insertReservationPreparedStatement(connection, reservation)
                 , keyHolder);
         return new Reservation(keyHolder.getKey()
                 .longValue(), reservation);

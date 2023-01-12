@@ -62,3 +62,11 @@
 
 - `RestAssured`를 통해 `Controller`의 메서드의 기능을 테스트한다.
 - `@MockBean` 으로 `ReservationService`를 이용한다.
+
+
+## ThemeRepository
+- [ ] 테마 생성
+- [ ] 테마 조회
+- [ ] 테마 목록 조회
+- [ ] 테마 수정
+- [ ] 테마 삭제
