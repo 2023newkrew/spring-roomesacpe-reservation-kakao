@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import org.springframework.beans.factory.annotation.Value;
 
 public class ConnectionHandler {
 
@@ -16,6 +15,8 @@ public class ConnectionHandler {
     private static String USERNAME;
 
     private static String PASSWORD;
+
+    private final Connection connection;
 
     static {
         FileReader reader;
@@ -52,8 +53,6 @@ public class ConnectionHandler {
         return tokens[1];
     }
 
-
-    private final Connection connection;
 
     public ConnectionHandler() {
         this.connection = connect();
