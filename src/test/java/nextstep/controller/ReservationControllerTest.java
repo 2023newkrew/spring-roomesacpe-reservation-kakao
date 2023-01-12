@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.dto.CreateReservationDto;
+import nextstep.domain.theme.Theme;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -18,6 +19,9 @@ public class ReservationControllerTest {
     @LocalServerPort
     int port;
 
+    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -26,9 +30,7 @@ public class ReservationControllerTest {
     @DisplayName("create reservation test")
     @Test
     void createReservation() {
-
-
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:35", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:35", "name", defaultTheme);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
@@ -41,14 +43,14 @@ public class ReservationControllerTest {
     @DisplayName("duplicate reservation test")
     @Test
     void sameTimeReservationTest() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
                 .when().post("/reservations");
 
-        CreateReservationDto reservationDto2 = new CreateReservationDto("2022-08-11", "13:30", "name2");
+        CreateReservationDto reservationDto2 = new CreateReservationDto("2022-08-11", "13:30", "name2", defaultTheme);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +63,7 @@ public class ReservationControllerTest {
     @DisplayName("get reservation test")
     @Test
     void getReservation() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,7 +80,7 @@ public class ReservationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("id", is(1))
                 .body("date", is("2022-08-11"))
-                .body("time", is("13:30"))
+                .body("time", is("13:30:00"))
                 .body("name", is("name"))
                 .body("themeName", is("워너고홈"))
                 .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
@@ -88,7 +90,7 @@ public class ReservationControllerTest {
     @DisplayName("delete reservation test")
     @Test
     void deleteReservation() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name");
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -2,11 +2,14 @@ package nextstep.domain.dto;
 
 import nextstep.domain.reservation.Reservation;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class GetReservationDto {
 
     private final Long id;
-    private final String date;
-    private final String time;
+    private final LocalDate date;
+    private final LocalTime time;
     private final String name;
     private final String themeName;
     private final String themeDesc;
@@ -14,8 +17,8 @@ public class GetReservationDto {
 
     public GetReservationDto(Reservation reservation) {
         this.id = reservation.getId();
-        this.date = reservation.getDate().toString();
-        this.time = reservation.getTime().toString();
+        this.date = reservation.getDate();
+        this.time = reservation.getTime();
         this.name = reservation.getName();
         this.themeName = reservation.getTheme().getName();
         this.themeDesc = reservation.getTheme().getDesc();
@@ -26,11 +29,11 @@ public class GetReservationDto {
         return id;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 

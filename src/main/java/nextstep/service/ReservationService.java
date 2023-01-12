@@ -38,9 +38,9 @@ public class ReservationService {
         return reservationRepository.add(reservation);
     }
 
-    public GetReservationDto getReservation(Long id) {
-        return new GetReservationDto(reservationRepository.findById(id)
-                .orElseThrow(NoReservationException::new));
+    public Reservation getReservation(Long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(NoReservationException::new);
     }
 
     public void deleteReservation(Long id) {

@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import nextstep.domain.dto.GetReservationDto;
 import nextstep.domain.dto.CreateReservationDto;
+import nextstep.domain.reservation.Reservation;
 import nextstep.exception.DuplicateTimeReservationException;
 import nextstep.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class ReservationController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetReservationDto> getReservation(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(reservationService.getReservation(id));
+        return ResponseEntity.ok().body(new GetReservationDto(reservationService.getReservation(id)));
     }
 
     @DeleteMapping("/{id}")
