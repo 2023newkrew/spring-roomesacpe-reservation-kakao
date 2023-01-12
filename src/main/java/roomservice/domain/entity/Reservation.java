@@ -1,15 +1,18 @@
-package roomservice.domain;
+package roomservice.domain.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
  * Reservation class is a DTO class, containing reservation information such as id, datetime, name and theme.
  */
-@Data
-@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class Reservation {
     private Long id; // DB에서 기본 키, auto_increment 되어있음
     private LocalDate date; // 예약에서 date, time, theme이 모두 중복되는 경우 exception(중복 예약)
@@ -17,11 +20,7 @@ public class Reservation {
     private String name;
     private Theme theme; // 어떤 방 탈출인가를 정의하는 객체
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public void setId(long id){
         this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
     }
 }
