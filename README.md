@@ -66,3 +66,19 @@
 - [x] ReservationService Test 추가
 - [x] Repository Test 단위 테스트 적용
 - [x] ConsoleReservationRepository의 커넥션 획득 예외 처리
+
+---
+
+## 3단계
+
+### 구현 리스트
+- 테마 관리 기능
+  - [ ] 테마 생성 기능
+  - [ ] 테마 목록 조회
+  - [ ] 테마 수정 기능
+  - [ ] 테마 삭제 기능
+  - [ ] 콘솔 테마 관리 기능
+  - [ ] 테마 관리 웹 API
+
+- 직접 추가한 제약 사항
+  - [ ] 예약은 30분 단위로 가능
