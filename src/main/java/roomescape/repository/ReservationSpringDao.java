@@ -1,14 +1,14 @@
-package roomservice.repository;
+package roomescape.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomservice.domain.Reservation;
-import roomservice.exceptions.exception.DuplicatedReservationException;
-import roomservice.exceptions.exception.NonExistentReservationException;
+import roomescape.entity.Reservation;
+import roomescape.exceptions.exception.DuplicatedReservationException;
+import roomescape.exceptions.exception.NoSuchReservationException;
 
 import java.sql.PreparedStatement;
 
@@ -55,15 +55,15 @@ public class ReservationSpringDao implements ReservationDao{
 //                        ));
                         return reservation;
                     }, id);
-        } catch (IncorrectResultSizeDataAccessException error) {
-            throw new NonExistentReservationException();
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchReservationException();
         }
     }
 
     public void deleteById(long id) {
         String sql = "delete from RESERVATION where id = ?";
         if (jdbcTemplate.update(sql, id) == 0) {
-            throw new NonExistentReservationException();
+            throw new NoSuchReservationException();
         }
     }
 

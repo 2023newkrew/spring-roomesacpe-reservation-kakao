@@ -1,4 +1,4 @@
-package roomservice.domain;
+package roomescape.entity;
 
 import lombok.Data;
 

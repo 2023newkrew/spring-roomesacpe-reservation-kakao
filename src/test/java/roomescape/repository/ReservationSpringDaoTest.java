@@ -1,4 +1,4 @@
-package roomservice.repository;
+package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomservice.domain.Reservation;
-import roomservice.exceptions.exception.DuplicatedReservationException;
-import roomservice.exceptions.exception.NonExistentReservationException;
+import roomescape.entity.Reservation;
+import roomescape.exceptions.exception.DuplicatedReservationException;
+import roomescape.exceptions.exception.NoSuchReservationException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -64,9 +64,9 @@ public class ReservationSpringDaoTest {
 
     @Test
     void throwExceptionWhenReservationNotExist() {
-        assertThatThrownBy(() -> reservationDao.findById(1L)).isInstanceOf(NonExistentReservationException.class);
+        assertThatThrownBy(() -> reservationDao.findById(1L)).isInstanceOf(NoSuchReservationException.class);
 
-        assertThatThrownBy(() -> reservationDao.deleteById(1L)).isInstanceOf(NonExistentReservationException.class);
+        assertThatThrownBy(() -> reservationDao.deleteById(1L)).isInstanceOf(NoSuchReservationException.class);
     }
 
     @Test
@@ -75,6 +75,6 @@ public class ReservationSpringDaoTest {
         testReservation.setId(id);
         reservationDao.deleteById(id);
 
-        assertThatThrownBy(() -> reservationDao.findById(id)).isInstanceOf(NonExistentReservationException.class);
+        assertThatThrownBy(() -> reservationDao.findById(id)).isInstanceOf(NoSuchReservationException.class);
     }
 }

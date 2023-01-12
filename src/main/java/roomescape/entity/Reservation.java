@@ -1,12 +1,14 @@
-package roomservice.domain;
+package roomescape.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Builder
 public class Reservation {
     private Long id;
     private LocalDate date;

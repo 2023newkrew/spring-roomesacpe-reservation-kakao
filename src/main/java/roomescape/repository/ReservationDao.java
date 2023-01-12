@@ -1,6 +1,6 @@
-package roomservice.repository;
+package roomescape.repository;
 
-import roomservice.domain.Reservation;
+import roomescape.entity.Reservation;
 
 public interface ReservationDao {
     long add(Reservation reservation);

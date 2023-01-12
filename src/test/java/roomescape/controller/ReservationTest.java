@@ -1,4 +1,4 @@
-package roomservice.controller;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import org.json.JSONObject;
@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
-import roomservice.domain.Reservation;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
+import roomescape.entity.Reservation;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -25,6 +27,7 @@ public class ReservationTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
     private final static LocalTime testTime = LocalTime.of(13, 0);
     private final Reservation reservation = new Reservation();
+    private ReservationRequestDto reservationRequestDto;
     private final RestTemplate restTemplate = new RestTemplate();
     private String baseUrl;
     @Autowired
@@ -48,6 +51,7 @@ public class ReservationTest {
         reservation.setDate(testDate);
         reservation.setTime(testTime);
         reservation.setName("hi");
+        reservationRequestDto = new ReservationRequestDto(testDate, testTime, "hi");
         baseUrl = "http://localhost:" + port;
     }
 
@@ -80,14 +84,16 @@ public class ReservationTest {
     @DisplayName("Http Method - GET")
     @Test
     void showReservation() {
-        URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
+        URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservationRequestDto, JSONObject.class)
                 .getHeaders().getLocation();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(path)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", is("hi"));
+                .body("name", is("hi"))
+                .body("date", is("2023-01-01"))
+                .body("time", is("13:00"));
     }
 
     @DisplayName("Http Method - GET Exception")
@@ -104,7 +110,7 @@ public class ReservationTest {
     @DisplayName("Http Method - DELETE")
     @Test
     void deleteReservation() {
-        URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservation, JSONObject.class)
+        URI path = restTemplate.postForEntity(baseUrl + "/reservations", reservationRequestDto, JSONObject.class)
                 .getHeaders().getLocation();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -120,7 +126,7 @@ public class ReservationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/0")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .statusCode(HttpStatus.CONFLICT.value())
                 .body(is("존재하지 않는 예약 id입니다."));
     }
 }

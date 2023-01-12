@@ -1,9 +1,8 @@
-package roomservice.repository;
+package roomescape.repository;
 
-import roomservice.domain.Reservation;
-import roomservice.domain.Theme;
-import roomservice.exceptions.exception.DuplicatedReservationException;
-import roomservice.exceptions.exception.NonExistentReservationException;
+import roomescape.entity.Reservation;
+import roomescape.exceptions.exception.DuplicatedReservationException;
+import roomescape.exceptions.exception.NoSuchReservationException;
 
 import java.sql.*;
 
@@ -67,7 +66,7 @@ public class ReservationConsoleDao implements ReservationDao{
 //                );
                 return reservation;
             }
-            throw new NonExistentReservationException();
+            throw new NoSuchReservationException();
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -80,7 +79,7 @@ public class ReservationConsoleDao implements ReservationDao{
              PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setLong(1, id);
             if (pstmt.executeUpdate() == 0) {
-                throw new NonExistentReservationException();
+                throw new NoSuchReservationException();
             }
         } catch(SQLException e){
             e.printStackTrace();

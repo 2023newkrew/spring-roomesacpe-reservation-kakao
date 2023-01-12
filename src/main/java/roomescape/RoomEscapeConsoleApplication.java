@@ -1,8 +1,8 @@
-package roomservice;
+package roomescape;
 
-import roomservice.domain.Reservation;
-import roomservice.repository.ReservationConsoleDao;
-import roomservice.repository.ReservationDao;
+import roomescape.entity.Reservation;
+import roomescape.repository.ReservationConsoleDao;
+import roomescape.repository.ReservationDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
