@@ -11,42 +11,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 import roomescape.dto.request.ReservationRequestDTO;
 import roomescape.dto.response.ReservationResponseDTO;
-import roomescape.exception.DuplicatedReservationException;
-import roomescape.exception.NoSuchReservationException;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
     @PostMapping("")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
-        Reservation reservation = reservationRequestDTO.toEntity(defaultTheme);
-
-        this.reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime())
-                .ifPresent((e) -> {
-                    throw new DuplicatedReservationException();
-                });
-
-        Long newReservationId = this.reservationRepository.save(reservation);
+        Long newReservationId = this.reservationService.save(reservationRequestDTO);
 
         return ResponseEntity.created(URI.create("/reservations/" + newReservationId)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> retrieveReservation(@PathVariable Long id) {
-        Reservation reservation = this.reservationRepository.findById(id)
-                .orElseThrow(NoSuchReservationException::new);
-
-        final ReservationResponseDTO reservationResponseDTO = ReservationResponseDTO.from(reservation);
+        final ReservationResponseDTO reservationResponseDTO = this.reservationService.findById(id);
 
         return ResponseEntity.ok()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -55,11 +40,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        boolean deleted = this.reservationRepository.deleteById(id);
-
-        if (!deleted) {
-            throw new NoSuchReservationException();
-        }
+        this.reservationService.deleteById(id);
 
         return ResponseEntity.noContent().build();
     }
