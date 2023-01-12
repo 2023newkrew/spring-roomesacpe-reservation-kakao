@@ -52,16 +52,17 @@ public class ReservationJdbcDao implements ReservationDao {
         return id;
     }
 
-    public int countByDateAndTime(LocalDate date, LocalTime time) {
+    public int countByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long id) {
         // 드라이버 연결
         Connection con = getConnection();
 
         int count = 0;
         try {
-            String sql = "SELECT count(*) FROM reservation WHERE date = ? and time = ?";
+            String sql = "SELECT count(*) FROM reservation WHERE date = ? and time = ? and theme_id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
+            ps.setLong(3, id);
             ResultSet rs = ps.executeQuery();
 
             rs.next();

@@ -4,6 +4,7 @@ import nextstep.dto.ReservationRequest;
 import nextstep.dto.ReservationResponse;
 import nextstep.exceptions.exception.InvalidRequestException;
 import nextstep.repository.ReservationJdbcDao;
+import nextstep.repository.ThemeJdbcDao;
 import nextstep.service.ReservationService;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class ReservationConsole {
 
 
     public static void main(String[] args) {
-        final ReservationService reservationService = new ReservationService(new ReservationJdbcDao());
+        final ReservationService reservationService = new ReservationService(new ReservationJdbcDao(), new ThemeJdbcDao());
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -40,7 +41,8 @@ public class ReservationConsole {
                 ReservationRequest reservationRequest = new ReservationRequest(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
-                        name
+                        name,
+                        1L
                 );
 
                 try {

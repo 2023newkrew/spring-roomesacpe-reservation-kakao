@@ -7,6 +7,7 @@ import nextstep.dto.ReservationResponse;
 import nextstep.exceptions.ErrorCode;
 import nextstep.exceptions.exception.InvalidRequestException;
 import nextstep.repository.ReservationDao;
+import nextstep.repository.ThemeDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +18,32 @@ import java.util.Optional;
 @Service
 public class ReservationService {
     private final ReservationDao reservationDao;
+    private final ThemeDao themeDao;
 
-    public ReservationService(@Qualifier("reservationJdbcTemplateDao") ReservationDao reservationDao) {
+    public ReservationService(
+            @Qualifier("reservationJdbcTemplateDao") ReservationDao reservationDao,
+            @Qualifier("themeJdbcTemplateDao") ThemeDao themeDao
+    ) {
         this.reservationDao = reservationDao;
+        this.themeDao = themeDao;
     }
 
     public Long reserve(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
-        if (reservationDao.countByDateAndTime(date, time) > 0) {
+        Long themeId = reservationRequest.getThemeId();
+
+        if (reservationDao.countByDateAndTimeAndThemeId(date, time, themeId) > 0) {
             throw new InvalidRequestException(ErrorCode.RESERVATION_DUPLICATED);
         }
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-        Reservation newReservation = new Reservation(date, time, reservationRequest.getName(), theme);
+        validateId(themeId);
+        Optional<Theme> themeFound = themeDao.findById(themeId);
+        if (themeFound.isEmpty()) {
+            throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
+        }
 
+        Reservation newReservation = new Reservation(date, time, reservationRequest.getName(), themeFound.get());
         return reservationDao.save(newReservation);
     }
 
@@ -45,7 +57,7 @@ public class ReservationService {
     }
 
     private void validateId(Long id) {
-        if (id <= 0) {
+        if (id == null || id <= 0) {
             throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
         }
     }

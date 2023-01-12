@@ -1,10 +1,15 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
+import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequest;
 import nextstep.repository.ReservationJdbcTemplateDao;
+import nextstep.repository.ThemeJdbcTemplateDao;
 import nextstep.service.ReservationService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -33,14 +38,23 @@ public class ReservationControllerTest {
     ReservationService reservationService;
     @Autowired
     ReservationJdbcTemplateDao reservationJdbcTemplateDao;
+    @Autowired
+    ThemeJdbcTemplateDao themeJdbcTemplateDao;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        Theme theme = new Theme(
+                "워너고홈",
+                "병맛 어드벤처 회사 코믹물",
+                29000
+        );
+        themeJdbcTemplateDao.save(theme);
         ReservationRequest requestDto = new ReservationRequest(
                 LocalDate.parse("2023-03-10"),
                 LocalTime.parse("13:00"),
-                "jay"
+                "jay",
+                1L
         );
         reservationService.reserve(requestDto);
     }
@@ -48,6 +62,7 @@ public class ReservationControllerTest {
     @AfterEach
     void afterEach() {
         reservationJdbcTemplateDao.clear();
+        themeJdbcTemplateDao.clear();
     }
 
     @DisplayName("예약 - 예약되어있지 않은 날짜와 시간으로 요청시 예약이 성공해야 한다")
@@ -57,6 +72,7 @@ public class ReservationControllerTest {
             put("date", "2023-03-11");
             put("time", "13:00");
             put("name", "jay");
+            put("theme_id", "1");
         }};
 
         RestAssured.given().log().all()
@@ -75,6 +91,7 @@ public class ReservationControllerTest {
             put("date", "2023-03-10");
             put("time", "13:00");
             put("name", "jay");
+            put("theme_id", "1");
         }};
 
         RestAssured.given().log().all()
@@ -83,7 +100,7 @@ public class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body(is("이미 예약된 테마이거나 날짜/시간 입니다."));
+                .body(is("이미 예약된 테마이거나 날짜/시간입니다."));
     }
 
     @DisplayName("예약 - TimeTable 에 존재하지 않는 시간으로 요청시 예외처리 되어야 한다")
@@ -93,6 +110,7 @@ public class ReservationControllerTest {
             put("date", "2023-03-11");
             put("time", "01:00");
             put("name", "jay");
+            put("theme_id", "1");
         }};
 
         RestAssured.given().log().all()
@@ -111,6 +129,7 @@ public class ReservationControllerTest {
             put("date", "2023-01-01");
             put("time", "01:00");
             put("name", "jay");
+            put("theme_id", "1");
         }};
 
         RestAssured.given().log().all()
@@ -125,17 +144,19 @@ public class ReservationControllerTest {
     @DisplayName("예약 - 잘못된 양식(값)으로 요청시 예외처리 되어야 한다")
     @ParameterizedTest
     @CsvSource(value = {
-            ";14:30;jack",
-            "abc;14:30;jack",
-            "2023-03-01;;jack",
-            "2023-03-01;abc;jack",
-            "2023-03-01;14:30;"
+            ";14:30;jack;1",
+            "abc;14:30;jack;1",
+            "2023-03-01;;jack;1",
+            "2023-03-01;abc;jack;1",
+            "2023-03-01;14:30;;1",
+            "2023-03-01;14:30;jack;"
     }, delimiter = ';')
-    void reserveByInvalidInputValue(String date, String time, String name) {
+    void reserveByInvalidInputValue(String date, String time, String name, String themeId) {
         Map<String, String> request = new HashMap<>() {{
             put("date", date);
             put("time", time);
             put("name", name);
+            put("theme_id", themeId);
         }};
 
         RestAssured.given().log().all()
@@ -149,15 +170,17 @@ public class ReservationControllerTest {
     @DisplayName("예약 - 잘못된 양식(키)으로 요청시 예외처리 되어야 한다")
     @ParameterizedTest
     @CsvSource(value = {
-            "dating;time;name",
-            "date;timing;name",
-            "date;time;naming"
+            "dating;time;name;theme_id",
+            "date;timing;name;theme_id",
+            "date;time;naming;theme_id",
+            "date;time;name;theme_ing"
     }, delimiter = ';')
-    void reserveByInvalidInputKey(String date, String time, String name) {
+    void reserveByInvalidInputKey(String date, String time, String name, String themeId) {
         Map<String, String> request = new HashMap<>() {{
             put(date, "2023-03-01");
             put(time, "13:00");
             put(name, "jack");
+            put(themeId, "1");
         }};
 
         RestAssured.given().log().all()
@@ -166,7 +189,25 @@ public class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("잘못된 입력 입니다."));
+                .body(is("잘못된 입력입니다."));
+    }
+
+    @DisplayName("예약 - 존재하지 않은 테마 id 로 예약 요청시 예외처리 되어야 한다.")
+    @Test
+    void reserveByInvalidThemeId() {
+        Map<String, String> request = new HashMap<>() {{
+            put("date", "2023-03-01");
+            put("time", "13:00");
+            put("name", "jack");
+            put("themeId", "2");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("조회 - 등록되어있는 id 로 조회시 조회 되어야 한다")

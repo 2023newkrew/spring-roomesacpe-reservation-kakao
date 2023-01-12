@@ -6,6 +6,7 @@ import nextstep.dto.ThemeResponse;
 import nextstep.exceptions.ErrorCode;
 import nextstep.exceptions.exception.InvalidRequestException;
 import nextstep.repository.ThemeDao;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class ThemeService {
     private ThemeDao themeDao;
 
-    public ThemeService(ThemeDao themeDao) {
+    public ThemeService(@Qualifier("themeJdbcTemplateDao") ThemeDao themeDao) {
         this.themeDao = themeDao;
     }
 
