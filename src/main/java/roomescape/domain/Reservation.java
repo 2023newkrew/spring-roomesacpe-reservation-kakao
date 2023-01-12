@@ -6,8 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Reservation {
 
     private Long id;
@@ -15,15 +19,6 @@ public class Reservation {
     private LocalTime time;
     private String name;
     private Theme theme;
-
-    @Builder
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.domain.Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
 
     public Long getId() {
         return id;

@@ -41,13 +41,13 @@ public class RoomEscapeConsoleApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
+                Reservation reservation = Reservation.builder()
+                        .id(++reservationIdIndex)
+                        .date(LocalDate.parse(date))
+                        .time(LocalTime.parse(time + ":00"))
+                        .name(name)
+                        .theme(theme)
+                        .build();
 
                 RESERVATION_JDBC_REPOSITORY.save(reservation);
 

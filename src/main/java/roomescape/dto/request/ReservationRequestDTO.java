@@ -22,7 +22,11 @@ public class ReservationRequestDTO {
     private final String name;
 
     public Reservation toEntity(Theme theme) {
-        return new Reservation(null, LocalDate.parse(date),
-                LocalTime.parse(time + ":00"), this.name, theme);
+        return Reservation.builder()
+                .date(LocalDate.parse(this.date))
+                .time(LocalTime.parse(this.time + ":00"))
+                .name(this.name)
+                .theme(theme)
+                .build();
     }
 }
