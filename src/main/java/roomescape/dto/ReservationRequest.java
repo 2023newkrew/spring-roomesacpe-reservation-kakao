@@ -1,25 +1,21 @@
-package nextstep;
+package roomescape.dto;
+
+import roomescape.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Reservation {
-    private Long id;
+public class ReservationRequest {
     private LocalDate date;
     private LocalTime time;
     private String name;
     private Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
+    public ReservationRequest(LocalDate date, LocalTime time, String name, Theme theme) {
         this.date = date;
         this.time = time;
         this.name = name;
         this.theme = theme;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public LocalDate getDate() {
@@ -34,7 +30,24 @@ public class Reservation {
         return name;
     }
 
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Theme getTheme() {
         return theme;
     }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
 }
