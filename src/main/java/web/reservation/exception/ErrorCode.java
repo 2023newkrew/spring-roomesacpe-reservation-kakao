@@ -1,10 +1,10 @@
-package web.exception;
+package web.reservation.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static web.controller.RoomEscapeController.BEGIN_TIME;
-import static web.controller.RoomEscapeController.LAST_TIME;
+import static web.reservation.controller.ReservationController.BEGIN_TIME;
+import static web.reservation.controller.ReservationController.LAST_TIME;
 
 @Getter
 public enum ErrorCode {

@@ -1,4 +1,4 @@
-package web.repository;
+package web.reservation.repository;
 
 
 import web.entity.Reservation;

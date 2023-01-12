@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import web.entity.Reservation;
-import web.exception.ReservationException;
+import web.reservation.exception.ReservationException;
+import web.reservation.repository.DatabaseReservationRepository;
+import web.reservation.repository.ReservationRepository;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;

@@ -1,12 +1,12 @@
-package web.repository;
+package web.reservation.repository;
 
 import web.entity.Reservation;
-import web.exception.ReservationException;
+import web.reservation.exception.ReservationException;
 
 import java.util.HashMap;
 import java.util.Optional;
 
-import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
+import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
 
 public class MemoryReservationRepository implements ReservationRepository {
 

@@ -1,4 +1,4 @@
-package web.repository;
+package web.reservation.repository;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -6,7 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.entity.Reservation;
-import web.exception.ReservationException;
+import web.reservation.exception.ReservationException;
 
 import javax.sql.DataSource;
 import java.sql.Date;
@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
-import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
+import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
 
 @Repository
 public class DatabaseReservationRepository implements ReservationRepository {

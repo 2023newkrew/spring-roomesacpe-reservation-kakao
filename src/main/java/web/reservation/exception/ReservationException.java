@@ -1,4 +1,4 @@
-package web.exception;
+package web.reservation.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

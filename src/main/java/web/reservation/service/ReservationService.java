@@ -1,18 +1,18 @@
-package web.service;
+package web.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import web.dto.ReservationRequestDto;
-import web.dto.ReservationResponseDto;
+import web.reservation.dto.ReservationRequestDto;
+import web.reservation.dto.ReservationResponseDto;
 import web.entity.Reservation;
-import web.exception.ReservationException;
-import web.repository.ReservationRepository;
+import web.reservation.exception.ReservationException;
+import web.reservation.repository.ReservationRepository;
 
-import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
+import static web.reservation.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
-public class RoomEscapeService {
+public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 

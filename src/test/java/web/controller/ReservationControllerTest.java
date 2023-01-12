@@ -14,10 +14,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import web.dto.ReservationResponseDto;
+import web.reservation.dto.ReservationResponseDto;
 import web.entity.Reservation;
-import web.exception.ReservationException;
-import web.service.RoomEscapeService;
+import web.reservation.exception.ReservationException;
+import web.reservation.service.ReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,18 +28,18 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
-import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
+import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
+import static web.reservation.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 @WebMvcTest
 @ExtendWith(MockitoExtension.class)
-public class RoomEscapeControllerTest {
+public class ReservationControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    RoomEscapeService roomEscapeService;
+    ReservationService reservationService;
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
@@ -49,7 +49,7 @@ public class RoomEscapeControllerTest {
 
         @BeforeEach
         void setupMockingService() {
-            when(roomEscapeService.reservation(any())).thenReturn(1L);
+            when(reservationService.reservation(any())).thenReturn(1L);
         }
 
         @Test
@@ -64,7 +64,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void should_responseConflict_when_duplicateReservation() throws Exception {
-            when(roomEscapeService.reservation(any())).thenThrow(new ReservationException(RESERVATION_DUPLICATE));
+            when(reservationService.reservation(any())).thenThrow(new ReservationException(RESERVATION_DUPLICATE));
             String content = getValidContent();
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +178,7 @@ public class RoomEscapeControllerTest {
                             LocalDate.of(2022, 8, 11),
                             LocalTime.of(13, 0),
                             "name"));
-            when(roomEscapeService.findReservationById(anyLong())).thenReturn(responseDto);
+            when(reservationService.findReservationById(anyLong())).thenReturn(responseDto);
             mockMvc.perform(get("/reservations/1"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(1))
@@ -192,7 +192,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void should_responseNotFound_when_notExistId() throws Exception {
-            when(roomEscapeService.findReservationById(anyLong())).thenThrow(new ReservationException(RESERVATION_NOT_FOUND));
+            when(reservationService.findReservationById(anyLong())).thenThrow(new ReservationException(RESERVATION_NOT_FOUND));
             mockMvc.perform(get("/reservations/-1")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound())
@@ -205,14 +205,14 @@ public class RoomEscapeControllerTest {
     class CancelReservation {
         @Test
         void should_successfully_when_validRequest() throws Exception {
-            doNothing().when(roomEscapeService).cancelReservation(anyLong());
+            doNothing().when(reservationService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/1"))
                     .andExpect(status().isNoContent());
         }
 
         @Test
         void shoud_responseNotFound_then_notExistId() throws Exception {
-            doThrow(new ReservationException(RESERVATION_NOT_FOUND)).when(roomEscapeService).cancelReservation(anyLong());
+            doThrow(new ReservationException(RESERVATION_NOT_FOUND)).when(reservationService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").value(RESERVATION_NOT_FOUND.getMessage()));
