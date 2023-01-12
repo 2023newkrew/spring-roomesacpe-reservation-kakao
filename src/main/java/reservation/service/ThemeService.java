@@ -6,6 +6,7 @@ import reservation.model.domain.Theme;
 import reservation.model.dto.RequestTheme;
 import reservation.respository.ThemeJdbcTemplateRepository;
 import reservation.util.exception.restAPI.DuplicateException;
+import java.util.List;
 
 import static reservation.util.exception.ErrorMessages.THEME_DUPLICATED;
 
@@ -25,6 +26,10 @@ public class ThemeService {
             throw new DuplicateException(THEME_DUPLICATED);
         }
         return themeJdbcTemplateRepository.save(changeToTheme(requestTheme));
+    }
+
+    public List<Theme> getAllTheme() {
+        return themeJdbcTemplateRepository.findAll();
     }
 
     private Theme changeToTheme(RequestTheme requestTheme) {

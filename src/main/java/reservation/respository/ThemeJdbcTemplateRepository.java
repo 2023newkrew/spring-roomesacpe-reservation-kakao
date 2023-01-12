@@ -1,13 +1,16 @@
 package reservation.respository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class ThemeJdbcTemplateRepository implements ThemeRepository{
@@ -31,8 +34,25 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository{
         return this.jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
+    @Override
+    public List<Theme> findAll(){
+        String sql = "SELECT id, name, desc, price theme_id FROM theme";
+        try {
+            return this.jdbcTemplate.query(sql,
+                    (rs, rowNum) -> new Theme(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("desc"),
+                        rs.getInt("price")
+                    )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     public boolean checkDuplicateName(String name){
-        String sql = "SELECT EXISTS (SELECT 1 FROM Theme WHERE name = ?)";
+        String sql = "SELECT EXISTS (SELECT 1 FROM theme WHERE name = ?)";
         return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, name));
     }
 }
