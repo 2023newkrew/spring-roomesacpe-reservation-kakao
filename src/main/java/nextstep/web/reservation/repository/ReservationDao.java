@@ -53,6 +53,12 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
         }
     }
 
+    public List<Reservation> findAll() {
+        String sql = "SELECT * FROM THEME;";
+
+        return jdbcTemplate.query(sql, reservationRowMapper);
+    }
+
     private Map<String, Object> prepareParams(Reservation reservation) {
         return Map.of(
                 "date", reservation.getDate(),
@@ -62,9 +68,4 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
         );
     }
 
-    public List<Reservation> findAll() {
-        String sql = "SELECT * FROM THEME;";
-
-        return jdbcTemplate.query(sql, reservationRowMapper);
-    }
 }

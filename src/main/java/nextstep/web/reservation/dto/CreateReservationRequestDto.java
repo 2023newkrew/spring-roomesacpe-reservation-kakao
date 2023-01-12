@@ -25,7 +25,7 @@ public class CreateReservationRequestDto {
     @NotBlank(message = "이름을 확인해 주세요.")
     private String name;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "테마 ID를 확인해 주세요")
+    @Min(value = 1, message = "테마 ID를 확인해 주세요")
     private Long themeId;
 }

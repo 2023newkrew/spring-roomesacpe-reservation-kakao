@@ -12,4 +12,4 @@ server:
     include-exception: false
     include-message: never
     include-stacktrace: never
-    whitelabel.enabled: false
+    whitelabel.enabled: true

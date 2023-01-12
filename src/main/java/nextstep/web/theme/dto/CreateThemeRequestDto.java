@@ -13,12 +13,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CreateThemeRequestDto {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "테마명을 확인해 주세요")
+    @NotBlank(message = "테마명을 확인해 주세요")
     private String name;
 
     private String desc;
 
-    @Min(1)
+    @Min(value = 1, message = "가격을 확인해 주세요.")
     private Integer price;
 }

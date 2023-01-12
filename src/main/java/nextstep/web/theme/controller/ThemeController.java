@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,14 +43,15 @@ public class ThemeController {
     }
 
     @DeleteMapping("{id}")
-    public Response<Void> deleteTheme(@PathVariable Long id) {
+    public Response<Void> deleteTheme(@PathVariable @Min(value = 1, message = "ID를 확인해 주세요") Long id) {
         themeService.deleteTheme(id);
 
         return new Response<>(HttpStatus.OK.value(), HttpStatus.NO_CONTENT.name(), null);
     }
 
     @PutMapping("{id}")
-    public Response<Void> updateTheme(@PathVariable Long id, @RequestBody @Valid CreateThemeRequestDto requestDto) {
+    public Response<Void> updateTheme(@PathVariable @Min(value = 1, message = "ID를 확인해 주세요") Long id,
+                                      @RequestBody @Valid CreateThemeRequestDto requestDto) {
         themeService.updateTheme(requestDto, id);
 
         return new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), null);

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,14 +25,14 @@ public class ReservationController {
     }
 
     @GetMapping("{id}")
-    public Response<FindReservationResponseDto> findReservation(@PathVariable Long id) {
+    public Response<FindReservationResponseDto> findReservation(@PathVariable @Min(value = 1, message = "ID를 확인해 주세요") Long id) {
         FindReservationResponseDto reservation = reservationService.findReservation(id);
 
         return new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), reservation);
     }
 
     @DeleteMapping("{id}")
-    public Response<Void> deleteReservation(@PathVariable Long id) {
+    public Response<Void> deleteReservation(@PathVariable @Min(value = 1, message = "ID를 확인해 주세요") Long id) {
         reservationService.deleteReservation(id);
 
         return new Response<>(HttpStatus.OK.value(), HttpStatus.NO_CONTENT.name(), null);
