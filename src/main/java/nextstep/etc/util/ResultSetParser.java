@@ -11,7 +11,9 @@ import java.sql.Time;
 public class ResultSetParser {
 
     public static Boolean existsRow(ResultSet resultSet) throws SQLException {
-        return resultSet.getRow() != 0;
+        resultSet.last();
+
+        return resultSet.getRow() > 0;
     }
 
     public static ReservationDTO parseReservationDto(ResultSet resultSet) throws SQLException {

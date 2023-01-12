@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -18,7 +19,7 @@ public class ReservationController {
     private final ReservationService service;
 
     @PostMapping
-    public ResponseEntity<?> createReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<?> createReservation(@RequestBody @Validated ReservationRequest request) {
         Long reservationId = service.create(request);
         URI location = URI.create(RESERVATION_PATH + "/" + reservationId);
 

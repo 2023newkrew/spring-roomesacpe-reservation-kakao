@@ -2,6 +2,7 @@ package nextstep.etc.handler;
 
 import nextstep.etc.exception.BaseException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,6 +21,10 @@ public class GlobalExceptionHandler {
     private BaseException getBaseException(Throwable e) {
         if (e instanceof BaseException) {
             return (BaseException) e;
+        }
+
+        if (e instanceof MethodArgumentNotValidException) {
+            return new BaseException((MethodArgumentNotValidException) e);
         }
 
         return new BaseException(e);
