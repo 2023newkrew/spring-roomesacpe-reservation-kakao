@@ -59,12 +59,12 @@ public class ReservationController {
     }
 
     private Reservation convertToReservationFromDto(ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = new Reservation();
-        reservation.setDate(reservationRequestDto.getDate());
-        reservation.setTime(reservationRequestDto.getTime());
-        reservation.setName(reservationRequestDto.getName());
-        reservation.setTheme(DEFAULT_THEME);
-        return reservation;
+        return new Reservation(
+                reservationRequestDto.getDate(),
+                reservationRequestDto.getTime(),
+                reservationRequestDto.getName(),
+                DEFAULT_THEME
+        );
     }
 
     private ReservationResponseDto convertToDtoFromReservation(Reservation reservation) {
