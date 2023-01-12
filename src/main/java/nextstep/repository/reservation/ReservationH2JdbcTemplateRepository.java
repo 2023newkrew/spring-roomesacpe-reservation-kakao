@@ -63,7 +63,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public boolean hasReservationAt(LocalDate date, LocalTime time) {
-        String sql = "SELECT id AS cnt FROM reservation WHERE date = ? AND time = ? LIMIT 1";
+        String sql = "SELECT id FROM reservation WHERE date = ? AND time = ? LIMIT 1";
         List<Long> reservationIds = jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> rs.getLong("id"),
@@ -72,5 +72,17 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
         );
 
         return reservationIds.size() == 1;
+    }
+
+    @Override
+    public boolean hasReservationWithTheme(Long themeId) {
+        String sql = "SELECT id FROM reservation WHERE theme_id = ? LIMIT 1";
+        List<Long> themeIds = jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> rs.getLong("id"),
+                themeId
+        );
+
+        return themeIds.size() == 1;
     }
 }

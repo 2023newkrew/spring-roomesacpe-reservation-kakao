@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import nextstep.dto.request.CreateThemeRequest;
 import nextstep.dto.response.ThemeResponse;
+import nextstep.exception.ReservedThemeException;
 import nextstep.service.ThemeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class ThemeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTheme(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTheme(@PathVariable Long id) throws ReservedThemeException {
         themeService.deleteTheme(id);
 
         return ResponseEntity

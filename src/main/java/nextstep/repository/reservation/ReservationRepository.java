@@ -11,4 +11,5 @@ public interface ReservationRepository {
     Reservation get(Long id) throws ReservationNotFoundException;
     void delete(Long id);
     boolean hasReservationAt(LocalDate date, LocalTime time);
+    boolean hasReservationWithTheme(Long themeId);
 }

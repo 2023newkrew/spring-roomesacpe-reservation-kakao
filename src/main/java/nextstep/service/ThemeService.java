@@ -3,7 +3,10 @@ package nextstep.service;
 import nextstep.domain.Theme;
 import nextstep.dto.request.CreateThemeRequest;
 import nextstep.dto.response.ThemeResponse;
+import nextstep.exception.ReservedThemeException;
+import nextstep.repository.reservation.ReservationRepository;
 import nextstep.repository.theme.ThemeRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class ThemeService {
     private final ThemeRepository themeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ThemeService(ThemeRepository themeRepository) {
+    public ThemeService(ThemeRepository themeRepository, @Qualifier("jdbcTemplate") ReservationRepository reservationRepository) {
         this.themeRepository = themeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public ThemeResponse createTheme(CreateThemeRequest createThemeRequest) {
@@ -28,7 +33,11 @@ public class ThemeService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteTheme(Long id) {
+    public void deleteTheme(Long id) throws ReservedThemeException {
+        if (reservationRepository.hasReservationWithTheme(id)) {
+            throw new ReservedThemeException();
+        }
+
         themeRepository.delete(id);
     }
 }
