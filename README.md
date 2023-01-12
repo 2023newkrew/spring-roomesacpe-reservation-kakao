@@ -42,3 +42,23 @@
   - [x] 예약 추가
   - [x] 예약 조회
   - [x] 예약 삭제
+
+
+### 리팩토링 목록
+- 리뷰 반영
+  - [ ] 커넥션 연결, 해제 코드 메서드 분리 및 추상화
+  - [ ] 테스트시 테이블 재생성하는 부분을 프로덕션 코드에서 제거
+  - [ ] WebAppReservationService에서 예약 중복 비교시 변수를 통해 가독성 향상
+  - [ ] 프로덕션 코드에서 Reservation equals 오버라이드 메서드 제거
+  - [ ] WebAppReservationRepository에서 예외 catch시 로그 출력
+  - [ ] 필드 주입을 생성자 주입으로 변경
+  - [ ] ReservationController에서 insert 실패시 예외로 처리하도록 수정
+  - [ ] 자원을 해제하는 코드를 finally 블록 안으로 이동
+  - [ ] 테스트 이름을 목적과 예상 결과를 포함하도록 수정
+
+
+- [ ] 콘솔 앱과 웹 앱이 같은 Service를 공유하도록 리팩토링
+- [ ] Reservation 생성메서드 추가
+- [ ] 콘솔 앱 main 함수 메서드 분 
+- [ ] Service Test 추가
+- [ ] Repository Test 단위 테스트 적용
