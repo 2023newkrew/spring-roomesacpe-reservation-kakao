@@ -25,7 +25,7 @@ public class ReservationServiceTest {
     @BeforeEach
     @Transactional
     void setUp() {
-        ThemeRequestDto themeRequestDto = new ThemeRequestDto("Test Theme", "Lorem Ipsum", 1000);
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
         themeId = themeService.createTheme(themeRequestDto);
     }
 

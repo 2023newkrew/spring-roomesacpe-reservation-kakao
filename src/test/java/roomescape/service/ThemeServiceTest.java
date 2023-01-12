@@ -24,7 +24,7 @@ public class ThemeServiceTest {
     @Transactional
     public void createAndFindThemeTest() {
         //given
-        ThemeRequestDto themeRequestDto = new ThemeRequestDto("Test Theme", "Lorem Ipsum", 1000);
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
         //when
         Long themeId = themeService.createTheme(themeRequestDto);
         //then
@@ -36,7 +36,7 @@ public class ThemeServiceTest {
     @Transactional
     public void createDuplicateThemeTest() {
         //given
-        ThemeRequestDto themeRequestDto = new ThemeRequestDto("Test Theme", "Lorem Ipsum", 1000);
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
         //when
         Long themeId = themeService.createTheme(themeRequestDto);
         //then
@@ -48,7 +48,7 @@ public class ThemeServiceTest {
     @Transactional
     public void deleteThemeTest() {
         //given
-        ThemeRequestDto themeRequestDto = new ThemeRequestDto("Test Theme", "Lorem Ipsum", 1000);
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
         Long themeId = themeService.createTheme(themeRequestDto);
         reservationService.createReservation(new ReservationRequestDto(LocalDate.now(), LocalTime.now(), "Tester", themeId));
         //when
