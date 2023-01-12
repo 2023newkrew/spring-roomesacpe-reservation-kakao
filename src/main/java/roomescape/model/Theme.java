@@ -1,4 +1,4 @@
-package nextstep;
+package roomescape.model;
 
 public class Theme {
     private String name;
