@@ -4,7 +4,6 @@ import domain.Reservation;
 import domain.Theme;
 import kakao.error.ErrorCode;
 import kakao.error.exception.RecordNotFoundException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -34,10 +33,10 @@ public class ReservationJDBCRepository {
         LocalDate date = resultSet.getDate("date").toLocalDate();
         LocalTime time = resultSet.getTime("time").toLocalTime();
         String name = resultSet.getString("name");
-        String themeName = resultSet.getString("theme_name");
-        String themeDesc = resultSet.getString("theme_desc");
-        Integer themePrice = resultSet.getInt("theme_price");
-        Long themeId = resultSet.getLong("theme_id");
+        String themeName = resultSet.getString("theme.name");
+        String themeDesc = resultSet.getString("theme.desc");
+        Integer themePrice = resultSet.getInt("theme.price");
+        Long themeId = resultSet.getLong("theme.id");
 
         return Reservation.builder()
                 .id(id)
@@ -55,22 +54,21 @@ public class ReservationJDBCRepository {
     }
 
     public Reservation findById(Long id) {
-        String SELECT_SQL = "select * from reservation where id=?";
-        try {
-            return jdbcTemplate.queryForObject(SELECT_SQL, customerRowMapper, id);
-        } catch (DataAccessException e) {
-            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND, e);
-        }
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id=theme.id where reservation.id=? limit 1";
+
+        List<Reservation> result = jdbcTemplate.query(SELECT_SQL, customerRowMapper, id);
+        if (result.isEmpty()) throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND, null);
+        return result.get(0);
     }
 
     public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        String SELECT_SQL = "select * from reservation where date=? and time=?";
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id=theme.id where reservation.date=? and reservation.time=?";
 
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
     }
 
     public List<Reservation> findByRequestId(Long requestId) {
-        String SELECT_SQL = "select * from reservation where theme_id=?";
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id=theme.id where reservation.theme_id=?";
 
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, requestId);
     }

@@ -1,6 +1,7 @@
 package kakao.repository;
 
 import domain.Reservation;
+import domain.Theme;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +20,6 @@ public class ReservationJDBCRepositoryTest {
     private ReservationJDBCRepository reservationJDBCRepository;
 
     @Autowired
-    private ThemeJDBCRepository themeJDBCRepository;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private Reservation reservation;
@@ -38,7 +36,7 @@ public class ReservationJDBCRepositoryTest {
                 .name("baker")
                 .date(LocalDate.of(2022, 10, 13))
                 .time(LocalTime.of(13, 00))
-                .theme(themeJDBCRepository.findById(1L))
+                .theme(new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000))
                 .build();
 
         jdbcTemplate.execute("TRUNCATE TABLE reservation");
@@ -62,7 +60,7 @@ public class ReservationJDBCRepositoryTest {
         Assertions.assertThat(reservation.getName()).isEqualTo(cp.getName());
         Assertions.assertThat(reservation.getDate()).isEqualTo(cp.getDate());
         Assertions.assertThat(reservation.getTime()).isEqualTo(cp.getTime());
-        Assertions.assertThat(reservation.getTheme()).isEqualTo(cp.getTheme());
+        Assertions.assertThat(reservation.getThemeId()).isEqualTo(cp.getThemeId());
     }
 
     @DisplayName("저장된 날짜에 해당하는 데이터들을 조회한다")
