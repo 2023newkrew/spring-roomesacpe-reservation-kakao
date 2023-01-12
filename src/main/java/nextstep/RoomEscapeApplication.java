@@ -1,10 +1,13 @@
 package nextstep;
 
+import reservation.model.domain.Reservation;
+import reservation.model.domain.Theme;
+import reservation.respository.ReservationRepository;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -12,6 +15,7 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
+    private static final ReservationRepository RESERVATION_JDBC_REPOSITORY = new ReservationJdbcRepository();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -44,7 +48,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                reservations.add(reservation);
+                RESERVATION_JDBC_REPOSITORY.save(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -58,11 +62,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
-
+                Reservation reservation = RESERVATION_JDBC_REPOSITORY.findById(id);
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
@@ -77,7 +77,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
+                if(RESERVATION_JDBC_REPOSITORY.deleteById(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }
