@@ -31,7 +31,7 @@ public class RepositoryTest {
         LocalDate date = LocalDate.of(2023, 1, 1);
         LocalTime time = LocalTime.of(11, 0);
 
-        requestReservation = new RequestReservation(date, time, "name");
+        requestReservation = new RequestReservation(date, time, "name", 1L);
     }
 
     @BeforeEach
@@ -71,6 +71,6 @@ public class RepositoryTest {
     }
 
     private Reservation makeReservationBeforeStore(RequestReservation req, Theme theme) {
-        return new Reservation(0L, req.getDate(), req.getTime(), req.getName(), theme);
+        return new Reservation(0L, req.getDate(), req.getTime(), req.getUsername(), theme);
     }
 }

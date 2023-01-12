@@ -32,7 +32,7 @@ public class ControllerTest {
         LocalDate localDate = LocalDate.of(2023, 1, 1);
         LocalTime localTime = LocalTime.of(11, 0);
 
-        RequestReservation requestReservation = new RequestReservation(localDate, localTime, "TEST");
+        RequestReservation requestReservation = new RequestReservation(localDate, localTime, "TEST", 1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -52,7 +52,7 @@ public class ControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(1))
-                .body("name", is("TEST"));
+                .body("username", is("TEST"));
     }
 
     @DisplayName("DELETE /reservations/1 → GET /reservations/1")

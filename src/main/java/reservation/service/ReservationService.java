@@ -45,6 +45,6 @@ public class ReservationService {
 
     // 저장되기 이전의 Reservation 객체를 생성 - 레이어 간 DTO 구분
     private Reservation makeReservationBeforeStore(RequestReservation req, Theme theme) {
-        return new Reservation(0L, req.getDate(), req.getTime(), req.getName(), theme);
+        return new Reservation(0L, req.getDate(), req.getTime(), req.getUsername(), theme);
     }
 }

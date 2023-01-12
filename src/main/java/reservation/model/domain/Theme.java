@@ -1,7 +1,10 @@
 package reservation.model.domain;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class Theme {
     private String name;
     private String desc;
@@ -11,18 +14,6 @@ public class Theme {
         this.name = name;
         this.desc = desc;
         this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
     }
 
     @Override

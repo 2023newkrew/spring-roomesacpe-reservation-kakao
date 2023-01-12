@@ -37,7 +37,7 @@ public class ServiceTest {
     public ServiceTest() {
         LocalDate date = LocalDate.of(2023, 1, 1);
         LocalTime time = LocalTime.of(11, 0);
-        this.req = new RequestReservation(date, time, "name");
+        this.req = new RequestReservation(date, time, "name", 1L);
         this.theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         this.reservation = new Reservation(0L, date, time, "name", theme);
     }
