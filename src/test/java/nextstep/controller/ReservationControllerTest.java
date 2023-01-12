@@ -16,6 +16,7 @@ import org.springframework.test.context.TestExecutionListeners;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.Matchers.*;
 
@@ -24,7 +25,10 @@ import static org.hamcrest.Matchers.*;
         mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class ReservationControllerTest {
 
-    private static final Theme DEFAULT_THEME = new Theme("검은방", "밀실 탈출", 30_000);
+    Theme DEFAULT_THEME = new Theme("검은방", "밀실 탈출", 30_000);
+    ReservationRequestDto testRequestDto;
+    DateTimeFormatter dateFormatter;
+    DateTimeFormatter timeFormatter;
 
     @LocalServerPort
     int port;
@@ -32,6 +36,9 @@ class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        testRequestDto = generateReservationRequestDto("2023-01-01", "13:00", "john");
+        dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     }
 
     private ReservationRequestDto generateReservationRequestDto(String date, String time, String name) {
@@ -45,12 +52,9 @@ class ReservationControllerTest {
     @DisplayName("예약 생성 요청이 성공하면 201 코드와 Location 헤더 반환")
     @Test
     void reserveRequest() {
-        ReservationRequestDto reservationRequestDto =
-                generateReservationRequestDto("2023-01-01", "13:00", "john");
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationRequestDto)
+                .body(testRequestDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -60,28 +64,41 @@ class ReservationControllerTest {
     @DisplayName("예약 조회 성공 시 200 코드와 조회한 예약의 날짜, 시간, 예약자 이름 반환")
     @Test
     void findReservationRequest() {
-        ReservationRequestDto reservationRequestDto =
-                generateReservationRequestDto("2023-01-01", "13:00", "john");
+        int generatedId = requestSaveAndGetGeneratedId();
 
+        RestAssured.given().log().all()
+                .get("/reservations/" + generatedId)
+                .then().log().all()
+                .body("id", is(generatedId))
+                .body("date", is(testRequestDto.getDate().format(dateFormatter)))
+                .body("time", is(testRequestDto.getTime().format(timeFormatter)))
+                .body("name", is(testRequestDto.getName()))
+                .body("themeName", is(DEFAULT_THEME.getName()))
+                .body("themeDesc", is(DEFAULT_THEME.getDesc()))
+                .body("themePrice", is(DEFAULT_THEME.getPrice()));
+    }
+
+    private int requestSaveAndGetGeneratedId() {
         String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationRequestDto)
+                .body(testRequestDto)
                 .post("/reservations")
                 .then().log().all()
                 .extract().header("Location");
 
         String[] split = location.split("/");
         int savedId = Integer.parseInt(split[split.length - 1]);
+        return savedId;
+    }
+
+    @DisplayName("예약 취소 성공 시 204 코드 반환")
+    @Test
+    void cancelReservationRequest() {
+        int generatedId = requestSaveAndGetGeneratedId();
 
         RestAssured.given().log().all()
-                .get("/reservations/" + savedId)
+                .delete("/reservations/" + generatedId)
                 .then().log().all()
-                .body("id", is(savedId))
-                .body("date", is("2023-01-01"))
-                .body("time", is("13:00"))
-                .body("name", is("john"))
-                .body("themeName", is(DEFAULT_THEME.getName()))
-                .body("themeDesc", is(DEFAULT_THEME.getDesc()))
-                .body("themePrice", is(DEFAULT_THEME.getPrice()));
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
