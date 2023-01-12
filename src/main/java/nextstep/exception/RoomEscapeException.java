@@ -1,7 +1,16 @@
 package nextstep.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class RoomEscapeException extends RuntimeException{
-    public RoomEscapeException(String message) {
+    private final HttpStatus httpStatus;
+
+    public RoomEscapeException(HttpStatus httpStatus, String message) {
         super(message);
+        this.httpStatus = httpStatus;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 }
