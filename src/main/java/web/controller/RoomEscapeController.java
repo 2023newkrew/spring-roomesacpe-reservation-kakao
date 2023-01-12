@@ -35,13 +35,7 @@ public class RoomEscapeController {
     }
 
     private boolean isInvalidTime(LocalTime reservationTime) {
-        if (isOutOfBusinessHours(reservationTime)) {
-            return true;
-        }
-        if (isUnitOf30Minutes(reservationTime)) {
-            return true;
-        }
-        return false;
+        return isOutOfBusinessHours(reservationTime) || isUnitOf30Minutes(reservationTime);
     }
 
     private boolean isOutOfBusinessHours(LocalTime time) {
