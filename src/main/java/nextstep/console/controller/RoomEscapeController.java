@@ -1,5 +1,10 @@
-package nextstep.etc.console;
+package nextstep.console.controller;
 
+import nextstep.console.dto.Command;
+import nextstep.console.dto.CommandType;
+import nextstep.console.dto.Params;
+import nextstep.console.view.RoomEscapeInput;
+import nextstep.console.view.RoomEscapeOutput;
 import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.service.ReservationService;

@@ -1,4 +1,4 @@
-package nextstep.etc.console;
+package nextstep.console.view;
 
 import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ThemeDTO;

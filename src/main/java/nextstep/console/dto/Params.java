@@ -1,4 +1,4 @@
-package nextstep.etc.console;
+package nextstep.console.dto;
 
 import nextstep.reservation.dto.ReservationRequest;
 

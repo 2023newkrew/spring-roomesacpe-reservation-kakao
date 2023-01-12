@@ -1,8 +1,8 @@
 package nextstep;
 
-import nextstep.etc.console.RoomEscapeController;
-import nextstep.etc.console.RoomEscapeInput;
-import nextstep.etc.console.RoomEscapeOutput;
+import nextstep.console.controller.RoomEscapeController;
+import nextstep.console.view.RoomEscapeInput;
+import nextstep.console.view.RoomEscapeOutput;
 import nextstep.reservation.dao.ReservationDAO;
 import nextstep.reservation.dao.SimpleReservationDAO;
 import nextstep.reservation.repository.ReservationRepository;

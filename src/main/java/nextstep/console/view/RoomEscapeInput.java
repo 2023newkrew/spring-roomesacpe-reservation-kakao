@@ -1,4 +1,6 @@
-package nextstep.etc.console;
+package nextstep.console.view;
+
+import nextstep.console.dto.Command;
 
 import java.io.InputStream;
 import java.util.Scanner;
