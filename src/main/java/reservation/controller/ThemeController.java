@@ -3,7 +3,8 @@ package reservation.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reservation.domain.Theme;
-import reservation.domain.dto.ThemeDto;
+import reservation.domain.dto.request.ThemeRequest;
+import reservation.domain.dto.response.ThemeResponse;
 import reservation.service.ThemeService;
 
 import java.net.URI;
@@ -18,9 +19,10 @@ public class ThemeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> postTheme(@RequestBody ThemeDto ThemeDto) {
-        Long id = themeService.createTheme(ThemeDto);
-        return ResponseEntity.created(URI.create("/Themes/" + id)).build();
+    public ResponseEntity<?> createTheme(@RequestBody ThemeRequest themeRequest) {
+        Theme theme = new Theme(null, themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
+        Long id = themeService.createTheme(theme);
+        return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
 
     @GetMapping("/{themeId}")
@@ -29,7 +31,7 @@ public class ThemeController {
         if (theme == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(theme);
+        return ResponseEntity.ok().body(new ThemeResponse(theme));
     }
 
     @DeleteMapping("/{themeId}")

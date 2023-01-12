@@ -1,8 +1,8 @@
-package reservation.domain.dto;
+package reservation.domain.dto.request;
 
 import org.springframework.lang.NonNull;
 
-public class ThemeDto {
+public class ThemeRequest {
     @NonNull
     private final String name;
 
@@ -12,7 +12,7 @@ public class ThemeDto {
     @NonNull
     private final Integer price;
 
-    public ThemeDto(@NonNull String name, @NonNull String desc, @NonNull Integer price) {
+    public ThemeRequest(@NonNull String name, @NonNull String desc, @NonNull Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;

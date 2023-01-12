@@ -2,8 +2,7 @@ package reservation.service;
 
 import org.springframework.stereotype.Service;
 import reservation.domain.Theme;
-import reservation.domain.dto.ThemeDto;
-import reservation.handler.exception.DuplicatedException;
+import reservation.handler.exception.DuplicatedObjectException;
 import reservation.respository.ThemeRepository;
 
 @Service
@@ -14,11 +13,11 @@ public class ThemeService {
         this.themeRepository = themeRepository;
     }
 
-    public Long createTheme(ThemeDto themeDto) {
-        if (themeRepository.existTheme(themeDto)) {
-            throw new DuplicatedException();
+    public Long createTheme(Theme theme) {
+        if (themeRepository.existTheme(theme)) {
+            throw new DuplicatedObjectException();
         }
-        return themeRepository.createTheme(themeDto);
+        return themeRepository.createTheme(theme);
     }
 
     public Theme getTheme(Long themeId) {

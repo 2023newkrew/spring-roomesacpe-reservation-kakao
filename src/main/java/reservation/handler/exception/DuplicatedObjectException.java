@@ -1,6 +1,6 @@
 package reservation.handler.exception;
 
-public class DuplicatedException extends RuntimeException {
+public class DuplicatedObjectException extends RuntimeException {
     @Override
     public String toString() {
         return this.getClass().getSimpleName();

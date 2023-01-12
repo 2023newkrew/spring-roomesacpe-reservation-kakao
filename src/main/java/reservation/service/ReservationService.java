@@ -2,9 +2,7 @@ package reservation.service;
 
 import org.springframework.stereotype.Service;
 import reservation.domain.Reservation;
-import reservation.domain.Theme;
-import reservation.domain.dto.ReservationDto;
-import reservation.handler.exception.DuplicatedException;
+import reservation.handler.exception.DuplicatedObjectException;
 import reservation.respository.ReservationRepository;
 
 @Service
@@ -15,12 +13,11 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Long createReservation(ReservationDto reservationDto) {
-        if (reservationRepository.existReservation(reservationDto.getDate(), reservationDto.getTime())) {
-            throw new DuplicatedException();
+    public Long createReservation(Reservation reservation) {
+        if (reservationRepository.existReservation(reservation.getDate(), reservation.getTime(), reservation.getThemeId())) {
+            throw new DuplicatedObjectException();
         }
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-        return reservationRepository.createReservation(reservationDto, theme);
+        return reservationRepository.createReservation(reservation);
     }
 
     public Reservation getReservation(Long reservationId) {

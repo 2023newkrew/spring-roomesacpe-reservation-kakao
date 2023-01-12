@@ -6,10 +6,17 @@ public class Theme {
     private final Long id;
     private final String name;
     private final String desc;
-    private final Integer price;
+    private final int price;
 
-    public Theme(Long id, String name, String desc, Integer price) {
+    public Theme(Long id, String name, String desc, int price) {
         this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+    }
+
+    public Theme(String name, String desc, int price) {
+        this.id = null;
         this.name = name;
         this.desc = desc;
         this.price = price;
@@ -27,7 +34,7 @@ public class Theme {
         return desc;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 

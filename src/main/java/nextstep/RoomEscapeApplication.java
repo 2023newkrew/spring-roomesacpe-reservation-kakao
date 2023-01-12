@@ -1,12 +1,9 @@
 package nextstep;
 
 import reservation.domain.Reservation;
-import reservation.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -18,10 +15,7 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        long reservationIdIndex = 0L;
 
         while (true) {
             System.out.println();
@@ -38,17 +32,16 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                long theme_id = Long.parseLong(params.split(",")[3]);
 
                 Reservation reservation = new Reservation(
                         ++reservationIdIndex,
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        theme_id
                 );
 
-                // 요 로직 대신 레포 로직을 사용해서 저장해야 한다.
-                // reservations.add(reservation);
                 consoleRepository.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
@@ -68,9 +61,7 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 아이디: " + reservation.getThemeId());
             }
 
             if (input.startsWith(DELETE)) {
