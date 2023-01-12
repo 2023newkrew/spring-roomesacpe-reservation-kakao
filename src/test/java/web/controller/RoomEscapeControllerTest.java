@@ -70,7 +70,8 @@ public class RoomEscapeControllerTest {
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content))
-                    .andExpect(status().isConflict());
+                    .andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.message").value(RESERVATION_DUPLICATE.getMessage()));
         }
 
         @ParameterizedTest
@@ -195,7 +196,8 @@ public class RoomEscapeControllerTest {
             when(roomEscapeService.findReservationById(anyLong())).thenThrow(new ReservationNotFoundException(RESERVATION_NOT_FOUND));
             mockMvc.perform(get("/reservations/-1")
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value(RESERVATION_NOT_FOUND.getMessage()));
         }
     }
 
@@ -213,7 +215,8 @@ public class RoomEscapeControllerTest {
         void shoud_responseNotFound_then_notExistId() throws Exception {
             doThrow(new ReservationNotFoundException(RESERVATION_NOT_FOUND)).when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value(RESERVATION_NOT_FOUND.getMessage()));
         }
     }
 
