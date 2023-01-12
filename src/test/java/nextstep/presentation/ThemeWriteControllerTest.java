@@ -1,13 +1,10 @@
 package nextstep.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nextstep.domain.theme.Theme;
 import nextstep.dto.request.CreateThemeRequest;
-import nextstep.dto.request.Pageable;
-import nextstep.dto.response.FindThemeResponse;
 import nextstep.error.ApplicationException;
 import nextstep.error.ErrorType;
-import nextstep.service.ThemeService;
+import nextstep.service.ThemeWriteService;
 import nextstep.utils.ThemeRequestValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +16,15 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WebMvcTest(ThemeController.class)
-public class ThemeControllerTest {
+@WebMvcTest(ThemeWriteController.class)
+public class ThemeWriteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +33,7 @@ public class ThemeControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ThemeService themeService;
+    private ThemeWriteService themeWriteService;
 
     @MockBean
     private ThemeRequestValidator themeRequestValidator;
@@ -56,7 +46,7 @@ public class ThemeControllerTest {
 
         doNothing().when(themeRequestValidator)
                         .validateCreateRequest(any(CreateThemeRequest.class));
-        given(themeService.createTheme(any(CreateThemeRequest.class)))
+        given(themeWriteService.createTheme(any(CreateThemeRequest.class)))
                 .willReturn(themeId);
 
         // when
@@ -88,27 +78,7 @@ public class ThemeControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest());
-        verify(themeService, times(0)).createTheme(any(CreateThemeRequest.class));
-    }
-
-    @Test
-    void 테마_목록을_페이지_단위로_조회한다() throws Exception {
-        // given
-        int page = 0, size = 5;
-        List<FindThemeResponse> findThemeResponses = Stream.of("혜화 잡화점", "거울의 방", "베니스 상인의 저택", "워너고홈", "명당")
-                .map((themeName) -> FindThemeResponse.from(new Theme(themeName, "테마 설명", 22_000)))
-                .collect(Collectors.toList());
-
-        given(themeService.findAllTheme(any(Pageable.class)))
-                .willReturn(findThemeResponses);
-
-        // when
-        ResultActions perform = mockMvc.perform(get("/themes?page=" + page + "&size=" + size));
-
-        // then
-        perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(size)));
+        verify(themeWriteService, times(0)).createTheme(any(CreateThemeRequest.class));
     }
 
 }

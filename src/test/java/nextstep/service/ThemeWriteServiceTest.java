@@ -17,13 +17,13 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class ThemeServiceTest {
+public class ThemeWriteServiceTest {
 
     @Mock
     private ThemeRepository themeRepository;
 
     @InjectMocks
-    private ThemeService themeService;
+    private ThemeWriteService themeWriteService;
 
     @Test
     void 테마_생성에_성공한다() {
@@ -35,40 +35,10 @@ public class ThemeServiceTest {
                 .willReturn(theme);
 
         // when
-        Long themeId = themeService.createTheme(createThemeRequest);
+        Long themeId = themeWriteService.createTheme(createThemeRequest);
 
         // then
         assertThat(themeId).isEqualTo(theme.getId());
-    }
-
-    @Test
-    void 존재하지_않는_이름으로_테마를_조회할_경우_예외가_발생한다() {
-        // given
-        String invalidName = "베니스 상인의 저택";
-
-        given(themeRepository.findByName(eq(invalidName)))
-                .willReturn(Optional.empty());
-
-        // when, then
-        assertThatThrownBy(() -> themeService.findThemeByName(invalidName))
-                .isInstanceOf(ApplicationException.class);
-    }
-
-    @Test
-    void 존재하는_이름으로_테마를_조회한다() {
-        // given
-        String themeName = "거울의 방";
-        Theme savedTheme = new Theme(themeName, "테마 설명", 25_000);
-
-        given(themeRepository.findByName(eq(themeName)))
-                .willReturn(Optional.of(savedTheme));
-
-        // when
-        Theme findByName = themeService.findThemeByName(themeName);
-
-        // then
-        assertThat(findByName).usingRecursiveComparison()
-                .isEqualTo(savedTheme);
     }
 
     @Test
@@ -81,7 +51,7 @@ public class ThemeServiceTest {
                 .willReturn(Optional.of(savedTheme));
 
         // when, then
-        assertThatThrownBy(() -> themeService.createTheme(createThemeRequest))
+        assertThatThrownBy(() -> themeWriteService.createTheme(createThemeRequest))
                 .isInstanceOf(ApplicationException.class);
     }
 

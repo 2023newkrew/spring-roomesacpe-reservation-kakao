@@ -13,23 +13,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class ReservationServiceTest {
+public class ReservationWriteServiceTest {
 
     @Mock
     private ReservationRepository reservationRepository;
 
     @Mock
-    private ThemeService themeService;
+    private ThemeReadService themeReadService;
 
     @InjectMocks
-    private ReservationService reservationService;
+    private ReservationWriteService reservationWriteService;
 
     @Test
     void 예약을_생성한다() {
@@ -38,7 +37,7 @@ public class ReservationServiceTest {
         Theme theme = new Theme(3L, createReservationRequest.getThemeName(), "테마 설명", 29_000);
         Reservation reservation = new Reservation(51L, LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime()), createReservationRequest.getName(), theme);
 
-        given(themeService.findThemeByName(createReservationRequest.getThemeName()))
+        given(themeReadService.findThemeByName(createReservationRequest.getThemeName()))
                 .willReturn(theme);
         given(reservationRepository.existsByThemeIdAndDateAndTime(theme.getId(), LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime())))
                 .willReturn(false);
@@ -46,7 +45,7 @@ public class ReservationServiceTest {
                 .willReturn(reservation);
 
         // when
-        Long reservationId = reservationService.createReservation(createReservationRequest);
+        Long reservationId = reservationWriteService.createReservation(createReservationRequest);
 
         // then
         assertThat(reservationId).isEqualTo(reservation.getId());
@@ -58,26 +57,13 @@ public class ReservationServiceTest {
         CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", "테마 이름");
         Theme theme = new Theme(10L, createReservationRequest.getThemeName(), "테마 설명", 20_000);
 
-        given(themeService.findThemeByName(createReservationRequest.getThemeName()))
+        given(themeReadService.findThemeByName(createReservationRequest.getThemeName()))
                 .willReturn(theme);
         given(reservationRepository.existsByThemeIdAndDateAndTime(theme.getId(), LocalDate.parse(createReservationRequest.getDate()), LocalTime.parse(createReservationRequest.getTime())))
                 .willReturn(true);
 
         // when, then
-        assertThatThrownBy(() -> reservationService.createReservation(createReservationRequest))
-                .isInstanceOf(ApplicationException.class);
-    }
-
-    @Test
-    void 존재하지_않는_예약을_조회할_경우_예외가_발생한다() {
-        // given
-        Long invaildId = 500L;
-
-        given(reservationRepository.findById(invaildId))
-                .willReturn(Optional.empty());
-
-        // when, then
-        assertThatThrownBy(() -> reservationService.findReservationById(invaildId))
+        assertThatThrownBy(() -> reservationWriteService.createReservation(createReservationRequest))
                 .isInstanceOf(ApplicationException.class);
     }
 
