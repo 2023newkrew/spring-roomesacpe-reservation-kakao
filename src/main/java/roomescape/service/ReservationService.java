@@ -9,17 +9,17 @@ import roomescape.domain.Reservation;
 import roomescape.domain.Themes;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
-import roomescape.repository.ReservationWebRepository;
+import roomescape.repository.ReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
 public class ReservationService {
-    private final ReservationWebRepository reservationWebRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationWebRepository reservationWebRepository) {
-        this.reservationWebRepository = reservationWebRepository;
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @Transactional
@@ -28,26 +28,26 @@ public class ReservationService {
         LocalTime time = reservationRequest.getTime();
         checkTimeDuplication(date, time);
         Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
-        return reservationWebRepository.insertReservation(reservation);
+        return reservationRepository.insertReservation(reservation);
     }
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {
-        reservationWebRepository.getReservationByDateAndTime(date, time)
-            .ifPresent(reservation -> {
-                throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
-            });
+        reservationRepository.getReservationByDateAndTime(date, time)
+                .ifPresent(reservation -> {
+                    throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
+                });
     }
 
     public ReservationResponse getReservation(Long reservationId) {
-        Reservation reservation = reservationWebRepository.getReservation(reservationId)
-            .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
+        Reservation reservation = reservationRepository.getReservation(reservationId)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
         return ReservationResponse.fromEntity(reservation);
     }
 
     @Transactional
     public void deleteReservation(Long reservationId) {
-        reservationWebRepository.getReservation(reservationId)
+        reservationRepository.getReservation(reservationId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
-        reservationWebRepository.deleteReservation(reservationId);
+        reservationRepository.deleteReservation(reservationId);
     }
 }
