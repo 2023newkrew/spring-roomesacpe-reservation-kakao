@@ -37,10 +37,6 @@ public class Reservation {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -55,10 +51,6 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
-    }
-
-    public boolean overlap(Reservation other) {
-        return this.date.equals(other.date) && this.time.equals(other.time);
     }
 
 }
