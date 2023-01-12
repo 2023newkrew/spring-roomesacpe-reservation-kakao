@@ -6,12 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +34,10 @@ class ReservationJdbcRepositoryTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        initTable();
+        truncateAllTables();
 
         repository = new ReservationJdbcRepository();
+
         testTheme = new Theme("Theme", "Theme desc", 10_000);
 
         inputReservation1 = generateReservation(
@@ -49,53 +48,21 @@ class ReservationJdbcRepositoryTest {
                 null, "2023-01-03", "15:00", "park", testTheme);
 
         expectedReservation1 = generateReservation(
-                1L, "2023-01-01", "13:00", "kim", testTheme);
+                null, "2023-01-01", "13:00", "kim", testTheme);
         expectedReservation2 = generateReservation(
-                2L, "2023-01-02", "14:00", "lee", testTheme);
+                null, "2023-01-02", "14:00", "lee", testTheme);
         expectedReservation3 = generateReservation(
-                3L, "2023-01-03", "15:00", "park", testTheme);
+                null, "2023-01-03", "15:00", "park", testTheme);
 
-    }
-
-    private void initTable() throws SQLException {
-        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-        String sql = "DROP TABLE IF EXISTS RESERVATION";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.executeUpdate();
-        ps.close();
-
-        sql = "CREATE TABLE IF NOT EXISTS RESERVATION ( " +
-                "id bigint not null auto_increment, " +
-                "date date, " +
-                "time time, " +
-                "name varchar(20), " +
-                "theme_name varchar(20), " +
-                "theme_desc varchar(255), " +
-                "theme_price int, " +
-                "primary key (id))";
-
-        ps = conn.prepareStatement(sql);
-        ps.executeUpdate();
-        ps.close();
-
-        conn.close();
-    }
-
-    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date),
-                LocalTime.parse(time),
-                name,
-                theme
-        );
     }
 
     @DisplayName("예약을 저장한다.")
     @Test
     void save() {
         Reservation savedReservation = repository.save(inputReservation1);
+
+        expectedReservation1.setId(savedReservation.getId());
+
         assertThat(savedReservation).isEqualTo(expectedReservation1);
     }
 
@@ -106,6 +73,10 @@ class ReservationJdbcRepositoryTest {
         Reservation savedReservation2 = repository.save(inputReservation2);
         Reservation savedReservation3 = repository.save(inputReservation3);
 
+        expectedReservation1.setId(savedReservation1.getId());
+        expectedReservation2.setId(savedReservation2.getId());
+        expectedReservation3.setId(savedReservation3.getId());
+
         assertThat(savedReservation1).isEqualTo(expectedReservation1);
         assertThat(savedReservation2).isEqualTo(expectedReservation2);
         assertThat(savedReservation3).isEqualTo(expectedReservation3);
@@ -114,13 +85,17 @@ class ReservationJdbcRepositoryTest {
     @DisplayName("id로 예약을 조회한다 - 조회 성공")
     @Test
     void find_success() {
-        repository.save(inputReservation1);
-        repository.save(inputReservation2);
-        repository.save(inputReservation3);
+        Reservation savedReservation1 = repository.save(inputReservation1);
+        Reservation savedReservation2 = repository.save(inputReservation2);
+        Reservation savedReservation3 = repository.save(inputReservation3);
 
-        Optional<Reservation> result1 = repository.findById(1L);
-        Optional<Reservation> result2 = repository.findById(2L);
-        Optional<Reservation> result3 = repository.findById(3L);
+        expectedReservation1.setId(savedReservation1.getId());
+        expectedReservation2.setId(savedReservation2.getId());
+        expectedReservation3.setId(savedReservation3.getId());
+
+        Optional<Reservation> result1 = repository.findById(savedReservation1.getId());
+        Optional<Reservation> result2 = repository.findById(savedReservation2.getId());
+        Optional<Reservation> result3 = repository.findById(savedReservation3.getId());
 
         assertThat(result1).isNotEmpty()
                 .get().isEqualTo(expectedReservation1);
@@ -140,9 +115,13 @@ class ReservationJdbcRepositoryTest {
     @DisplayName("모든 예약을 조회한다")
     @Test
     void findAll() {
-        repository.save(inputReservation1);
-        repository.save(inputReservation2);
-        repository.save(inputReservation3);
+        Reservation savedReservation1 = repository.save(inputReservation1);
+        Reservation savedReservation2 = repository.save(inputReservation2);
+        Reservation savedReservation3 = repository.save(inputReservation3);
+
+        expectedReservation1.setId(savedReservation1.getId());
+        expectedReservation2.setId(savedReservation2.getId());
+        expectedReservation3.setId(savedReservation3.getId());
 
         List<Reservation> result = repository.findAll();
 
@@ -159,16 +138,12 @@ class ReservationJdbcRepositoryTest {
     @DisplayName("예약을 삭제한다 - 삭제 성공")
     @Test
     void delete_success() {
-        repository.save(inputReservation1);
-        repository.save(inputReservation2);
-        repository.save(inputReservation3);
+        Reservation savedReservation1 = repository.save(inputReservation1);
 
-        Long id = 1L;
-
-        boolean result = repository.delete(id);
+        boolean result = repository.delete(savedReservation1.getId());
 
         assertThat(result).isTrue();
-        assertThat(repository.findById(id)).isEmpty();
+        assertThat(repository.findById(savedReservation1.getId())).isEmpty();
     }
 
     @DisplayName("예약을 삭제한다 - 삭제할 대상 없음")
@@ -176,5 +151,58 @@ class ReservationJdbcRepositoryTest {
     void delete_fail() {
         boolean result = repository.delete(1L);
         assertThat(result).isFalse();
+
+    }
+
+    private void truncateAllTables() throws SQLException {
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+
+        List<String> truncateTableQueries = generateTruncateTableQueries(conn);
+
+        executeTruncateTableQueries(conn, truncateTableQueries);
+
+        conn.close();
+    }
+
+    private static void executeTruncateTableQueries(Connection conn, List<String> truncateQueries) throws SQLException {
+        PreparedStatement setReferentialIntegrityFalse = conn.prepareStatement("SET REFERENTIAL_INTEGRITY FALSE");
+        setReferentialIntegrityFalse.executeUpdate();
+        setReferentialIntegrityFalse.close();
+
+        for (String truncateQuery : truncateQueries) {
+            PreparedStatement ps = conn.prepareStatement(truncateQuery);
+            ps.executeUpdate();
+            ps.close();
+        }
+
+        PreparedStatement setReferentialIntegrityTrue = conn.prepareStatement("SET REFERENTIAL_INTEGRITY TRUE");
+        setReferentialIntegrityTrue.executeUpdate();
+        setReferentialIntegrityTrue.close();
+    }
+
+    private static List<String> generateTruncateTableQueries(Connection conn) throws SQLException {
+        String sql = "SELECT Concat('TRUNCATE TABLE ', TABLE_NAME, ';') AS query FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet truncateQueryResultSet = ps.executeQuery();
+
+        List<String> truncateQueries = new ArrayList<>();
+        while (truncateQueryResultSet.next()) {
+            truncateQueries.add(truncateQueryResultSet.getString("query"));
+        }
+
+        truncateQueryResultSet.close();
+        ps.close();
+
+        return truncateQueries;
+    }
+
+    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
+        return new Reservation(
+                id,
+                LocalDate.parse(date),
+                LocalTime.parse(time),
+                name,
+                theme
+        );
     }
 }
