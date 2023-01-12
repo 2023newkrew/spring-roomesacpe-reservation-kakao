@@ -1,4 +1,4 @@
-package nextstep;
+package roomescape.repository;
 
 import roomescape.model.Reservation;
 import roomescape.model.Theme;

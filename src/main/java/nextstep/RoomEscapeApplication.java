@@ -4,6 +4,8 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
+import roomescape.repository.ReservationConsoleRepository;
+import roomescape.repository.ThemeConsoleRepository;
 import roomescape.service.ReservationService;
 import roomescape.service.ThemeService;
 
