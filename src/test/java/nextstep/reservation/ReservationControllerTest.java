@@ -30,14 +30,12 @@ public class ReservationControllerTest {
     @Autowired
     private ReservationService reservationService;
     private Reservation reservation;
-    private Reservation reservationDuplicated;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
-        reservationDuplicated = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", theme);
     }
 
     @AfterEach
@@ -60,6 +58,7 @@ public class ReservationControllerTest {
     @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생")
     @Test
     void createReservationDuplicate() {
+        Reservation reservationDuplicated = new Reservation(null, reservation.getDate(), reservation.getTime(), "name2", reservation.getTheme());
         createReservation(reservation);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
