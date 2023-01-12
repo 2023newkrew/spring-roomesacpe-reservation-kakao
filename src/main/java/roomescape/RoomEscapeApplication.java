@@ -59,7 +59,7 @@ public class RoomEscapeApplication {
                 Reservation reservation;
 
                 try {
-                    reservation = new Reservation(date, time, name, theme);
+                    reservation = new Reservation(null, date, time, name, theme);
                     reservationConsoleRepository.findReservationByDateAndTime(date, time)
                             .ifPresent((e) -> {
                                 throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);

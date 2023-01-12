@@ -9,6 +9,7 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
+import roomescape.mapper.ReservationMapper;
 import roomescape.repository.ReservationWebRepository;
 
 import java.time.LocalDate;
@@ -24,13 +25,15 @@ public class ReservationService {
 
     @Transactional
     public Long createReservation(ReservationRequest reservationRequest) {
-        LocalDate date = reservationRequest.getDate();
-        LocalTime time = reservationRequest.getTime();
-        Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
+        LocalDate requestedDate = reservationRequest.getDate();
+        LocalTime requestedTime = reservationRequest.getTime();
+        reservationRequest.setTheme(Themes.WANNA_GO_HOME);
 
-        checkTimeDuplication(date, time);
+        checkTimeDuplication(requestedDate, requestedTime);
 
-        return reservationWebRepository.save(reservation);
+        return reservationWebRepository.save(
+                ReservationMapper.INSTANCE.reservationRequestToReservation(reservationRequest)
+        );
     }
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {
@@ -42,10 +45,10 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse getReservation(Long reservationId) {
-        return ReservationResponse.fromEntity(
-                reservationWebRepository.findOne(reservationId)
-                        .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND))
-        );
+        Reservation reservation = reservationWebRepository.findOne(reservationId)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
+
+        return ReservationMapper.INSTANCE.reservationToReservationResponse(reservation);
     }
 
     @Transactional

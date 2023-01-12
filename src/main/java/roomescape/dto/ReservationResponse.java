@@ -1,7 +1,5 @@
 package roomescape.dto;
 
-import roomescape.domain.Reservation;
-
 public class ReservationResponse {
     private final Long id;
     private final String date;
@@ -47,17 +45,5 @@ public class ReservationResponse {
 
     public Integer getThemePrice() {
         return themePrice;
-    }
-
-    public static ReservationResponse fromEntity(Reservation reservation) {
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getDate().toString(),
-                reservation.getTime().toString(),
-                reservation.getTheme().getName(),
-                reservation.getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
-        );
     }
 }

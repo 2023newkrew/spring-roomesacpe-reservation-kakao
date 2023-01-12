@@ -13,7 +13,7 @@ public class Reservation {
     private final String name;
     private final Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.domain.Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
         this.date = date;
         validateTime(time);
@@ -26,10 +26,6 @@ public class Reservation {
         if (!TimeTable.isExist(time)) {
             throw new RoomEscapeException(ErrorCode.TIME_TABLE_NOT_AVAILABLE);
         }
-    }
-
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this(null, date, time, name, theme);
     }
 
     public Long getId() {

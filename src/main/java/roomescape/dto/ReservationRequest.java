@@ -1,6 +1,5 @@
 package roomescape.dto;
 
-import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
 import java.time.LocalDate;
@@ -10,6 +9,14 @@ public class ReservationRequest {
     private LocalDate date;
     private LocalTime time;
     private String name;
+    private Theme theme;
+
+    public ReservationRequest(LocalDate date, LocalTime time, String name, Theme theme) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
 
     public LocalDate getDate() {
         return date;
@@ -35,12 +42,12 @@ public class ReservationRequest {
         this.name = name;
     }
 
-    public Reservation toEntity(Theme theme) {
-        return new Reservation(
-                date,
-                time,
-                name,
-                theme
-        );
+    public Theme getTheme() {
+        return theme;
     }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
 }

@@ -23,7 +23,7 @@ public class ReservationController {
             @RequestBody ReservationRequest reservationRequest,
             HttpServletRequest httpServletRequest
     ) {
-        Long reservationId = reservationService.createReservation(reservationRequest);
+        Long reservationId = reservationService.createReservation(reservationRequest) ;
         String currentURL = httpServletRequest.getRequestURL().toString();
 
         return ResponseEntity.created(
