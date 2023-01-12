@@ -9,18 +9,16 @@ import nextstep.exception.ConflictException;
 import nextstep.exception.NotFoundException;
 import nextstep.mapstruct.ReservationMapper;
 import nextstep.repository.ReservationRepository;
-import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    
+
     @Override
-    public Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
+    public Reservation createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
         validate(reservationRequestDTO);
-        return reservationRepository.save(reservationRequestDTO).getId();
+        return reservationRepository.save(reservationRequestDTO);
     }
 
     private void validate(ReservationRequestDTO reservationRequestDTO) throws SQLException {
@@ -33,12 +31,11 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponseDTO findReservation(Long id) throws SQLException {
-        try {
-            Reservation reservation = reservationRepository.findById(id);
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+        if (reservation != null) {
             return ReservationMapper.INSTANCE.reservationToResponseDTO(reservation);
-        } catch (DataAccessException e) {
-            return null;
         }
+        return null;
     }
 
     @Override

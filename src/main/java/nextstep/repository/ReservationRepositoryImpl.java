@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
@@ -49,13 +50,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) throws DataAccessException {
-        String sql = "SELECT * from reservation WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+    public Optional<Reservation> findById(Long id) throws DataAccessException {
+        String sql = ReservationJdbcSql.FIND_BY_ID;
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(), rs.getString("name"),
                         new Theme(rs.getString("theme_name"),
-                                rs.getString("theme_desc"), rs.getInt("theme_price"))), id);
+                                rs.getString("theme_desc"), rs.getInt("theme_price"))), id).stream().findAny();
     }
 
     @Override

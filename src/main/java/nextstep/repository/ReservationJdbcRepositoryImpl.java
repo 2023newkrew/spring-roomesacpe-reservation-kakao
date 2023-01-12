@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 import nextstep.dto.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
@@ -58,11 +59,10 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         Reservation reservation = null;
         try {
             String sql = ReservationJdbcSql.FIND_BY_ID;
-
             PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -73,7 +73,10 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return reservation;
+        if(reservation == null){
+            return Optional.empty();
+        }
+        return Optional.of(reservation);
     }
 
     @Override

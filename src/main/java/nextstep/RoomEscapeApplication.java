@@ -8,8 +8,6 @@ import nextstep.dto.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ReservationResponseDTO;
 import nextstep.entity.Reservation;
-import nextstep.entity.Theme;
-import nextstep.entity.ThemeConstants;
 import nextstep.repository.ReservationJdbcRepositoryImpl;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.ReservationService;
@@ -48,12 +46,8 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
-                Long reservationId = reservationService.createReservation(
+                Reservation reservation = reservationService.createReservation(
                         new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name));
-
-                Reservation reservation = new Reservation(reservationId, LocalDate.parse(date), LocalTime.parse(time),
-                        name,
-                        new Theme(ThemeConstants.THEME_NAME, ThemeConstants.THEME_DESC, ThemeConstants.THEME_PRICE));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
