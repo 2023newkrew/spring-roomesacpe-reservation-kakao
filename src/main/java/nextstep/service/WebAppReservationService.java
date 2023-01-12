@@ -4,6 +4,7 @@ import nextstep.domain.theme.Theme;
 import nextstep.domain.dto.CreateReservationDTO;
 import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.reservation.Reservation;
+import nextstep.exception.DuplicateTimeReservationException;
 import nextstep.repository.WebAppReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class WebAppReservationService {
                 Time.valueOf(reservation.getTime())
         );
         if (duplicatedCount > 0) {
-            return -1;
+            throw new DuplicateTimeReservationException();
         }
         return webAppReservationRepository.add(reservation);
     }

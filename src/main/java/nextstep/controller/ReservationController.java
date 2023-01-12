@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.dto.CreateReservationDTO;
+import nextstep.exception.DuplicateTimeReservationException;
 import nextstep.service.WebAppReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,11 +23,12 @@ public class ReservationController {
 
     @PostMapping()
     public ResponseEntity createReservation(@RequestBody CreateReservationDTO reservationDto) {
-        long id = webAppReservationService.addReservation(reservationDto);
-        if (id == -1) {
+        try {
+            long id = webAppReservationService.addReservation(reservationDto);
+            return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        } catch (DuplicateTimeReservationException ex) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,11 +41,4 @@ public class ReservationController {
         webAppReservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
-
-    @DeleteMapping("/all")
-    public ResponseEntity deleteAllReservations() {
-        webAppReservationService.deleteAllReservations();
-        return ResponseEntity.noContent().build();
-    }
-
 }
