@@ -38,8 +38,8 @@ public class ReservationService {
         return new ReservationResponseDto(reservation, theme);
     }
 
-    public Integer cancelReservation(Long id) {
-        return reservationRepository.delete(id);
+    public Boolean cancelReservation(Long id) {
+        return reservationRepository.delete(id) == 1;
     }
 
     public Reservation getReservation(Long id) {
