@@ -39,21 +39,28 @@ class ReservationMemoryRepositoryTest {
                 null, "2023-01-03", "15:00", "park", testTheme);
 
         expectedReservation1 = generateReservation(
-                null, "2023-01-01", "13:00", "kim", testTheme);
+                1L, "2023-01-01", "13:00", "kim", testTheme);
         expectedReservation2 = generateReservation(
-                null, "2023-01-02", "14:00", "lee", testTheme);
+                2L, "2023-01-02", "14:00", "lee", testTheme);
         expectedReservation3 = generateReservation(
-                null, "2023-01-03", "15:00", "park", testTheme);
+                3L, "2023-01-03", "15:00", "park", testTheme);
 
+    }
+
+    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
+        return new Reservation(
+                id,
+                LocalDate.parse(date),
+                LocalTime.parse(time),
+                name,
+                theme
+        );
     }
 
     @DisplayName("예약을 저장한다.")
     @Test
     void save() {
         Reservation savedReservation = repository.save(inputReservation1);
-
-        expectedReservation1.setId(savedReservation.getId());
-
         assertThat(savedReservation).isEqualTo(expectedReservation1);
     }
 
@@ -64,10 +71,6 @@ class ReservationMemoryRepositoryTest {
         Reservation savedReservation2 = repository.save(inputReservation2);
         Reservation savedReservation3 = repository.save(inputReservation3);
 
-        expectedReservation1.setId(savedReservation1.getId());
-        expectedReservation2.setId(savedReservation2.getId());
-        expectedReservation3.setId(savedReservation3.getId());
-
         assertThat(savedReservation1).isEqualTo(expectedReservation1);
         assertThat(savedReservation2).isEqualTo(expectedReservation2);
         assertThat(savedReservation3).isEqualTo(expectedReservation3);
@@ -76,17 +79,13 @@ class ReservationMemoryRepositoryTest {
     @DisplayName("id로 예약을 조회한다 - 조회 성공")
     @Test
     void find_success() {
-        Reservation savedReservation1 = repository.save(inputReservation1);
-        Reservation savedReservation2 = repository.save(inputReservation2);
-        Reservation savedReservation3 = repository.save(inputReservation3);
+        repository.save(inputReservation1);
+        repository.save(inputReservation2);
+        repository.save(inputReservation3);
 
-        expectedReservation1.setId(savedReservation1.getId());
-        expectedReservation2.setId(savedReservation2.getId());
-        expectedReservation3.setId(savedReservation3.getId());
-
-        Optional<Reservation> result1 = repository.findById(savedReservation1.getId());
-        Optional<Reservation> result2 = repository.findById(savedReservation2.getId());
-        Optional<Reservation> result3 = repository.findById(savedReservation3.getId());
+        Optional<Reservation> result1 = repository.findById(1L);
+        Optional<Reservation> result2 = repository.findById(2L);
+        Optional<Reservation> result3 = repository.findById(3L);
 
         assertThat(result1).isNotEmpty()
                 .get().isEqualTo(expectedReservation1);
@@ -106,13 +105,9 @@ class ReservationMemoryRepositoryTest {
     @DisplayName("모든 예약을 조회한다")
     @Test
     void findAll() {
-        Reservation savedReservation1 = repository.save(inputReservation1);
-        Reservation savedReservation2 = repository.save(inputReservation2);
-        Reservation savedReservation3 = repository.save(inputReservation3);
-
-        expectedReservation1.setId(savedReservation1.getId());
-        expectedReservation2.setId(savedReservation2.getId());
-        expectedReservation3.setId(savedReservation3.getId());
+        repository.save(inputReservation1);
+        repository.save(inputReservation2);
+        repository.save(inputReservation3);
 
         List<Reservation> result = repository.findAll();
 
@@ -129,12 +124,16 @@ class ReservationMemoryRepositoryTest {
     @DisplayName("예약을 삭제한다 - 삭제 성공")
     @Test
     void delete_success() {
-        Reservation savedReservation1 = repository.save(inputReservation1);
+        repository.save(inputReservation1);
+        repository.save(inputReservation2);
+        repository.save(inputReservation3);
 
-        boolean result = repository.delete(savedReservation1.getId());
+        Long id = 1L;
+
+        boolean result = repository.delete(id);
 
         assertThat(result).isTrue();
-        assertThat(repository.findById(savedReservation1.getId())).isEmpty();
+        assertThat(repository.findById(id)).isEmpty();
     }
 
     @DisplayName("예약을 삭제한다 - 삭제할 대상 없음")
@@ -142,15 +141,5 @@ class ReservationMemoryRepositoryTest {
     void delete_fail() {
         boolean result = repository.delete(1L);
         assertThat(result).isFalse();
-    }
-
-    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date),
-                LocalTime.parse(time),
-                name,
-                theme
-        );
     }
 }
