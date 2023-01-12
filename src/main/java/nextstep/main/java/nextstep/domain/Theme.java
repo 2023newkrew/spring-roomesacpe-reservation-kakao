@@ -1,10 +1,14 @@
 package nextstep.main.java.nextstep.domain;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Theme {
     private Long id;
+
     private final String name;
+
     private final String desc;
     private final Integer price;
 
@@ -25,6 +29,17 @@ public class Theme {
         this(id, theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
+    public static Theme of(ResultSet resultSet) throws SQLException {
+        return new Theme((resultSet.getLong("id")),
+                resultSet.getString("name"),
+                resultSet.getString("desc"),
+                resultSet.getInt("price"));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -36,6 +51,7 @@ public class Theme {
     public Integer getPrice() {
         return price;
     }
+
 
     @Override
     public boolean equals(Object o) {

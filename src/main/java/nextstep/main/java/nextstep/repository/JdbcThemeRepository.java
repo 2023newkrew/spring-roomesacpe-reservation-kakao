@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.repository;
 
 import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.repositoryUtil.CustomPreparedStatementCreator;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -28,7 +29,12 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public Optional<Theme> findById(Long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM theme WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, count) -> Theme.of(rs), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
