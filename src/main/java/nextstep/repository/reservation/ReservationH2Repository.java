@@ -3,11 +3,14 @@ package nextstep.repository.reservation;
 import nextstep.domain.Reservation;
 import nextstep.exception.DatabaseException;
 import nextstep.exception.ReservationNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Deprecated(since = "step3")
+@Repository
 public class ReservationH2Repository implements ReservationRepository {
 
     @Override
@@ -105,6 +108,12 @@ public class ReservationH2Repository implements ReservationRepository {
         } finally {
             closeResources(con, ps, rs);
         }
+    }
+
+    @Deprecated(since = "step3")
+    @Override
+    public boolean hasReservationWithTheme(Long themeId) {
+        return false;
     }
 
     private Connection getConnection() {

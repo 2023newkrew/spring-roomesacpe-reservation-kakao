@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated(since = "step3")
 @Repository
 public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
@@ -27,6 +28,12 @@ public class ReservationMemoryRepository implements ReservationRepository {
     public boolean hasReservationAt(LocalDate date, LocalTime time) {
         return reservations.values().stream()
                 .anyMatch(reservation -> reservation.isAtDateTime(date, time));
+    }
+
+    @Deprecated(since = "step3")
+    @Override
+    public boolean hasReservationWithTheme(Long themeId) {
+        return false;
     }
 
     @Override
