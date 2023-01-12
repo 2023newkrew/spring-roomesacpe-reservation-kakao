@@ -35,8 +35,10 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ReservationResponseDto findReservation(@PathVariable long id){
-        return convertToDtoFromReservation(reservationService.findReservation(id));
+    public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable long id){
+        ReservationResponseDto reservationResponseDto =
+                convertToDtoFromReservation(reservationService.findReservation(id));
+        return ResponseEntity.ok(reservationResponseDto);
     }
 
     @DeleteMapping("/{id}")
