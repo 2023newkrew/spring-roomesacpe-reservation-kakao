@@ -1,4 +1,4 @@
-package nextstep.controller;
+package nextstep.domains.reservation.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.reservation.dto.ReservationRequestDto;

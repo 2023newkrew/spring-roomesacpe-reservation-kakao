@@ -2,7 +2,7 @@ package nextstep.domain.reservation.repository;
 
 import nextstep.domain.reservation.domain.Reservation;
 import nextstep.domain.theme.domain.Theme;
-import nextstep.exceptions.exception.ReservationNotFoundException;
+import nextstep.global.exceptions.exception.ReservationNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

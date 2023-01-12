@@ -2,8 +2,8 @@ package nextstep;
 
 import nextstep.domain.reservation.dto.ReservationRequestDto;
 import nextstep.domain.reservation.dto.ReservationResponseDto;
-import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.exceptions.exception.ReservationNotFoundException;
+import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.global.exceptions.exception.ReservationNotFoundException;
 import nextstep.domain.reservation.repository.ReservationJdbcRepository;
 import nextstep.domain.reservation.service.ReservationService;
 
