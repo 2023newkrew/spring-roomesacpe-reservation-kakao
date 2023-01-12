@@ -7,8 +7,8 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public interface ReservationRepository {
-    public Reservation save(Reservation reservation);
-    public Optional<Reservation> findById(Long id);
-    public Boolean existsByDateAndTime(LocalDate date, LocalTime time);
-    public void deleteById(Long id);
+    Reservation save(Reservation reservation);
+    Optional<Reservation> findById(Long id);
+    Boolean existsByDateAndTime(LocalDate date, LocalTime time);
+    void deleteById(Long id);
 }
