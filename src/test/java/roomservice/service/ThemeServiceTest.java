@@ -1,11 +1,10 @@
 package roomservice.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomservice.domain.dto.ThemeDto;
+import roomservice.domain.dto.ThemeCreateDto;
 import roomservice.domain.entity.Theme;
 
 import static org.assertj.core.api.Assertions.*;
@@ -18,7 +17,7 @@ public class ThemeServiceTest {
     ThemeService themeService;
     @Test
     void create(){
-        assertThat(themeService.createTheme(new ThemeDto(
+        assertThat(themeService.createTheme(new ThemeCreateDto(
                 "test",
                 "testDescription",
                 15000

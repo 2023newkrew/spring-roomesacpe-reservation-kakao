@@ -40,6 +40,12 @@ public class ThemeDao {
         return theme.getId();
     }
 
+    public List<Theme> selectAllTheme(){
+        String sql = "SELECT * FROM theme";
+        List<Theme> result = jdbcTemplate.query(sql, themeRowMapper);
+        return result;
+    }
+
     public Theme selectThemeById(long id) {
         String sql = "SELECT * FROM theme WHERE id = ?";
         List<Theme> result = jdbcTemplate.query(sql, themeRowMapper, id);
