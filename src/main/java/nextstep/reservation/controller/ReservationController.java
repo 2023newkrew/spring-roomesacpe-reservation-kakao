@@ -3,7 +3,6 @@ package nextstep.reservation.controller;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.exception.CreateReservationException;
 import nextstep.reservation.service.ReservationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @Autowired
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
