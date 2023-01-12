@@ -1,9 +1,9 @@
-package reservation.util.exception;
+package reservation.util.exception.db;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import reservation.util.exception.db.DBException;
 
-public class ConnectionException extends DBException{
+public class ConnectionException extends DBException {
 
     public ConnectionException(String errorMessage){
         super(errorMessage);

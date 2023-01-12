@@ -3,9 +3,8 @@ package reservation.util;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import reservation.util.exception.ConnectionException;
-import reservation.util.exception.DBException;
-import reservation.util.exception.RestAPIException;
+import reservation.util.exception.db.DBException;
+import reservation.util.exception.restAPI.RestAPIException;
 
 
 @RestControllerAdvice

@@ -11,8 +11,8 @@ import reservation.model.domain.Theme;
 import reservation.model.dto.RequestReservation;
 import reservation.respository.ReservationJdbcTemplateRepository;
 import reservation.service.ReservationService;
-import reservation.util.exception.DuplicateException;
-import reservation.util.exception.NotFoundException;
+import reservation.util.exception.restAPI.DuplicateException;
+import reservation.util.exception.restAPI.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

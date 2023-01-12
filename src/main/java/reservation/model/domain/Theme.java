@@ -1,20 +1,17 @@
 package reservation.model.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Getter
+@AllArgsConstructor
 public class Theme {
+    private Long id;
     private String name;
     private String desc;
     private Integer price;
-
-    public Theme(String name, String desc, Integer price) {
-        this.name = name;
-        this.desc = desc;
-        this.price = price;
-    }
 
     @Override
     public boolean equals(Object o) {

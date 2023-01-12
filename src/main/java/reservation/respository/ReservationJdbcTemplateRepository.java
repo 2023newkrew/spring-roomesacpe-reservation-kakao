@@ -25,7 +25,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public Long save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(connection -> {
@@ -33,9 +33,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getThemeId());
 
             return ps;
         }, keyHolder);
@@ -45,16 +43,14 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public Reservation findById(Long reservationId) {
-        String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE id = ?";
         try {
             return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
                     rs.getLong("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getTime("time").toLocalTime(),
                     rs.getString("name"),
-                    new Theme(rs.getString("theme_name"),
-                            rs.getString("theme_desc"),
-                            rs.getInt("theme_price"))
+                    rs.getLong("theme_id")
             ), reservationId);
         } catch (EmptyResultDataAccessException e) {
             return null;

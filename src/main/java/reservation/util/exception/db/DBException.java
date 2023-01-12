@@ -1,15 +1,16 @@
-package reservation.util.exception;
+package reservation.util.exception.db;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public abstract class RestAPIException extends RuntimeException{
+public abstract class DBException extends RuntimeException{
+
     @Getter
     private final String errorMessage;
 
     public abstract HttpStatus getHttpStatus();
 
-    public RestAPIException(String errorMessage){
+    public DBException(String errorMessage){
         super(errorMessage);
         this.errorMessage = errorMessage;
     }

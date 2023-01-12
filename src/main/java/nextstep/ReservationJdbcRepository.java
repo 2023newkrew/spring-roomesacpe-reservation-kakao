@@ -5,8 +5,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
 import reservation.respository.ReservationRepository;
-import reservation.util.exception.ConnectionException;
-import reservation.util.exception.QueryException;
+import reservation.util.exception.db.ConnectionException;
+import reservation.util.exception.db.QueryException;
 
 import java.sql.*;
 
@@ -41,9 +41,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getThemeId());
             ps.executeUpdate();
             id = (long) keyHolder.getKey();
             ps.close();
@@ -69,9 +67,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                         rs.getDate(1).toLocalDate(),
                         rs.getTime(2).toLocalTime(),
                         rs.getString(3),
-                        new Theme(rs.getString(4),
-                                rs.getString(5),
-                                rs.getInt(6))
+                        rs.getLong(4)
                 );
             }
 

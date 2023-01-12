@@ -13,5 +13,5 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 }
