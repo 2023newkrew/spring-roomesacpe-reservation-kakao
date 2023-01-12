@@ -1,8 +1,8 @@
 package nextstep.repository;
 
-import nextstep.dto.Reservation;
-import nextstep.dto.ReservationInput;
-import nextstep.dto.Theme;
+import nextstep.domain.Reservation;
+import nextstep.dto.ReservationDTO;
+import nextstep.domain.Theme;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -147,14 +147,14 @@ public class ReservationConnRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean duplicate(ReservationInput reservationInput) {
+    public boolean duplicate(ReservationDTO reservationDTO) {
         try {
             getConnection();
 
             String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, Date.valueOf(reservationInput.getDate()));
-            pstmt.setTime(2, Time.valueOf(reservationInput.getTime()));
+            pstmt.setDate(1, Date.valueOf(reservationDTO.getDate()));
+            pstmt.setTime(2, Time.valueOf(reservationDTO.getTime()));
 
             resultSet = pstmt.executeQuery();
             if(resultSet.next()){

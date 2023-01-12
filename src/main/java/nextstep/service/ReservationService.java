@@ -1,8 +1,9 @@
 package nextstep.service;
 
-import nextstep.dto.Reservation;
-import nextstep.dto.ReservationInput;
-import nextstep.dto.Theme;
+import nextstep.domain.Reservation;
+import nextstep.dto.ReservationDTO;
+import nextstep.dto.ReservationVO;
+import nextstep.domain.Theme;
 import nextstep.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +17,23 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation newReservation(ReservationInput reservationInput){
+    public Reservation newReservation(ReservationDTO reservationDTO){
 
-        if (reservationRepository.duplicate(reservationInput)) {
+        if (reservationRepository.duplicate(reservationDTO)) {
             throw new IllegalArgumentException();
         }
 
         Reservation reservation = new Reservation();
-        reservation.setTime(reservationInput.getTime());
-        reservation.setDate(reservationInput.getDate());
-        reservation.setName(reservationInput.getName());
+        reservation.setTime(reservationDTO.getTime());
+        reservation.setDate(reservationDTO.getDate());
+        reservation.setName(reservationDTO.getName());
         reservation.setTheme(theme);
         return this.reservationRepository.create(reservation);
     }
 
-    public Reservation findReservation(long id){
-        return this.reservationRepository.find(id);
+    public ReservationVO findReservation(long id){
+        Reservation result = this.reservationRepository.find(id);
+        return new ReservationVO(result.getId(),result.getDate(),result.getTime(),result.getName(),result.getTheme());
     }
 
     public boolean deleteReservation(long id){

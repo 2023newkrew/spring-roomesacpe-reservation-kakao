@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,12 +11,6 @@ public class Reservation {
     private Theme theme;
 
     public Reservation() {
-    }
-
-    public Reservation(LocalDate date, LocalTime time, String name) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
     }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
@@ -67,14 +61,4 @@ public class Reservation {
         return theme;
     }
 
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", date=" + date +
-                ", time=" + time +
-                ", name='" + name + '\'' +
-                ", theme=" + theme +
-                '}';
-    }
 }

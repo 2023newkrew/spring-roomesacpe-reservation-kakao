@@ -1,8 +1,8 @@
 package nextstep.repository;
 
-import nextstep.dto.Reservation;
-import nextstep.dto.ReservationInput;
-import nextstep.dto.Theme;
+import nextstep.domain.Reservation;
+import nextstep.dto.ReservationDTO;
+import nextstep.domain.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Time;
 import java.util.List;
 
@@ -61,9 +60,9 @@ public class ReservationJdbcRepository implements ReservationRepository{
     }
 
     @Override
-    public boolean duplicate(ReservationInput reservationInput) {
+    public boolean duplicate(ReservationDTO reservationDTO) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, reservationInput.getDate(), reservationInput.getTime()) > 0;
+        return jdbcTemplate.queryForObject(sql, Integer.class, reservationDTO.getDate(), reservationDTO.getTime()) > 0;
     }
 
     private RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {

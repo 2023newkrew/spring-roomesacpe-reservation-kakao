@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.domain;
 
 public class Theme {
     private String name;

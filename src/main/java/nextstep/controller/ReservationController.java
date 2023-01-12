@@ -1,7 +1,8 @@
 package nextstep.controller;
 
-import nextstep.dto.Reservation;
-import nextstep.dto.ReservationInput;
+import nextstep.domain.Reservation;
+import nextstep.dto.ReservationDTO;
+import nextstep.dto.ReservationVO;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity createReservation(@RequestBody ReservationInput reservation){
+    public ResponseEntity createReservation(@RequestBody ReservationDTO reservation){
         Reservation ret = this.reservationService.newReservation(reservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + ret.getId())).build();
@@ -28,9 +29,9 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Reservation getReservation(@PathVariable long id){
-        Reservation reservation = this.reservationService.findReservation(id);
-        return reservation;
+    public ReservationVO getReservation(@PathVariable long id){
+        ReservationVO reservationVO = this.reservationService.findReservation(id);
+        return reservationVO;
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,7 @@
 package nextstep.repository;
 
-import nextstep.dto.Reservation;
-import nextstep.dto.ReservationInput;
+import nextstep.domain.Reservation;
+import nextstep.dto.ReservationDTO;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface ReservationRepository {
 
     boolean delete(long id);
 
-    boolean duplicate(ReservationInput reservationInput);
+    boolean duplicate(ReservationDTO reservationDTO);
 }
