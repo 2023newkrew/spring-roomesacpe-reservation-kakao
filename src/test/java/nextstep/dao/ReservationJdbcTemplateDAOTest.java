@@ -49,12 +49,13 @@ public class ReservationJdbcTemplateDAOTest {
         assertThat(reservation.getName()).isEqualTo("name");
     }
 
-    @DisplayName("날짜 및 시간으로 예약 조회")
+    @DisplayName("날짜, 시간, 테마 아이디로 예약 조회")
     @Test
     void findByDateAndTime() {
-        List<Reservation> reservations = reservationJdbcTemplateDAO.findByDateAndTime(
+        List<Reservation> reservations = reservationJdbcTemplateDAO.findByDateAndTimeAndThemeId(
                 LocalDate.of(2022, 8, 11),
-                LocalTime.of(13, 0)
+                LocalTime.of(13, 0),
+                1L
         );
 
         assertThat(reservations).hasSize(1);

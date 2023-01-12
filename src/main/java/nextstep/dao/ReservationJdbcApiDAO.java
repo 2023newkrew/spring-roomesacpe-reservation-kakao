@@ -45,11 +45,12 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
     }
 
     @Override
-    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
+    public List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
         try (Connection con = getConnection()) {
-            PreparedStatement ps = con.prepareStatement(FIND_BY_DATE_TIME_SQL);
+            PreparedStatement ps = con.prepareStatement(FIND_BY_DATE_TIME_THEME_SQL);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
+            ps.setLong(3, themeId);
 
             ResultSet rs = ps.executeQuery();
             List<Reservation> reservations = new ArrayList<>();

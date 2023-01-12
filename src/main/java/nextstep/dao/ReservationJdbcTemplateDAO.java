@@ -35,8 +35,8 @@ public class ReservationJdbcTemplateDAO implements ReservationDAO {
     }
 
     @Override
-    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.query(FIND_BY_DATE_TIME_SQL, RESERVATION_ROW_MAPPER, date, time);
+    public List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
+        return jdbcTemplate.query(FIND_BY_DATE_TIME_THEME_SQL, RESERVATION_ROW_MAPPER, date, time, themeId);
     }
 
     @Override

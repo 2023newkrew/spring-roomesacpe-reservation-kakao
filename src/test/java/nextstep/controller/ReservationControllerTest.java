@@ -1,7 +1,6 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.domain.Reservation;
 import nextstep.domain.ReservationSaveForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,22 +45,23 @@ class ReservationControllerTest {
                 .header("Location", matchesPattern("/reservations/\\d+"));
     }
 
-    @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
+    @DisplayName("예약 생성 시 같은 시간대, 같은 테마에 예약이 있다면 예약을 생성할 수 없음")
     @Test
     void reservationException() {
-        Reservation reservation = new Reservation(
+        ReservationSaveForm reservationSaveForm = new ReservationSaveForm(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0),
-                "name4"
+                "name3",
+                1L
         );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(reservationSaveForm)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body(is("동일한 시간대에 예약이 이미 존재합니다."));
+                .body(is("동일한 시간대, 동일한 테마에 예약이 이미 존재합니다."));
     }
 
     @DisplayName("예약 조회")

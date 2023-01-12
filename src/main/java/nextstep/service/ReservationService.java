@@ -17,9 +17,13 @@ public class ReservationService {
     }
 
     public Long saveReservation(ReservationSaveForm reservationSaveForm) {
-        List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(reservationSaveForm.getDate(), reservationSaveForm.getTime());
+        List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTimeAndThemeId(
+                reservationSaveForm.getDate(),
+                reservationSaveForm.getTime(),
+                reservationSaveForm.getThemeId()
+        );
         if (reservationsByDateAndTime.size() > 0) {
-            throw new DataConflictException("동일한 시간대에 예약이 이미 존재합니다.");
+            throw new DataConflictException("동일한 시간대, 동일한 테마에 예약이 이미 존재합니다.");
         }
 
         return reservationDAO.save(reservationSaveForm);

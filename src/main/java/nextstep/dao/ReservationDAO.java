@@ -19,7 +19,7 @@ public interface ReservationDAO {
             + " FROM reservation INNER JOIN theme AS t"
             + " ON reservation.theme_id = t.id";
     String FIND_BY_ID_SQL = FIND_ALL_SQL + " WHERE reservation.id = ?";
-    String FIND_BY_DATE_TIME_SQL = FIND_ALL_SQL + " WHERE date = ? AND time = ?";
+    String FIND_BY_DATE_TIME_THEME_SQL = FIND_ALL_SQL + " WHERE date = ? AND time = ? AND theme_id = ?";
     String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
     RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
@@ -39,7 +39,7 @@ public interface ReservationDAO {
 
     Reservation findById(Long id);
 
-    List<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
+    List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
 
     int deleteById(Long id);
 
