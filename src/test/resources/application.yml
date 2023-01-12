@@ -1,0 +1,15 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test4
+    username: sa
+    password:
+  sql:
+    init:
+      #      mode: always # 처음 실행할때는 always
+      mode: never # 이후에는 never로 변경
+      schema-locations: classpath:schema.sql
