@@ -12,7 +12,6 @@ import nextstep.repository.ReservationRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
