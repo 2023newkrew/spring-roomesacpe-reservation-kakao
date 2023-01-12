@@ -24,7 +24,6 @@ public class RoomEscapeApplication {
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
 
-
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
@@ -67,7 +66,6 @@ public class RoomEscapeApplication {
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
                 reservationDAO.deleteReservation(id);
                 System.out.println("예약이 취소되었습니다.");
