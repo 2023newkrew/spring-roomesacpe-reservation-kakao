@@ -2,7 +2,10 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import org.junit.jupiter.api.*;
+import nextstep.exception.ReservationException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static nextstep.exception.ErrorCode.RESERVATION_NOT_FOUND;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
 class JdbcReservationRepositoryTest {
 
-    @Autowired JdbcReservationRepository jdbcReservationRepository;
+    @Autowired
+    JdbcReservationRepository jdbcReservationRepository;
 
     static Theme theme;
 
@@ -28,101 +33,86 @@ class JdbcReservationRepositoryTest {
     }
 
     @AfterEach
-    void setUp() throws Exception {
+    void setUp() {
         jdbcReservationRepository.dropTable();
         jdbcReservationRepository.createTable();
     }
 
-    @DisplayName("예약을 저장할 수 있다.")
     @Test
-    void jdbcAddReservationTest() {
-        Reservation actual = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
-
-        assertDoesNotThrow(() -> jdbcReservationRepository.save(actual.getDate(),
-                actual.getTime(),
-                actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
-        ));
-    }
-
-    @DisplayName("중복 예약은 예약할 수 없다.")
-    @Test
-    void jdbcAddReservationExceptionTest() {
-        Reservation actual = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
-
-        assertDoesNotThrow(() -> jdbcReservationRepository.save(actual.getDate(),
-                actual.getTime(),
-                actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
-        ));
-
-        assertThatExceptionOfType(Exception.class).isThrownBy(() ->
-                jdbcReservationRepository.save(actual.getDate(),
-                        actual.getTime(),
-                        actual.getName(),
-                        new Theme(
-                                actual.getTheme().getName(),
-                                actual.getTheme().getDesc(),
-                                actual.getTheme().getPrice()))
-        );
-    }
-
-    @DisplayName("예약을 조회할 수 있다.")
-    @Test
-    void jdbcFindReservationTest() {
+    void 예약을_저장할_수_있다() {
         //given
-        Reservation actual = new Reservation(
+        Reservation reservation = new Reservation(
                 1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
 
-        Long saveId = jdbcReservationRepository.save(actual.getDate(),
-                actual.getTime(),
-                actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
+        //when, then
+        assertDoesNotThrow(() -> jdbcReservationRepository.save(reservation));
+    }
+
+    @Test
+    void 중복된_일시에_예약할_수_없다() {
+        //given
+        Reservation reservation = new Reservation(
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+
+        //when, then
+        assertThatExceptionOfType(Exception.class).isThrownBy(() -> {
+                    jdbcReservationRepository.save(reservation);
+                    jdbcReservationRepository.save(reservation);
+                }
         );
+    }
+
+    @Test
+    void 예약을_조회할_수_있다() {
+        //given
+        Reservation reservation = new Reservation(
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+
+        Long saveId = jdbcReservationRepository.save(reservation);
 
         //when
-        Reservation reservation2 = jdbcReservationRepository.findById(saveId);
+        Reservation foundReservation = jdbcReservationRepository.findById(saveId);
 
         //then
-        assertThat(actual.getName()).isEqualTo(reservation2.getName());
-        assertThat(actual.getDate()).isEqualTo(reservation2.getDate());
-        assertThat(actual.getTheme().getName()).isEqualTo(reservation2.getTheme().getName());
+        assertThat(reservation.getName()).isEqualTo(foundReservation.getName());
+        assertThat(reservation.getDate()).isEqualTo(foundReservation.getDate());
+        assertThat(reservation.getTheme().getName()).isEqualTo(foundReservation.getTheme().getName());
     }
 
-    @DisplayName("예약을 삭제할 수 있다.")
     @Test
-    void jdbcDeleteReservationTest() {
+    void 없는_예약을_조회할_수_없다() {
         //given
-        Reservation actual = new Reservation(
+        Long fakeId = 1L;
+
+        //when, then
+        ReservationException e = assertThrows(ReservationException.class,
+                () -> jdbcReservationRepository.findById(fakeId));
+        assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
+    }
+
+    @Test
+    void 예약을_취소할_수_있다() {
+        //given
+        Reservation reservation = new Reservation(
                 1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
 
-        Long saveId = jdbcReservationRepository.save(actual.getDate(),
-                actual.getTime(),
-                actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
-        );
+        Long saveId = jdbcReservationRepository.save(reservation);
 
-        assertDoesNotThrow(() ->
-                jdbcReservationRepository.deleteById(saveId)
-        );
+        //when, then
+        assertDoesNotThrow(() -> jdbcReservationRepository.deleteById(saveId));
+        assertThatThrownBy(() -> jdbcReservationRepository.findById(saveId))
+                .isInstanceOf(Exception.class);
+    }
 
-        assertThatExceptionOfType(Exception.class).isThrownBy(() ->
-                jdbcReservationRepository.findById(saveId)
-        );
+    @Test
+    void 없는_예약을_취소할_수_없다() {
+        //given
+        Long fakeId = 1L;
+
+        //when, then
+        ReservationException e = assertThrows(ReservationException.class,
+                () -> jdbcReservationRepository.deleteById(fakeId));
+        assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
     }
 
 }
