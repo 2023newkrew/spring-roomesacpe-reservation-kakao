@@ -1,6 +1,7 @@
 package nextstep.dao;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.ReservationSaveForm;
 import nextstep.domain.Theme;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,9 +14,12 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationDAO {
-    String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-    String FIND_BY_ID_SQL = "SELECT * FROM reservation WHERE id = ?";
-    String FIND_BY_DATE_TIME_SQL = "SELECT * FROM reservation WHERE date = ? AND time = ?";
+    String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
+    String FIND_ALL_SQL = "SELECT reservation.*, t.name AS theme_name, t.desc AS theme_desc, t.price AS theme_price"
+            + " FROM reservation INNER JOIN theme AS t"
+            + " ON reservation.theme_id = t.id";
+    String FIND_BY_ID_SQL = FIND_ALL_SQL + " WHERE reservation.id = ?";
+    String FIND_BY_DATE_TIME_SQL = FIND_ALL_SQL + " WHERE date = ? AND time = ?";
     String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
     RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
@@ -24,13 +28,14 @@ public interface ReservationDAO {
             resultSet.getTime("time").toLocalTime(),
             resultSet.getString("name"),
             new Theme(
+                    resultSet.getLong("theme_id"),
                     resultSet.getString("theme_name"),
                     resultSet.getString("theme_desc"),
                     resultSet.getInt("theme_price")
             )
     );
 
-    Long save(Reservation reservation);
+    Long save(ReservationSaveForm reservationSaveForm);
 
     Reservation findById(Long id);
 
@@ -38,15 +43,13 @@ public interface ReservationDAO {
 
     int deleteById(Long id);
 
-    static PreparedStatementCreator getInsertPreparedStatementCreator(Reservation reservation) {
+    static PreparedStatementCreator getInsertPreparedStatementCreator(ReservationSaveForm reservationSaveForm) {
         return connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setDate(1, Date.valueOf(reservationSaveForm.getDate()));
+            ps.setTime(2, Time.valueOf(reservationSaveForm.getTime()));
+            ps.setString(3, reservationSaveForm.getName());
+            ps.setLong(4, reservationSaveForm.getThemeId());
             return ps;
         };
     }

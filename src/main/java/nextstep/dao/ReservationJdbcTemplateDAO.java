@@ -1,6 +1,7 @@
 package nextstep.dao;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.ReservationSaveForm;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,9 +21,9 @@ public class ReservationJdbcTemplateDAO implements ReservationDAO {
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Long save(ReservationSaveForm reservationSaveForm) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservation);
+        PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservationSaveForm);
 
         jdbcTemplate.update(insertPreparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();

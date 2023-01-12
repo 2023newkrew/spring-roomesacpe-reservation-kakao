@@ -1,6 +1,7 @@
 package nextstep.dao;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.ReservationSaveForm;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
 import java.sql.*;
@@ -15,9 +16,9 @@ public class ReservationJdbcApiDAO implements ReservationDAO {
     private static final String DATASOURCE_PASSWORD = "";
 
     @Override
-    public Long save(Reservation reservation) {
+    public Long save(ReservationSaveForm reservationSaveForm) {
         try (Connection con = getConnection()) {
-            PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservation);
+            PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservationSaveForm);
             PreparedStatement ps = insertPreparedStatementCreator.createPreparedStatement(con);
 
             ps.executeUpdate();

@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import nextstep.dao.ReservationDAO;
 import nextstep.domain.Reservation;
+import nextstep.domain.ReservationSaveForm;
 import nextstep.domain.ReservationInfo;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationService.saveReservation(reservation);
+    public ResponseEntity createReservation(@RequestBody ReservationSaveForm reservationSaveForm) {
+        Long id = reservationService.saveReservation(reservationSaveForm);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 

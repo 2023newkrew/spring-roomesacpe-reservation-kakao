@@ -1,7 +1,7 @@
 package nextstep.dao;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.ReservationSaveForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,18 +28,14 @@ public class ReservationJdbcTemplateDAOTest {
 
     @DisplayName("예약 생성")
     @Test
-    void insert() {
-        Reservation reservation = new Reservation(
+    void save() {
+        ReservationSaveForm reservationSaveForm = new ReservationSaveForm(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0),
                 "name3",
-                new Theme(
-                        "워너고홈",
-                        "병맛 어드벤처 회사 코믹물",
-                        29000
-                )
+                1L
         );
-        Long id = reservationJdbcTemplateDAO.save(reservation);
+        Long id = reservationJdbcTemplateDAO.save(reservationSaveForm);
 
         assertThat(id).isNotNull();
     }
@@ -68,8 +64,8 @@ public class ReservationJdbcTemplateDAOTest {
     @DisplayName("예약 삭제")
     @Test
     void deleteById() {
-        int rowNum = reservationJdbcTemplateDAO.deleteById(1L);
+        int rowCount = reservationJdbcTemplateDAO.deleteById(1L);
 
-        assertThat(rowNum).isEqualTo(1);
+        assertThat(rowCount).isEqualTo(1);
     }
 }

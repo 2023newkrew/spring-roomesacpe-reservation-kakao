@@ -3,7 +3,7 @@ package nextstep;
 import nextstep.dao.ReservationDAO;
 import nextstep.dao.ReservationJdbcApiDAO;
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.ReservationSaveForm;
 import nextstep.exceptions.DataConflictException;
 
 import java.time.LocalDate;
@@ -19,16 +19,12 @@ public class ConsoleRoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        /* *************************************************** */
         ReservationDAO reservationDAO = new ReservationJdbcApiDAO();
-        /* *************************************************** */
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
+            System.out.println("- 예약하기: add {date},{time},{name},{theme_id} ex) add 2022-08-11,13:00,류성현,1");
             System.out.println("- 예약조회: find {id} ex) find 1");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
@@ -40,28 +36,27 @@ public class ConsoleRoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                Long themeId = Long.parseLong(params.split(",")[3]);
 
-                Reservation reservation = new Reservation(
+                ReservationSaveForm reservationSaveForm = new ReservationSaveForm(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        themeId
                 );
 
-                /* *************************************************** */
-                List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(reservation.getDate(), reservation.getTime());
+                List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(reservationSaveForm.getDate(), reservationSaveForm.getTime());
                 if (reservationsByDateAndTime.size() > 0) {
                     throw new DataConflictException("동일한 시간대에 예약이 이미 존재합니다.");
                 }
 
-                reservationDAO.save(reservation);
-                /* *************************************************** */
+                Long id = reservationDAO.save(reservationSaveForm);
 
                 System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
+                System.out.println("예약 번호: " + id);
+                System.out.println("예약 날짜: " + reservationSaveForm.getDate());
+                System.out.println("예약 시간: " + reservationSaveForm.getTime());
+                System.out.println("예약자 이름: " + reservationSaveForm.getName());
             }
 
             if (input.startsWith(FIND)) {
@@ -69,9 +64,7 @@ public class ConsoleRoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                /* *************************************************** */
                 Reservation reservation = reservationDAO.findById(id);
-                /* *************************************************** */
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -87,9 +80,7 @@ public class ConsoleRoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                /* *************************************************** */
                 if (reservationDAO.deleteById(id) > 0) {
-                    /* *************************************************** */
                     System.out.println("예약이 취소되었습니다.");
                 }
             }
