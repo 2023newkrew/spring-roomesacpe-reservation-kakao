@@ -2,8 +2,6 @@ package roomescape;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
@@ -20,8 +18,6 @@ public class RoomEscapeConsoleApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -42,17 +38,16 @@ public class RoomEscapeConsoleApplication {
                 String name = params.split(",")[2];
 
                 Reservation reservation = Reservation.builder()
-                        .id(++reservationIdIndex)
                         .date(LocalDate.parse(date))
                         .time(LocalTime.parse(time + ":00"))
                         .name(name)
                         .theme(theme)
                         .build();
 
-                RESERVATION_JDBC_REPOSITORY.save(reservation);
+                final Long newReservationId = RESERVATION_JDBC_REPOSITORY.save(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
+                System.out.println("예약 번호: " + newReservationId);
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
