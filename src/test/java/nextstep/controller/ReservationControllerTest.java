@@ -102,6 +102,15 @@ class ReservationControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("존재하지 않는 예약 취소 요청 시 404 코드 반환")
+    @Test
+    void deleteRequestFail() {
+        RestAssured.given().log().all()
+                .delete("/reservations/-1")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
     private int requestReserveAndGetGeneratedId() {
         String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
