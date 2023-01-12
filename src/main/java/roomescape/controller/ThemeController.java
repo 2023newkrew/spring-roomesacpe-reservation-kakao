@@ -27,18 +27,12 @@ public class ThemeController {
     @GetMapping("/theme/{id}")
     public ResponseEntity showTheme(@PathVariable Long id) {
         Theme theme = themeService.showTheme(id);
-        if (theme == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 테마는 없는 테마입니다.");
-        }
         return ResponseEntity.ok(theme);
     }
 
     @PutMapping("/theme")
     public ResponseEntity updateTheme(@RequestBody Theme theme) {
         Theme modifiedTheme = themeService.updateTheme(theme);
-        if (modifiedTheme == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 테마는 없는 테마입니다.");
-        }
         return ResponseEntity.ok(modifiedTheme);
     }
 

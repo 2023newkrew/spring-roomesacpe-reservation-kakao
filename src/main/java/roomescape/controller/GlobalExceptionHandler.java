@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity ReservationNotFoundException(NoSuchElementException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약은 없는 예약입니다.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("잘못된 접근입니다.");
     }
 
 }

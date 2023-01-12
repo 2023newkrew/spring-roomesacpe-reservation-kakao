@@ -6,6 +6,8 @@ import roomescape.repository.ThemeRepository;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeRequest;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional
 public class ThemeService {
@@ -29,11 +31,17 @@ public class ThemeService {
 
     public Theme showTheme(Long id) {
         return themeRepository.findThemeById(id);
+        if (theme == null) {
+            throw new NoSuchElementException("없는 테마 조회");
+        }
+        return themeAppRepository.findThemeById(id);
     }
 
     public Theme updateTheme(Theme theme) {
-        themeRepository.updateTheme(theme);
-        return themeRepository.findThemeById(theme.getId());
+        int count = themeAppRepository.updateTheme(theme);
+        if (count == 0) {
+            throw new NoSuchElementException("없는 테마 수정 요청");
+        }
     }
 
     public int deleteTheme(Long id) {
