@@ -47,7 +47,7 @@ public class ReservationDAO {
     public void addReservation(Reservation reservation) {
         try {
             PreparedStatement addPs = con.prepareStatement(INSERT_QUERY);
-            addPs.setInt(INDEX_ID, reservation.getTheme().getPrice());
+            addPs.setLong(INDEX_ID, reservation.getId());
             addPs.setDate(INDEX_DATE, Date.valueOf(reservation.getDate()));
             addPs.setTime(INDEX_TIME, Time.valueOf(reservation.getTime()));
             addPs.setString(INDEX_NAME, reservation.getName());
