@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
 import static web.reservation.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
-@WebMvcTest
+@WebMvcTest(ReservationController.class)
 @ExtendWith(MockitoExtension.class)
 public class ReservationControllerTest {
 
