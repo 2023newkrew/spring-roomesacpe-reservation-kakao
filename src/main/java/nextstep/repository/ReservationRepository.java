@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.dto.Reservation;
+import nextstep.dto.ReservationInput;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface ReservationRepository {
     List<Reservation> findAll();
 
     boolean delete(long id);
+
+    boolean duplicate(ReservationInput reservationInput);
 }

@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.dto.Reservation;
+import nextstep.dto.ReservationInput;
 import nextstep.dto.Theme;
 
 import java.sql.*;
@@ -106,5 +107,23 @@ public class ReservationConnRepository implements ReservationRepository {
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean duplicate(ReservationInput reservationInput) {
+        try {
+            String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setDate(1, Date.valueOf(reservationInput.getDate()));
+            ps.setTime(2, Time.valueOf(reservationInput.getTime()));
+
+            ResultSet resultSet = ps.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e){
+            throw new RuntimeException();
+        }
+        return false;
     }
 }

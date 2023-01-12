@@ -17,10 +17,8 @@ public class ReservationService {
     }
 
     public Reservation newReservation(ReservationInput reservationInput){
-        boolean isDuplicate = reservationRepository.findAll().stream()
-                .anyMatch(rsv -> rsv.getDate().equals(reservationInput.getDate()) && rsv.getTime().equals(reservationInput.getTime()));
 
-        if (isDuplicate) {
+        if (reservationRepository.duplicate(reservationInput)) {
             throw new IllegalArgumentException();
         }
 

@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.dto.Reservation;
+import nextstep.dto.ReservationInput;
 import nextstep.dto.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,6 +58,12 @@ public class ReservationJdbcRepository implements ReservationRepository{
     public boolean delete(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
+    }
+
+    @Override
+    public boolean duplicate(ReservationInput reservationInput) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, reservationInput.getDate(), reservationInput.getTime()) > 0;
     }
 
     private RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
