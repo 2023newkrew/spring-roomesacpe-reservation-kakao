@@ -1,21 +1,22 @@
-package console;
+package roomescape;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import web.domain.Reservation;
-import web.domain.Theme;
-import web.exception.NoSuchReservationException;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
+import roomescape.exception.NoSuchReservationException;
+import roomescape.repository.ReservationJdbcRepository;
 
-public class RoomEscapeApplication {
+public class RoomEscapeConsoleApplication {
 
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final ReservationDAO reservationDAO = new ReservationDAO();
+    private static final ReservationJdbcRepository RESERVATION_JDBC_REPOSITORY = new ReservationJdbcRepository();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -48,7 +49,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                reservationDAO.addReservation(reservation);
+                RESERVATION_JDBC_REPOSITORY.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -62,7 +63,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findById(id)
+                Reservation reservation = RESERVATION_JDBC_REPOSITORY.findById(id)
                         .orElseThrow(NoSuchReservationException::new);
 
                 System.out.println("예약 번호: " + reservation.getId());
@@ -79,7 +80,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                boolean isDeleted = reservationDAO.deleteById(id);
+                boolean isDeleted = RESERVATION_JDBC_REPOSITORY.deleteById(id);
                 if (isDeleted) {
                     System.out.println("정상적으로 삭제되었습니다.");
                 }

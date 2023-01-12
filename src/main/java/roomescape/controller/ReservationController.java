@@ -1,4 +1,4 @@
-package web.presentation;
+package roomescape.controller;
 
 import java.net.URI;
 import java.sql.Date;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import web.domain.Reservation;
-import web.domain.Theme;
-import web.dto.request.ReservationRequestDTO;
-import web.dto.response.ReservationResponseDTO;
-import web.exception.DuplicatedReservationException;
-import web.exception.NoSuchReservationException;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
+import roomescape.dto.request.ReservationRequestDTO;
+import roomescape.dto.response.ReservationResponseDTO;
+import roomescape.exception.DuplicatedReservationException;
+import roomescape.exception.NoSuchReservationException;
 
 @RestController
 @RequestMapping("/reservations")

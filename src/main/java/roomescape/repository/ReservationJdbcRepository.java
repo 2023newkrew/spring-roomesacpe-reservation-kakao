@@ -1,4 +1,4 @@
-package console;
+package roomescape.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Optional;
-import web.domain.Reservation;
-import web.domain.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
-public class ReservationDAO {
+public class ReservationJdbcRepository {
 
     public void addReservation(Reservation reservation) {
         // 드라이버 연결

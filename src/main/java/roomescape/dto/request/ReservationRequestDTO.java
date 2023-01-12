@@ -1,11 +1,11 @@
-package web.dto.request;
+package roomescape.dto.request;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import web.domain.Reservation;
-import web.domain.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
 @Getter
 @RequiredArgsConstructor

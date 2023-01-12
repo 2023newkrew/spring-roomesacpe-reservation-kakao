@@ -1,4 +1,4 @@
-package web.exception;
+package roomescape.exception;
 
 public class NoSuchReservationException extends RuntimeException {
 

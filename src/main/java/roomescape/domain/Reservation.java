@@ -1,4 +1,4 @@
-package web.domain;
+package roomescape.domain;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ public class Reservation {
     private Theme theme;
 
     @Builder
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, web.domain.Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, roomescape.domain.Theme theme) {
         this.id = id;
         this.date = date;
         this.time = time;
