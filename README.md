@@ -30,6 +30,7 @@
 ### API 설계
 
 - 예약 생성
+  - 날짜, 시간, 이름 정보로 예약을 생성
 
 ```
 POST /reservations HTTP/1.1
@@ -48,6 +49,7 @@ Location: /reservations/1
 ```
 
 - 예약 조회
+  - 해당하는 id의 예약 내용을 반환
 ```
 GET /reservations/{id} HTTP/1.1
 ```
@@ -67,9 +69,21 @@ Content-Type: application/json
 ```
 
 - 예약 삭제
+  - 해당하는 id의 예약을 삭제하고 예약 내용을 반환
 ```
 DELETE /reservations/{id} HTTP/1.1
 ```
 ```
-HTTP/1.1 204
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": {id},
+    "date": "2022-08-11",
+    "time": "13:00",
+    "name": "name",
+    "themeName": "워너고홈",
+    "themeDesc": "병맛 어드벤처 회사 코믹물",
+    "themePrice": 29000
+}
 ```
