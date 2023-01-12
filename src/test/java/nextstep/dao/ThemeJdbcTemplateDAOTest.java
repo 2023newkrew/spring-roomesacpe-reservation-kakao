@@ -32,6 +32,7 @@ class ThemeJdbcTemplateDAOTest {
         assertThat(id).isNotNull();
     }
 
+    @DisplayName("전체 테마 조회")
     @Test
     void findAll() {
         List<Theme> themes = themeJdbcTemplateDAO.findAll();
