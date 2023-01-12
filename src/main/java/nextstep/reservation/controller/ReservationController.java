@@ -18,14 +18,14 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
         Reservation createReservation;
         createReservation = reservationService.create(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + createReservation.getId())).build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<Reservation> clear() {
         reservationService.clear();
         return ResponseEntity.noContent().build();
