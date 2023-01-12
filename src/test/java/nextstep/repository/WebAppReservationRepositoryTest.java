@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DisplayName("Reservation Repository 테스트 (웹)")
 @Sql(scripts = {"classpath:recreate.sql"})
 public class WebAppReservationRepositoryTest {
     private final ReservationRepository webAppReservationRepository;
@@ -25,7 +26,7 @@ public class WebAppReservationRepositoryTest {
         this.webAppReservationRepository = webAppReservationRepository;
     }
 
-    @DisplayName("reservation test")
+    @DisplayName("예약 추가 삭제 조회 통합 테스트")
     @Test
     void webAppReservationRepo() {
 

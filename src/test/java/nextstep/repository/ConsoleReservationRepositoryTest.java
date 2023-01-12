@@ -15,10 +15,11 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.*;
 
 @Sql(scripts = {"classpath:recreate.sql"})
+@DisplayName("Reservation Repository 테스트 (콘솔)")
 public class ConsoleReservationRepositoryTest {
     private final ReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
 
-    @DisplayName("reservation test")
+    @DisplayName("예약 추가 삭제 조회 통합 테스트")
     @Test
     void consoleReservationRepo() {
         Reservation newReservation = new Reservation(
