@@ -1,14 +1,22 @@
-package nextstep;
+package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+
     private Long id;
     private LocalDate date;
     private LocalTime time;
     private String name;
     private Theme theme;
+
+    public Reservation() {
+    }
+
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this(null, date, time, name, theme);
+    }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
@@ -36,5 +44,9 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
+    }
+
+    public boolean isValid() {
+        return date != null && time != null && name != null;
     }
 }

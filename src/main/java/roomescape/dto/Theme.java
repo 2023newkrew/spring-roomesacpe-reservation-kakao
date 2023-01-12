@@ -1,6 +1,7 @@
-package nextstep;
+package roomescape.dto;
 
 public class Theme {
+
     private String name;
     private String desc;
     private Integer price;
