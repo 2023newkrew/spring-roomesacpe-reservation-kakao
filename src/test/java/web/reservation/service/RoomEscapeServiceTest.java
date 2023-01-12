@@ -1,4 +1,4 @@
-package web.service;
+package web.reservation.service;
 
 
 class RoomEscapeServiceTest {

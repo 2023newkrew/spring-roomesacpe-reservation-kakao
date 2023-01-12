@@ -1,4 +1,4 @@
-package web.repository;
+package web.reservation.repository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;

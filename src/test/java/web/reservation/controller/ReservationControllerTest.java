@@ -1,4 +1,4 @@
-package web.controller;
+package web.reservation.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
