@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:schema/theme_schema.sql", "classpath:data/theme_init.sql"})
+@Sql(scripts = {"classpath:schema/schema.sql", "classpath:data/init.sql"})
 public class ThemeTest {
     @LocalServerPort
     int port;
@@ -78,5 +78,15 @@ public class ThemeTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("이미 동일한 이름의 테마가 있습니다."));
+    }
+
+    @Test
+    void 존재하지_않는_테마_삭제_오류() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/100")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 테마입니다."));
     }
 }

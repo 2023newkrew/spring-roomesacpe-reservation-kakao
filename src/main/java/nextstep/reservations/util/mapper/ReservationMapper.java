@@ -16,12 +16,12 @@ public interface ReservationMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "theme", ignore = true)
     })
-    Reservation RequestDtoToReservation(ReservationRequestDto requestDto);
+    Reservation requestDtoToReservation(ReservationRequestDto requestDto);
 
     @Mappings({
             @Mapping(source = "theme.name", target = "themeName"),
             @Mapping(source = "theme.desc", target = "themeDesc"),
             @Mapping(source = "theme.price", target = "themePrice")
     })
-    ReservationResponseDto ReservationToResponseDto(Reservation reservation);
+    ReservationResponseDto reservationToResponseDto(Reservation reservation);
 }

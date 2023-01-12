@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
+import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -36,12 +38,20 @@ public class JdbcTemplateReservationRepository implements ReservationRepository{
     @Override
     public Reservation findById(Long id) {
         RowMapper<Reservation> rowMapper = getReservationRowMapper();
-        return jdbcTemplate.queryForObject(ReservationQuery.FIND_BY_ID.get(), rowMapper, id);
+
+        try {
+            return Objects.requireNonNull(jdbcTemplate.queryForObject(ReservationQuery.FIND_BY_ID.get(), rowMapper, id));
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new NoSuchReservationException();
+        }
     }
 
     @Override
     public void remove(final Long id) {
-        jdbcTemplate.update(ReservationQuery.REMOVE_BY_ID.get(), id);
+        int count = jdbcTemplate.update(ReservationQuery.REMOVE_BY_ID.get(), id);
+
+        if (count == 0) throw new NoSuchReservationException();
     }
 
     private static RowMapper<Reservation> getReservationRowMapper() {

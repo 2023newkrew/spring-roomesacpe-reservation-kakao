@@ -20,7 +20,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:schema/reservation_schema.sql", "classpath:data/reservation_init.sql"})
+@Sql(scripts = {"classpath:schema/schema.sql", "classpath:data/init.sql"})
 public class ReservationTest {
     @LocalServerPort
     int port;
@@ -115,5 +115,23 @@ public class ReservationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("예약할 수 없는 시간입니다."));
+    }
+
+    @Test
+    void 존재하지_않는_예약_조회_오류() {
+        RestAssured.given().log().all()
+                .when().get("/reservations/100")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 예약입니다."));
+    }
+
+    @Test
+    void 존재하지_않는_예약_삭제_오류() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/100")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 예약입니다."));
     }
 }

@@ -3,7 +3,9 @@ package nextstep.reservations.domain.repository.reservation;
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
+import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -14,7 +16,7 @@ import java.sql.SQLException;
 @Repository
 public class JdbcReservationRepository implements ReservationRepository{
     @Override
-    public Long add(Reservation reservation) {
+    public Long add(Reservation reservation) throws DuplicateKeyException, NoSuchReservationException {
         try (Connection connection = JdbcUtil.getConnection()) {
             PreparedStatement pstmt = getInsertOnePstmt(connection, reservation);
             pstmt.executeUpdate();
@@ -26,6 +28,7 @@ public class JdbcReservationRepository implements ReservationRepository{
         catch (SQLException e) {
             throw new DuplicateReservationException();
         }
+
         return null;
     }
 
@@ -51,9 +54,10 @@ public class JdbcReservationRepository implements ReservationRepository{
                                 .build())
                         .build();
             }
-            return null;
+            else {
+                throw new NoSuchReservationException();
+            }
         }
-
         catch (SQLException e) {
             throw new RuntimeException();
         }
@@ -66,7 +70,9 @@ public class JdbcReservationRepository implements ReservationRepository{
 
             pstmt = connection.prepareStatement(ReservationQuery.REMOVE_BY_ID.get());
             pstmt.setLong(1, id);
-            pstmt.executeUpdate();
+            int count = pstmt.executeUpdate();
+
+            if (count == 0) throw new NoSuchReservationException();
         }
         catch (SQLException e) {
             throw new RuntimeException();

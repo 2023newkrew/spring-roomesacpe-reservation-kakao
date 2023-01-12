@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-12T13:22:07+0900",
+    date = "2023-01-12T17:39:17+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 18.0.2 (Amazon.com Inc.)"
 )
 @Component
 public class ReservationMapperImpl implements ReservationMapper {
 
     @Override
-    public Reservation RequestDtoToReservation(ReservationRequestDto requestDto) {
+    public Reservation requestDtoToReservation(ReservationRequestDto requestDto) {
         if ( requestDto == null ) {
             return null;
         }
@@ -32,7 +32,7 @@ public class ReservationMapperImpl implements ReservationMapper {
     }
 
     @Override
-    public ReservationResponseDto ReservationToResponseDto(Reservation reservation) {
+    public ReservationResponseDto reservationToResponseDto(Reservation reservation) {
         if ( reservation == null ) {
             return null;
         }

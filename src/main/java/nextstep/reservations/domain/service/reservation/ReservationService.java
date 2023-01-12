@@ -5,8 +5,6 @@ import nextstep.reservations.domain.repository.reservation.ReservationRepository
 import nextstep.reservations.dto.reservation.ReservationRequestDto;
 import nextstep.reservations.dto.reservation.ReservationResponseDto;
 import nextstep.reservations.util.mapper.ReservationMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +15,11 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public Long addReservation(final ReservationRequestDto requestDto) {
-        return reservationRepository.add(reservationMapper.RequestDtoToReservation(requestDto));
+        return reservationRepository.add(reservationMapper.requestDtoToReservation(requestDto));
     }
 
     public ReservationResponseDto getReservation(final Long id) {
-        return reservationMapper.ReservationToResponseDto(reservationRepository.findById(id));
+        return reservationMapper.reservationToResponseDto(reservationRepository.findById(id));
     }
 
     public void deleteReservation(final Long id) {

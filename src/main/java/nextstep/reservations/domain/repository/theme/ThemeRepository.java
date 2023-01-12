@@ -3,6 +3,7 @@ package nextstep.reservations.domain.repository.theme;
 import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.theme.exception.DuplicateThemeException;
+import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class ThemeRepository {
             throw new DuplicateThemeException();
         }
 
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<Theme> findAll() {
@@ -48,7 +50,9 @@ public class ThemeRepository {
         return jdbcTemplate.query(ThemeQuery.FIND_ALL.get(), rowMapper);
     }
 
-    public void delete(final Long id) {
-        jdbcTemplate.update(ThemeQuery.REMOVE_BY_ID.get(), id);
+    public void remove(final Long id) {
+        int count = jdbcTemplate.update(ThemeQuery.REMOVE_BY_ID.get(), id);
+
+        if (count == 0) throw new NoSuchThemeException();
     }
 }
