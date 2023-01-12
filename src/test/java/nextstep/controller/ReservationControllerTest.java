@@ -64,7 +64,7 @@ class ReservationControllerTest {
     @DisplayName("예약 조회 성공 시 200 코드와 조회한 예약의 날짜, 시간, 예약자 이름 반환")
     @Test
     void findReservationRequest() {
-        int generatedId = requestSaveAndGetGeneratedId();
+        int generatedId = requestReserveAndGetGeneratedId();
 
         RestAssured.given().log().all()
                 .get("/reservations/" + generatedId)
@@ -78,7 +78,31 @@ class ReservationControllerTest {
                 .body("themePrice", is(DEFAULT_THEME.getPrice()));
     }
 
-    private int requestSaveAndGetGeneratedId() {
+    @DisplayName("예약 취소 성공 시 204 코드 반환")
+    @Test
+    void cancelReservationRequest() {
+        int generatedId = requestReserveAndGetGeneratedId();
+
+        RestAssured.given().log().all()
+                .delete("/reservations/" + generatedId)
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("중복 예약 요청 시 400 코드 반환")
+    @Test
+    void duplicateReserveRequest() {
+        requestReserveAndGetGeneratedId();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(testRequestDto)
+                .post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private int requestReserveAndGetGeneratedId() {
         String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(testRequestDto)
@@ -87,18 +111,6 @@ class ReservationControllerTest {
                 .extract().header("Location");
 
         String[] split = location.split("/");
-        int savedId = Integer.parseInt(split[split.length - 1]);
-        return savedId;
-    }
-
-    @DisplayName("예약 취소 성공 시 204 코드 반환")
-    @Test
-    void cancelReservationRequest() {
-        int generatedId = requestSaveAndGetGeneratedId();
-
-        RestAssured.given().log().all()
-                .delete("/reservations/" + generatedId)
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+        return Integer.parseInt(split[split.length - 1]);
     }
 }
