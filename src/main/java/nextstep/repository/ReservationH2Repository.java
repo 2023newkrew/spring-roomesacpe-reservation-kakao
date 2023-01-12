@@ -1,6 +1,6 @@
 package nextstep.repository;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.exception.DatabaseException;
 import nextstep.exception.ReservationNotFoundException;
 

@@ -1,6 +1,6 @@
 package nextstep.dto.response;
 
-import nextstep.Theme;
+import nextstep.domain.Theme;
 
 public class ThemeResponse {
     private Long id;

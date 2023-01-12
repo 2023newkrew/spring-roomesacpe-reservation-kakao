@@ -1,6 +1,6 @@
 package nextstep.dto.response;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 
 public class ReservationResponse {
 

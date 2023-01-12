@@ -1,6 +1,6 @@
 package nextstep.service;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.dto.response.ReservationResponse;

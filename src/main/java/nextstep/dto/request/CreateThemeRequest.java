@@ -1,6 +1,6 @@
 package nextstep.dto.request;
 
-import nextstep.Theme;
+import nextstep.domain.Theme;
 
 public class CreateThemeRequest {
     private final String name;

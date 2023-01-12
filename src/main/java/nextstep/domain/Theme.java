@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.domain;
 
 public class Theme {
     public static final Theme DEFAULT_THEME = Theme.of(0L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);

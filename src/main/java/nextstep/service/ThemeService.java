@@ -1,6 +1,6 @@
 package nextstep.service;
 
-import nextstep.Theme;
+import nextstep.domain.Theme;
 import nextstep.dto.request.CreateThemeRequest;
 import nextstep.dto.response.ThemeResponse;
 import nextstep.repository.ThemeRepository;
