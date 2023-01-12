@@ -14,13 +14,10 @@ import java.net.URI;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.IllformedLocaleException;
-import java.util.List;
 
 @RestController
 public class RoomEscapeController {
-    List<Reservation> reservationList = new ArrayList<>();
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,7 +28,6 @@ public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reserva
                 "select count(*) from RESERVATION where date = ? AND time = ?", Integer.class,
                 reservation.getDate(), reservation.getTime());
         if (duplicatedRow == 1) {
-            System.out.println("ASASASS");
             throw new IllformedLocaleException("TEST");
         }
         jdbcTemplate.update(

@@ -10,7 +10,7 @@ public class Reservation {
     private String name;
     private Theme theme;
 
-    public Reservation(){
+    public Reservation() {
 
     }
 
@@ -25,20 +25,16 @@ public class Reservation {
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
 
-    public LocalDate getDate(){
-        return date;
-    }
+    public LocalDate getDate() { return date; }
 
-    public LocalTime getTime(){
-        return time;
-    }
+    public LocalTime getTime() { return time; }
 
     public Theme getTheme() {
         return theme;
     }
-
 }
