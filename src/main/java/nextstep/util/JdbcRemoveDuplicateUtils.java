@@ -24,6 +24,7 @@ public class JdbcRemoveDuplicateUtils {
         String themeName = rs.getString("theme_name");
         String themeDesc = rs.getString("theme_desc");
         Integer themePrice = rs.getInt("theme_price");
-        return new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice));
+        // TODO : 테마 id 처리
+        return new Reservation(id, date, time, name, new Theme(null, themeName, themeDesc, themePrice));
     }
 }
