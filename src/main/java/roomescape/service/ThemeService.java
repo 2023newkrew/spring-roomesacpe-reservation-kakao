@@ -4,9 +4,7 @@ import org.springframework.stereotype.Service;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
 import roomescape.model.Theme;
-import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ThemeJdbcRepository;
 import roomescape.repository.ThemeRepository;
 
 import java.util.NoSuchElementException;
@@ -16,7 +14,7 @@ public class ThemeService {
     private final ThemeRepository themeRepository;
     private final ReservationRepository reservationRepository;
 
-    public ThemeService(ThemeJdbcRepository themeRepository, ReservationJdbcRepository reservationRepository) {
+    public ThemeService(ThemeRepository themeRepository, ReservationRepository reservationRepository) {
         this.themeRepository = themeRepository;
         this.reservationRepository = reservationRepository;
     }

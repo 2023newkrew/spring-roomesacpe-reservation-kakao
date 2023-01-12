@@ -2,37 +2,45 @@ package nextstep;
 
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ThemeRequestDto;
+import roomescape.dto.ThemeResponseDto;
 import roomescape.service.ReservationService;
+import roomescape.service.ThemeService;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
-    private static final String ADD = "add";
-    private static final String FIND = "find";
-    private static final String DELETE = "delete";
+    private static final String ADD_R = "add res";
+    private static final String FIND_R = "find res";
+    private static final String DELETE_R = "delete res";
+    private static final String ADD_T = "add theme";
+    private static final String FIND_T = "find theme";
+    private static final String DELETE_T = "delete theme";
     private static final String QUIT = "quit";
 
     public static void main(String[] args) {
         ReservationConsoleRepository reservationConsoleRepository = new ReservationConsoleRepository();
         ThemeConsoleRepository themeConsoleRepository = new ThemeConsoleRepository();
         ReservationService reservationService = new ReservationService(reservationConsoleRepository, themeConsoleRepository);
+        ThemeService themeService = new ThemeService(themeConsoleRepository, reservationConsoleRepository);
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name},{theme_id} ex) add 2022-08-11,13:00,류성현,1");
-            System.out.println("- 예약조회: find {id} ex) find 1");
-            System.out.println("- 예약취소: delete {id} ex) delete 1");
+            System.out.println("- 예약하기: add res {date},{time},{name},{theme_id} ex) add res 2022-08-11,13:00,류성현,1");
+            System.out.println("- 예약조회: find res {id} ex) find res 1");
+            System.out.println("- 예약취소: delete res {id} ex) delete res 1");
+            System.out.println("- 테마추가: add theme {name},{desc},{price} ex) add theme 테마테마,LoremIpsum,1000");
+            System.out.println("- 테마조회: find theme {id} ex) find theme 1");
+            System.out.println("- 테마삭제: delete theme {id} ex) delete theme 1");
             System.out.println("- 종료: quit");
 
             String input = scanner.nextLine();
-            if (input.startsWith(ADD)) {
-                String params = input.split(" ")[1];
+            if (input.startsWith(ADD_R)) {
+                String params = input.split(" ")[2];
 
                 LocalDate date = LocalDate.parse(params.split(",")[0]);
                 LocalTime time = LocalTime.parse(params.split(",")[1] + ":00");
@@ -50,8 +58,8 @@ public class RoomEscapeApplication {
                 System.out.println("예약자 이름: " + reservationRequestDto.getName());
             }
 
-            if (input.startsWith(FIND)) {
-                String params = input.split(" ")[1];
+            if (input.startsWith(FIND_R)) {
+                String params = input.split(" ")[2];
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
@@ -66,13 +74,53 @@ public class RoomEscapeApplication {
                 System.out.println("예약 테마 가격: " + reservationResponseDto.getThemePrice());
             }
 
-            if (input.startsWith(DELETE)) {
-                String params = input.split(" ")[1];
+            if (input.startsWith(DELETE_R)) {
+                String params = input.split(" ")[2];
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 reservationService.deleteReservation(id);
                 System.out.println("예약이 취소되었습니다.");
+            }
+
+            if (input.startsWith(ADD_T)) {
+                String params = input.split(" ")[2];
+
+                String name = params.split(",")[0];
+                String desc = params.split(",")[1];
+                Integer price = Integer.parseInt(params.split(",")[2]);
+
+                ThemeRequestDto themeRequestDto = new ThemeRequestDto(name, desc, price);
+
+                Long themeId = themeService.createTheme(themeRequestDto);
+
+                System.out.println("테마가 등록되었습니다.");
+                System.out.println("테마 번호: " + themeId);
+                System.out.println("테마 이름: " + themeRequestDto.getName());
+                System.out.println("테마 설명: " + themeRequestDto.getDesc());
+                System.out.println("테마 가격: " + themeRequestDto.getPrice());
+            }
+
+            if (input.startsWith(FIND_T)) {
+                String params = input.split(" ")[2];
+
+                Long id = Long.parseLong(params.split(",")[0]);
+
+                ThemeResponseDto themeResponseDto = themeService.findTheme(id);
+
+                System.out.println("테마 번호: " + themeResponseDto.getId());
+                System.out.println("테마 이름: " + themeResponseDto.getName());
+                System.out.println("테마 설명: " + themeResponseDto.getDesc());
+                System.out.println("테마 가격: " + themeResponseDto.getPrice());
+            }
+
+            if (input.startsWith(DELETE_T)) {
+                String params = input.split(" ")[2];
+
+                Long id = Long.parseLong(params.split(",")[0]);
+
+                themeService.deleteTheme(id);
+                System.out.println("테마가 삭제되었습니다.");
             }
 
             if (input.equals(QUIT)) {
