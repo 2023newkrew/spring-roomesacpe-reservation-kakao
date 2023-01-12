@@ -31,7 +31,7 @@ public class RoomEscapeConsoleApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        Theme theme = themeRepository.findOneByName("워너고홈").orElseThrow(() -> {
+        Theme theme = themeRepository.find(1L).orElseThrow(() -> {
             throw new RuntimeException("테마를 불러오는데 실패했습니다.");
         });
 

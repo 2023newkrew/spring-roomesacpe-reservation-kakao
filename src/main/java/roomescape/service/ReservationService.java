@@ -23,7 +23,7 @@ public class ReservationService {
 
     public Reservation createReservation(ReservationRequestDto reservationRequest) {
         Theme theme = themeRepository
-                .findOneByName("워너고홈")
+                .find(1L)
                 .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that Name");});
         if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
             throw new IllegalArgumentException("Already have reservation at that date & time");
