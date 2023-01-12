@@ -1,4 +1,4 @@
-package nextstep.web.repository;
+package nextstep.web.common.repository;
 
 public interface RoomEscapeRepository<T> {
 

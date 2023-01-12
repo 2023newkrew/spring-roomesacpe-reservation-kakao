@@ -1,10 +1,11 @@
-package nextstep.web.controller;
+package nextstep.web.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.web.dto.CreateReservationRequestDto;
-import nextstep.web.dto.CreateReservationResponseDto;
-import nextstep.web.dto.FindReservationResponseDto;
-import nextstep.web.service.ReservationService;
+import nextstep.web.common.controller.Response;
+import nextstep.web.reservation.dto.CreateReservationRequestDto;
+import nextstep.web.reservation.dto.CreateReservationResponseDto;
+import nextstep.web.reservation.dto.FindReservationResponseDto;
+import nextstep.web.reservation.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

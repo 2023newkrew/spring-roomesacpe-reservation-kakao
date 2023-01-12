@@ -1,10 +1,10 @@
-package nextstep.web.service;
+package nextstep.web.reservation.service;
 
 import nextstep.domain.Reservation;
-import nextstep.web.dto.CreateReservationRequestDto;
-import nextstep.web.dto.CreateReservationResponseDto;
-import nextstep.web.dto.FindReservationResponseDto;
-import nextstep.web.repository.RoomEscapeRepository;
+import nextstep.web.reservation.dto.CreateReservationRequestDto;
+import nextstep.web.reservation.dto.CreateReservationResponseDto;
+import nextstep.web.reservation.dto.FindReservationResponseDto;
+import nextstep.web.common.repository.RoomEscapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

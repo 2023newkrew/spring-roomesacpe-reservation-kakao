@@ -1,9 +1,9 @@
 package nextstep.web.controller;
 
 import io.restassured.RestAssured;
-import nextstep.web.dto.CreateReservationRequestDto;
-import nextstep.web.dto.CreateReservationResponseDto;
-import nextstep.web.service.ReservationService;
+import nextstep.web.reservation.dto.CreateReservationRequestDto;
+import nextstep.web.reservation.dto.CreateReservationResponseDto;
+import nextstep.web.reservation.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

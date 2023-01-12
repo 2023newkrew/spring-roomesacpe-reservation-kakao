@@ -1,4 +1,4 @@
-package nextstep.web.dto;
+package nextstep.web.reservation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

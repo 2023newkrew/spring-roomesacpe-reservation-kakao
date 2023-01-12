@@ -1,10 +1,10 @@
-package nextstep.web.service;
+package nextstep.web.theme.service;
 
 import nextstep.domain.Theme;
-import nextstep.web.dto.CreateThemeRequestDto;
-import nextstep.web.dto.CreateThemeResponseDto;
-import nextstep.web.dto.FindThemeResponseDto;
-import nextstep.web.repository.RoomEscapeRepository;
+import nextstep.web.theme.dto.CreateThemeRequestDto;
+import nextstep.web.theme.dto.CreateThemeResponseDto;
+import nextstep.web.theme.dto.FindThemeResponseDto;
+import nextstep.web.common.repository.RoomEscapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

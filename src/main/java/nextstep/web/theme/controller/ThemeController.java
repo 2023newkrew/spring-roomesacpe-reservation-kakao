@@ -1,8 +1,11 @@
-package nextstep.web.controller;
+package nextstep.web.theme.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.web.dto.*;
-import nextstep.web.service.ThemeService;
+import nextstep.web.common.controller.Response;
+import nextstep.web.theme.dto.CreateThemeRequestDto;
+import nextstep.web.theme.dto.CreateThemeResponseDto;
+import nextstep.web.theme.dto.FindThemeResponseDto;
+import nextstep.web.theme.service.ThemeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

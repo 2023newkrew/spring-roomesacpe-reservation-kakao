@@ -1,9 +1,10 @@
-package nextstep.web.repository;
+package nextstep.web.theme.repository;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.domain.Theme;
-import nextstep.web.exception.BusinessException;
-import nextstep.web.exception.CommonErrorCode;
+import nextstep.web.common.exception.BusinessException;
+import nextstep.web.common.exception.CommonErrorCode;
+import nextstep.web.common.repository.RoomEscapeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

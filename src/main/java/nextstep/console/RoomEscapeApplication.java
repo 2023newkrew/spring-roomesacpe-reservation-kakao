@@ -1,8 +1,8 @@
 package nextstep.console;
 
 import nextstep.domain.Reservation;
-import nextstep.web.repository.ReservationDao;
-import nextstep.web.repository.RoomEscapeRepository;
+import nextstep.web.reservation.repository.ReservationDao;
+import nextstep.web.common.repository.RoomEscapeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 

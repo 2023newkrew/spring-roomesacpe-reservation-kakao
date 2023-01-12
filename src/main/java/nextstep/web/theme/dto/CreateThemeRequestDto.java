@@ -1,4 +1,4 @@
-package nextstep.web.dto;
+package nextstep.web.theme.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

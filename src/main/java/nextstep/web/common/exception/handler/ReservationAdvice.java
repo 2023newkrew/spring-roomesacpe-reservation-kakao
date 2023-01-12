@@ -1,9 +1,9 @@
-package nextstep.web.exception.handler;
+package nextstep.web.common.exception.handler;
 
-import nextstep.web.exception.BusinessException;
-import nextstep.web.exception.CommonErrorCode;
-import nextstep.web.exception.ErrorCode;
-import nextstep.web.exception.ErrorResponse;
+import nextstep.web.common.exception.BusinessException;
+import nextstep.web.common.exception.CommonErrorCode;
+import nextstep.web.common.exception.ErrorCode;
+import nextstep.web.common.exception.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

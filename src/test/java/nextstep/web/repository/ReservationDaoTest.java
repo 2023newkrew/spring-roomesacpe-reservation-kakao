@@ -1,7 +1,8 @@
 package nextstep.web.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.web.exception.BusinessException;
+import nextstep.web.common.exception.BusinessException;
+import nextstep.web.reservation.repository.ReservationDao;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,9 @@
 package nextstep.web.service;
 
 import nextstep.domain.Reservation;
-import nextstep.web.dto.CreateReservationRequestDto;
-import nextstep.web.repository.RoomEscapeRepository;
+import nextstep.web.reservation.dto.CreateReservationRequestDto;
+import nextstep.web.common.repository.RoomEscapeRepository;
+import nextstep.web.reservation.service.ReservationService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

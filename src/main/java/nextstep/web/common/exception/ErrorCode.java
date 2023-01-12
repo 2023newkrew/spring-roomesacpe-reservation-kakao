@@ -1,4 +1,4 @@
-package nextstep.web.exception;
+package nextstep.web.common.exception;
 
 import org.springframework.http.HttpStatus;
 
