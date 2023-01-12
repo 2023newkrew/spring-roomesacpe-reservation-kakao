@@ -2,12 +2,16 @@ package reservation.respository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
@@ -18,27 +22,23 @@ import java.util.Objects;
 @Repository
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("RESERVATION")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public Long save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        this.jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setLong(4, reservation.getThemeId());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("date", reservation.getDate())
+                .addValue("time", reservation.getTime())
+                .addValue("name", reservation.getName())
+                .addValue("theme_id", reservation.getThemeId());
+        return this.jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Override
