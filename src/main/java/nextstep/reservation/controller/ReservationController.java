@@ -4,12 +4,11 @@ import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.exception.CreateReservationException;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
