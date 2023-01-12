@@ -10,7 +10,7 @@ import nextstep.dto.ReservationResponseDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.entity.ThemeConstants;
-import nextstep.repository.ReservationJDBCRepositoryImpl;
+import nextstep.repository.ReservationJdbcRepositoryImpl;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.ReservationService;
 import nextstep.service.ReservationServiceImpl;
@@ -25,7 +25,7 @@ public class RoomEscapeApplication {
     private static final String QUIT = "quit";
 
     private static final ConnectionHandler connectionHandler = new ConnectionHandler();
-    private static final ReservationRepository reservationJDBCRepository = new ReservationJDBCRepositoryImpl(
+    private static final ReservationRepository reservationJDBCRepository = new ReservationJdbcRepositoryImpl(
             connectionHandler);
     private static final ReservationService reservationService = new ReservationServiceImpl(reservationJDBCRepository);
 
@@ -74,7 +74,7 @@ public class RoomEscapeApplication {
                 System.out.println("예약 시간: " + reservationResponseDTO.getTime());
                 System.out.println("예약자 이름: " + reservationResponseDTO.getName());
                 System.out.println("예약 테마 이름: " + reservationResponseDTO.getThemeName());
-                System.out.println("예약 테마 설명: " + reservationResponseDTO.getThemeDesc());
+                System.out.println("예약 테마 설명: " + reservationResponseDTO.getThemeDescription());
                 System.out.println("예약 테마 가격: " + reservationResponseDTO.getThemePrice());
             }
 

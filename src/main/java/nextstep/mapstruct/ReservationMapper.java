@@ -14,7 +14,7 @@ public interface ReservationMapper {
 
     @Mappings({
             @Mapping(target = "themeName", source = "theme.name"),
-            @Mapping(target = "themeDesc", source = "theme.desc"),
+            @Mapping(target = "themeDescription", source = "theme.description"),
             @Mapping(target = "themePrice", source = "theme.price")
     })
     ReservationResponseDTO reservationToResponseDTO(Reservation reservation);

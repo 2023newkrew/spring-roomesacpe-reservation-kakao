@@ -9,16 +9,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-@ComponentScan
 public class ConnectionHandler {
 
     @Value("${spring.datasource.hikari.jdbc-url}")
-    private String CONNECTION_URL;
+    private String CONNECTION_URL = "jdbc:h2:tcp://localhost/~/test";
     @Value("${spring.datasource.hikari.username}")
-    private String USERNAME;
+    private String USERNAME = "sa";
 
     @Value("${spring.datasource.hikari.password}")
-    private String PASSWORD;
+    private String PASSWORD ="";
     private final Connection connection;
 
     public ConnectionHandler() {

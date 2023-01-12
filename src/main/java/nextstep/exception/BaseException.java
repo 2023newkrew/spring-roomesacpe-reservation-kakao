@@ -35,15 +35,8 @@ public class BaseException extends RuntimeException {
         return errorMessages;
     }
 
-    public void setErrorMessages(List<String> errorMessages) {
-        this.errorMessages = errorMessages;
-    }
-
     public HttpStatus getErrorStatus() {
         return errorStatus;
     }
 
-    public void setErrorStatus(HttpStatus errorStatus) {
-        this.errorStatus = errorStatus;
-    }
 }

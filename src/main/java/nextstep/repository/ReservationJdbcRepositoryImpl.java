@@ -16,14 +16,68 @@ import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 
-public class ReservationJDBCRepositoryImpl implements ReservationRepository {
+public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     private final ConnectionHandler connectionHandler;
 
-    public ReservationJDBCRepositoryImpl(ConnectionHandler connectionHandler) {
+    public ReservationJdbcRepositoryImpl(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
     }
 
+    @Override
+    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
+        Reservation reservation = insertReservation(reservationRequestDTO);
+        return reservation;
+    }
+
+    @Override
+    public boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException {
+        String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
+        PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+        ps.setDate(1, Date.valueOf(date));
+        ps.setTime(2, Time.valueOf(time));
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
+    }
+
+    @Override
+    public Reservation findById(Long id) {
+        Reservation reservation = findReservationById(id);
+        return reservation;
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return deleteReservationById(id);
+    }
+
+    private Reservation findReservationById(Long id) {
+        Reservation reservation = null;
+        try {
+            String sql = "SELECT * FROM RESERVATION WHERE ID = ?";
+            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                reservation = getReservation(rs);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return reservation;
+    }
+
+    private int deleteReservationById(Long id) {
+        try {
+            String sql = "DELETE FROM RESERVATION WHERE ID = ?";
+            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps.setLong(1, id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private Reservation insertReservation(ReservationRequestDTO requestDTO) {
         Reservation reservation = null;
@@ -46,63 +100,6 @@ public class ReservationJDBCRepositoryImpl implements ReservationRepository {
             throw new RuntimeException(e);
         }
         return reservation;
-    }
-
-
-    @Override
-    public boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException {
-        String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
-        PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-        ps.setDate(1, Date.valueOf(date));
-        ps.setTime(2, Time.valueOf(time));
-        ResultSet rs = ps.executeQuery();
-        return rs.next();
-
-    }
-
-    @Override
-    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
-        Reservation reservation = insertReservation(reservationRequestDTO);
-        return reservation;
-    }
-
-    public Reservation findById(Long id) {
-        Reservation reservation = findReservationById(id);
-        return reservation;
-    }
-
-
-    private Reservation findReservationById(Long id) {
-        Reservation reservation = null;
-        try {
-            String sql = "SELECT * FROM RESERVATION WHERE ID = ?";
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-            ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                reservation = getReservation(rs);
-
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return reservation;
-    }
-
-    @Override
-    public int deleteById(Long id) {
-        return deleteReservationById(id);
-    }
-
-    private int deleteReservationById(Long id) {
-        try {
-            String sql = "DELETE FROM RESERVATION WHERE ID = ?";
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-            ps.setLong(1, id);
-            return ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private Reservation getReservation(ResultSet rs) throws SQLException {
