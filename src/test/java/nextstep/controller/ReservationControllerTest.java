@@ -111,6 +111,15 @@ class ReservationControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
+    @DisplayName("예약 조회 실패 시 404 코드 반환")
+    @Test
+    void findRequestFail() {
+        RestAssured.given().log().all()
+                .get("/reservations/-1")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
     private int requestReserveAndGetGeneratedId() {
         String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
