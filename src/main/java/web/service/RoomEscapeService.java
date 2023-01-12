@@ -8,6 +8,8 @@ import web.entity.Reservation;
 import web.exception.ReservationNotFoundException;
 import web.repository.ReservationRepository;
 
+import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class RoomEscapeService {
@@ -20,14 +22,14 @@ public class RoomEscapeService {
 
     public ReservationResponseDto findReservationById(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
+                .orElseThrow(() -> new ReservationNotFoundException(RESERVATION_NOT_FOUND));
         return ReservationResponseDto.of(reservationId, reservation);
     }
 
     public void cancelReservation(long reservationId) {
         long deleteReservationCount = reservationRepository.delete(reservationId);
         if (deleteReservationCount == 0) {
-            throw new ReservationNotFoundException(reservationId);
+            throw new ReservationNotFoundException(RESERVATION_NOT_FOUND);
         }
     }
 }

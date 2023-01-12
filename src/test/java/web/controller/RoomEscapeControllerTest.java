@@ -30,6 +30,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
+import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 @WebMvcTest
 @ExtendWith(MockitoExtension.class)
@@ -63,7 +65,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void should_responseConflict_when_duplicateReservation() throws Exception {
-            when(roomEscapeService.reservation(any())).thenThrow(ReservationDuplicateException.class);
+            when(roomEscapeService.reservation(any())).thenThrow(new ReservationDuplicateException(RESERVATION_DUPLICATE));
             String content = getValidContent();
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -190,7 +192,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void should_responseNotFound_when_notExistId() throws Exception {
-            when(roomEscapeService.findReservationById(anyLong())).thenThrow(ReservationNotFoundException.class);
+            when(roomEscapeService.findReservationById(anyLong())).thenThrow(new ReservationNotFoundException(RESERVATION_NOT_FOUND));
             mockMvc.perform(get("/reservations/-1")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
@@ -209,7 +211,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void shoud_responseNotFound_then_notExistId() throws Exception {
-            doThrow(ReservationNotFoundException.class).when(roomEscapeService).cancelReservation(anyLong());
+            doThrow(new ReservationNotFoundException(RESERVATION_NOT_FOUND)).when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
                     .andExpect(status().isNotFound());
         }

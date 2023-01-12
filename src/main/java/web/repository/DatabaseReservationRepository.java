@@ -15,6 +15,8 @@ import java.sql.Time;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
+
 @Repository
 public class DatabaseReservationRepository implements ReservationRepository {
 
@@ -27,7 +29,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     @Override
     public long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
-            throw new ReservationDuplicateException();
+            throw new ReservationDuplicateException(RESERVATION_DUPLICATE);
         }
         String sql = "INSERT INTO RESERVATION (date, time, name) VALUES (?, ?, ?);";
         try {

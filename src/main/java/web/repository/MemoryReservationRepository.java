@@ -6,6 +6,8 @@ import web.exception.ReservationDuplicateException;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
+
 public class MemoryReservationRepository implements ReservationRepository {
 
     static final HashMap<Long, Reservation> reservations = new HashMap<>();
@@ -14,7 +16,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
-            throw new ReservationDuplicateException();
+            throw new ReservationDuplicateException(RESERVATION_DUPLICATE);
         }
         reservations.put(++createdId, reservation);
         return createdId;

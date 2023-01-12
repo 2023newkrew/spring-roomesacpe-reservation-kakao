@@ -1,8 +1,17 @@
 package web.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
 public class ReservationDuplicateException extends RuntimeException {
 
-    public ReservationDuplicateException() {
-        super("요청하신 시간대에 이미 예약이 있습니다.");
+    private final String message;
+    private final HttpStatus httpStatus;
+
+    public ReservationDuplicateException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.message = errorCode.getMessage();
+        this.httpStatus = errorCode.getHttpStatus();
     }
 }
