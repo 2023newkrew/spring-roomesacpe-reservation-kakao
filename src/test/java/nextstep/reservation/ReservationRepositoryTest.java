@@ -5,12 +5,12 @@ import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
+@Transactional
 class ReservationRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
@@ -32,11 +33,6 @@ class ReservationRepositoryTest {
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", theme);
         this.reservationDuplicated = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", theme);
-    }
-
-    @AfterEach
-    void tearDown() {
-        reservationRepository.clear();
     }
 
     @Test
