@@ -3,6 +3,7 @@ package nextstep.service;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.NotFoundReservationException;
 import nextstep.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public Reservation findReservation(Long id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundReservationException("예약이 존재하지 않습니다 - id:" + id));
     }
 
     public boolean cancelReservation(Long id) {

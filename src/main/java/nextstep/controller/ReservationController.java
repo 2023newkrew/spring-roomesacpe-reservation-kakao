@@ -2,13 +2,13 @@ package nextstep.controller;
 
 import nextstep.domain.Reservation;
 import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.NotFoundReservationException;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/reservations")
@@ -49,7 +49,7 @@ public class ReservationController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Object> handle(NoSuchElementException exception) {
+    public ResponseEntity<Object> handle(NotFoundReservationException exception) {
         return ResponseEntity.notFound().build();
     }
 }

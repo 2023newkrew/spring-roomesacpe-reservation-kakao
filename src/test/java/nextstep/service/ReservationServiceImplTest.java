@@ -3,16 +3,14 @@ package nextstep.service;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.DuplicateReservationException;
+import nextstep.exception.NotFoundReservationException;
 import nextstep.repository.ReservationMemoryRepository;
-import nextstep.service.ReservationService;
-import nextstep.service.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -92,7 +90,7 @@ class ReservationServiceImplTest {
     @Test
     void findReservation_fail() {
         assertThatThrownBy(() -> reservationService.findReservation(1L))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(NotFoundReservationException.class);
     }
 
     @DisplayName("예약 취소에 성공하면 true 반환")
