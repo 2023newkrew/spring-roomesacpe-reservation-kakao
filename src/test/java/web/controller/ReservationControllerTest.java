@@ -135,7 +135,8 @@ public class ReservationControllerTest {
             return "{\n" +
                     "\t\"date\": \"" + date + "\",\n" +
                     "\t\"time\": \"13:00\",\n" +
-                    "\t\"name\": \"name\"\n" +
+                    "\t\"name\": \"name\"\n," +
+                    "\t\"themeId\": 0\n" +
                     "}";
         }
 
@@ -144,7 +145,8 @@ public class ReservationControllerTest {
             return "{\n" +
                     "\t\"date\": \"" + today + "\",\n" +
                     "\t\"time\": \"" + time + "\",\n" +
-                    "\t\"name\": \"name\"\n" +
+                    "\t\"name\": \"name\"\n," +
+                    "\t\"themeId\": 0\n" +
                     "}";
         }
 
@@ -153,7 +155,8 @@ public class ReservationControllerTest {
             return "{\n" +
                     "\t\"date\": \"" + today + "\",\n" +
                     "\t\"time\": \"13:00\",\n" +
-                    "\t\"name\": \"" + name + "\"\n" +
+                    "\t\"name\": \"" + name + "\",\n" +
+                    "\t\"themeId\": 0\n" +
                     "}";
         }
 
@@ -162,7 +165,8 @@ public class ReservationControllerTest {
             return "{\n" +
                     "\t\"date\": \"" + today + "\",\n" +
                     "\t\"time\": \"13:00\",\n" +
-                    "\t\"name\": \"name\"\n" +
+                    "\t\"name\": \"name\",\n" +
+                    "\t\"themeId\": 0\n" +
                     "}";
         }
     }
@@ -178,7 +182,8 @@ public class ReservationControllerTest {
                             1L,
                             LocalDate.of(2022, 8, 11),
                             LocalTime.of(13, 0),
-                            "name"));
+                            "name",
+                            0L));
             when(reservationService.findReservationById(anyLong())).thenReturn(responseDto);
             mockMvc.perform(get("/reservations/1"))
                     .andExpect(status().isOk())
