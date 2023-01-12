@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @Repository
@@ -17,15 +19,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private final ReservationDAO dao;
 
     @Override
-    public Long insertIfNotExistsDateTime(Reservation reservation) {
-        Date date = Date.valueOf(reservation.getDate());
-        Time time = Time.valueOf(reservation.getTime());
-        if (dao.existsByDateAndTime(date, time)) {
-            throw new RuntimeException("해당 날짜에는 이미 예약이 존재합니다.");
-        }
-        ReservationDTO dto = ReservationMapper.INSTANCE.toDto(reservation);
+    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+        return dao.existsByDateAndTime(Date.valueOf(date), Time.valueOf(time));
+    }
 
-        return dao.insert(dto);
+    @Override
+    public Long insert(Reservation reservation) {
+        return dao.insert(ReservationMapper.INSTANCE.toDto(reservation));
     }
 
     @Override

@@ -1,115 +1,102 @@
 package nextstep.reservation.dao;
 
+import lombok.AllArgsConstructor;
+import nextstep.etc.util.ResultSetParser;
+import nextstep.etc.util.StatementCreator;
 import nextstep.reservation.dto.ReservationDTO;
-import nextstep.reservation.dto.ThemeDTO;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.*;
 
+@AllArgsConstructor
 public class SimpleReservationDAO implements ReservationDAO {
 
-    private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
-            (resultSet, rowNum) -> {
-                if (!resultSet.next()) {
-                    return null;
-                }
-                ThemeDTO theme = new ThemeDTO(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                );
-                return new ReservationDTO(
-                        resultSet.getLong("id"),
-                        resultSet.getDate("date")
-                                .toLocalDate(),
-                        resultSet.getTime("time")
-                                .toLocalTime(),
-                        resultSet.getString("name"),
-                        theme
-                );
-            };
+    private static final String URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
 
-    @Override
-    public Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException {
-        try (Connection connection = getConnection()) {
-            var ps = connection.prepareStatement(SELECT_BY_DATE_AND_TIME_SQL);
-            ps.setDate(1, date);
-            ps.setTime(2, time);
-            var rs = ps.executeQuery();
-            rs.next();
-            return rs.getInt(1) > 0;
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    private static final String USER = "sa";
+
+    private static final String PASSWORD = "";
+
+    @FunctionalInterface
+    private interface QueryFunction<R> {
+        R query(Connection connection) throws SQLException;
     }
 
     @Override
-    public Long insert(ReservationDTO dto) {
-        try (Connection connection = getConnection()) {
-            var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
-            Date date = Date.valueOf(dto.getDate());
-            Time time = Time.valueOf(dto.getTime());
-            ThemeDTO theme = dto.getTheme();
-            ps.setDate(1, date);
-            ps.setTime(2, time);
-            ps.setString(3, dto.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
-            ps.executeUpdate();
-            var rs = ps.getGeneratedKeys();
-            rs.next();
-            return rs.getLong(1);
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    public Boolean existsByDateAndTime(Date date, Time time) {
+        return tryQuery(getExistsByDateAndTimeQuery(date, time));
     }
 
-    @Override
-    public ReservationDTO getById(Long id) {
+    private <R> R tryQuery(QueryFunction<R> func) {
         try (Connection connection = getConnection()) {
-            var ps = connection.prepareStatement(SELECT_BY_ID_SQL);
-            ps.setLong(1, id);
-            var rs = ps.executeQuery();
-            return RESERVATION_DTO_ROW_MAPPER.mapRow(rs, 0);
+            return func.query(connection);
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Boolean deleteById(Long id) {
-        try (Connection connection = getConnection()) {
-            var ps = connection.prepareStatement(DELETE_BY_ID_SQL);
-            ps.setLong(1, id);
-            var rs = ps.executeUpdate();
-            return rs == 1;
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
     }
 
     private Connection getConnection() throws SQLException {
         try {
-            return DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             throw e;
         }
+    }
+
+    private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Date date, Time time) {
+        return connection -> {
+            var ps = StatementCreator.createSelectByDateAndTimeStatement(connection, date, time);
+            ps.executeUpdate();
+            var rs = ps.getGeneratedKeys();
+            rs.next();
+            return ResultSetParser.existsRow(rs);
+        };
+    }
+
+    @Override
+    public Long insert(ReservationDTO dto) {
+        return tryQuery(getInsertQuery(dto));
+    }
+
+    private QueryFunction<Long> getInsertQuery(ReservationDTO dto) {
+        return connection -> {
+            var ps = StatementCreator.createInsertStatement(connection, dto);
+            ps.executeUpdate();
+            var rs = ps.getGeneratedKeys();
+            rs.next();
+            return rs.getLong(1);
+        };
+    }
+
+    @Override
+    public ReservationDTO getById(Long id) {
+        return tryQuery(getSelectByIdQuery(id));
+    }
+
+    private QueryFunction<ReservationDTO> getSelectByIdQuery(Long id) {
+        return connection -> {
+            var ps = StatementCreator.createSelectByIdStatement(connection, id);
+            var rs = ps.executeQuery();
+            rs.next();
+            return ResultSetParser.parseReservationDto(rs);
+        };
+    }
+
+    @Override
+    public Boolean deleteById(Long id) {
+        return tryQuery(getDeleteByIdQuery(id));
+    }
+
+    private QueryFunction<Boolean> getDeleteByIdQuery(Long id) {
+        return connection -> {
+            var ps = StatementCreator.createDeleteByIdStatement(connection, id);
+            var rs = ps.executeUpdate();
+            return rs > 0;
+        };
     }
 }

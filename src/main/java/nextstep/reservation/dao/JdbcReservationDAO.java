@@ -1,87 +1,69 @@
 package nextstep.reservation.dao;
 
 import lombok.AllArgsConstructor;
+import nextstep.etc.util.ResultSetParser;
+import nextstep.etc.util.StatementCreator;
 import nextstep.reservation.dto.ReservationDTO;
-import nextstep.reservation.dto.ThemeDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
-import java.util.Objects;
+import java.sql.Date;
+import java.sql.Time;
 
 @AllArgsConstructor
 @Component
 public class JdbcReservationDAO implements ReservationDAO {
 
-    private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
-            (resultSet, rowNum) -> {
-                ThemeDTO theme = new ThemeDTO(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                );
-                return new ReservationDTO(
-                        resultSet.getLong("id"),
-                        resultSet.getDate("date")
-                                .toLocalDate(),
-                        resultSet.getTime("time")
-                                .toLocalTime(),
-                        resultSet.getString("name"),
-                        theme
-                );
-            };
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException {
-        return jdbcTemplate.queryForObject(SELECT_BY_DATE_AND_TIME_SQL, (r, ignore) -> r.getInt(1) > 0, date, time);
+    public Boolean existsByDateAndTime(Date date, Time time) {
+        return jdbcTemplate.query(
+                getExistsByDateAndTimeStatementCreator(date, time),
+                ResultSetParser::existsRow
+        );
+    }
+
+    private static PreparedStatementCreator getExistsByDateAndTimeStatementCreator(Date date, Time time) {
+        return con -> StatementCreator.createSelectByDateAndTimeStatement(con, date, time);
     }
 
     @Override
     public Long insert(ReservationDTO dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(getPreparedStatementCreator(dto), keyHolder);
-        Number key = keyHolder.getKey();
+        jdbcTemplate.update(getInsertStatementCreator(dto), keyHolder);
 
-        return Objects.requireNonNull(key)
-                .longValue();
+        return keyHolder.getKeyAs(Long.class);
     }
 
-    private PreparedStatementCreator getPreparedStatementCreator(ReservationDTO dto) {
-        return connection -> getPrepareStatement(connection, dto);
-    }
-
-    private PreparedStatement getPrepareStatement(Connection connection, ReservationDTO dto) throws SQLException {
-        var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
-        Date date = Date.valueOf(dto.getDate());
-        Time time = Time.valueOf(dto.getTime());
-        ThemeDTO theme = dto.getTheme();
-        ps.setDate(1, date);
-        ps.setTime(2, time);
-        ps.setString(3, dto.getName());
-        ps.setString(4, theme.getName());
-        ps.setString(5, theme.getDesc());
-        ps.setInt(6, theme.getPrice());
-        return ps;
+    private static PreparedStatementCreator getInsertStatementCreator(ReservationDTO dto) {
+        return con -> StatementCreator.createInsertStatement(con, dto);
     }
 
     @Override
     public ReservationDTO getById(Long id) {
-        try {
-            return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, RESERVATION_DTO_ROW_MAPPER, id);
-        }
-        catch (Exception ignore) {
-            return null;
-        }
+        return jdbcTemplate.query(
+                getSelectByIdStatementCreator(id),
+                ResultSetParser::parseReservationDto
+        );
+    }
+
+    private static PreparedStatementCreator getSelectByIdStatementCreator(Long id) {
+        return con -> StatementCreator.createSelectByIdStatement(con, id);
     }
 
     @Override
     public Boolean deleteById(Long id) {
-        return jdbcTemplate.queryForObject(DELETE_BY_ID_SQL, (r, rowNum) -> rowNum == 1, id);
+        return jdbcTemplate.query(
+                getDeleteByIdStatementCreator(id),
+                ResultSetParser::existsRow
+        );
+    }
+
+    private static PreparedStatementCreator getDeleteByIdStatementCreator(Long id) {
+        return con -> StatementCreator.createDeleteByIdStatement(con, id);
     }
 }

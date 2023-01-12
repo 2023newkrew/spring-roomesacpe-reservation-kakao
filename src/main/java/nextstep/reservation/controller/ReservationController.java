@@ -19,7 +19,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationRequest request) {
-        URI location = URI.create(RESERVATION_PATH + "/" + service.create(request));
+        Long reservationId = service.create(request);
+        URI location = URI.create(RESERVATION_PATH + "/" + reservationId);
 
         return ResponseEntity.created(location)
                 .build();
@@ -33,9 +34,7 @@ public class ReservationController {
 
     @DeleteMapping("/{reservation_id}")
     public ResponseEntity<?> deleteReservation(@PathVariable("reservation_id") Long reservationId) {
-        service.deleteById(reservationId);
 
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.ok(service.deleteById(reservationId));
     }
 }
