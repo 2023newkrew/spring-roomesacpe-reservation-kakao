@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @Getter
 @ToString
 @Builder
+@AllArgsConstructor
 public class Reservation {
     private Long id;
     private LocalDate date;

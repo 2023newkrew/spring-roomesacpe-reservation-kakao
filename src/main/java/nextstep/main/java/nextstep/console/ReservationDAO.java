@@ -118,11 +118,12 @@ public class ReservationDAO implements ReservationRepository {
     }
 
     private Connection connect() {
+        Connection connection = null;
         try {
-            return DriverManager.getConnection(SERVER_URL, USER_NAME, PASSWORD);
+            connection = DriverManager.getConnection(SERVER_URL, USER_NAME, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException();
+        return connection;
     }
 }

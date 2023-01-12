@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static nextstep.main.java.nextstep.global.constant.ExceptionMessage.*;
-
 @Service
 @RequiredArgsConstructor
 public class ThemeService {

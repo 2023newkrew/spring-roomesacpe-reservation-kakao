@@ -28,11 +28,11 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(error.getErrorCode(), error.getErrorMessage()));
     }
 
-    private List<String> generateMethodArgumentExceptionResponseBody(MethodArgumentNotValidException exception) {
+    private List<BadRequestInfo> generateMethodArgumentExceptionResponseBody(MethodArgumentNotValidException exception) {
         return exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> error.getField() + " : " + error.getDefaultMessage())
+                .map(errors -> new BadRequestInfo(errors.getField(), errors.getDefaultMessage()))
                 .collect(Collectors.toList());
     }
 }

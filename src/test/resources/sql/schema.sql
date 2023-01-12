@@ -21,4 +21,5 @@ CREATE TABLE theme
 );
 
 INSERT INTO THEME VALUES (100, 'themeName', 'description of theme', 50000);
+INSERT INTO THEME VALUES (101, 'themeCanDelete', 'theme with no reservation', 30000);
 INSERT INTO RESERVATION VALUES (100, '2024-01-01', '09:30', 'name', 100);
