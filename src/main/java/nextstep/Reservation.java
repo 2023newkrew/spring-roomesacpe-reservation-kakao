@@ -1,10 +1,7 @@
 package nextstep;
 
-import roomescape.domain.ReservationRequest;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class Reservation {
 
@@ -12,7 +9,7 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+    private Theme theme;
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
@@ -20,17 +17,6 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.theme = theme;
-    }
-
-    public Reservation(ReservationRequest reservationRequest) {
-        this.date = LocalDate.parse(reservationRequest.getDate(), DateTimeFormatter.ISO_DATE);
-        this.time = LocalTime.parse(reservationRequest.getTime());
-        this.name = reservationRequest.getName();
-    }
-
-    public Reservation(ReservationRequest reservationRequest, Long id) {
-        this(reservationRequest);
-        this.id = id;
     }
 
     public Long getId() {

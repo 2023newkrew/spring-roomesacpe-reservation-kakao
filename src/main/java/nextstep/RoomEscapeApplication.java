@@ -1,7 +1,7 @@
 package nextstep;
 
 import nextstep.console.ReservationDAO;
-import roomescape.domain.ReservationRequest;
+import roomescape.dto.ReservationRequest;
 
 import java.util.Scanner;
 
@@ -33,7 +33,9 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(new ReservationRequest(date, time, name));
+
+                ReservationRequest reservationRequest = new ReservationRequest(date, time, name);
+                Reservation reservation = reservationRequest.toReservation();
                 reservationDAO.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");

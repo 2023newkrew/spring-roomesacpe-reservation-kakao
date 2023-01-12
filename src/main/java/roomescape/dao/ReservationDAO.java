@@ -1,7 +1,7 @@
 package roomescape.dao;
 
 import nextstep.Reservation;
-import roomescape.domain.ReservationRequest;
+import roomescape.dto.ReservationRequest;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,7 +32,7 @@ public class ReservationDAO {
                 "theme_desc", "병맛 어드벤처 회사 코믹물",
                 "theme_price", 29000);
         Long key = insertActor.executeAndReturnKey(reservationInfo).longValue();
-        return new Reservation(reservationRequest, key);
+        return reservationRequest.toReservation(key);
     }
 
     public int checkSchedule(ReservationRequest reservationRequest) {

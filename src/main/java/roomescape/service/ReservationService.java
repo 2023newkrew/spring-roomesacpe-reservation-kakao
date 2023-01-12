@@ -3,7 +3,7 @@ package roomescape.service;
 import nextstep.Reservation;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
-import roomescape.domain.ReservationRequest;
+import roomescape.dto.ReservationRequest;
 
 import java.util.List;
 
