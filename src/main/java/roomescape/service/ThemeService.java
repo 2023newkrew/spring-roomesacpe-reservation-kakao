@@ -2,9 +2,9 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.repository.ThemeRepository;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeRequest;
+import roomescape.repository.ThemeRepository;
 
 import java.util.NoSuchElementException;
 
@@ -30,18 +30,19 @@ public class ThemeService {
     }
 
     public Theme showTheme(Long id) {
-        return themeRepository.findThemeById(id);
+        Theme theme = themeRepository.findThemeById(id);
         if (theme == null) {
             throw new NoSuchElementException("없는 테마 조회");
         }
-        return themeAppRepository.findThemeById(id);
+        return themeRepository.findThemeById(id);
     }
 
     public Theme updateTheme(Theme theme) {
-        int count = themeAppRepository.updateTheme(theme);
+        int count = themeRepository.updateTheme(theme);
         if (count == 0) {
             throw new NoSuchElementException("없는 테마 수정 요청");
         }
+        return themeRepository.findThemeById(theme.getId());
     }
 
     public int deleteTheme(Long id) {
