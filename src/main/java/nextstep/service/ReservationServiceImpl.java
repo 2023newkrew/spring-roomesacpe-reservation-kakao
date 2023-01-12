@@ -1,7 +1,6 @@
 package nextstep.service;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.NotFoundReservationException;
 import nextstep.repository.ReservationRepository;
@@ -12,7 +11,6 @@ import java.util.List;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private static final Theme ROOM_ESCAPE_THEME = new Theme("검은방", "밀실 탈출", 30_000);
     private final ReservationRepository repository;
 
     public ReservationServiceImpl(ReservationRepository repository) {
@@ -23,7 +21,6 @@ public class ReservationServiceImpl implements ReservationService {
         if (hasSameDateAndTimeReservation(reservation)) {
             throw new DuplicateReservationException("날짜와 시간이 동일한 예약이 이미 존재합니다.");
         }
-        reservation.setTheme(ROOM_ESCAPE_THEME);
         return repository.save(reservation);
     }
 

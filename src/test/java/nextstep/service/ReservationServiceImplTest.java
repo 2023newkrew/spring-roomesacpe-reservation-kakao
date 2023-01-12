@@ -39,9 +39,9 @@ class ReservationServiceImplTest {
     @Test
     void reserve_duplicate() {
         Reservation reservation1 = generateReservation(
-                null, "2023-01-01", "13:00", "john", null);
+                null, "2023-01-01", "13:00", "john", testTheme);
         Reservation reservation2 = generateReservation(
-                null, "2023-01-01", "13:00", "kim", null);
+                null, "2023-01-01", "13:00", "kim", testTheme);
 
         assertThatNoException()
                 .isThrownBy(() -> reservationService.reserve(reservation1));
@@ -53,11 +53,11 @@ class ReservationServiceImplTest {
     @Test
     void reserve_success() {
         Reservation reservation1 = generateReservation(
-                null, "2023-01-01", "13:00", "john", null);
+                null, "2023-01-01", "13:00", "john", testTheme);
         Reservation reservation2 = generateReservation(
-                null, "2023-01-01", "14:00", "john", null);
+                null, "2023-01-01", "14:00", "john", testTheme);
         Reservation reservation3 = generateReservation(
-                null, "2023-01-02", "13:00", "john", null);
+                null, "2023-01-02", "13:00", "john", testTheme);
 
         assertThatNoException()
                 .isThrownBy(() -> reservationService.reserve(reservation1));
@@ -72,7 +72,7 @@ class ReservationServiceImplTest {
     void findReservation_success() {
         //given
         Reservation reservation = generateReservation(
-                null, "2023-01-01", "13:00", "john", null);
+                null, "2023-01-01", "13:00", "john", testTheme);
         reservationService.reserve(reservation);
         Long id = 1L;
 
