@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ReservationExceptionAdvice {
 
     @ExceptionHandler(ReservationDuplicateException.class)
-    public ResponseEntity<String> handleReservationDuplicateException(ReservationDuplicateException e) {
+    public ResponseEntity<ErrorResponse> handleReservationDuplicateException(ReservationDuplicateException e) {
         return ResponseEntity.status(e.getHttpStatus())
-                .body(e.getMessage());
+                .body(ErrorResponse.from(e.getMessage()));
     }
 
     @ExceptionHandler(ReservationNotFoundException.class)
-    public ResponseEntity<String> handleReservationNotFoundException(ReservationNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleReservationNotFoundException(ReservationNotFoundException e) {
         return ResponseEntity.status(e.getHttpStatus())
-                .body(e.getMessage());
+                .body(ErrorResponse.from(e.getMessage()));
     }
 }
