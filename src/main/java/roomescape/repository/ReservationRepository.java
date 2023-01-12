@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
 
 public interface ReservationRepository {
 
