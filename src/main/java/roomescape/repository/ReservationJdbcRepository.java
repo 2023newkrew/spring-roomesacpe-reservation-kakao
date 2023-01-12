@@ -25,20 +25,18 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
+        return new Reservation(
+                resultSet.getLong("reservation.id"),
+                resultSet.getDate("reservation.date").toLocalDate(),
+                resultSet.getTime("reservation.time").toLocalTime(),
+                resultSet.getString("reservation.name"),
                 new Theme(
-                        //TODO: change to use Theme Repo
-                        null,
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
+                        resultSet.getLong("theme.id"),
+                        resultSet.getString("theme.name"),
+                        resultSet.getString("theme.desc"),
+                        resultSet.getInt("theme.price")
                 )
         );
-        return reservation;
     };
 
     @Override
@@ -47,15 +45,13 @@ public class ReservationJdbcRepository implements ReservationRepository {
         parameters.put("date", reservation.getDate().toString());
         parameters.put("time", reservation.getTime().toString());
         parameters.put("name", reservation.getName());
-        parameters.put("theme_name", reservation.getTheme().getName());
-        parameters.put("theme_desc", reservation.getTheme().getDesc());
-        parameters.put("theme_price", reservation.getTheme().getPrice().toString());
+        parameters.put("theme_id", reservation.getTheme().getId().toString());
         return insertActor.executeAndReturnKey(parameters).longValue();
     }
 
     @Override
     public Optional<Reservation> findOneById(long reservationId) {
-        String sql = "select * from reservation where id = ? limit 1";
+        String sql = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.id = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, reservationId).stream().findFirst();
     }
 
@@ -67,7 +63,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "select * from reservation where date = ? and time = ?";
+        String sql = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.date = ? and reservation.time = ?";
         return jdbcTemplate.query(sql, actorRowMapper, date, time).size() > 0;
     }
 }
