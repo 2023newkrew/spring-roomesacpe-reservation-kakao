@@ -10,7 +10,18 @@ import java.sql.*;
 
 public class ReservationJdbcRepository implements ReservationRepository {
 
+    private final String DB_URL = "jdbc:h2:~/test;AUTO_SERVER=TRUE";
+    private final String DB_USER = "sa";
+    private final String DB_PW = "";
+
     private Connection makeConnection(){
+
+//        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PW)){
+//            // SQL 실행
+//        } catch (SQLException | AssertionError e) {
+//            throw ConnectionException("연결 오류");
+//        }
+
         Connection con = null;
         try {
             con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=TRUE", "sa", "");
@@ -20,6 +31,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
+
         return con;
     }
 
