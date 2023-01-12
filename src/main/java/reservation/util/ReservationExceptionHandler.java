@@ -10,9 +10,9 @@ import reservation.util.exception.restAPI.RestAPIException;
 @RestControllerAdvice
 public class ReservationExceptionHandler {
 
-    // 예약 관련 Exception 핸들러
+    // restApi 관련 Exception 핸들러
     @ExceptionHandler(RestAPIException.class)
-    public ResponseEntity<String> handleReservationException(RestAPIException e){
+    public ResponseEntity<String> handleRestApiException(RestAPIException e){
         return ResponseEntity.status(e.getHttpStatus())
                 .body(e.getErrorMessage());
     }

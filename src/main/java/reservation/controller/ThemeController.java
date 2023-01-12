@@ -33,4 +33,10 @@ public class ThemeController {
         List<Theme> themes = themeService.getAllTheme();
         return ResponseEntity.ok().body(themes);
     }
+
+    @DeleteMapping("/{themeId}")
+    public ResponseEntity<?> deleteTheme(@PathVariable Long themeId) {
+        themeService.deleteTheme(themeId);
+        return ResponseEntity.noContent().build();
+    }
 }

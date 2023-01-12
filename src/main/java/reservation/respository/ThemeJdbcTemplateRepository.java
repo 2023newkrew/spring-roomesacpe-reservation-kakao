@@ -51,8 +51,19 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository{
         }
     }
 
+    @Override
+    public int deleteById(Long themeId) {
+        String sql = "DELETE FROM theme WHERE id = ?";
+        return this.jdbcTemplate.update(sql, themeId);
+    }
+
     public boolean checkDuplicateName(String name){
         String sql = "SELECT EXISTS (SELECT 1 FROM theme WHERE name = ?)";
         return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, name));
+    }
+
+    public boolean checkExistById(Long id){
+        String sql = "SELECT EXISTS (SELECT 1 FROM theme WHERE id = ?)";
+        return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }
