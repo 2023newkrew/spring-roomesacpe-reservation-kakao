@@ -9,6 +9,7 @@ import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -19,7 +20,7 @@ public class ThemeController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ThemeCreateRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody ThemeCreateRequest request) {
         Long id = themeService.save(request);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
@@ -43,7 +44,7 @@ public class ThemeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,
-                                    @RequestBody ThemeUpdateRequest themeUpdateRequest) {
+                                    @Valid @RequestBody ThemeUpdateRequest themeUpdateRequest) {
         themeService.update(id, themeUpdateRequest);
 
         return ResponseEntity.noContent().build();

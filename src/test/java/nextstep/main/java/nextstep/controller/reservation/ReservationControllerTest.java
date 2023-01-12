@@ -1,4 +1,4 @@
-package nextstep.main.java.nextstep.controller;
+package nextstep.main.java.nextstep.controller.reservation;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
