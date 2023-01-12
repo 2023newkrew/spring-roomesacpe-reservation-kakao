@@ -4,35 +4,32 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.NotFoundReservationException;
-import nextstep.repository.ReservationMemoryRepository;
+import nextstep.repository.RepositoryTestExecutionListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestExecutionListeners;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.*;
 
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestExecutionListeners(listeners = RepositoryTestExecutionListener.class,
+        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class ReservationServiceImplTest {
 
+    @Autowired
     ReservationService reservationService;
     Theme testTheme;
 
     @BeforeEach
     void setUp() {
         testTheme = new Theme("검은방", "밀실 탈출", 30_000);
-        reservationService = new ReservationServiceImpl(new ReservationMemoryRepository());
-    }
-
-    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date),
-                LocalTime.parse(time),
-                name,
-                theme
-        );
     }
 
     @DisplayName("예약 시 날짜와 시간이 모두 동일한 예약이 이미 존재하는 경우 예외 발생")
@@ -73,14 +70,14 @@ class ReservationServiceImplTest {
         //given
         Reservation reservation = generateReservation(
                 null, "2023-01-01", "13:00", "john", testTheme);
-        reservationService.reserve(reservation);
-        Long id = 1L;
+        Reservation savedReservation = reservationService.reserve(reservation);
+        Long savedId = savedReservation.getId();
 
         Reservation expected = generateReservation(
-                id, "2023-01-01", "13:00", "john", testTheme);
+                savedId, "2023-01-01", "13:00", "john", testTheme);
 
         //when
-        Reservation result = reservationService.findReservation(id);
+        Reservation result = reservationService.findReservation(savedId);
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -98,11 +95,11 @@ class ReservationServiceImplTest {
     void delete_success() {
         Reservation reservation = generateReservation(
                 null, "2023-01-01", "13:00", "john", testTheme);
-        reservationService.reserve(reservation);
-        Long id = 1L;
+        Reservation savedReservation = reservationService.reserve(reservation);
+        Long savedId = savedReservation.getId();
 
         //when
-        boolean result = reservationService.cancelReservation(id);
+        boolean result = reservationService.cancelReservation(savedId);
 
         //then
         assertThat(result).isTrue();
@@ -113,5 +110,15 @@ class ReservationServiceImplTest {
     void delete_fail() {
         //then
         assertThat(reservationService.cancelReservation(1L)).isFalse();
+    }
+
+    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
+        return new Reservation(
+                id,
+                LocalDate.parse(date),
+                LocalTime.parse(time),
+                name,
+                theme
+        );
     }
 }
