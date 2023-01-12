@@ -25,4 +25,9 @@ public class ThemeMockRepository implements ThemeRepository {
     public void delete(Long themeId) {
 
     }
+
+    @Override
+    public Boolean hasThemeWithName(String themeName) {
+        return null;
+    }
 }

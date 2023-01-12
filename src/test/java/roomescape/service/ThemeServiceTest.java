@@ -24,4 +24,16 @@ public class ThemeServiceTest {
         //then
         Assertions.assertThatNoException().isThrownBy(() -> themeService.findTheme(themeId));
     }
+
+    @DisplayName("중복된 이름의 theme 저장 시 예외 발생")
+    @Test
+    @Transactional
+    public void createDuplicateThemeTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("Test Theme", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        //then
+        Assertions.assertThatIllegalArgumentException().isThrownBy(() -> themeService.createTheme(themeRequestDto));
+    }
 }

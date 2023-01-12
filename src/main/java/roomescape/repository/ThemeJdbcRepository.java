@@ -57,4 +57,10 @@ public class ThemeJdbcRepository implements ThemeRepository {
         String sql = "delete from theme where id = ?";
         jdbcTemplate.update(sql, themeId);
     }
+
+    @Override
+    public Boolean hasThemeWithName(String themeName) {
+        String sql = "select * from theme where name = ?";
+        return jdbcTemplate.query(sql, actorRowMapper, themeName).size() > 0;
+    }
 }

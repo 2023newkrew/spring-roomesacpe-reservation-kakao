@@ -8,4 +8,5 @@ public interface ThemeRepository {
     Optional<Theme> findOneById(Long themeId);
     Optional<Theme> findOneByName(String themeName);
     void delete(Long themeId);
+    Boolean hasThemeWithName(String themeName);
 }

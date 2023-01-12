@@ -18,6 +18,7 @@ public class ThemeService {
     }
 
     public Long createTheme(ThemeRequestDto themeRequest) {
+        checkForSameNameTheme(themeRequest);
         Theme theme = themeRequest.toEntity();
         return themeRepository.save(theme);
     }
@@ -32,5 +33,11 @@ public class ThemeService {
 
     public void deleteTheme(Long themeId) {
         themeRepository.delete(themeId);
+    }
+
+    private void checkForSameNameTheme(ThemeRequestDto themeRequest) {
+        if (themeRepository.hasThemeWithName(themeRequest.getName())) {
+            throw new IllegalArgumentException("Already have theme with same name");
+        }
     }
 }

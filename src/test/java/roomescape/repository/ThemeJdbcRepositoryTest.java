@@ -41,4 +41,16 @@ public class ThemeJdbcRepositoryTest {
         //then
         Assertions.assertThat(optionalTheme).isEmpty();
     }
+
+    @DisplayName("중복되는 Theme 이름 존재 유무 확인")
+    @Test
+    @Transactional
+    public void hasThemeWithNameTest() {
+        //given
+        Theme theme = new Theme(null, "Test Theme", "lorem ipsum", 1000);
+        //when
+        long themeId = themeRepository.save(theme);
+        //then
+        Assertions.assertThat(themeRepository.hasThemeWithName("Test Theme")).isTrue();
+    }
 }
