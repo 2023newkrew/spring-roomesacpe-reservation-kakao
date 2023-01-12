@@ -9,3 +9,12 @@ CREATE TABLE IF Not Exists RESERVATION
     theme_price int,
     primary key (id)
 );
+
+CREATE TABLE IF NOT EXISTS THEME
+(
+    id    bigint not null auto_increment,
+    name  varchar(20),
+    desc  varchar(255),
+    price int,
+    primary key (id)
+)
