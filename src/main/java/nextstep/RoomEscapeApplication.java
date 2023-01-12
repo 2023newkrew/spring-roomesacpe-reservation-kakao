@@ -21,10 +21,8 @@ public class RoomEscapeApplication {
     private static final String UPDATE_THEME = "update theme";
     private static final String DELETE_THEME = "delete theme";
     private static final String QUIT = "quit";
-
     private static final ReservationService reservationService = new ReservationService(new ReservationConsoleRepository(), new ThemeConsoleRepository());
     private static final ThemeService themeService = new ThemeService(new ThemeConsoleRepository());
-
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);

@@ -30,6 +30,7 @@ public class ReservationRequest {
                 LocalTime.parse(time),
                 name,
                 theme
+
         );
     }
 
@@ -48,4 +49,5 @@ public class ReservationRequest {
     public Long getTheme_id() {
         return theme_id;
     }
+
 }
