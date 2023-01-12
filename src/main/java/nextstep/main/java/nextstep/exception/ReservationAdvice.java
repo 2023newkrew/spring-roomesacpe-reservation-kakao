@@ -12,12 +12,12 @@ import static nextstep.main.java.nextstep.exception.ErrorCode.NO_SUCH_RESERVATIO
 @RestControllerAdvice
 public class ReservationAdvice {
     @ExceptionHandler(DuplicateReservationException.class)
-    public ResponseEntity<?> handleDuplicate() {
+    public ResponseEntity<?> handleDuplicateReservationException() {
         return new ResponseEntity<>(DUPLICATE_RESERVATION_ERROR.getErrorMessage(), DUPLICATE_RESERVATION_ERROR.getErrorCode());
     }
 
     @ExceptionHandler(NoSuchReservationException.class)
-    public ResponseEntity<?> handleNotExists() {
+    public ResponseEntity<?> handleNoSuchReservationException() {
         return new ResponseEntity<>(NO_SUCH_RESERVATION_ERROR.getErrorMessage(), NO_SUCH_RESERVATION_ERROR.getErrorCode());
     }
 }
