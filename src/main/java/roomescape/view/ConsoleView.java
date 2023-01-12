@@ -24,7 +24,7 @@ public class ConsoleView {
         System.out.println("- 예약하기: add reservation {date},{time},{name},{theme_id} ex) add reservation 2022-08-11,13:00,류성현,1");
         System.out.println("- 예약조회: find reservation {id} ex) find reservation 1");
         System.out.println("- 예약취소: delete reservation {id} ex) delete reservation 1");
-        System.out.println("- 테마생성: add theme {name},{desc},{price} ex) add theme 워너고홈, 병맛 어드벤처 회사 코믹물,29000");
+        System.out.println("- 테마생성: add theme {name},{desc},{price} ex) add theme 워너고홈,병맛 어드벤처 회사 코믹물,29000");
         System.out.println("- 테마보기: show theme");
         System.out.println("- 테마삭제: delete theme {id} ex) delete theme 1");
         System.out.println("- 종료: quit");
