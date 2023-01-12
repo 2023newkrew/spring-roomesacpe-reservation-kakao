@@ -48,8 +48,8 @@ class ReservationServiceTest {
         when(reservationRepository.save(any()))
                 .thenReturn(1L);
 
-        Assertions.assertThat(reservationService.createReservation(requestDto))
-                .isEqualTo(1L);
+        Assertions.assertThat(reservationService.createReservation(requestDto).getLocation())
+                .isEqualTo("/reservations/1");
     }
 
     @Test

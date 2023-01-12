@@ -15,16 +15,11 @@ import javax.validation.Valid;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private static final String BASE_URI = "/reservation";
     private final ReservationService reservationService;
 
     @PostMapping
     public Response<CreateReservationResponseDto> createReservation(@RequestBody @Valid CreateReservationRequestDto requestDto) {
-        CreateReservationResponseDto location = new CreateReservationResponseDto(
-                BASE_URI + "/" + reservationService.createReservation(requestDto)
-        );
-
-        return new Response<>(HttpStatus.OK.value(), HttpStatus.CREATED.name(), location);
+        return new Response<>(HttpStatus.OK.value(), HttpStatus.CREATED.name(), reservationService.createReservation(requestDto));
     }
 
     @GetMapping("{id}")

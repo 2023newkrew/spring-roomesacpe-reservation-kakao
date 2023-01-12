@@ -3,29 +3,22 @@ package nextstep.web.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateReservationRequestDto {
+public class CreateThemeRequestDto {
 
-    @DateTimeFormat(pattern = "YYYY-MM-dd")
-    private LocalDate date;
-
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime time;
-
+    @NotNull
     @NotBlank
     private String name;
 
-    @NotNull
+    private String desc;
+
     @Min(1)
-    private Long themeId;
+    private Integer price;
 }

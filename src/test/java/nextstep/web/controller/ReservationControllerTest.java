@@ -2,6 +2,7 @@ package nextstep.web.controller;
 
 import io.restassured.RestAssured;
 import nextstep.web.dto.CreateReservationRequestDto;
+import nextstep.web.dto.CreateReservationResponseDto;
 import nextstep.web.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,11 +48,11 @@ class ReservationControllerTest {
         CreateReservationRequestDto requestDto = new CreateReservationRequestDto(
                 LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1", 1L
         );
-        Long id = reservationService.createReservation(requestDto);
+        CreateReservationResponseDto responseDto = reservationService.createReservation(requestDto);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/"+id)
+                .when().get(responseDto.getLocation())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -61,11 +62,11 @@ class ReservationControllerTest {
         CreateReservationRequestDto requestDto = new CreateReservationRequestDto(
                 LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1", 1L
         );
-        Long id = reservationService.createReservation(requestDto);
+        CreateReservationResponseDto responseDto = reservationService.createReservation(requestDto);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/"+id)
+                .when().delete(responseDto.getLocation())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

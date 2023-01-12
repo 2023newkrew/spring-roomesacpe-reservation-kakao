@@ -2,6 +2,7 @@ package nextstep.web.service;
 
 import nextstep.domain.Reservation;
 import nextstep.web.dto.CreateReservationRequestDto;
+import nextstep.web.dto.CreateReservationResponseDto;
 import nextstep.web.dto.FindReservationResponseDto;
 import nextstep.web.repository.RoomEscapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReservationService {
 
+    private static final String BASE_URI = "/reservations";
+
     private final RoomEscapeRepository<Reservation> reservationRepository;
 
     @Autowired
@@ -18,7 +21,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Long createReservation(CreateReservationRequestDto requestDto) {
+    public CreateReservationResponseDto createReservation(CreateReservationRequestDto requestDto) {
         Reservation reservation = Reservation.of(
                 requestDto.getDate(),
                 requestDto.getTime(),
@@ -26,7 +29,11 @@ public class ReservationService {
                 requestDto.getThemeId()
         );
 
-        return reservationRepository.save(reservation);
+        CreateReservationResponseDto responseDto = new CreateReservationResponseDto(
+                 BASE_URI + "/" + reservationRepository.save(reservation)
+        );
+
+        return responseDto;
     }
 
     public FindReservationResponseDto findReservation(Long id) {
