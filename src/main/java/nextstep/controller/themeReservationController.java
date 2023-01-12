@@ -15,7 +15,7 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/reservations")
-public class ReservationController {
+public class themeReservationController {
 
     private final ThemeReservationService themeReservationService;
 
@@ -35,7 +35,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Object> cancelReservation(@NonNull @PathVariable("id") Long id) throws SQLException{
+    ResponseEntity<Object> cancelReservation(@NonNull @PathVariable("id") Long id){
         try{
             themeReservationService.cancelById(id);
             return ResponseEntity.noContent().build();
