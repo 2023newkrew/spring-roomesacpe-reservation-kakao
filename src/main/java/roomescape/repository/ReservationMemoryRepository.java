@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
 import java.time.LocalDate;
