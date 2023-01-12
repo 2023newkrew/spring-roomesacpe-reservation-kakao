@@ -2,7 +2,6 @@ package nextstep.web.repository;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.web.exception.BusinessException;
 import nextstep.web.exception.CommonErrorCode;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +22,7 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
     public static final String KEY_COLUMN_NAME = "id";
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> Reservation.from(resultSet);
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> Reservation.from(resultSet);
 
     public Long save(Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -37,8 +36,8 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
 
 
     public Reservation findById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE ID = ?;";
-        List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper, id);
+        String sql = "SELECT * FROM RESERVATION WHERE ID = ?;";
+        List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper, id);
         if (reservations.isEmpty()) {
             throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
         }
@@ -47,22 +46,18 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation WHERE ID = ?;";
+        String sql = "DELETE FROM RESERVATION WHERE ID = ?;";
         if (jdbcTemplate.update(sql, id) == 0) {
             throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
         }
     }
 
     private Map<String, Object> prepareParams(Reservation reservation) {
-        Theme theme = reservation.getTheme();
-
         return Map.of(
                 "date", reservation.getDate(),
                 "time", reservation.getTime(),
                 "name", reservation.getName(),
-                "theme_name", theme.getName(),
-                "theme_desc", theme.getDesc(),
-                "theme_price", theme.getPrice()
+                "theme_id", reservation.getThemeId()
         );
     }
 }

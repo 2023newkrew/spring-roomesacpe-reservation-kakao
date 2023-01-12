@@ -1,7 +1,6 @@
 package nextstep.web.service;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.web.dto.CreateReservationRequestDto;
 import nextstep.web.dto.FindReservationResponseDto;
 import nextstep.web.repository.RoomEscapeRepository;
@@ -24,9 +23,9 @@ public class ReservationService {
                 requestDto.getDate(),
                 requestDto.getTime(),
                 requestDto.getName(),
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+                requestDto.getThemeId()
         );
-        
+
         return reservationRepository.save(reservation);
     }
 

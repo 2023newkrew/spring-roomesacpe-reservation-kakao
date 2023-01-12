@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +17,7 @@ public class FindReservationResponseDto {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 
     public static FindReservationResponseDto of(Reservation reservation) {
         return new FindReservationResponseDto(
@@ -26,7 +25,7 @@ public class FindReservationResponseDto {
                 reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                reservation.getTheme()
+                reservation.getThemeId()
         );
     }
 }

@@ -1,9 +1,10 @@
 package nextstep.console;
 
-import nextstep.console.dao.ReservationDao;
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
-import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.ReservationDao;
+import nextstep.web.repository.RoomEscapeRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,12 +16,16 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static final ReservationRepository reservationDao = new ReservationDao();
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUrl("jdbc:h2:~/test");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+        dataSource.setDriverClassName("org.h2.Driver");
+        RoomEscapeRepository<Reservation> reservationDao = new ReservationDao(new JdbcTemplate(dataSource));
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Long themeId = 1L;
 
         while (true) {
             System.out.println();
@@ -42,7 +47,7 @@ public class RoomEscapeApplication {
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        themeId
                 );
 
                 Long generatedId = reservationDao.save(reservation);
@@ -65,9 +70,7 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 번호: " + reservation.getThemeId());
             }
 
             if (input.startsWith(DELETE)) {

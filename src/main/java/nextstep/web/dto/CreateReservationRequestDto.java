@@ -22,4 +22,6 @@ public class CreateReservationRequestDto {
 
     @NotBlank
     private String name;
+
+    private Long themeId;
 }

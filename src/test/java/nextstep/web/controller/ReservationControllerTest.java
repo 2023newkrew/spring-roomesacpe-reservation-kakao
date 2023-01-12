@@ -31,7 +31,7 @@ class ReservationControllerTest {
     @Test
     void 예약을_생성할_수_있다() {
         CreateReservationRequestDto requestDto = new CreateReservationRequestDto(
-                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1"
+                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1", 1L
         );
 
         RestAssured.given().log().all()
@@ -45,7 +45,7 @@ class ReservationControllerTest {
     @Test
     void 예약을_조회할_수_있다() {
         CreateReservationRequestDto requestDto = new CreateReservationRequestDto(
-                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1"
+                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1", 1L
         );
         Long id = reservationService.createReservation(requestDto);
 
@@ -59,7 +59,7 @@ class ReservationControllerTest {
     @Test
     void 예약을_취소할_수_있다() {
         CreateReservationRequestDto requestDto = new CreateReservationRequestDto(
-                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1"
+                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1", 1L
         );
         Long id = reservationService.createReservation(requestDto);
 
