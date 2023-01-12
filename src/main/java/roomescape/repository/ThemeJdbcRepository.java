@@ -8,6 +8,7 @@ import roomescape.model.Theme;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -47,14 +48,20 @@ public class ThemeJdbcRepository implements ThemeRepository {
     }
 
     @Override
+    public List<Theme> findAll() {
+        String sql = "select * from theme";
+        return jdbcTemplate.query(sql, actorRowMapper);
+    }
+
+    @Override
     public Integer delete(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "delete from theme where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Boolean has(String name) {
-        String sql = "delete from reservation where name = ? limit 1";
+        String sql = "select * from theme where name = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, name).size() > 0;
     }
 }

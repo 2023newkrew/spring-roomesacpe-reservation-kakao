@@ -11,7 +11,7 @@ import java.net.URI;
 
 @Controller
 public class ReservationController {
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -19,8 +19,8 @@ public class ReservationController {
 
     @GetMapping("/reservations/{id}")
     public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable("id") Long id) {
-        ReservationResponseDto reservationResponseDto = reservationService.findReservation(id);
-        return ResponseEntity.ok(reservationResponseDto);
+        ReservationResponseDto res = reservationService.findReservation(id);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/reservations")

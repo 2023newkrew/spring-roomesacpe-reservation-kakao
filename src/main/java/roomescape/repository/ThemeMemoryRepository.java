@@ -3,6 +3,8 @@ package roomescape.repository;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Theme;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,6 +31,11 @@ public class ThemeMemoryRepository implements ThemeRepository {
     @Override
     public Optional<Theme> find(Long id) {
         return Optional.ofNullable(themes.get(id));
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        return new ArrayList<>(themes.values());
     }
 
     @Override
