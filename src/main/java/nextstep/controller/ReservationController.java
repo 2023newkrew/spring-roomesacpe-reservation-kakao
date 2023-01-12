@@ -1,0 +1,42 @@
+package nextstep.controller;
+
+import java.net.URI;
+import nextstep.domain.Reservation;
+import nextstep.domain.ReservationInfo;
+import nextstep.service.ReservationService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/reservations")
+public class ReservationController {
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
+
+    @PostMapping("")
+    public ResponseEntity createReservation(@RequestBody Reservation reservation) {
+        Long id = reservationService.createReservation(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity lookupReservation(@PathVariable Long id) {
+        ReservationInfo reservationInfo = reservationService.lookupReservation(id);
+        return ResponseEntity.ok().body(reservationInfo);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity cancelReservation(@PathVariable Long id) {
+        ReservationInfo reservationInfo = reservationService.deleteReservation(id);
+        return ResponseEntity.ok().body(reservationInfo);
+    }
+}
