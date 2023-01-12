@@ -1,19 +1,24 @@
 package kakao.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.List;
 import kakao.domain.Reservation;
 import kakao.domain.Theme;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
+import kakao.error.ErrorCode;
+import kakao.error.exception.CustomException;
 import kakao.repository.reservation.ReservationRepository;
 import kakao.repository.theme.ThemeRepository;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,33 +52,85 @@ class ReservationServiceTest {
             .theme(theme)
             .build();
 
-    @Test
-    @DisplayName("정상적으로 예약을 생성할 수 있다.")
-    public void testCreateReservation() {
-        //given
-        CreateReservationRequest request = new CreateReservationRequest(
-                reservation.getDate(),
-                reservation.getTime(),
-                reservation.getName(),
-                theme.getId()
-        );
-        doReturn(theme).when(themeRepository).findById(request.themeId);
-        doReturn(reservation).when(reservationRepository).save(Mockito.any(Reservation.class));
+    @Nested
+    @DisplayName("예약 생성 테스트")
+    class ReservationCreateTest {
+        @Test
+        @DisplayName("정상적으로 예약을 생성할 수 있다.")
+        public void testCreateReservation() {
+            //given
+            CreateReservationRequest request = new CreateReservationRequest(
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getName(),
+                    theme.getId()
+            );
+            doReturn(List.of()).when(reservationRepository)
+                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+            doReturn(theme).when(themeRepository).findById(request.themeId);
+            doReturn(reservation).when(reservationRepository).save(Mockito.any(Reservation.class));
 
-        //when
-        ReservationResponse response = reservationService.createReservation(request);
+            //when
+            ReservationResponse response = reservationService.createReservation(request);
 
-        //then
-        verify(themeRepository).findById(request.themeId);
-        verify(reservationRepository).save(Mockito.any(Reservation.class));
-        assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
-                .hasFieldOrPropertyWithValue("date", reservation.getDate())
-                .hasFieldOrPropertyWithValue("time", reservation.getTime())
-                .hasFieldOrPropertyWithValue("name", reservation.getName());
-        assertThat(response.theme).hasFieldOrPropertyWithValue("id", theme.getId())
-                .hasFieldOrPropertyWithValue("name", theme.getName())
-                .hasFieldOrPropertyWithValue("desc", theme.getDesc())
-                .hasFieldOrPropertyWithValue("price", theme.getPrice());
+            //then
+            verify(reservationRepository)
+                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+            verify(themeRepository).findById(request.themeId);
+            verify(reservationRepository).save(Mockito.any(Reservation.class));
+            assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
+                    .hasFieldOrPropertyWithValue("date", reservation.getDate())
+                    .hasFieldOrPropertyWithValue("time", reservation.getTime())
+                    .hasFieldOrPropertyWithValue("name", reservation.getName());
+            assertThat(response.theme).hasFieldOrPropertyWithValue("id", theme.getId())
+                    .hasFieldOrPropertyWithValue("name", theme.getName())
+                    .hasFieldOrPropertyWithValue("desc", theme.getDesc())
+                    .hasFieldOrPropertyWithValue("price", theme.getPrice());
+        }
+
+        @Test
+        @DisplayName("잘못된 테마의 ID로는 예약을 생성할 수 없다.")
+        public void testCreateReservationWithInvalidThemeId() {
+            //given
+            CreateReservationRequest request = new CreateReservationRequest(
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getName(),
+                    0L
+            );
+            doReturn(List.of()).when(reservationRepository)
+                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+            doReturn(null).when(themeRepository).findById(0L);
+
+            //when //then
+            assertThatThrownBy(() -> reservationService.createReservation(request))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.THEME_NOT_FOUND.getMessage());
+            verify(reservationRepository)
+                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+            verify(themeRepository).findById(0L);
+        }
+
+        @Test
+        @DisplayName("같은 테마 중복된 시간에는 예약을 할 수 없다.")
+        public void testCreateDuplicatedReservation() {
+            //given
+            CreateReservationRequest request = new CreateReservationRequest(
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getName(),
+                    0L
+            );
+            doReturn(List.of(reservation)).when(reservationRepository)
+                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+
+            //when //then
+            assertThatThrownBy(() -> reservationService.createReservation(request))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.DUPLICATE_RESERVATION.getMessage());
+            verify(reservationRepository)
+                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+        }
     }
 
     @Test
