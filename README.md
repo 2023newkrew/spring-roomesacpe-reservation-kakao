@@ -26,6 +26,8 @@
   - [x] id가 일치하는 Reservation을 제거
   - [x] 204 리스폰스
 
+---
+
 ## 2단계
 - 콘솔 애플리케이션에 데이터베이스를 적용한다.
   - 직접 커넥션을 만들어서 데이터베이스에 접근한다.
@@ -43,13 +45,14 @@
   - [x] 예약 조회
   - [x] 예약 삭제
 
+---
 
 ### 리팩토링 목록
 - 리뷰 반영
   - [ ] 커넥션 연결, 해제 코드 메서드 분리 및 추상화
   - [ ] 테스트시 테이블 재생성하는 부분을 프로덕션 코드에서 제거
   - [ ] WebAppReservationService에서 예약 중복 비교시 변수를 통해 가독성 향상
-  - [ ] 프로덕션 코드에서 Reservation equals 오버라이드 메서드 제거
+  - [ ] 프로덕션 코드성에서 Reservation equals 오버라이드 메서드 제거
   - [ ] WebAppReservationRepository에서 예외 catch시 로그 출력
   - [ ] 필드 주입을 생성자 주입으로 변경
   - [ ] ReservationController에서 insert 실패시 예외로 처리하도록 수정
