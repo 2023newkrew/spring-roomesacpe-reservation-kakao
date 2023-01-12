@@ -3,19 +3,18 @@ package kakao.controller;
 import kakao.model.request.ReservationRequest;
 import kakao.model.response.ReservationResponse;
 import kakao.service.ReservationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
-
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
 
     @PostMapping
     public ResponseEntity<String> createReservation(@RequestBody ReservationRequest reservationRequest) {

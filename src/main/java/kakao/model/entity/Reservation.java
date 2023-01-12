@@ -2,11 +2,15 @@ package kakao.model.entity;
 
 import kakao.model.response.Theme;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Getter
+@RequiredArgsConstructor
 public class Reservation {
 
     private final Long id;
@@ -14,14 +18,6 @@ public class Reservation {
     private final LocalTime time;
     private final String name;
     private final Theme theme;
-
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
 
     public static class Column {
         public static final String ID = "id";

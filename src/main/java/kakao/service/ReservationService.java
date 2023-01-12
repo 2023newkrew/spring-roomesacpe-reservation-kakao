@@ -20,11 +20,7 @@ public class ReservationService {
     }
 
     public Long createReservation(ReservationRequest reservationRequest) {
-        int numberOfBooked = reservationRepository
-                .findByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())
-                .size();
-
-        if (numberOfBooked > 0) {
+        if (reservationRepository.findByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime()).isEmpty()) {
             throw new DuplicatedReservationException();
         }
 
