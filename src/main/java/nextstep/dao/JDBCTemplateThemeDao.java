@@ -2,25 +2,29 @@ package nextstep.dao;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.entity.Theme;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Repository
-@RequiredArgsConstructor
 public class JDBCTemplateThemeDao implements ThemeDao{
 
     private static final String SELECT_BY_THEME_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
 
-    private final JdbcTemplate jdbcTemplate;
-
+    public final JdbcTemplate jdbcTemplate;
+    @Autowired  // 생성자 하나면 @Autowired 생략 가능능
+    public JDBCTemplateThemeDao(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
     private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) ->
             new Theme(
                     resultSet.getLong("id"),

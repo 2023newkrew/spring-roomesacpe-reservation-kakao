@@ -14,11 +14,9 @@ public class DirectConnectionThemeDao implements ThemeDao {
     private static final String FIND_BY_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
 
-    private final DataSource dataSource;
-
     @Override
     public Theme findById(Long id) throws SQLException{
-        Connection con = dataSource.getConnection();
+        Connection con = DatabaseUtil.getConnection();
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
         try{
@@ -36,7 +34,7 @@ public class DirectConnectionThemeDao implements ThemeDao {
 
     @Override
     public int insert(Theme theme) throws SQLException{
-        Connection con = dataSource.getConnection();
+        Connection con = DatabaseUtil.getConnection();
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
         Long themeId = 0L;

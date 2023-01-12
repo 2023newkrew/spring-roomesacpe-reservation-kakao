@@ -1,27 +1,29 @@
 package nextstep.dao;
 
-import lombok.RequiredArgsConstructor;
 import nextstep.entity.Reservation;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Repository
-@RequiredArgsConstructor
 public class JDBCTemplateThemeReservationDao implements ThemeReservationDao{
 
     private static final String INSERT_SQL = "INSERT INTO RESERVATION(`date`, `time`, `name`, `theme_id`) VALUES (?, ?, ?, ?)";
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT `id`, `date`, `time`, `name`, `theme_id`  FROM RESERVATION WHERE ID = ?";
 
-    private final JdbcTemplate jdbcTemplate;
+    public final JdbcTemplate jdbcTemplate;
+    
+    public JDBCTemplateThemeReservationDao(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->{
         return new Reservation(

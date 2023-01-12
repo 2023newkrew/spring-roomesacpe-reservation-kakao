@@ -18,11 +18,10 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT * FROM RESERVATION WHERE ID = ?";
 
-    private final DataSource dataSource;
     @Override
     public int insert(Reservation reservation) throws SQLException{
         System.out.println("DirectConnectionThemeReservationDao.insert");
-        Connection con = dataSource.getConnection();
+        Connection con = DatabaseUtil.getConnection();
         System.out.println(con);
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
@@ -51,7 +50,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
 
     @Override
     public int deleteReservation(Long id) throws SQLException {
-        Connection con = dataSource.getConnection();
+        Connection con = DatabaseUtil.getConnection();
         PreparedStatement psmt = null;
         int deleteCount = 0;
         try{
@@ -68,7 +67,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
 
     @Override
     public Reservation findById(Long id) throws SQLException {
-        Connection con = dataSource.getConnection();
+        Connection con = DatabaseUtil.getConnection();
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
         try{
