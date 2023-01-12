@@ -7,7 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Profile;
 import roomescape.entity.Reservation;
 import roomescape.entity.Theme;
-import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationConsoleRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,9 +21,9 @@ public class SpringConsoleApplication implements CommandLineRunner {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private final ReservationRepository repository;
+    private final ReservationConsoleRepository repository;
 
-    public SpringConsoleApplication(ReservationRepository repository) {
+    public SpringConsoleApplication(ReservationConsoleRepository repository) {
         this.repository = repository;
     }
 
