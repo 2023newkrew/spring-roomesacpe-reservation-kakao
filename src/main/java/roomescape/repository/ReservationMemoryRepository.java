@@ -22,9 +22,10 @@ public class ReservationMemoryRepository implements ReservationRepository{
 
     @Override
     public Long save(Reservation reservation) {
-        reservation.setId(reservationIdIndex.get());
-        reservations.put(reservationIdIndex.get(), reservation);
-        return reservationIdIndex.getAndIncrement();
+        Long id = reservationIdIndex.getAndIncrement();
+        reservation.setId(id);
+        reservations.put(id, reservation);
+        return id;
     }
 
     @Override
