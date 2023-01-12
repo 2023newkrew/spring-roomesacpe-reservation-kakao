@@ -60,7 +60,7 @@ public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reserva
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable("id") String id) {
-        reservationList.removeIf(reserve -> reserve.getId() == Long.parseLong(id));
+        jdbcTemplate.update("DELETE FROM RESERVATION WHERE id=?", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

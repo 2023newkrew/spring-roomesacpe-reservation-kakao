@@ -18,9 +18,9 @@
 
 **API 설계**
 * 예약생성
-![reserve_create.png](reserve_create.png)
+![reserve_create.png](./reserve_create.png)
 * 예약조회
-![reserve_search.png](reserve_search.png)
+![reserve_search.png](./reserve_search.png)
 * 예약삭제
-![reserve_delete.png](reserve_delete.png)
+![reserve_delete.png](./reserve_delete.png)
 
