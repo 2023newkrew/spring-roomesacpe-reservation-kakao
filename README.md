@@ -122,7 +122,7 @@ HTTP/1.1 204
   - `id` 를 넘겨받는다.
   - `Repository` 에 `id` 를 넘겨서 예약을 조회한다.
   - 조회에 성공하면 `Reservation` 객체를 반환한다.
-  - 조회에 실패하면 `NoSuchElementException` 예외를 던진다.
+  - 조회에 실패하면 예외를 던진다.
 - 예약을 취소한다.
   - `id` 를 넘겨받는다.
   -`Repository` 에 `id` 를 넘겨서 예약을 삭제한다.
