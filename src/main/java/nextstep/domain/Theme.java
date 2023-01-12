@@ -30,6 +30,15 @@ public class Theme {
         return new Theme(name, desc, price);
     }
 
+    public static Theme of(CreateThemeRequestDto requestDto, Long id) {
+        return Theme.builder()
+                .id(id)
+                .name(requestDto.getName())
+                .desc(requestDto.getDesc())
+                .price(requestDto.getPrice())
+                .build();
+    }
+
     public static Theme from(ResultSet rs) throws SQLException {
         return Theme.builder()
                 .id(rs.getLong("id"))

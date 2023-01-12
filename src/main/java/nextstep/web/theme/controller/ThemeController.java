@@ -2,10 +2,7 @@ package nextstep.web.theme.controller;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.web.common.controller.Response;
-import nextstep.web.theme.dto.CreateThemeRequestDto;
-import nextstep.web.theme.dto.CreateThemeResponseDto;
-import nextstep.web.theme.dto.FindAllThemeResponseDto;
-import nextstep.web.theme.dto.FindThemeResponseDto;
+import nextstep.web.theme.dto.*;
 import nextstep.web.theme.service.ThemeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +46,12 @@ public class ThemeController {
         themeService.deleteTheme(id);
 
         return new Response<>(HttpStatus.OK.value(), HttpStatus.NO_CONTENT.name(), null);
+    }
+
+    @PutMapping("{id}")
+    public Response<Void> updateTheme(@PathVariable Long id, @RequestBody @Valid CreateThemeRequestDto requestDto) {
+        themeService.updateTheme(requestDto, id);
+
+        return new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), null);
     }
 }
