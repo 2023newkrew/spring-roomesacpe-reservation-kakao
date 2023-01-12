@@ -16,8 +16,8 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 public class JDBCTemplateThemeDao implements ThemeDao{
 
-    private static final String SELECT_BY_THEME_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
-    private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
+    private static final String SELECT_BY_THEME_ID_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM THEME WHERE `ID` = ?";
+    private static final String INSERT_SQL = "INSERT INTO `THEME`(`NAME`, `DESC`, `PRICE`) VALUES (?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 

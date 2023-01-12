@@ -2,7 +2,6 @@ package nextstep.dao;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.entity.Theme;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
