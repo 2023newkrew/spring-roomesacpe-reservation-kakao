@@ -14,13 +14,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import web.entity.Theme;
+import web.theme.dto.ThemeResponseDto;
 import web.theme.exception.ThemeException;
 import web.theme.service.ThemeService;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static web.theme.exception.ErrorCode.THEME_DUPLICATE;
@@ -148,6 +152,47 @@ class ThemeControllerTest {
                     "\t\"desc\": \"테마설명\",\n" +
                     "\t\"price\": 22000\n" +
                     "}";
+        }
+    }
+
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class Find {
+
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            List<ThemeResponseDto> responseDto = List.of(
+                    ThemeResponseDto.of(
+                            Theme.of(1L, "테마이름", "테마설명", 22000)),
+                    ThemeResponseDto.of(
+                            Theme.of(2L, "테마이름2", "테마설명2", 45000))
+            );
+
+            when(themeService.findThemes()).thenReturn(responseDto);
+
+            mockMvc.perform(get("/themes"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(1))
+                    .andExpect(jsonPath("$[0].name").value("테마이름"))
+                    .andExpect(jsonPath("$[0].desc").value("테마설명"))
+                    .andExpect(jsonPath("$[0].price").value(22000))
+                    .andExpect(jsonPath("$[1].id").value(2))
+                    .andExpect(jsonPath("$[1].name").value("테마이름2"))
+                    .andExpect(jsonPath("$[1].desc").value("테마설명2"))
+                    .andExpect(jsonPath("$[1].price").value(45000));
+        }
+
+        @Test
+        void should_successfully_when_emptyThemes() throws Exception {
+            List<ThemeResponseDto> responseDto = List.of();
+
+            when(themeService.findThemes()).thenReturn(responseDto);
+
+            mockMvc.perform(get("/themes"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$").isArray())
+                    .andExpect(jsonPath("$").isEmpty());
         }
     }
 }

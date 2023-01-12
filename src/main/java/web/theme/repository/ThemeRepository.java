@@ -13,6 +13,7 @@ import web.theme.exception.ThemeException;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -62,6 +63,17 @@ public class ThemeRepository {
             return Optional.empty();
         }
         return Optional.of(findTheme);
+    }
+
+    public List<Theme> findAll() {
+        String sql = "SELECT * FROM THEME";
+        List<Theme> findThemes;
+        try {
+            findThemes = jdbcTemplate.query(sql, themeRowMapper());
+        } catch (DataAccessException e) {
+            return List.of();
+        }
+        return findThemes;
     }
 
     public Long delete(long themeId) {

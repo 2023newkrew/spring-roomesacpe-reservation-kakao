@@ -10,6 +10,7 @@ import web.theme.exception.ErrorCode;
 import web.theme.exception.ThemeException;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,7 +33,7 @@ class ThemeRepositoryTest {
     class Save {
 
         @Test
-        void should_successfully_when_validReservation() {
+        void should_successfully_when_validTheme() {
             String name = "테마이름";
             String desc = "테마설명";
             int price = 22000;
@@ -60,4 +61,41 @@ class ThemeRepositoryTest {
                     .hasMessage(ErrorCode.THEME_DUPLICATE.getMessage());
         }
     }
+
+    @Nested
+    class FindAll {
+
+        @Test
+        void should_successfully_when_multiThemes() {
+            String name = "테마이름";
+            String desc = "테마설명";
+            int price = 22000;
+            Theme theme = Theme.of(null, name, desc, price);
+            long themeId = themeRepository.save(theme);
+
+            String name2 = "테마이름2";
+            String desc2 = "테마설명2";
+            int price2 = 45000;
+            Theme theme2 = Theme.of(null, name2, desc2, price2);
+            long themeId2 = themeRepository.save(theme2);
+
+            List<Theme> findThemes = themeRepository.findAll();
+
+            assertThat(findThemes.get(0).getId()).isEqualTo(themeId);
+            assertThat(findThemes.get(0).getName()).isEqualTo(name);
+            assertThat(findThemes.get(0).getDesc()).isEqualTo(desc);
+            assertThat(findThemes.get(0).getPrice()).isEqualTo(price);
+            assertThat(findThemes.get(1).getId()).isEqualTo(themeId2);
+            assertThat(findThemes.get(1).getName()).isEqualTo(name2);
+            assertThat(findThemes.get(1).getDesc()).isEqualTo(desc2);
+            assertThat(findThemes.get(1).getPrice()).isEqualTo(price2);
+        }
+
+        @Test
+        void should_returnEmptyList_when_notExistTheme() {
+            assertThat(themeRepository.findAll()).isNotNull();
+            assertThat(themeRepository.findAll()).isEmpty();
+        }
+    }
+
 }
