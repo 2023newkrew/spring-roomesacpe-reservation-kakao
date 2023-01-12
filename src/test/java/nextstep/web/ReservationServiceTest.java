@@ -4,6 +4,7 @@ import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.service.ReservationService;
 import nextstep.dto.ReservationRequest;
+import nextstep.web.JdbcTemplateReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
