@@ -49,7 +49,11 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
-                Long id = repository.insertIfNotExistsDateTime(reservation);
+                if (repository.existsByDateAndTime(reservation.getDate(), reservation.getTime())) {
+                    throw new RuntimeException("해당 시각에는 이미 예약이 존재합니다.");
+                }
+
+                Long id = repository.insert(reservation);
                 reservation = repository.getById(id);
 
                 System.out.println("예약이 등록되었습니다.");
