@@ -30,7 +30,11 @@ public class WebAppReservationService {
                 reservationDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
-        if (webAppReservationRepository.countByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
+        int duplicatedCount = webAppReservationRepository.countByDateAndTime(
+                Date.valueOf(reservation.getDate()),
+                Time.valueOf(reservation.getTime())
+        );
+        if (duplicatedCount > 0) {
             return -1;
         }
         return webAppReservationRepository.add(reservation);
@@ -44,7 +48,4 @@ public class WebAppReservationService {
         webAppReservationRepository.delete(id);
     }
 
-    public void deleteAllReservations() {
-        webAppReservationRepository.deleteAll();
-    }
 }

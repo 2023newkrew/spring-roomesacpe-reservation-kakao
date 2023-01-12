@@ -50,8 +50,8 @@
 ### 리팩토링 목록
 - 리뷰 반영
   - [ ] 커넥션 연결, 해제 코드 메서드 분리 및 추상화
-  - [ ] 테스트시 테이블 재생성하는 부분을 프로덕션 코드에서 제거, Sql 어노테이션으로 대체
-  - [ ] WebAppReservationService에서 예약 중복 비교시 변수를 통해 가독성 향상
+  - [x] 테스트시 테이블 재생성하는 부분을 프로덕션 코드에서 제거, Sql 어노테이션으로 대체
+  - [x] WebAppReservationService에서 예약 중복 비교시 변수를 통해 가독성 향상
   - [ ] 프로덕션 코드성에서 Reservation equals 오버라이드 메서드 제거
   - [x] WebAppReservationRepository에서 예외 catch시 로그 출력
   - [x] 필드 주입을 생성자 주입으로 변경
