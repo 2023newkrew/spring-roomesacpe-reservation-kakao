@@ -1,32 +1,10 @@
 package roomescape.repository;
 
-import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
 import java.sql.*;
 
-public class ThemeConsoleRepository implements ThemeRepository {
-
-    private Connection getConnection() {
-        Connection con = null;
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-        return con;
-    }
-
-    private void close(Connection con) {
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
-    }
+public class ThemeConsoleRepository extends BaseConsoleRepository implements ThemeRepository {
 
     @Override
     public Long createTheme(Theme theme) {
@@ -53,32 +31,8 @@ public class ThemeConsoleRepository implements ThemeRepository {
         Theme theme = null;
         Connection con = getConnection();
         try {
-            String sql = "SELECT * FROM theme WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(FIND_THEME_BY_ID_SQL);
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                theme = new Theme(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("desc"),
-                        rs.getInt("price")
-                );
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    @Override
-    public Theme findThemeByName(String name) {
-        Theme theme = null;
-        Connection con = getConnection();
-        try {
-            String sql = "SELECT * FROM theme WHERE name = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 theme = new Theme(
@@ -99,8 +53,7 @@ public class ThemeConsoleRepository implements ThemeRepository {
         int count = 0;
         Connection con = getConnection();
         try {
-            String sql = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(UPDATE_THEME_SQL);
             ps.setString(1, theme.getName());
             ps.setString(2, theme.getDesc());
             ps.setInt(3, theme.getPrice());
@@ -118,8 +71,7 @@ public class ThemeConsoleRepository implements ThemeRepository {
         int count = 0;
         Connection con = getConnection();
         try {
-            String sql = "DELETE FROM theme WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(DELETE_THEME_SQL);
             ps.setLong(1, id);
             count = ps.executeUpdate();
         } catch (SQLException e) {

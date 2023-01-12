@@ -40,27 +40,17 @@ public class ThemeAppRepository implements ThemeRepository {
     }
 
     public Theme findThemeById(Long id) {
-        String sql = "select * from theme where id = ?";
-        return jdbcTemplate.query(sql, actorRowMapper, id).stream()
-                .findFirst()
-                .orElse(null);
-    }
-
-    public Theme findThemeByName(String name) {
-        String sql = "select * from theme where name = ?";
-        return jdbcTemplate.query(sql, actorRowMapper, name).stream()
+        return jdbcTemplate.query(FIND_THEME_BY_ID_SQL, actorRowMapper, id).stream()
                 .findFirst()
                 .orElse(null);
     }
 
     public int updateTheme(Theme theme) {
-        String sql = "update theme set name = ?, desc = ?, price = ? where id = ?";
-        return jdbcTemplate.update(sql, theme.getName(), theme.getDesc(), theme.getPrice(), theme.getId());
+        return jdbcTemplate.update(UPDATE_THEME_SQL, theme.getName(), theme.getDesc(), theme.getPrice(), theme.getId());
     }
 
     public int deleteTheme(Long id) {
-        String sql = "delete from theme where id = ?";
-        return jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(DELETE_THEME_SQL, id);
     }
 
 }
