@@ -18,7 +18,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public Reservation reserve(Reservation reservation) {
-        if (hasSameDateAndTimeReservation(reservation)) {
+        if (isDuplicateReservation(reservation)) {
             throw new DuplicateReservationException("날짜와 시간이 동일한 예약이 이미 존재합니다.");
         }
         return repository.save(reservation);
@@ -33,7 +33,7 @@ public class ReservationServiceImpl implements ReservationService {
         return repository.delete(id);
     }
 
-    private boolean hasSameDateAndTimeReservation(Reservation reservation) {
+    private boolean isDuplicateReservation(Reservation reservation) {
         List<Reservation> confirmedReservations = repository.findAll();
         return confirmedReservations.stream()
                 .anyMatch(confirmed ->
