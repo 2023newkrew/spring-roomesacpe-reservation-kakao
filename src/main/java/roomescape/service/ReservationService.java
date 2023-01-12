@@ -39,8 +39,12 @@ public class ReservationService {
     }
 
     private void checkForOverlappingReservation(ReservationRequestDto reservationRequest) {
-        if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
-            throw new IllegalArgumentException("Already have reservation at that date & time");
+        if (reservationRepository.hasOneByDateAndTimeAndTheme(
+                reservationRequest.getDate(),
+                reservationRequest.getTime(),
+                reservationRequest.getThemeId())
+        ) {
+            throw new IllegalArgumentException("Already have reservation for that theme at that date & time");
         }
     }
 }

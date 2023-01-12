@@ -57,10 +57,10 @@ public class ReservationJdbcRepositoryTest {
         Assertions.assertThat(optionalReservation).isEmpty();
     }
 
-    @DisplayName("특정 날짜, 시간의 Reservation 검출")
+    @DisplayName("특정 Theme, 날짜, 시간의 Reservation 검출")
     @Test
     @Transactional
-    public void hasOneByDateAndTimeTest() {
+    public void hasOneByDateAndTimeAndThemeTest() {
         //given
         LocalDate date = LocalDate.of(2023, 1,10);
         LocalTime time = LocalTime.of(11,11,11);
@@ -68,7 +68,7 @@ public class ReservationJdbcRepositoryTest {
         //when
         long reservationId = reservationRepository.save(reservation);
         //then
-        Assertions.assertThat(reservationRepository.hasOneByDateAndTime(date, time)).isTrue();
+        Assertions.assertThat(reservationRepository.hasOneByDateAndTimeAndTheme(date, time, theme.getId())).isTrue();
     }
 
     @DisplayName("특정 Theme의 Reservation 검출")

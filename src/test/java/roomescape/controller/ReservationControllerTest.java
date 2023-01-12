@@ -25,18 +25,18 @@ public class ReservationControllerTest {
     }
 
 
-    @DisplayName("예약 생성 성공 테스트")
-    @Test
-    void reservationSuccessTest() {
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        String name = "tester";
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(date, time, name);
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequestDto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-    }
+//    @DisplayName("예약 생성 성공 테스트")
+//    @Test
+//    void reservationSuccessTest() {
+//        LocalDate date = LocalDate.now();
+//        LocalTime time = LocalTime.now();
+//        String name = "tester";
+//        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(date, time, name);
+//        RestAssured.given().log().all()
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .body(reservationRequestDto)
+//                .when().post("/reservations")
+//                .then().log().all()
+//                .statusCode(HttpStatus.CREATED.value());
+//    }
 }

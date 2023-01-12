@@ -32,10 +32,10 @@ public class ReservationMemoryRepository implements ReservationRepository{
     }
 
     @Override
-    public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
+    public Boolean hasOneByDateAndTimeAndTheme(LocalDate date, LocalTime time, Long themeId) {
         return reservations.values()
                 .stream()
-                .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));
+                .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time) && reservation.getTheme().getId().equals(themeId));
     }
 
     @Override
