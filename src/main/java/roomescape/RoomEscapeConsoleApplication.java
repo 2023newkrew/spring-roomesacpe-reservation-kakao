@@ -49,7 +49,7 @@ public class RoomEscapeConsoleApplication {
                         theme
                 );
 
-                RESERVATION_JDBC_REPOSITORY.addReservation(reservation);
+                RESERVATION_JDBC_REPOSITORY.save(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());

@@ -7,13 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 
-public class ReservationJdbcRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
-    public void addReservation(Reservation reservation) {
+    @Override
+    public Long save(Reservation reservation) {
         // 드라이버 연결
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
             System.out.println("정상적으로 연결되었습니다.");
@@ -28,11 +30,38 @@ public class ReservationJdbcRepository {
             ps.setString(5, reservation.getTheme().getDesc());
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            return rs.getLong("id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Override
+    public Optional<Reservation> findByDateAndTime(final LocalDate date, final LocalTime time) {
+        try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
+            System.out.println("정상적으로 연결되었습니다.");
+
+            String sql = "SELECT * FROM reservation WHERE date = (?) AND time = (?) LIMIT 1";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
+
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+
+            final Reservation reservation = Reservation.from(rs);
+            return Optional.of(reservation);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Optional<Reservation> findById(Long reservationId) {
         // 드라이버 연결
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
@@ -48,17 +77,7 @@ public class ReservationJdbcRepository {
                 return Optional.empty();
             }
 
-            final Theme theme = new Theme(rs.getString(5),
-                    rs.getString(6),
-                    rs.getInt(7));
-
-            final Reservation reservation = new Reservation(
-                    rs.getLong(1),
-                    rs.getDate(2).toLocalDate(),
-                    rs.getTime(3).toLocalTime(),
-                    rs.getString(4),
-                    theme
-            );
+            final Reservation reservation = Reservation.from(rs);
 
             return Optional.of(reservation);
         } catch (SQLException e) {
@@ -66,6 +85,7 @@ public class ReservationJdbcRepository {
         }
     }
 
+    @Override
     public boolean deleteById(Long reservationId) {
         // 드라이버 연결
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
