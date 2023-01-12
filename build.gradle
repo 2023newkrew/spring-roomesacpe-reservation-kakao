@@ -18,8 +18,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.projectlombok:lombok:1.18.12'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.18'
-    implementation 'mysql:mysql-connector-java'
+//    implementation 'mysql:mysql-connector-java'
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.9.0'
     annotationProcessor('org.projectlombok:lombok:1.18.12')
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -30,3 +31,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+//
+//bootRun {
+//    String activeProfile = System.properties['spring.profiles.active']
+//    systemProperty "spring.profiles.active", activeProfile
+//}
