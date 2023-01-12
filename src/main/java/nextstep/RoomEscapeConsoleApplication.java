@@ -1,8 +1,10 @@
 package nextstep;
 
-import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.entity.Theme;
-import nextstep.reservation.repository.ConsoleReservationRepository;
+import nextstep.reservations.domain.entity.reservation.Reservation;
+import nextstep.reservations.domain.entity.theme.Theme;
+import nextstep.reservations.domain.repository.reservation.ConsoleReservationRepository;
+import nextstep.reservations.domain.repository.reservation.ReservationRepository;
+import nextstep.reservations.util.jdbc.JdbcUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,9 +18,10 @@ public class RoomEscapeConsoleApplication {
     private static final String QUIT = "quit";
 
     public static void main(String[] args) {
+        JdbcUtil.getConnection();
         Scanner scanner = new Scanner(System.in);
 
-        ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
+        ReservationRepository reservationRepository = new ConsoleReservationRepository();
         long reservationIdIndex = 0L;
 
         Theme theme = Theme.builder()
@@ -51,7 +54,7 @@ public class RoomEscapeConsoleApplication {
                         theme
                 );
 
-                consoleReservationRepository.add(reservation);
+                reservationRepository.add(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -64,7 +67,7 @@ public class RoomEscapeConsoleApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = consoleReservationRepository.findById(id);
+                Reservation reservation = reservationRepository.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -79,7 +82,7 @@ public class RoomEscapeConsoleApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                consoleReservationRepository.remove(id);
+                reservationRepository.remove(id);
                 System.out.println("예약이 취소되었습니다.");
 
             }
