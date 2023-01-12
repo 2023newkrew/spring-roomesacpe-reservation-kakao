@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ReservationAdvice {
     @ExceptionHandler(ReservationException.class)
-    public ResponseEntity handle() {
-        return ResponseEntity.badRequest().body("ReservationException");
+    public ResponseEntity handle(ReservationException reservationException) {
+        return ResponseEntity.badRequest().body(reservationException.getMessage());
     }
 }
