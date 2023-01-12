@@ -1,12 +1,15 @@
 package nextstep;
 
+import nextstep.reservation.dto.ReservationRequestDto;
+import nextstep.reservation.dto.ReservationResponseDto;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.repository.ConsoleReservationRepository;
+import nextstep.reservation.repository.ReservationTraditionalRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import nextstep.reservation.service.ReservationService;
 
 
 public class RoomEscapeConsoleApplication {
@@ -15,10 +18,14 @@ public class RoomEscapeConsoleApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
+    private static final String URL = "jdbc:h2:~/workspace/kakao/spring-roomesacpe-reservation-kakao/room-escape";
+    private static final String USER = "sa";
+    private static final String PASSWORD = "";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
+        ReservationService reservationService = new ReservationService(
+                new ReservationTraditionalRepository(URL, USER, PASSWORD));
         long reservationIdIndex = 0L;
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
@@ -46,8 +53,12 @@ public class RoomEscapeConsoleApplication {
                         name,
                         theme
                 );
-
-                consoleReservationRepository.add(reservation);
+                ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
+                        .date(LocalDate.parse(date))
+                        .time(LocalTime.parse(time + ":00"))
+                        .name(name)
+                        .build();
+                reservationService.addReservation(reservationRequestDto);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -58,30 +69,29 @@ public class RoomEscapeConsoleApplication {
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = consoleReservationRepository.findById(id);
-
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                ReservationResponseDto reservationResponseDto = reservationService.getReservation(id);
+                System.out.println("예약 번호: " + reservationResponseDto.getId());
+                System.out.println("예약 날짜: " + reservationResponseDto.getDate());
+                System.out.println("예약 시간: " + reservationResponseDto.getTime());
+                System.out.println("예약자 이름: " + reservationResponseDto.getName());
+                System.out.println("예약 테마 이름: " + reservationResponseDto.getThemeName());
+                System.out.println("예약 테마 설명: " + reservationResponseDto.getThemeDesc());
+                System.out.println("예약 테마 가격: " + reservationResponseDto.getThemePrice());
             }
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
-                consoleReservationRepository.remove(id);
+                reservationService.deleteReservation(id);
                 System.out.println("예약이 취소되었습니다.");
-
             }
 
             if (input.equals(QUIT)) {
                 break;
+            }
+            if (input.equals("all")){
+                System.out.println(reservationService.getAllReservation());
             }
         }
     }

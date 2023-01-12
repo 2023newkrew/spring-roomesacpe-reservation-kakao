@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ReservationRepository {
 
-    Reservation add(Reservation reservation);
+    Long add(Reservation reservation);
 
     Optional<Reservation> findById(Long id);
 
