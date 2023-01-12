@@ -58,6 +58,7 @@ public class ReservationRepositoryTest {
     void delete() {
         Long id = 100L;
 
+        assertThat(reservationRepository.findById(id)).isPresent();
         assertThatCode(() -> reservationRepository.deleteById(id)).doesNotThrowAnyException();
         assertThat(reservationRepository.findById(id)).isEmpty();
     }

@@ -36,6 +36,8 @@ public class ThemeControllerUnitTest {
     private ObjectMapper objectMapper;
     @MockBean
     ThemeService themeService;
+    @MockBean
+    ReservationService reservationService;
 
     @Test
     @DisplayName("성공적으로 테마가 생성된다.")

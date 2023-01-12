@@ -86,7 +86,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT EXISTS(SELECT * FROM reservation WHERE date = ? AND time = ?)";
-        return EMPTY_SIZE != jdbcTemplate.queryForObject(sql, new Object[]{Date.valueOf(date), Time.valueOf(time)}, Integer.class);
+        return jdbcTemplate.queryForObject(sql ,new Object[] {date, time}, Boolean.class);
     }
 
     @Override

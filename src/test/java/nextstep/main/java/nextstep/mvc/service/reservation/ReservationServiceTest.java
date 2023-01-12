@@ -45,7 +45,7 @@ public class ReservationServiceTest {
         given(reservationRepository.save(any()))
                 .willReturn(id);
         given(reservationRepository.findById(id))
-                .willReturn(Optional.ofNullable(createReservationFromIdAndRequest(id, request)));
+                .willReturn(Optional.ofNullable(reservation));
 
         Long newReservationId = reservationService.save(request);
         ReservationFindResponse response = reservationService.findById(newReservationId);
@@ -71,7 +71,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("[예약 조회] 존재하지 않는 예약은 조회 불가")
-    void findSuccess() {
+    void findNotExists() {
         Long id = 1L;
         given(reservationRepository.findById(id))
                 .willReturn(Optional.empty());
