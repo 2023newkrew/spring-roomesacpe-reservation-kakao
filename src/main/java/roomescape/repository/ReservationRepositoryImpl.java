@@ -9,21 +9,17 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import java.time.format.DateTimeFormatter;
-import roomescape.exceptions.exception.DuplicatedReservationException;
 
 @Repository
-public class DatabaseReservationRepository implements ReservationRepository{
+public class ReservationRepositoryImpl implements ReservationRepository{
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Long save(Reservation reservation) {
-        if (isReservationIdDuplicated(reservation)) {
-            throw new DuplicatedReservationException();
-        }
         String sql = "insert into RESERVATION (date, time, name) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -61,7 +57,7 @@ public class DatabaseReservationRepository implements ReservationRepository{
         return jdbcTemplate.update(sql, id);
     }
 
-    private boolean isReservationIdDuplicated(Reservation reservation) {
+    public boolean isReservationIdDuplicated(Reservation reservation) {
         String sql = "select count(*) from RESERVATION WHERE date =  ? and time = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, reservation.getDate(), reservation.getTime()) > 0;
     }

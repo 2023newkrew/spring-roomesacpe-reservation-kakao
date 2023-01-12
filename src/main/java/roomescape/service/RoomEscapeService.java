@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.exceptions.exception.DuplicatedReservationException;
 import roomescape.repository.ReservationRepository;
 import roomescape.exceptions.exception.NoSuchReservationException;
 import roomescape.dto.ReservationRequestDto;
@@ -15,7 +16,15 @@ public class RoomEscapeService {
     }
 
     public Long makeReservation(ReservationRequestDto reservationRequestDto) {
+        Reservation reservation = reservationRequestDto.toEntity();
+        validateNotExistentReservation(reservation);
         return reservationRepository.save(reservationRequestDto.toEntity());
+    }
+
+    private void validateNotExistentReservation(Reservation reservation) {
+        if (reservationRepository.isReservationIdDuplicated(reservation)) {
+            throw new DuplicatedReservationException();
+        }
     }
 
     public ReservationResponseDto findReservationById(Long reservationId) {

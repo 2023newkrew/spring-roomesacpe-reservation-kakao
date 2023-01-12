@@ -3,6 +3,7 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,47 +17,35 @@ import java.time.LocalTime;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
 public class ReservationSpringDaoTest {
-    private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
-    private final static LocalTime testTime = LocalTime.of(13, 0);
+    private final static LocalDate testDate = LocalDate.now();
+    private final static LocalTime testTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private ReservationDao reservationDao;
     private Reservation testReservation;
 
     @BeforeEach
     void setUp() {
         reservationDao = new ReservationSpringDao(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE RESERVATION IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE RESERVATION(" +
-                "    id          bigint not null auto_increment,\n" +
-                "    date        date,\n" +
-                "    time        time,\n" +
-                "    name        varchar(20),\n" +
-                "    theme_name  varchar(20),\n" +
-                "    theme_desc  varchar(255),\n" +
-                "    theme_price int,\n" +
-                "    primary key (id)\n)");
-        testReservation = new Reservation();
-        testReservation.setDate(testDate);
-        testReservation.setTime(testTime);
-        testReservation.setName("daniel");
+        testReservation = Reservation.builder().date(testDate).time(testTime).name("daniel").build();
     }
 
     @Test
     void createTest() {
-        assertThat(reservationDao.add(testReservation)).isEqualTo(1L);
+        assertThat(reservationDao.add(testReservation)).isPositive();
     }
 
     @Test
     void throwExceptionWhenDuplicated() {
+        testReservation.setTime(testReservation.getTime().plusHours(1));
         reservationDao.add(testReservation);
         assertThatThrownBy(() -> reservationDao.add(testReservation)).isInstanceOf(DuplicatedReservationException.class);
     }
 
     @Test
     void showTest() {
+        testReservation.setTime(testReservation.getTime().plusHours(2));
         long id = reservationDao.add(testReservation);
         testReservation.setId(id);
         assertThat(reservationDao.findById(id)).isEqualTo(testReservation);
@@ -64,17 +53,15 @@ public class ReservationSpringDaoTest {
 
     @Test
     void throwExceptionWhenReservationNotExist() {
-        assertThatThrownBy(() -> reservationDao.findById(1L)).isInstanceOf(NoSuchReservationException.class);
-
-        assertThatThrownBy(() -> reservationDao.deleteById(1L)).isInstanceOf(NoSuchReservationException.class);
+        assertThatThrownBy(() -> reservationDao.findById(0L)).isInstanceOf(NoSuchReservationException.class);
+        assertThatThrownBy(() -> reservationDao.deleteById(0L)).isInstanceOf(NoSuchReservationException.class);
     }
 
     @Test
     void deleteTest() {
+        testReservation.setTime(testReservation.getTime().plusHours(3));
         long id = reservationDao.add(testReservation);
-        testReservation.setId(id);
         reservationDao.deleteById(id);
-
         assertThatThrownBy(() -> reservationDao.findById(id)).isInstanceOf(NoSuchReservationException.class);
     }
 }

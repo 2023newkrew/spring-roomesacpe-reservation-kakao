@@ -10,28 +10,15 @@ import java.util.Optional;
 import roomescape.entity.Reservation;
 import roomescape.exceptions.exception.DuplicatedReservationException;
 
-public class ConsoleReservationRepository implements ReservationRepository{
-    public ConsoleReservationRepository(){
-        String dropSql = "DROP TABLE RESERVATION IF EXISTS";
-        String createSql =  "CREATE TABLE RESERVATION(" +
-                "    id          bigint not null auto_increment,\n" +
-                "    date        date,\n" +
-                "    time        time,\n" +
-                "    name        varchar(20),\n" +
-                "    theme_name  varchar(20),\n" +
-                "    theme_desc  varchar(255),\n" +
-                "    theme_price int,\n" +
-                "    primary key (id)\n)";
-        try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-             PreparedStatement dropPstmt = con.prepareStatement(dropSql);
-             PreparedStatement createPstmt = con.prepareStatement(createSql)
-        ){
-            dropPstmt.executeUpdate();
-            createPstmt.executeUpdate();
-        } catch(SQLException e){
+public class ReservationRepositoryWithoutTemplateImpl implements ReservationRepository {
+    public ReservationRepositoryWithoutTemplateImpl() {
+        try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "")) {
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
     }
+
     @Override
     public Long save(Reservation reservation) {
         if (isReservationIdDuplicated(reservation)) {
@@ -39,19 +26,19 @@ public class ConsoleReservationRepository implements ReservationRepository{
         }
         String sql = "INSERT INTO RESERVATION(date, time, name) VALUES (?, ?, ?)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-                PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, reservation.getDate().toString());
             pstmt.setString(2, reservation.getTime().toString());
             pstmt.setString(3, reservation.getName());
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()){
+            if (rs.next()) {
                 return rs.getLong("id");
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1L;
+        return null;
     }
 
     @Override
@@ -84,16 +71,16 @@ public class ConsoleReservationRepository implements ReservationRepository{
     public int delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-             PreparedStatement pstmt = con.prepareStatement(sql)){
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setLong(1, id);
             return pstmt.executeUpdate();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         throw new IllegalArgumentException();
     }
 
-    private boolean isReservationIdDuplicated(Reservation reservation) {
+    public boolean isReservationIdDuplicated(Reservation reservation) {
         String sql = "select count(*) from RESERVATION WHERE date =  ? and time = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {

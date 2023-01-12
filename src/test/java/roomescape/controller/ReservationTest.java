@@ -77,7 +77,7 @@ public class ReservationTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .statusCode(HttpStatus.CONFLICT.value())
                 .body(is("이미 예약된 시간입니다."));
     }
 
@@ -126,7 +126,7 @@ public class ReservationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/0")
                 .then().log().all()
-                .statusCode(HttpStatus.CONFLICT.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("존재하지 않는 예약 id입니다."));
     }
 }

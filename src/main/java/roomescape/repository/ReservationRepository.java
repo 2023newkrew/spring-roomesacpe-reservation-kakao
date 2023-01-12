@@ -11,4 +11,6 @@ public interface ReservationRepository {
     Optional<Reservation> findById(Long reservationId);
 
     int delete(Long reservationId);
+
+    boolean isReservationIdDuplicated(Reservation reservation);
 }
