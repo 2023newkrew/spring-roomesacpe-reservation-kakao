@@ -19,15 +19,15 @@ import java.util.Optional;
 public class ReservationWebRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-        resultSet.getLong("id"),
-        resultSet.getDate("date").toLocalDate(),
-        resultSet.getTime("time").toLocalTime(),
-        resultSet.getString("name"),
-        new Theme(
-            resultSet.getString("theme_name"),
-            resultSet.getString("theme_desc"),
-            resultSet.getInt("theme_price")
-        )
+            resultSet.getLong("id"),
+            resultSet.getDate("date").toLocalDate(),
+            resultSet.getTime("time").toLocalTime(),
+            resultSet.getString("name"),
+            new Theme(
+                    resultSet.getString("theme_name"),
+                    resultSet.getString("theme_desc"),
+                    resultSet.getInt("theme_price")
+            )
     );
 
     public ReservationWebRepository(JdbcTemplate jdbcTemplate) {
@@ -55,8 +55,8 @@ public class ReservationWebRepository implements ReservationRepository {
     public Optional<Reservation> getReservation(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = (?)";
         return jdbcTemplate.query(sql, reservationRowMapper, id)
-            .stream()
-            .findAny();
+                .stream()
+                .findAny();
     }
 
     @Override
@@ -69,8 +69,8 @@ public class ReservationWebRepository implements ReservationRepository {
     public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
         return jdbcTemplate.query(sql, reservationRowMapper, date, time)
-            .stream()
-            .findAny();
+                .stream()
+                .findAny();
     }
 
     @Override

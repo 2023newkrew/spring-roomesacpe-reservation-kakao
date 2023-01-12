@@ -38,6 +38,6 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(id, date, time, name, theme))
-            .isInstanceOf(RoomEscapeException.class);
+                .isInstanceOf(RoomEscapeException.class);
     }
 }

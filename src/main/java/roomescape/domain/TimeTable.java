@@ -21,6 +21,6 @@ public enum TimeTable {
 
     public static boolean isExist(LocalTime time) {
         return Arrays.stream(values())
-            .anyMatch(timeTable -> timeTable.time.equals(time));
+                .anyMatch(timeTable -> timeTable.time.equals(time));
     }
 }

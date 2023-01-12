@@ -6,8 +6,8 @@ public class ReservationResponse {
     private final Long id;
     private final String date;
     private final String time;
-    private final String themeName;
     private final String name;
+    private final String themeName;
     private final String themeDesc;
     private final Integer themePrice;
 
@@ -51,13 +51,13 @@ public class ReservationResponse {
 
     public static ReservationResponse fromEntity(Reservation reservation) {
         return new ReservationResponse(
-            reservation.getId(),
-            reservation.getDate().toString(),
-            reservation.getTime().toString(),
-            reservation.getName(),
-            reservation.getTheme().getName(),
-            reservation.getTheme().getDesc(),
-            reservation.getTheme().getPrice()
+                reservation.getId(),
+                reservation.getDate().toString(),
+                reservation.getTime().toString(),
+                reservation.getName(),
+                reservation.getTheme().getName(),
+                reservation.getTheme().getDesc(),
+                reservation.getTheme().getPrice()
         );
     }
 }

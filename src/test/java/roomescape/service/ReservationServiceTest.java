@@ -16,7 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest
@@ -43,9 +44,9 @@ class ReservationServiceTest {
     void createReservation() {
         // given
         ReservationRequest reservationRequest = new ReservationRequest(
-            LocalDate.now().toString(),
-            LocalTime.of(11, 30).toString(),
-            "name"
+                LocalDate.now().toString(),
+                LocalTime.of(11, 30).toString(),
+                "name"
         );
 
         // when
@@ -60,21 +61,21 @@ class ReservationServiceTest {
     void createReservationDuplicated() {
         // given
         ReservationRequest reservationRequest1 = new ReservationRequest(
-            LocalDate.now().toString(),
-            LocalTime.of(11, 30).toString(),
-            "reservation1"
+                LocalDate.now().toString(),
+                LocalTime.of(11, 30).toString(),
+                "reservation1"
         );
         reservationService.createReservation(reservationRequest1);
 
         ReservationRequest reservationRequest2 = new ReservationRequest(
-            LocalDate.now().toString(),
-            LocalTime.of(11, 30).toString(),
-            "reservation2"
+                LocalDate.now().toString(),
+                LocalTime.of(11, 30).toString(),
+                "reservation2"
         );
 
         // when & then
         assertThatThrownBy(() -> reservationService.createReservation(reservationRequest2))
-            .isInstanceOf(RoomEscapeException.class);
+                .isInstanceOf(RoomEscapeException.class);
     }
 
     @DisplayName("ReservationId를 통해 예약을 조회할 수 있다.")
@@ -82,9 +83,9 @@ class ReservationServiceTest {
     void getReservation() {
         // given
         ReservationRequest reservationRequest = new ReservationRequest(
-            LocalDate.now().toString(),
-            LocalTime.of(11, 30).toString(),
-            "name"
+                LocalDate.now().toString(),
+                LocalTime.of(11, 30).toString(),
+                "name"
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
 
@@ -114,9 +115,9 @@ class ReservationServiceTest {
     void deleteReservation() {
         // given
         ReservationRequest reservationRequest = new ReservationRequest(
-            LocalDate.now().toString(),
-            LocalTime.of(11, 30).toString(),
-            "name"
+                LocalDate.now().toString(),
+                LocalTime.of(11, 30).toString(),
+                "name"
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
 
