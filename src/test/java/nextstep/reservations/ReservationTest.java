@@ -38,11 +38,11 @@ public class ReservationTest {
     void 예약_생성() {
         Map<String, Object> reservationRequest = new HashMap<>();
         reservationRequest.put("date", "2022-08-01");
-        reservationRequest.put("time", "14:00");
+        reservationRequest.put("time", "13:00");
         reservationRequest.put("name", "name");
         reservationRequest.put("themeName", "워너고홈");
         reservationRequest.put("themeDesc", "병맛 어드벤처 회사 코믹물");
-        reservationRequest.put("themePrice", 29000);
+        reservationRequest.put("themePrice", 29_000);
 
 
         RestAssured.given().log().all()
@@ -82,11 +82,11 @@ public class ReservationTest {
     void 중복_예약_오류() {
         Map<String, Object> reservationRequest = new HashMap<>();
         reservationRequest.put("date", "1982-02-19");
-        reservationRequest.put("time", "02:02");
+        reservationRequest.put("time", "13:00");
         reservationRequest.put("name", "name");
         reservationRequest.put("themeName", "워너고홈");
         reservationRequest.put("themeDesc", "병맛 어드벤처 회사 코믹물");
-        reservationRequest.put("themePrice", 29000);
+        reservationRequest.put("themePrice", 29_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -95,5 +95,25 @@ public class ReservationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("해당 시간에 해당 테마의 중복된 예약이 있습니다."));
+    }
+
+    @Test
+    void 예약할_수_없는_시간_오류() {
+        Map<String, Object> reservationRequest = new HashMap<>();
+        reservationRequest.put("date", "2022-08-01");
+        reservationRequest.put("time", "14:00");
+        reservationRequest.put("name", "name");
+        reservationRequest.put("themeName", "워너고홈");
+        reservationRequest.put("themeDesc", "병맛 어드벤처 회사 코믹물");
+        reservationRequest.put("themePrice", 29_000);
+
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequest)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("예약할 수 없는 시간입니다."));
     }
 }

@@ -21,7 +21,7 @@ public class RoomEscapeConsoleApplication {
         JdbcUtil.getConnection();
         Scanner scanner = new Scanner(System.in);
 
-        ReservationRepository reservationRepository = new ConsoleReservationRepository();
+        ReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
         long reservationIdIndex = 0L;
 
         Theme theme = Theme.builder()
@@ -54,10 +54,10 @@ public class RoomEscapeConsoleApplication {
                         theme
                 );
 
-                reservationRepository.add(reservation);
+                Long createdId = consoleReservationRepository.add(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservation.getId());
+                System.out.println("예약 번호: " + createdId);
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
@@ -67,7 +67,7 @@ public class RoomEscapeConsoleApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = reservationRepository.findById(id);
+                Reservation reservation = consoleReservationRepository.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -82,7 +82,7 @@ public class RoomEscapeConsoleApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                reservationRepository.remove(id);
+                consoleReservationRepository.remove(id);
                 System.out.println("예약이 취소되었습니다.");
 
             }

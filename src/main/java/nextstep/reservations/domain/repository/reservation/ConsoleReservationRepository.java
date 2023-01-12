@@ -4,30 +4,24 @@ import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class ConsoleReservationRepository implements ReservationRepository{
-    public ConsoleReservationRepository() {
-        try (Connection connection = JdbcUtil.getConnection()) {
-            PreparedStatement pstmt;
-
-            pstmt = connection.prepareStatement(ReservationQuery.TRUNCATE.get());
-            pstmt.executeUpdate();
-        }
-        catch (SQLException e) {
-            throw new RuntimeException();
-        }
-    }
-
     @Override
     public Long add(Reservation reservation) {
         try (Connection connection = JdbcUtil.getConnection()) {
             PreparedStatement pstmt = getInsertOnePstmt(connection, reservation);
             pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getLong("id");
+            }
         }
         catch (SQLException e) {
             throw new DuplicateReservationException();
@@ -43,7 +37,6 @@ public class ConsoleReservationRepository implements ReservationRepository{
             pstmt = connection.prepareStatement(ReservationQuery.FIND_BY_ID.get());
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
-
 
             if (rs.next()) {
                 return Reservation.builder()

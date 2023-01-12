@@ -20,7 +20,6 @@ public class ThemeController {
     @PostMapping
     public ResponseEntity<Object> addTheme(@RequestBody ThemeRequestDto themeRequestDto) {
         Long id = themeService.addTheme(themeRequestDto);
-
         return ResponseEntity
                 .created(URI.create("/themes/" + id))
                 .build();
@@ -29,7 +28,6 @@ public class ThemeController {
     @GetMapping
     public ResponseEntity<List<ThemeResponseDto>> getAllThemes() {
         List<ThemeResponseDto> allThemes = themeService.getAllThemes();
-
         return ResponseEntity
                 .ok()
                 .body(allThemes);

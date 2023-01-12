@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.service.reservation.ReservationService;
 import nextstep.reservations.dto.reservation.ReservationRequestDto;
 import nextstep.reservations.dto.reservation.ReservationResponseDto;
+import nextstep.reservations.dto.reservation.TimeTable;
+import nextstep.reservations.exceptions.reservation.exception.NotAvailableTimeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,10 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> addReservation(@RequestBody ReservationRequestDto requestDto) {
+        if (!TimeTable.values.contains(requestDto.getTime())) {
+            throw new NotAvailableTimeException();
+        }
         Long id = reservationService.addReservation(requestDto);
-
         return ResponseEntity
                 .created(URI.create("/reservations/" + id))
                 .build();

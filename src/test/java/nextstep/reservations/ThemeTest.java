@@ -35,7 +35,7 @@ public class ThemeTest {
         Map<String, Object> themeRequest = new HashMap<>();
         themeRequest.put("name", "새로운 테마");
         themeRequest.put("desc", "테마설명");
-        themeRequest.put("price", 22000);
+        themeRequest.put("price", 22_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +69,7 @@ public class ThemeTest {
         Map<String, Object> themeRequest = new HashMap<>();
         themeRequest.put("name", "워너고홈");
         themeRequest.put("desc", "테마설명");
-        themeRequest.put("price", 22000);
+        themeRequest.put("price", 22_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
