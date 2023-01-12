@@ -1,8 +1,11 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
+import nextstep.dto.ReservationRequest;
 import nextstep.dto.ThemeRequest;
+import nextstep.repository.ReservationJdbcTemplateDao;
 import nextstep.repository.ThemeJdbcTemplateDao;
+import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +20,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +37,10 @@ class ThemeControllerTest {
     ThemeService themeService;
     @Autowired
     ThemeJdbcTemplateDao themeJdbcTemplateDao;
+    @Autowired
+    ReservationService reservationService;
+    @Autowired
+    ReservationJdbcTemplateDao reservationJdbcTemplateDao;
 
 
     @BeforeEach
@@ -47,6 +56,7 @@ class ThemeControllerTest {
 
     @AfterEach
     void afterEach() {
+        reservationJdbcTemplateDao.clear();
         themeJdbcTemplateDao.clear();
     }
 
@@ -201,8 +211,8 @@ class ThemeControllerTest {
 
     @DisplayName("수정 - 유효하지 않은 id 로 요청시 예외처리 되어야 한다.")
     @ParameterizedTest
-    @ValueSource(longs = {-1, 0})
-    void updateByInvalidId(Long invalidId) {
+    @ValueSource(strings = {"-1", "0", "abc"})
+    void updateByInvalidId(String invalidId) {
         Map<String, String> request = new HashMap<>() {{
             put("name", "테마이름2");
             put("desc", "테마설명2");
@@ -236,6 +246,31 @@ class ThemeControllerTest {
                 .statusCode(HttpStatus.CONFLICT.value());
     }
 
+    @DisplayName("수정 - 해당하는 테마로 예약된 내역이 있다면 예외처리 되어야 한다.")
+    @Test
+    void updateByIdWithRegisteredReservation() {
+        ReservationRequest requestDto = new ReservationRequest(
+                LocalDate.parse("2023-03-10"),
+                LocalTime.parse("13:00"),
+                "jay",
+                1L
+        );
+        reservationService.reserve(requestDto);
+
+        Map<String, String> request = new HashMap<>() {{
+            put("name", "테마이름2");
+            put("desc", "테마설명2");
+            put("price", "23000");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
+
     @DisplayName("삭제 - 요청이 정상적으로 이루어져야 한다")
     @Test
     void deleteNormally() {
@@ -265,5 +300,23 @@ class ThemeControllerTest {
                 .when().delete("/themes/" + invalidId)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("삭제 - 해당하는 테마로 예약된 내역이 있다면 예외처리 되어야 한다.")
+    @Test
+    void deleteByIdWithRegisteredReservation() {
+        ReservationRequest requestDto = new ReservationRequest(
+                LocalDate.parse("2023-03-10"),
+                LocalTime.parse("13:00"),
+                "jay",
+                1L
+        );
+        reservationService.reserve(requestDto);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
     }
 }

@@ -5,6 +5,7 @@ import nextstep.dto.ThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.exceptions.ErrorCode;
 import nextstep.exceptions.exception.InvalidRequestException;
+import nextstep.repository.ReservationDao;
 import nextstep.repository.ThemeDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class ThemeService {
+    private ReservationDao reservationDao;
     private ThemeDao themeDao;
 
-    public ThemeService(@Qualifier("themeJdbcTemplateDao") ThemeDao themeDao) {
+    public ThemeService(
+            @Qualifier("reservationJdbcTemplateDao") ReservationDao reservationDao,
+            @Qualifier("themeJdbcTemplateDao") ThemeDao themeDao
+    ) {
+        this.reservationDao = reservationDao;
         this.themeDao = themeDao;
     }
 
@@ -61,6 +67,9 @@ public class ThemeService {
         if (!themeFound.get().getName().equals(themeRequest.getName())) {
             validateNameDuplication(themeRequest.getName());
         }
+        if (reservationDao.countByThemeId(id) > 0) {
+            throw new InvalidRequestException(ErrorCode.RESERVATION_EXIST);
+        }
         Theme theme = new Theme(id, themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
         themeDao.update(theme);
         return id;
@@ -76,6 +85,9 @@ public class ThemeService {
         validateId(id);
         if (themeDao.findById(id).isEmpty()) {
             throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
+        }
+        if (reservationDao.countByThemeId(id) > 0) {
+            throw new InvalidRequestException(ErrorCode.RESERVATION_EXIST);
         }
         themeDao.delete(id);
     }

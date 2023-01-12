@@ -31,6 +31,11 @@ public class ReservationJdbcTemplateDao implements ReservationDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time, themeId);
     }
 
+    public int countByThemeId(Long themeId) {
+        String sql = "SELECT count(*) FROM reservation WHERE theme_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, themeId);
+    }
+
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT *, theme.name AS theme_name, theme.desc AS theme_desc, theme.price AS theme_price " +
                 "FROM reservation " +

@@ -75,6 +75,26 @@ public class ReservationJdbcDao implements ReservationDao {
         return count;
     }
 
+    public int countByThemeId(Long themeId) {
+        Connection con = getConnection();
+
+        int count = 0;
+        try {
+            String sql = "SELECT count(*) FROM reservation WHERE theme_id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            count = rs.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        closeConnection(con);
+        return count;
+    }
+
     public Optional<Reservation> findById(Long id) {
         Optional<Reservation> reservation;
         // 드라이버 연결

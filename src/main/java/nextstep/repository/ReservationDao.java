@@ -44,6 +44,8 @@ public interface ReservationDao {
 
     int countByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
 
+    int countByThemeId(Long themeId);
+
     Optional<Reservation> findById(Long id);
 
     void delete(Long id);
