@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode
 public class ReservationDto {
