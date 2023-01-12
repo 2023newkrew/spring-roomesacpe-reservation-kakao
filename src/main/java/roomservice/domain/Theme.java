@@ -1,5 +1,11 @@
-package nextstep;
+package roomservice.domain;
 
+import lombok.Data;
+
+/**
+ * Theme class is DTO class, containing room-escape theme information such as name, description, price.
+ */
+@Data
 public class Theme {
     private String name;
     private String desc;
@@ -9,17 +15,5 @@ public class Theme {
         this.name = name;
         this.desc = desc;
         this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
     }
 }
