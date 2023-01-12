@@ -12,14 +12,14 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final Theme theme;
+    private final Long themeId;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, long theme) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = theme;
     }
 
     public Long getId() {
@@ -38,8 +38,8 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Long getThemeId() {
+        return themeId;
     }
 
     @Override
@@ -47,11 +47,11 @@ public class Reservation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(theme, that.theme);
+        return Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(themeId, that.themeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, time, name, theme);
+        return Objects.hash(id, date, time, name, themeId);
     }
 }

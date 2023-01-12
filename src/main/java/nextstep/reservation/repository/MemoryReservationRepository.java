@@ -22,7 +22,7 @@ public class MemoryReservationRepository implements ReservationRepository {
             throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
         Long id = reservationCount.getAndIncrement();
-        Reservation creatteReservation = new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        Reservation creatteReservation = new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
         reservationList.put(id, creatteReservation);
         return creatteReservation;
     }

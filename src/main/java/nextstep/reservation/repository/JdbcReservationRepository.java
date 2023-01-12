@@ -1,7 +1,6 @@
 package nextstep.reservation.repository;
 
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.exception.ReservationExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,25 +32,22 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation create(Reservation reservation) {
-        Theme theme = reservation.getTheme();
         if (findByDateTime(reservation.getDate(), reservation.getTime())) {
             throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
-        String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) values(?,?,?,?,?,?)";
+
+        String sql = "insert into reservation (date, time, name, theme_id) values(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
-
+            ps.setLong(4, reservation.getThemeId());
             return ps;
         }, keyHolder);
 
-        return new Reservation(keyHolder.getKey().longValue(), reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
+        return new Reservation(keyHolder.getKey().longValue(), reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
     }
 
     @Override
@@ -90,10 +86,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 resultSet.getDate("date").toLocalDate(),
                 resultSet.getTime("time").toLocalTime(),
                 resultSet.getString("name"),
-                new Theme(resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price"))
-        );
+                resultSet.getLong("theme_id"));
     }
 
 }
