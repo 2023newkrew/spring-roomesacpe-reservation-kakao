@@ -8,3 +8,10 @@
    - id에 대응되는 예약이 없으면 예외 처리 할 것 (ErrorCode : 404)
 3. 예약 취소
 4. 예외 처리
+
+## 리팩터링 중점 사안
+- [ ] ReservationService를 콘솔에서도 재사용 하도록 변경
+- [ ] ReservationRepository Interface를 사용하도록 변경
+- [ ] Repository단 중복 로직 제거를 위한 Mapper 사용 고려
+- [ ] 테스트 이후에도 데이터 삭제하는 로직 필요
+- [x] 예외의 경우 테스트 보강 (id 없는 경우)

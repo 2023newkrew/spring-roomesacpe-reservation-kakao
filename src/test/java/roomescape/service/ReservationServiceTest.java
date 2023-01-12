@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest
@@ -29,6 +30,11 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
+        reservationWebRepository.deleteAllReservations();
+    }
+
+    @AfterEach
+    void tearDown() {
         reservationWebRepository.deleteAllReservations();
     }
 
@@ -92,6 +98,17 @@ class ReservationServiceTest {
         assertThat(reservationRequest.getTime().toString()).isEqualTo(reservationResponse.getTime());
     }
 
+    @DisplayName("등록되지 않은 ReservationId를 가지고 조회 시, 예외가 발생한다.")
+    @Test
+    void getReservationNotFound() {
+        // given
+        Long invalidReservationId = 1000000L;
+
+        // when
+        assertThatCode(() -> reservationService.getReservation(invalidReservationId))
+                .isInstanceOf(RoomEscapeException.class);
+    }
+
     @DisplayName("Reservation을 Id로 삭제할 수 있다.")
     @Test
     void deleteReservation() {
@@ -109,5 +126,16 @@ class ReservationServiceTest {
         // then
         Optional<Reservation> reservation = reservationWebRepository.getReservation(reservationId);
         assertThat(reservation).isEmpty();
+    }
+
+    @DisplayName("등록되지 않은 ReservationId를 가지고 삭제 시, 예외가 발생한다.")
+    @Test
+    void deleteReservationNotFound() {
+        // given
+        Long invalidReservationId = 1000000L;
+
+        // when
+        assertThatCode(() -> reservationService.deleteReservation(invalidReservationId))
+                .isInstanceOf(RoomEscapeException.class);
     }
 }
