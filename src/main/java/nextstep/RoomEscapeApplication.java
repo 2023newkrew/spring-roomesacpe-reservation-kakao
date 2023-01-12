@@ -1,8 +1,7 @@
 package nextstep;
 
-import nextstep.dto.request.CreateReservationConsoleRequest;
-import nextstep.dto.request.CreateReservationRequest;
-import nextstep.dto.response.ReservationConsoleResponse;
+import nextstep.dto.console.request.CreateReservationConsoleRequest;
+import nextstep.dto.console.response.ReservationConsoleResponse;
 import nextstep.exception.DatabaseException;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;

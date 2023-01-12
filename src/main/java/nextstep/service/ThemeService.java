@@ -1,8 +1,8 @@
 package nextstep.service;
 
 import nextstep.domain.Theme;
-import nextstep.dto.request.CreateThemeRequest;
-import nextstep.dto.response.ThemeResponse;
+import nextstep.dto.web.request.CreateThemeRequest;
+import nextstep.dto.web.response.ThemeResponse;
 import nextstep.exception.ReservedThemeException;
 import nextstep.repository.reservation.ReservationRepository;
 import nextstep.repository.theme.ThemeRepository;

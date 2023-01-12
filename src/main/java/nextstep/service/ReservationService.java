@@ -1,10 +1,10 @@
 package nextstep.service;
 
 import nextstep.domain.Reservation;
-import nextstep.dto.request.CreateReservationConsoleRequest;
-import nextstep.dto.request.CreateReservationRequest;
-import nextstep.dto.response.ReservationConsoleResponse;
-import nextstep.dto.response.ReservationResponse;
+import nextstep.dto.console.request.CreateReservationConsoleRequest;
+import nextstep.dto.web.request.CreateReservationRequest;
+import nextstep.dto.console.response.ReservationConsoleResponse;
+import nextstep.dto.web.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.reservation.ReservationRepository;

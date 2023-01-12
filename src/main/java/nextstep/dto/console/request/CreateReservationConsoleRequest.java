@@ -1,4 +1,4 @@
-package nextstep.dto.request;
+package nextstep.dto.console.request;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;

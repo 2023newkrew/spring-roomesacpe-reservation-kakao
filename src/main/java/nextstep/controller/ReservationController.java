@@ -1,7 +1,7 @@
 package nextstep.controller;
 
-import nextstep.dto.request.CreateReservationRequest;
-import nextstep.dto.response.ReservationResponse;
+import nextstep.dto.web.request.CreateReservationRequest;
+import nextstep.dto.web.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.service.ReservationService;

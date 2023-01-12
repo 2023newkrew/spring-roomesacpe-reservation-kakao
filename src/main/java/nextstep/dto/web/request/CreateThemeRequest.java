@@ -1,27 +1,26 @@
-package nextstep.dto.response;
+package nextstep.dto.web.request;
 
 import nextstep.domain.Theme;
 
-public class ThemeResponse {
-    private Long id;
+public class CreateThemeRequest {
     private final String name;
     private final String desc;
     private final Integer price;
 
-    private ThemeResponse(Long id, String name, String desc, Integer price) {
-        this.id = id;
+    private CreateThemeRequest(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
     }
 
-    public static ThemeResponse ofEntity(Theme theme) {
-        return new ThemeResponse(theme.getId(), theme.getName(), theme.getDesc(), theme.getPrice());
+    public static CreateThemeRequest of(String name, String desc, Integer price) {
+        return new CreateThemeRequest(name, desc, price);
     }
 
-    public Long getId() {
-        return id;
+    public Theme toEntity() {
+        return Theme.of(null, name, desc, price);
     }
+
     public String getName() {
         return name;
     }

@@ -1,4 +1,4 @@
-package nextstep.dto.response;
+package nextstep.dto.web.response;
 
 import nextstep.domain.Reservation;
 

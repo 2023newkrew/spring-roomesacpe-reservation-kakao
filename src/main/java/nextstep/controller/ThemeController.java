@@ -1,7 +1,7 @@
 package nextstep.controller;
 
-import nextstep.dto.request.CreateThemeRequest;
-import nextstep.dto.response.ThemeResponse;
+import nextstep.dto.web.request.CreateThemeRequest;
+import nextstep.dto.web.response.ThemeResponse;
 import nextstep.exception.ReservedThemeException;
 import nextstep.service.ThemeService;
 import org.springframework.http.HttpStatus;
