@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationAppDAO;
@@ -10,26 +11,26 @@ import roomescape.dto.ReservationRequest;
 @Transactional
 public class ReservationService {
 
-    private ReservationAppDAO reservationAppDAO;
+    private ReservationDAO reservationDAO;
 
     public ReservationService(ReservationAppDAO reservationAppDAO) {
-        this.reservationAppDAO = reservationAppDAO;
+        this.reservationDAO = reservationAppDAO;
     }
 
     public Reservation createReservation(ReservationRequest reservationRequest) {
-        if (reservationAppDAO.checkSchedule(reservationRequest) == 0) {
-            Long id = reservationAppDAO.addReservation(reservationRequest.toReservation());
-            return reservationAppDAO.findReservation(id);
+        if (reservationDAO.checkSchedule(reservationRequest) == 0) {
+            Long id = reservationDAO.addReservation(reservationRequest.toReservation());
+            return reservationDAO.findReservation(id);
         }
         return null;
     }
 
     public Reservation showReservation(Long id) {
-        return reservationAppDAO.findReservation(id);
+        return reservationDAO.findReservation(id);
     }
 
     public int deleteReservation(Long id) {
-        return reservationAppDAO.removeReservation(id);
+        return reservationDAO.removeReservation(id);
     }
 
 }
