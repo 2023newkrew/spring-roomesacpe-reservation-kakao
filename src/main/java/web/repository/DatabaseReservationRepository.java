@@ -6,7 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.entity.Reservation;
-import web.exception.ReservationDuplicateException;
+import web.exception.ReservationException;
 
 import javax.sql.DataSource;
 import java.sql.Date;
@@ -29,7 +29,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     @Override
     public long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
-            throw new ReservationDuplicateException(RESERVATION_DUPLICATE);
+            throw new ReservationException(RESERVATION_DUPLICATE);
         }
         String sql = "INSERT INTO RESERVATION (date, time, name) VALUES (?, ?, ?);";
         try {

@@ -1,7 +1,7 @@
 package web.repository;
 
 import web.entity.Reservation;
-import web.exception.ReservationDuplicateException;
+import web.exception.ReservationException;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
-            throw new ReservationDuplicateException(RESERVATION_DUPLICATE);
+            throw new ReservationException(RESERVATION_DUPLICATE);
         }
         reservations.put(++createdId, reservation);
         return createdId;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import web.dto.ReservationRequestDto;
 import web.dto.ReservationResponseDto;
 import web.entity.Reservation;
-import web.exception.ReservationNotFoundException;
+import web.exception.ReservationException;
 import web.repository.ReservationRepository;
 
 import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
@@ -22,14 +22,14 @@ public class RoomEscapeService {
 
     public ReservationResponseDto findReservationById(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationNotFoundException(RESERVATION_NOT_FOUND));
+                .orElseThrow(() -> new ReservationException(RESERVATION_NOT_FOUND));
         return ReservationResponseDto.of(reservationId, reservation);
     }
 
     public void cancelReservation(long reservationId) {
         long deleteReservationCount = reservationRepository.delete(reservationId);
         if (deleteReservationCount == 0) {
-            throw new ReservationNotFoundException(RESERVATION_NOT_FOUND);
+            throw new ReservationException(RESERVATION_NOT_FOUND);
         }
     }
 }

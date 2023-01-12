@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import web.entity.Reservation;
-import web.exception.ReservationDuplicateException;
+import web.exception.ReservationException;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
@@ -58,7 +58,7 @@ public class ReservationRepositoryTest {
             reservationRepository.save(reservation);
 
             assertThatThrownBy(() -> reservationRepository.save(reservation))
-                    .isInstanceOf(ReservationDuplicateException.class);
+                    .isInstanceOf(ReservationException.class);
         }
     }
 

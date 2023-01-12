@@ -16,8 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import web.dto.ReservationResponseDto;
 import web.entity.Reservation;
-import web.exception.ReservationDuplicateException;
-import web.exception.ReservationNotFoundException;
+import web.exception.ReservationException;
 import web.service.RoomEscapeService;
 
 import java.time.LocalDate;
@@ -65,7 +64,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void should_responseConflict_when_duplicateReservation() throws Exception {
-            when(roomEscapeService.reservation(any())).thenThrow(new ReservationDuplicateException(RESERVATION_DUPLICATE));
+            when(roomEscapeService.reservation(any())).thenThrow(new ReservationException(RESERVATION_DUPLICATE));
             String content = getValidContent();
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -193,7 +192,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void should_responseNotFound_when_notExistId() throws Exception {
-            when(roomEscapeService.findReservationById(anyLong())).thenThrow(new ReservationNotFoundException(RESERVATION_NOT_FOUND));
+            when(roomEscapeService.findReservationById(anyLong())).thenThrow(new ReservationException(RESERVATION_NOT_FOUND));
             mockMvc.perform(get("/reservations/-1")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound())
@@ -213,7 +212,7 @@ public class RoomEscapeControllerTest {
 
         @Test
         void shoud_responseNotFound_then_notExistId() throws Exception {
-            doThrow(new ReservationNotFoundException(RESERVATION_NOT_FOUND)).when(roomEscapeService).cancelReservation(anyLong());
+            doThrow(new ReservationException(RESERVATION_NOT_FOUND)).when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").value(RESERVATION_NOT_FOUND.getMessage()));
