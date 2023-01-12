@@ -58,7 +58,7 @@ public class ReservationJDBCRepository {
         try {
             return jdbcTemplate.queryForObject(SELECT_SQL, customerRowMapper, id);
         } catch (DataAccessException e) {
-            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND, e);
         }
     }
 
