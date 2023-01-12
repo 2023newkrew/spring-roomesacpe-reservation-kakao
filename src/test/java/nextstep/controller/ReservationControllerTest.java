@@ -65,16 +65,20 @@ public class ReservationControllerTest {
     void getReservation() {
         CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
 
-        RestAssured.given().log().all()
+        String location = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .header("Location");
+
+        long id = Long.parseLong(location.split("/")[2]);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/1")
+                .when().get("/reservations/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -92,13 +96,18 @@ public class ReservationControllerTest {
     void deleteReservation() {
         CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
 
-        RestAssured.given().log().all()
+        String location = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
-                .when().post("/reservations");
+                .when().post("/reservations")
+                .then().log().all()
+                .extract()
+                .header("Location");
+
+        long id = Long.parseLong(location.split("/")[2]);
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/"+id)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
