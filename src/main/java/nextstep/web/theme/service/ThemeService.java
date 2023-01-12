@@ -58,6 +58,6 @@ public class ThemeService {
     }
 
     private boolean isReserved(Long themeId) {
-        return ((ReservationDao) reservationRepository).findByThemeId(themeId).size() == 0;
+        return ((ReservationDao) reservationRepository).findByThemeId(themeId).size() != 0;
     }
 }
