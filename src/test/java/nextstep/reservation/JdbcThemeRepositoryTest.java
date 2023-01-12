@@ -35,7 +35,7 @@ class JdbcThemeRepositoryTest {
         Theme created = jdbcThemeRepository.create(theme);
 
         //then
-        assertThat(themeTestEaquals(theme, created)).isTrue();
+        assertThat(themeTestEquals(theme, created)).isTrue();
     }
 
 
@@ -82,7 +82,7 @@ class JdbcThemeRepositoryTest {
 
     }
 
-    private boolean themeTestEaquals(Theme a, Theme b) {
+    private boolean themeTestEquals(Theme a, Theme b) {
         return a.getName().equals(b.getName()) &&
                 a.getDesc().equals(b.getDesc()) &&
                 a.getPrice().equals(b.getPrice());
