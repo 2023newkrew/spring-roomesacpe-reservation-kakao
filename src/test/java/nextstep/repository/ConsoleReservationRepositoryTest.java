@@ -22,6 +22,7 @@ public class ConsoleReservationRepositoryTest {
     @Test
     void consoleReservationRepo() {
         Reservation newReservation = new Reservation(
+                null,
                 LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00"),
                 "name",

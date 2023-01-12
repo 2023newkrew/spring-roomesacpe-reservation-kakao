@@ -1,5 +1,6 @@
 package nextstep.domain.reservation;
 
+import nextstep.domain.dto.CreateReservationDto;
 import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
@@ -11,14 +12,6 @@ public class Reservation {
     private final LocalTime time;
     private final String name;
     private final Theme theme;
-
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = null;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
         this.id = id;
@@ -55,5 +48,15 @@ public class Reservation {
         && this.date.equals(reservation.getDate())
         && this.time.equals(reservation.getTime())
         && this.theme.equals(reservation.getTheme());
+    }
+
+    public static Reservation createReservation(CreateReservationDto createReservationDto) {
+        return new Reservation(
+                null,
+                LocalDate.parse(createReservationDto.getLocalDate()),
+                LocalTime.parse(createReservationDto.getLocalTime()),
+                createReservationDto.getName(),
+                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+        );
     }
 }

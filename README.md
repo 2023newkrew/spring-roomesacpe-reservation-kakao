@@ -58,10 +58,11 @@
   - [x] Reservation insert 실패시 예외로 처리하도록 수정
   - [x] 자원을 해제하는 코드를 finally 블록 안으로 이동
   - [ ] 테스트 이름을 목적과 예상 결과를 포함하도록 수정
+  - [ ] equals() 오버라이딩 시 hashcode() 함께 오버라이딩
 
 
 - [x] 콘솔 앱과 웹 앱이 같은 Service를 공유하도록 리팩토링
-- [ ] Reservation 생성메서드 추가
+- [x] Reservation 생성메서드 추가
 - [ ] 콘솔 앱 main 함수 메서드 분 
 - [ ] Service Test 추가
 - [ ] Repository Test 단위 테스트 적용

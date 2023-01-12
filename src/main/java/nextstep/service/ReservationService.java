@@ -26,13 +26,8 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public long addReservation(CreateReservationDto reservationDto) {
-        Reservation reservation = new Reservation(
-                LocalDate.parse(reservationDto.getLocalDate()),
-                LocalTime.parse(reservationDto.getLocalTime()),
-                reservationDto.getName(),
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
-        );
+    public long addReservation(CreateReservationDto createReservationDto) {
+        Reservation reservation = Reservation.createReservation(createReservationDto);
         int duplicatedCount = reservationRepository.countByDateAndTime(
                 Date.valueOf(reservation.getDate()),
                 Time.valueOf(reservation.getTime())
