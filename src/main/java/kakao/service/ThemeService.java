@@ -7,7 +7,7 @@ import kakao.domain.Theme;
 import kakao.dto.request.CreateThemeRequest;
 import kakao.dto.response.ThemeResponse;
 import kakao.error.ErrorCode;
-import kakao.error.exception.RecordNotFoundException;
+import kakao.error.exception.CustomException;
 import kakao.repository.theme.ThemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class ThemeService {
     public ThemeResponse getTheme(Long id) {
         Theme theme = themeRepository.findById(id);
         if (Objects.isNull(theme)) {
-            throw new RecordNotFoundException(ErrorCode.THEME_NOT_FOUND);
+            throw new CustomException(ErrorCode.THEME_NOT_FOUND);
         }
         return new ThemeResponse(theme);
     }
