@@ -39,7 +39,7 @@ public class ReservationServiceTest {
     }
 
     private final CreateReservationRequest request = new CreateReservationRequest(
-            LocalDate.of(2022, 10, 13),
+            LocalDate.of(2023, 10, 13),
             LocalTime.of(13, 00),
             "baker",
             1L

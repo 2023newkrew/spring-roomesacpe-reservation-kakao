@@ -123,30 +123,6 @@ public class ThemeJDBCRepositoryTest {
         Assertions.assertThat(cp.getPrice()).isEqualTo(3000);
     }
 
-    @DisplayName("이미 예약된 테마를 update 하면 UsingTheme 예외를 발생한다")
-    @Test
-    void updateUsedTheme() {
-        UpdateThemeRequest request = UpdateThemeRequest.builder()
-                .id(1L)
-                .name("updatedName")
-                .desc("updatedDesc")
-                .price(3000)
-                .build();
-
-        themeJDBCRepository.save(themeModel);
-        reservationJDBCRepository.save(
-                Reservation.builder()
-                        .name("name")
-                        .date(LocalDate.of(2022, 10, 13))
-                        .time(LocalTime.of(13, 00))
-                        .theme(themeJDBCRepository.findById(1L))
-                        .build()
-        );
-
-        Assertions.assertThatExceptionOfType(UsingThemeException.class)
-                .isThrownBy(() -> themeJDBCRepository.update(request));
-    }
-
     @DisplayName("id에 해당하는 Theme을 삭제하고, 삭제된 count를 반환한다")
     @Test
     void delete() {

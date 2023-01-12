@@ -29,7 +29,7 @@ public class ReservationControllerTest {
     private final String path = "reservations";
 
     private final CreateReservationRequest request = new CreateReservationRequest(
-            LocalDate.of(2022, 10, 13),
+            LocalDate.of(2023, 10, 13),
             LocalTime.of(13, 00),
             "baker",
             1L
@@ -91,7 +91,7 @@ public class ReservationControllerTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", is(request.name))
-                .body("date", is("2022-10-13"))
+                .body("date", is("2023-10-13"))
                 .body("time", is("13:00"))
                 .body("id", is(1));
     }

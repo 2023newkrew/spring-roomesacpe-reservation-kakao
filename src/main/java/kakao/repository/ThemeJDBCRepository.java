@@ -22,14 +22,12 @@ import java.util.Objects;
 public class ThemeJDBCRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final ReservationJDBCRepository reservationJDBCRepository;
 
-    public ThemeJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationJDBCRepository reservationJDBCRepository) {
+    public ThemeJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("theme")
                 .usingGeneratedKeyColumns("id");
-        this.reservationJDBCRepository = reservationJDBCRepository;
     }
 
     private static final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) ->
@@ -90,9 +88,6 @@ public class ThemeJDBCRepository {
     }
 
     public int update(UpdateThemeRequest request) {
-        if (reservationJDBCRepository.findByRequestId(request.id).size() > 0) {
-            throw new UsingThemeException();
-        }
         return jdbcTemplate.update(getUpdateSQL(request));
     }
 

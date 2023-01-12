@@ -1,6 +1,7 @@
 package kakao.service;
 
 import domain.ReservationFactory;
+import domain.ReservationValidator;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.repository.ReservationJDBCRepository;
@@ -10,14 +11,16 @@ import org.springframework.stereotype.Service;
 public class ReservationService {
 
     private final ReservationJDBCRepository reservationJDBCRepository;
-    private final ReservationFactory reservationFactory;
+    private final ReservationFactory reservationFactory = new ReservationFactory();
+    private final ReservationValidator reservationValidator;
 
     public ReservationService(ReservationJDBCRepository reservationJDBCRepository) {
         this.reservationJDBCRepository = reservationJDBCRepository;
-        this.reservationFactory = new ReservationFactory(reservationJDBCRepository);
+        reservationValidator = new ReservationValidator(reservationJDBCRepository);
     }
 
     public long createReservation(CreateReservationRequest request) {
+        reservationValidator.validateForCreate(request);
         return reservationJDBCRepository.save(reservationFactory.createReservation(request));
     }
 
