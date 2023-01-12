@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationService {
+    public static final Theme DEFAULT_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
     private final ReservationRepository repository;
 
     public ReservationService(ReservationRepository repository) {
@@ -17,7 +18,7 @@ public class ReservationService {
     }
 
     public Reservation save(ReservationCreateRequestDto request) {
-        Reservation reservation = new Reservation(request.getDate(), request.getTime(), request.getName(), new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
+        Reservation reservation = new Reservation(request.getDate(), request.getTime(), request.getName(), DEFAULT_THEME);
         if (repository.existsByDateAndTime(reservation.getDate(), reservation.getTime())) {
             throw new DuplicateReservationException();
         }
