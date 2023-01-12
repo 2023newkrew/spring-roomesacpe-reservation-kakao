@@ -81,7 +81,10 @@ public class ReservationJdbcDao implements ReservationDao {
         Connection con = getConnection();
 
         try {
-            String sql = "SELECT * FROM reservation WHERE id = ?;";
+            String sql = "SELECT *, theme.name AS theme_name, theme.desc AS theme_desc, theme.price AS theme_price " +
+                    "FROM reservation " +
+                    "LEFT JOIN theme ON reservation.theme_id = theme.id " +
+                    "WHERE reservation.id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
