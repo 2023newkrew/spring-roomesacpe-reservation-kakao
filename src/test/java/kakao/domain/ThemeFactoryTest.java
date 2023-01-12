@@ -27,8 +27,10 @@ public class ThemeFactoryTest {
     @BeforeEach()
     void setup() {
         themeFactory = new ThemeFactory(themeJDBCRepository);
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("TRUNCATE TABLE theme");
         jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     @DisplayName("CreateThemeRequest를 받아 Theme을 생성한다")

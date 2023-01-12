@@ -36,8 +36,10 @@ public class ThemeControllerTest {
     void setUp() {
         RestAssured.port = port;
 
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("TRUNCATE TABLE theme");
         jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     @DisplayName("예약이 정상적으로 생성되면 201 status를 반환한다")
