@@ -29,7 +29,6 @@ public class RoomEscapeApplication {
             connectionHandler);
     private static final ReservationService reservationService = new ReservationServiceImpl(reservationJDBCRepository);
 
-
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(RoomEscapeApplication.class, args);
         Scanner scanner = new Scanner(System.in);
