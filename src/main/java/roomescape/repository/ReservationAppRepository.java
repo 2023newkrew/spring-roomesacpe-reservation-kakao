@@ -51,9 +51,9 @@ public class ReservationAppRepository implements ReservationRepository {
     }
 
     @Override
-    public int checkSchedule(ReservationRequest reservationRequest) {
+    public int checkSchedule(String date, String time) {
         String sql = "select count(*) from reservation where `date` = ? and `time` = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, reservationRequest.getDate(), reservationRequest.getTime());
+        return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
     @Override

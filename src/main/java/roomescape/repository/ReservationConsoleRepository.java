@@ -52,14 +52,14 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     @Override
-    public int checkSchedule(ReservationRequest reservationRequest) {
+    public int checkSchedule(String date, String time) {
         int count = 0;
         Connection con = getConnection();
         try {
             String sql = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setDate(1, Date.valueOf(reservationRequest.getDate()));
-            ps.setTime(2, Time.valueOf(reservationRequest.getTime()));
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 count = rs.getInt(1);
