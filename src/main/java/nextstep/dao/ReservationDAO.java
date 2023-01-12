@@ -22,6 +22,7 @@ public interface ReservationDAO {
     String FIND_BY_ID_SQL = FIND_ALL_SQL + " WHERE reservation.id = ?";
     String FIND_BY_DATE_TIME_THEME_SQL = FIND_ALL_SQL + " WHERE date = ? AND time = ? AND theme_id = ?";
     String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
+    String COUNT_BY_THEME_ID_SQL = "SELECT COUNT(*) FROM reservation WHERE theme_id = ?";
 
     RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
@@ -43,6 +44,8 @@ public interface ReservationDAO {
     List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
 
     int deleteById(Long id);
+
+    boolean existsByThemeId(Long themeId);
 
     static PreparedStatementCreator getInsertPreparedStatementCreator(ReservationSaveForm reservationSaveForm) {
         return connection -> {

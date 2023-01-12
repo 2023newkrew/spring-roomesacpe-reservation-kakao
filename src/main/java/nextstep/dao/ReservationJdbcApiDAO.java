@@ -75,4 +75,20 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public boolean existsByThemeId(Long themeId) {
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(COUNT_BY_THEME_ID_SQL);
+            ps.setLong(1, themeId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

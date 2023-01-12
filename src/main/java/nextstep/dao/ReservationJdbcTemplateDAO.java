@@ -49,4 +49,9 @@ public class ReservationJdbcTemplateDAO implements ReservationDAO {
     public int deleteById(Long id) {
         return jdbcTemplate.update(DELETE_BY_ID_SQL, id);
     }
+
+    @Override
+    public boolean existsByThemeId(Long themeId) {
+        return jdbcTemplate.queryForObject(COUNT_BY_THEME_ID_SQL, Integer.class, themeId) > 0;
+    }
 }

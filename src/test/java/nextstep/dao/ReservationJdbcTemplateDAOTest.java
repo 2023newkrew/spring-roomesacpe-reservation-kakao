@@ -70,4 +70,12 @@ public class ReservationJdbcTemplateDAOTest {
 
         assertThat(rowCount).isEqualTo(1);
     }
+
+    @DisplayName("테마 아이디가 일치하는 예약 조회")
+    @Test
+    void existsByThemeId() {
+        boolean exists = reservationJdbcTemplateDAO.existsByThemeId(1L);
+
+        assertThat(exists).isTrue();
+    }
 }
