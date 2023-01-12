@@ -9,13 +9,14 @@ import java.util.Optional;
 public class ConsoleReservationRepository implements ReservationRepository {
 
     public Optional<Reservation> findById(long id) {
-        Connection con = ConnectionManager.getConnection();
+        Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Reservation reservation = null;
 
         try {
             String sql = "SELECT * FROM reservation WHERE id = ?;";
+            con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -40,18 +41,18 @@ public class ConsoleReservationRepository implements ReservationRepository {
             ConnectionManager.closeAll(rs, ps, con);
         }
 
-
         return Optional.ofNullable(reservation);
     }
 
     public long add(Reservation reservation) {
-        Connection con = ConnectionManager.getConnection();
+        Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Long id = null;
 
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
@@ -76,12 +77,13 @@ public class ConsoleReservationRepository implements ReservationRepository {
     }
 
     public int delete(long id) {
-        Connection con = ConnectionManager.getConnection();
+        Connection con = null;
         PreparedStatement ps = null;
         int result = 0;
 
         try {
             String sql = "DELETE FROM reservation WHERE id = ?;";
+            con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             result = ps.executeUpdate();
@@ -96,13 +98,14 @@ public class ConsoleReservationRepository implements ReservationRepository {
     }
 
     public int countByDateAndTime(Date date, Time time) {
-        Connection con = ConnectionManager.getConnection();
+        Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         int result = 0;
 
         try {
             String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+            con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql);
             ps.setDate(1, date);
             ps.setTime(2, time);

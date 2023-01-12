@@ -49,10 +49,8 @@
 
 ### 리팩토링 목록
 - 리뷰 반영
-  - [ ] 커넥션 연결, 해제 코드 메서드 분리 및 추상화
   - [x] 테스트시 테이블 재생성하는 부분을 프로덕션 코드에서 제거, Sql 어노테이션으로 대체
   - [x] WebAppReservationService에서 예약 중복 비교시 변수를 통해 가독성 향상
-  - [ ] 프로덕션 코드성에서 Reservation equals 오버라이드 메서드 제거
   - [x] WebAppReservationRepository에서 예외 catch시 로그 출력
   - [x] 필드 주입을 생성자 주입으로 변경
   - [x] Reservation insert 실패시 예외로 처리하도록 수정
@@ -66,4 +64,4 @@
 - [ ] 콘솔 앱 main 함수 메서드 분리
 - [x] ReservationService Test 추가
 - [ ] Repository Test 단위 테스트 적용
-- [ ] jdbc Repository의 자원 선언부 try 블럭으로 넣기
+- [x] ConsoleReservationRepository의 커넥션 획득 예외 처리
