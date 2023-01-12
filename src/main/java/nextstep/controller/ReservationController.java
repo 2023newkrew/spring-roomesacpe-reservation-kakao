@@ -4,13 +4,12 @@ import nextstep.domain.Reservation;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.NoSuchElementException;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
@@ -27,7 +26,6 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    @ResponseBody
     public Reservation findReservation(@PathVariable long id){
         return reservationService.findReservation(id);
     }
