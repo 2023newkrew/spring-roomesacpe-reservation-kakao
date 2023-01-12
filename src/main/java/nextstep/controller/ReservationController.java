@@ -25,6 +25,7 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
+        // 현재는 테마 커스터마이징 관련 기능이 필요 없으므로 하드코딩
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Long id = reservationService.createReservation(request.getDate(),
                 request.getTime(), request.getName(), theme);
@@ -39,7 +40,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable("id") Long id) throws SQLException {
+    public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
