@@ -1,12 +1,11 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 import roomescape.dto.ReservationRequest;
 
 import java.sql.*;
 
-public class ReservationConsoleDAO implements ReservationDAO {
+public class ReservationConsoleRepository implements ReservationRepository {
 
     private Connection getConnection() {
         Connection con = null;
@@ -87,11 +86,12 @@ public class ReservationConsoleDAO implements ReservationDAO {
                         rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(),
                         rs.getString("name"),
-                        new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
-                        )
+null
+//                        new Theme(
+//                                rs.getString("theme_name"),
+//                                rs.getString("theme_desc"),
+//                                rs.getInt("theme_price")
+//                        )
                 );
             } else {
                 throw new IllegalArgumentException("데이터 없음 비상비상");

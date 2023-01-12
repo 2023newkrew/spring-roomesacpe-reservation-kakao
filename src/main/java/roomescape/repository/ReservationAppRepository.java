@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import roomescape.domain.Reservation;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,17 +12,18 @@ import java.util.Map;
 import roomescape.domain.Theme;
 
 @Repository
-public class ReservationAppDAO implements ReservationDAO {
+public class ReservationAppRepository implements ReservationRepository {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertActor;
-    public final RowMapper<Reservation> actorRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Reservation> actorRowMapper = (rs, rowNum) -> {
         Reservation reservation = new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
                 new Theme(
+                        rs.getLong("tid"),
                         rs.getString("theme_name"),
                         rs.getString("theme_desc"),
                         rs.getInt("theme_price")
@@ -31,7 +32,7 @@ public class ReservationAppDAO implements ReservationDAO {
         return reservation;
     };
 
-    public ReservationAppDAO(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationAppRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
@@ -57,7 +58,7 @@ public class ReservationAppDAO implements ReservationDAO {
 
     @Override
     public Reservation findReservation(Long id) {
-        String sql = "select id, date, time, name, theme_name, theme_desc, theme_price from reservation where id = ?";
+        String sql = "select r.*, t.id as tid from reservation r, theme t where r.id = ? and r.theme_name = t.name";
         return jdbcTemplate.query(sql, actorRowMapper, id).stream()
                 .findFirst()
                 .orElse(null);

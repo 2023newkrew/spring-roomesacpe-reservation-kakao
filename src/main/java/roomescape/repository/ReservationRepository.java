@@ -1,9 +1,9 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
-public interface ReservationDAO {
+public interface ReservationRepository {
 
     public Long addReservation(Reservation reservation);
     public int checkSchedule(ReservationRequest reservationRequest);
