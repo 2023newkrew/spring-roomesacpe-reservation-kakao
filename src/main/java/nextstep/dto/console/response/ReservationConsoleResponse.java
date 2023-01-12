@@ -1,7 +1,5 @@
 package nextstep.dto.console.response;
 
-import nextstep.domain.Reservation;
-
 public class ReservationConsoleResponse {
 
     private final Long id;
@@ -22,16 +20,8 @@ public class ReservationConsoleResponse {
         this.themePrice = themePrice;
     }
 
-    public static ReservationConsoleResponse fromEntity(Reservation reservation) {
-        return new ReservationConsoleResponse(
-                reservation.getId(),
-                reservation.getDate().toString(),
-                reservation.getTime().toString(),
-                reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
-        );
+    public static ReservationConsoleResponse of(Long id, String date, String time, String name, String themeName, String themeDesc, Integer themePrice) {
+        return new ReservationConsoleResponse(id, date, time, name, themeName, themeDesc, themePrice);
     }
 
     public Long getId() {

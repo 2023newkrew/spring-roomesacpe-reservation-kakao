@@ -1,12 +1,10 @@
 package nextstep.service;
 
 import nextstep.domain.Reservation;
-import nextstep.dto.console.request.CreateReservationConsoleRequest;
-import nextstep.dto.web.request.CreateReservationRequest;
-import nextstep.dto.console.response.ReservationConsoleResponse;
-import nextstep.dto.web.response.ReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
+import nextstep.mapper.EntityMapper;
+import nextstep.mapper.EntityToResponseMapper;
 import nextstep.repository.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,32 +17,20 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public ReservationResponse createReservationForWeb(CreateReservationRequest request) throws DuplicateReservationException {
-        return ReservationResponse.fromEntity(createReservation(request.toEntity()));
-    }
+    public <R, T> R createReservation(T request, EntityMapper<T, Reservation, R> entityMapper) throws DuplicateReservationException {
+        Reservation reservation = entityMapper.requestToEntity(request);
 
-    public ReservationConsoleResponse createReservationForConsole(CreateReservationConsoleRequest request) throws DuplicateReservationException {
-        return ReservationConsoleResponse.fromEntity(createReservation(request.toEntity()));
-    }
-
-    private Reservation createReservation(Reservation reservation) throws DuplicateReservationException {
         if (reservationRepository.hasReservationAt(reservation.getDate(), reservation.getTime())) {
             throw new DuplicateReservationException();
         }
 
-        return reservationRepository.add(reservation);
+        Reservation createdReservation = reservationRepository.add(reservation);
+
+        return entityMapper.entityToResponse(createdReservation);
     }
 
-    public ReservationResponse findReservationForWeb(Long id) throws ReservationNotFoundException {
-        return ReservationResponse.fromEntity(findReservation(id));
-    }
-
-    public ReservationConsoleResponse findReservationForConsole(Long id) throws ReservationNotFoundException {
-        return ReservationConsoleResponse.fromEntity(findReservation(id));
-    }
-
-    private Reservation findReservation(Long id) throws ReservationNotFoundException {
-        return reservationRepository.get(id);
+    public <R> R findReservation(Long id, EntityToResponseMapper<Reservation, R> mapper) throws ReservationNotFoundException {
+        return mapper.entityToResponse(reservationRepository.get(id));
     }
 
     public void cancelReservation(Long id) {

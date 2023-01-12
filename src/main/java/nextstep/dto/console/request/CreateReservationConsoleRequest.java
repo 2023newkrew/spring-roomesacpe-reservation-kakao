@@ -1,8 +1,5 @@
 package nextstep.dto.console.request;
 
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -21,14 +18,6 @@ public class CreateReservationConsoleRequest {
         return new CreateReservationConsoleRequest(date, time, name);
     }
 
-    public Reservation toEntity() {
-        return Reservation.of(
-                LocalDate.parse(date),
-                LocalTime.parse(time + ":00"),
-                name,
-                Theme.DEFAULT_THEME
-        );
-    }
 
     public LocalDate getDate() {
         return LocalDate.parse(date);

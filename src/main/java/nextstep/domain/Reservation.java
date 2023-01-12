@@ -27,8 +27,6 @@ public class Reservation {
         return new Reservation(null, date, time, name, theme);
     }
 
-
-
     public boolean isAtDateTime(LocalDate date, LocalTime time) {
         return Objects.equals(this.date, date) && Objects.equals(this.time, time);
     }

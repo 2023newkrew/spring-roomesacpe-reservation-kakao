@@ -47,4 +47,8 @@ public class CreateReservationRequest {
     public String getName() {
         return name;
     }
+
+    public Long getThemeId() {
+        return themeId;
+    }
 }
