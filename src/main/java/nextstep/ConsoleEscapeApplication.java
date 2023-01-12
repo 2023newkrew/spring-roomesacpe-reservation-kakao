@@ -67,7 +67,7 @@ public class ConsoleEscapeApplication {
         System.out.println("- 종료: quit");
     }
 
-    private static void makeReservation(Theme theme, String input) throws ReservationException {
+    private static void makeReservation(Theme theme, String input) {
         String params = input.split(" ")[1];
 
         String date = params.split(",")[0];
@@ -82,7 +82,7 @@ public class ConsoleEscapeApplication {
         printReservationInfo(reservation);
     }
 
-    private static void getReservation(String input) throws ReservationException {
+    private static void getReservation(String input) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
@@ -92,7 +92,7 @@ public class ConsoleEscapeApplication {
         printReservationThemeInfo(reservation);
     }
 
-    private static void cancelReservation(String input) throws ReservationException {
+    private static void cancelReservation(String input) {
         String params = input.split(" ")[1];
 
         Long id = Long.parseLong(params.split(",")[0]);
