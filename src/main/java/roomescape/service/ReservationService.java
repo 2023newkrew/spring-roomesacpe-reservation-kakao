@@ -7,6 +7,7 @@ import roomescape.model.Reservation;
 import roomescape.model.Theme;
 import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ThemeMockRepository;
 import roomescape.repository.ThemeRepository;
 
 import java.util.NoSuchElementException;
@@ -16,7 +17,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
 
-    public ReservationService(ReservationJdbcRepository reservationRepository, ThemeRepository themeRepository) {
+    public ReservationService(ReservationJdbcRepository reservationRepository, ThemeMockRepository themeRepository) {
         this.reservationRepository = reservationRepository;
         this.themeRepository = themeRepository;
     }
