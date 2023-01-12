@@ -63,6 +63,6 @@ public class Reservation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name,date,time,theme);
+        return Objects.hash(name, date, time, theme);
     }
 }

@@ -1,5 +1,7 @@
 package nextstep.domain.theme;
 
+import java.util.Objects;
+
 public class Theme {
     private final String name;
     private final String desc;
@@ -27,5 +29,10 @@ public class Theme {
     public boolean equals(Object obj) {
         Theme theme = (Theme) obj;
         return this.name.equals(theme.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
