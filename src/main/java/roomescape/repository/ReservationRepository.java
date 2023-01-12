@@ -11,4 +11,5 @@ public interface ReservationRepository {
     Optional<Reservation> findOneById(long reservationId);
     void delete(long reservationId);
     Boolean hasOneByDateAndTime(LocalDate date, LocalTime time);
+    Boolean hasReservationOfTheme(long themeId);
 }

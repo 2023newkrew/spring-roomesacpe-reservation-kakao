@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
 import roomescape.model.Theme;
+import roomescape.repository.ReservationJdbcRepository;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeJdbcRepository;
 import roomescape.repository.ThemeRepository;
 
@@ -12,9 +14,11 @@ import java.util.NoSuchElementException;
 @Service
 public class ThemeService {
     private final ThemeRepository themeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ThemeService(ThemeJdbcRepository themeRepository) {
+    public ThemeService(ThemeJdbcRepository themeRepository, ReservationJdbcRepository reservationRepository) {
         this.themeRepository = themeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public Long createTheme(ThemeRequestDto themeRequest) {
@@ -32,12 +36,19 @@ public class ThemeService {
     }
 
     public void deleteTheme(Long themeId) {
+        checkForReservationsForTheme(themeId);
         themeRepository.delete(themeId);
     }
 
     private void checkForSameNameTheme(ThemeRequestDto themeRequest) {
         if (themeRepository.hasThemeWithName(themeRequest.getName())) {
             throw new IllegalArgumentException("Already have theme with same name");
+        }
+    }
+
+    private void checkForReservationsForTheme(Long themeId) {
+        if (reservationRepository.hasReservationOfTheme(themeId)) {
+            throw new IllegalArgumentException("There are existing reservations for that theme");
         }
     }
 }

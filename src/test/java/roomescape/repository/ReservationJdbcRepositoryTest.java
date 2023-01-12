@@ -70,4 +70,16 @@ public class ReservationJdbcRepositoryTest {
         //then
         Assertions.assertThat(reservationRepository.hasOneByDateAndTime(date, time)).isTrue();
     }
+
+    @DisplayName("특정 Theme의 Reservation 검출")
+    @Test
+    @Transactional
+    public void hasReservationOfThemeTest() {
+        //given
+        Reservation reservation = new Reservation(null, LocalDate.now(), LocalTime.now(), "Test", theme);
+        //when
+        long reservationId = reservationRepository.save(reservation);
+        //then
+        Assertions.assertThat(reservationRepository.hasReservationOfTheme(theme.getId())).isTrue();
+    }
 }

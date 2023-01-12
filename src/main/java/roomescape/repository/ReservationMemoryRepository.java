@@ -37,4 +37,9 @@ public class ReservationMemoryRepository implements ReservationRepository{
                 .stream()
                 .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));
     }
+
+    @Override
+    public Boolean hasReservationOfTheme(long themeId) {
+        return null;
+    }
 }

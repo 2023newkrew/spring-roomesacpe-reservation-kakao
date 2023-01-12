@@ -66,4 +66,10 @@ public class ReservationJdbcRepository implements ReservationRepository {
         String sql = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.date = ? and reservation.time = ?";
         return jdbcTemplate.query(sql, actorRowMapper, date, time).size() > 0;
     }
+
+    @Override
+    public Boolean hasReservationOfTheme(long themeId) {
+        String sql = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.theme_id = ?";
+        return jdbcTemplate.query(sql, actorRowMapper, themeId).size() > 0;
+    }
 }
