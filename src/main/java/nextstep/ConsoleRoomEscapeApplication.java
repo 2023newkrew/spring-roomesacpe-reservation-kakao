@@ -1,6 +1,6 @@
 package nextstep;
 
-import nextstep.dao.ConsoleReservationDAO;
+import nextstep.repository.ConsoleReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exceptions.ErrorCode;

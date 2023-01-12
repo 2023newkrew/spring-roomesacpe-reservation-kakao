@@ -1,51 +1,42 @@
 package nextstep.controller;
 
+import java.net.URI;
 import nextstep.domain.Reservation;
 import nextstep.domain.ReservationInfo;
-import nextstep.domain.Theme;
-import nextstep.exceptions.ErrorCode;
-import nextstep.exceptions.ReservationException;
-import nextstep.dao.WebReservationDAO;
+import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final WebReservationDAO webReservationDAO;
-    private final Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    private final ReservationService reservationService;
 
-    public ReservationController(WebReservationDAO reservationQueryingDAO) {
-        this.webReservationDAO = reservationQueryingDAO;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping("")
     public ResponseEntity createReservation(@RequestBody Reservation reservation) {
-        List<Reservation> reservationsByDateAndTime = webReservationDAO.findReservationByDateAndTime(
-                reservation.getDate(), reservation.getTime());
-        if (reservationsByDateAndTime.size() > 0) {
-            throw new ReservationException(ErrorCode.ALREADY_RESERVATION_EXISTS);
-        }
-
-        Reservation newReservation = new Reservation(reservation.getDate(), reservation.getTime(),
-                reservation.getName(), theme);
-        Long id = webReservationDAO.insertWithKeyHolder(newReservation);
+        Long id = reservationService.createReservation(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity lookupReservation(@PathVariable Long id) {
-        Reservation reservation = webReservationDAO.findReservationById(id);
-        ReservationInfo reservationInfo = new ReservationInfo(reservation);
+        ReservationInfo reservationInfo = reservationService.lookupReservation(id);
         return ResponseEntity.ok().body(reservationInfo);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity cancelReservation(@PathVariable Long id) {
-        webReservationDAO.delete(id);
-        return ResponseEntity.noContent().build();
+        ReservationInfo reservationInfo = reservationService.deleteReservation(id);
+        return ResponseEntity.ok().body(reservationInfo);
     }
 }

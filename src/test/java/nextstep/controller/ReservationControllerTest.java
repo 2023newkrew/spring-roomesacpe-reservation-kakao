@@ -81,6 +81,13 @@ class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(1))
+                .body("date", is("2022-08-11"))
+                .body("time", is("13:00"))
+                .body("name", is("name"))
+                .body("themeName", is("워너고홈"))
+                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
+                .body("themePrice", is(29000));
     }
 }

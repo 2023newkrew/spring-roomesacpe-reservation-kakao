@@ -1,6 +1,6 @@
 package nextstep.web;
 
-import nextstep.dao.WebReservationDAO;
+import nextstep.repository.WebReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,8 +43,8 @@ class WebReservationDAOTest {
 
     @Test
     @DisplayName("ID를 통해 예약 정보를 잘 받아오는지 테스트")
-    void findReservationByIdTest() {
-        Reservation reservation = webReservationDAO.findReservationById(1L);
+    void findByIdTest() {
+        Reservation reservation = webReservationDAO.findById(1L);
 
         assertThat(reservation).isNotNull();
         assertThat(reservation.getName()).isEqualTo("name");
@@ -52,8 +52,8 @@ class WebReservationDAOTest {
 
     @Test
     @DisplayName("예약 날짜와 시간이 일치하는 예약 정보를 잘 받아오는지 테스트")
-    void findReservationByDateAndTimeTest() {
-        List<Reservation> reservations = webReservationDAO.findReservationByDateAndTime(
+    void findByDateAndTimeTest() {
+        List<Reservation> reservations = webReservationDAO.findByDateAndTime(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0)
         );
@@ -79,7 +79,7 @@ class WebReservationDAOTest {
 
         assertThat(id).isNotNull();
 
-        Reservation reservationById = webReservationDAO.findReservationById(id);
+        Reservation reservationById = webReservationDAO.findById(id);
         assertThat(reservationById).isNotNull();
         assertThat(reservationById.getName()).isEqualTo("name3");
     }

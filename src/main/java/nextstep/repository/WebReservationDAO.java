@@ -1,4 +1,4 @@
-package nextstep.dao;
+package nextstep.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -56,12 +56,12 @@ public class WebReservationDAO {
         return keyHolder.getKey().longValue();
     }
 
-    public Reservation findReservationById(Long id) {
+    public Reservation findById(Long id) {
         String sql = "select * from reservation where id = ?";
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
-    public List<Reservation> findReservationByDateAndTime(LocalDate localDate, LocalTime localTime) {
+    public List<Reservation> findByDateAndTime(LocalDate localDate, LocalTime localTime) {
         String sql = "select * from reservation where date = ? and time = ?";
         return jdbcTemplate.query(sql, reservationRowMapper, localDate, localTime);
     }
