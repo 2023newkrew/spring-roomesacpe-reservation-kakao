@@ -31,7 +31,7 @@ public class JdbcThemeRepository implements ThemeRepository {
     public Optional<Theme> findById(Long id) {
         String sql = "SELECT * FROM theme WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, count) -> Theme.of(rs), id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> Theme.of(rs), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -39,7 +39,8 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public List<Theme> findAll() {
-        return null;
+        String sql = "SELECT * FROM theme";
+        return jdbcTemplate.query(sql, ((rs, rowNum) -> Theme.of(rs)));
     }
 
     @Override

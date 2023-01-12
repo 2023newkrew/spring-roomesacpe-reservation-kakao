@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -44,5 +46,19 @@ public class JdbcThemeRepositoryTest {
                 .isEqualTo(savedTheme);
         assertThat(jdbcThemeRepository.findById(NON_EXIST_THEME_ID)
                 .isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("테마 전체 조회 테스트")
+    void findAllTest() {
+        List<Theme> savedThemeList = List.of(jdbcThemeRepository.save(new Theme("테마1", "테마1", 22000)),
+                jdbcThemeRepository.save(new Theme("테마2", "테마2", 0)),
+                jdbcThemeRepository.save(new Theme("테마3", "테마3", 100)));
+
+        List<Theme> foundThemeList = jdbcThemeRepository.findAll();
+
+        assertThat(foundThemeList.get(0)).isEqualTo(savedThemeList.get(0));
+        assertThat(foundThemeList.get(1)).isEqualTo(savedThemeList.get(1));
+        assertThat(foundThemeList.get(2)).isEqualTo(savedThemeList.get(2));
     }
 }
