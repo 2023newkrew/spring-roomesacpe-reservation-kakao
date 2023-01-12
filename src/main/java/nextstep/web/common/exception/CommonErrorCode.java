@@ -16,7 +16,7 @@ public enum CommonErrorCode implements ErrorCode {
 
     BAD_PARAMETER_REQUEST(HttpStatus.BAD_REQUEST, "처리할 수 없는 요청입니다."),
 
-    RESERVED_THEME_ERROR(HttpStatus.METHOD_NOT_ALLOWED, "예약된 테마는 수정/삭제가 불가능합니다.");
+    RESERVED_THEME_ERROR(HttpStatus.METHOD_NOT_ALLOWED, "예약 있는 테마는 수정/삭제가 불가능합니다.");
 
     private final HttpStatus httpStatus;
 

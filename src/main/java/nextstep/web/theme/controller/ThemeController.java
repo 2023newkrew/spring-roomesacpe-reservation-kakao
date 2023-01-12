@@ -15,17 +15,11 @@ import javax.validation.constraints.Min;
 @RequestMapping("/themes")
 public class ThemeController {
 
-    private static final String BASE_URI = "/theme";
-
     private final ThemeService themeService;
 
     @PostMapping
     public Response<CreateThemeResponseDto> createTheme(@RequestBody @Valid CreateThemeRequestDto requestDto) {
-        CreateThemeResponseDto location = new CreateThemeResponseDto(
-                BASE_URI + "/" + themeService.createTheme(requestDto)
-        );
-
-        return new Response<>(HttpStatus.OK.value(), HttpStatus.CREATED.name(), location);
+        return new Response<>(HttpStatus.OK.value(), HttpStatus.CREATED.name(), themeService.createTheme(requestDto));
     }
 
     @GetMapping("{id}")

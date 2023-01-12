@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ThemeDao implements RoomEscapeRepository<Theme> {
 
-    public static final String TABLE_NAME = "reservation";
+    public static final String TABLE_NAME = "theme";
     public static final String KEY_COLUMN_NAME = "id";
     private final JdbcTemplate jdbcTemplate;
 
