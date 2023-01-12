@@ -75,8 +75,9 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 
-    public int deleteAllByThemeId(Long id) {
-        String sql = "DELETE FROM reservation WHERE theme_id = ?";
-        return this.jdbcTemplate.update(sql, id);
+    // 해당 테마에 대한 예약이 있는지 확인
+    public boolean existByThemeId(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE theme_id = ?)";
+        return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }

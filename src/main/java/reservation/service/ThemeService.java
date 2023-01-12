@@ -7,12 +7,12 @@ import reservation.model.dto.RequestTheme;
 import reservation.respository.ReservationJdbcTemplateRepository;
 import reservation.respository.ThemeJdbcTemplateRepository;
 import reservation.util.exception.restAPI.DuplicateException;
+import reservation.util.exception.restAPI.ExistException;
 import reservation.util.exception.restAPI.NotFoundException;
 
 import java.util.List;
 
-import static reservation.util.exception.ErrorMessages.THEME_DUPLICATED;
-import static reservation.util.exception.ErrorMessages.THEME_NOT_FOUND;
+import static reservation.util.exception.ErrorMessages.*;
 
 @Service
 public class ThemeService {
@@ -44,8 +44,10 @@ public class ThemeService {
             throw new NotFoundException(THEME_NOT_FOUND);
         }
 
-        // 테마가 존재한다면 해당 테마를 가지고 있는 모든 예약 삭제
-        reservationJdbcTemplateRepository.deleteAllByThemeId(id);
+        // 해당 테마를 가지고 있는 예약이 있다면 예약 불가능 (요구 조건)
+        if(reservationJdbcTemplateRepository.existByThemeId(id)){
+            throw new ExistException(THEME_RESERVATION_EXIST);
+        }
 
         // 테마 삭제
         themeJdbcTemplateRepository.deleteById(id);
