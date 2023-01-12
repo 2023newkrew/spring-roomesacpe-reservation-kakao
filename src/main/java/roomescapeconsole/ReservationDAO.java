@@ -3,6 +3,7 @@ package roomescapeconsole;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -60,7 +61,7 @@ public class ReservationDAO {
         }
     }
 
-    public Reservation lookUpReservation(Long findId) {
+    public Reservation lookUpReservation(Long findId) throws NoSuchObjectException {
         try {
             PreparedStatement lookUpPS = con.prepareStatement(SELECT_QUERY);
             lookUpPS.setString(INDEX_ID, String.valueOf(findId));
@@ -79,7 +80,7 @@ public class ReservationDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return new Reservation();
+        throw new NoSuchObjectException("No Object");
     }
 
     public void deleteReservation(Long deleteId) {

@@ -3,6 +3,7 @@ package roomescapeconsole;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
+import java.rmi.NoSuchObjectException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -56,7 +57,12 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.lookUpReservation(id);
+                Reservation reservation;
+                try {
+                    reservation = reservationDAO.lookUpReservation(id);
+                }catch(NoSuchObjectException e){
+                    continue;
+                }
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
