@@ -12,32 +12,34 @@ public class ReservationRequest {
     private String date;
     private String time;
     private String name;
+    private Long theme_id;
 
     public ReservationRequest() {}
 
-    public ReservationRequest(String date, String time, String name) {
+    public ReservationRequest(String date, String time, String name, Long theme_id) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.theme_id = theme_id;
     }
 
-    public Reservation toReservation() {
+    public Reservation toReservation(Theme theme) {
         return new Reservation(
                 null,
                 LocalDate.parse(date, DateTimeFormatter.ISO_DATE),
                 LocalTime.parse(time),
                 name,
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)
+                theme
         );
     }
 
-    public Reservation toReservation(Long id) {
+    public Reservation toReservation(Theme theme, Long id) {
         return new Reservation(
                 id,
                 LocalDate.parse(date, DateTimeFormatter.ISO_DATE),
                 LocalTime.parse(time),
                 name,
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)
+                theme
         );
     }
 
@@ -53,4 +55,7 @@ public class ReservationRequest {
         return name;
     }
 
+    public Long getTheme_id() {
+        return theme_id;
+    }
 }
