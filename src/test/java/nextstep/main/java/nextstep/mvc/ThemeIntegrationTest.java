@@ -2,14 +2,10 @@ package nextstep.main.java.nextstep.mvc;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
-import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
-import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,11 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.matcher.ResponseAwareMatcherComposer.and;
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)

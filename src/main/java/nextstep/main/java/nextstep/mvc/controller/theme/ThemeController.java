@@ -1,7 +1,6 @@
 package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;

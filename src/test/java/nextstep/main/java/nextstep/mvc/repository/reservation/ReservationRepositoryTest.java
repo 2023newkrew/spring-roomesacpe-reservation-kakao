@@ -17,8 +17,8 @@ import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.springframework.context.annotation.ComponentScan.*;
-import static org.springframework.context.annotation.FilterType.*;
+import static org.springframework.context.annotation.ComponentScan.Filter;
+import static org.springframework.context.annotation.FilterType.ANNOTATION;
 
 @JdbcTest(includeFilters = @Filter(type = ANNOTATION, classes = Repository.class))
 @Sql(scripts = "/sql/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)

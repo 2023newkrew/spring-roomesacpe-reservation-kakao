@@ -3,7 +3,6 @@ package nextstep.main.java.nextstep.mvc.domain.theme.request;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotEmpty;

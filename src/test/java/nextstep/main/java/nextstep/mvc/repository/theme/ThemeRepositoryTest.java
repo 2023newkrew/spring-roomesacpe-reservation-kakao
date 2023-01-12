@@ -1,10 +1,7 @@
 package nextstep.main.java.nextstep.mvc.repository.theme;
 
-import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
-import nextstep.main.java.nextstep.mvc.repository.reservation.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

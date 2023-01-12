@@ -1,19 +1,12 @@
 package nextstep.main.java.nextstep.mvc.service.theme;
 
 import nextstep.main.java.nextstep.global.exception.exception.AlreadyReservedThemeException;
-import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
-import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
-import nextstep.main.java.nextstep.mvc.domain.reservation.ReservationMapper;
-import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
-import nextstep.main.java.nextstep.mvc.domain.reservation.response.ReservationFindResponse;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
 import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
-import nextstep.main.java.nextstep.mvc.repository.reservation.ReservationRepository;
 import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
-import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

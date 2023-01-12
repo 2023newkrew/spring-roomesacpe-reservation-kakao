@@ -19,8 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,10 +1,8 @@
 package nextstep.main.java.nextstep.mvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import nextstep.main.java.nextstep.global.exception.BadRequestInfo;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +18,8 @@ import org.springframework.test.context.jdbc.Sql;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
