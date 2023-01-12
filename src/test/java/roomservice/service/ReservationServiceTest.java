@@ -1,12 +1,11 @@
 package roomservice.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import roomservice.domain.TimeTable;
-import roomservice.domain.dto.ReservationDto;
+import roomservice.domain.dto.ReservationCreateDto;
 import roomservice.exceptions.exception.InvalidReservationTimeException;
 import roomservice.exceptions.exception.InvalidThemeException;
 
@@ -23,14 +22,14 @@ public class ReservationServiceTest {
 
     @Test
     void createTest(){
-        assertThat(reservationService.createReservation(new ReservationDto(1L,
+        assertThat(reservationService.createReservation(new ReservationCreateDto(1L,
                 LocalDate.now(),
                 TimeTable.A.getTime(),
                 "Kim"))).isEqualTo(3L);
     }
     @Test
     void notCreateIfNotValidThemeId(){
-        assertThatThrownBy(()->{reservationService.createReservation(new ReservationDto(
+        assertThatThrownBy(()->{reservationService.createReservation(new ReservationCreateDto(
                 2L,
                 LocalDate.now(),
                 TimeTable.A.getTime(),
@@ -40,7 +39,7 @@ public class ReservationServiceTest {
 
     @Test
     void notCreateIfTimeIsNotValid(){
-        assertThatThrownBy(()->{reservationService.createReservation(new ReservationDto(
+        assertThatThrownBy(()->{reservationService.createReservation(new ReservationCreateDto(
                 1L,
                 LocalDate.now(),
                 LocalTime.of(13,22),

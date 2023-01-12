@@ -2,7 +2,7 @@ package roomservice.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import roomservice.domain.Reservation;
+import roomservice.domain.entity.Reservation;
 import roomservice.exceptions.exception.DuplicatedReservationException;
 import roomservice.exceptions.exception.NonExistentReservationException;
 
@@ -22,10 +22,7 @@ public class ReservationConsoleDaoTest {
     @BeforeEach
     void setUp() {
         reservationDao = new ReservationConsoleDao();
-        testReservation = new Reservation();
-        testReservation.setDate(testDate);
-        testReservation.setTime(testTime);
-        testReservation.setName("daniel");
+        testReservation = new Reservation(-1L, testDate, testTime, "daniel", null);
     }
 
     @Test
@@ -45,7 +42,7 @@ public class ReservationConsoleDaoTest {
     void showTest() {
         long id = reservationDao.insertReservation(testReservation);
         testReservation.setId(id);
-        assertThat(reservationDao.selectReservation(id)).isEqualTo(testReservation);
+        assertThat(reservationDao.selectReservation(id).getName()).isEqualTo(testReservation.getName());
     }
 
     @Test

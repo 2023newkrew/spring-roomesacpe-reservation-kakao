@@ -11,7 +11,7 @@ import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
-public class ReservationDto {
+public class ReservationCreateDto {
     @NotNull
     @Positive
     private Long themeId;

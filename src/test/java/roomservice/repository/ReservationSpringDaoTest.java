@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import roomservice.domain.Reservation;
+import roomservice.domain.entity.Reservation;
 import roomservice.exceptions.exception.DuplicatedReservationException;
-import roomservice.exceptions.exception.NonExistentReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,10 +28,7 @@ public class ReservationSpringDaoTest {
     @BeforeEach
     void setUp() {
         reservationDao = new ReservationSpringDao(jdbcTemplate);
-        testReservation = new Reservation();
-        testReservation.setDate(testDate);
-        testReservation.setTime(testTime);
-        testReservation.setName("daniel");
+        testReservation = new Reservation(null, testDate, testTime, "daniel", null);
     }
 
     @Test

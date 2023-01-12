@@ -1,15 +1,14 @@
 package roomservice.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomservice.domain.Reservation;
+import roomservice.domain.entity.Reservation;
+import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.DuplicatedReservationException;
-import roomservice.exceptions.exception.NonExistentReservationException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -21,18 +20,17 @@ import java.util.List;
 public class ReservationSpringDao implements ReservationDao {
     private JdbcTemplate jdbcTemplate;
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation();
-        reservation.setId(resultSet.getLong("id"));
-        reservation.setName(resultSet.getString("name"));
-        reservation.setDate(resultSet.getDate("date").toLocalDate());
-        reservation.setTime(resultSet.getTime("time").toLocalTime());
-//                        테마 관련 - 다음 리뷰 요청 때 구현
-//                        reservation.setTheme(new Theme(
-//                                resultSet.getString("theme_name"),
-//                                resultSet.getString("theme_desc"),
-//                                resultSet.getInt("theme_price")
-//                        ));
-
+        Reservation reservation = new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getTime("time").toLocalTime(),
+                resultSet.getString("name"),
+                new Theme(
+                        null,
+                        resultSet.getString("theme_name"),
+                        resultSet.getString("theme_desc"),
+                        resultSet.getInt("theme_price")
+                ));
         return reservation;
     };
 

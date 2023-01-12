@@ -1,10 +1,9 @@
 package roomservice.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomservice.domain.TimeTable;
-import roomservice.domain.dto.ReservationDto;
+import roomservice.domain.dto.ReservationCreateDto;
 import roomservice.domain.entity.Reservation;
 import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.InvalidReservationTimeException;
@@ -33,7 +32,7 @@ public class ReservationService {
      * @param reservationDto information of reservation to be added.
      * @return id if successfully created.
      */
-    public Long createReservation(ReservationDto reservationDto){
+    public Long createReservation(ReservationCreateDto reservationDto){
         validateTime(reservationDto.getTime());
         Theme theme = themeDao.selectThemeById(reservationDto.getThemeId());
         validateTheme(theme);

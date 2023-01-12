@@ -1,7 +1,7 @@
 package roomservice.repository;
 
-import roomservice.domain.Reservation;
-import roomservice.domain.Theme;
+import roomservice.domain.entity.Reservation;
+import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.DuplicatedReservationException;
 import roomservice.exceptions.exception.NonExistentReservationException;
 
@@ -58,19 +58,20 @@ public class ReservationConsoleDao implements ReservationDao {
         String sql = "SELECT * FROM RESERVATION WHERE id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            Reservation reservation = new Reservation();
+            Reservation reservation;
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                reservation.setTime(rs.getTime("time").toLocalTime());
-                reservation.setDate(rs.getDate("date").toLocalDate());
-                reservation.setName(rs.getString("name"));
-                reservation.setId(rs.getLong("id"));
-//                reservation.setTheme(
-//                        new Theme(rs.getString("theme_name"),
-//                                rs.getString("theme_desc"),
-//                                rs.getInt("theme_price"))
-//                );
+                reservation = new Reservation(
+                        rs.getLong("id"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime(),
+                        rs.getString("name"),
+                        new Theme(0L,
+                                rs.getString("theme_name"),
+                                rs.getString("theme_desc"),
+                                rs.getInt("theme_price"))
+                );
                 return reservation;
             }
             throw new NonExistentReservationException();

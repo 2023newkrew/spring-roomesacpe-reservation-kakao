@@ -1,6 +1,6 @@
 package roomservice;
 
-import roomservice.domain.Reservation;
+import roomservice.domain.entity.Reservation;
 import roomservice.repository.ReservationConsoleDao;
 import roomservice.repository.ReservationDao;
 
@@ -48,10 +48,11 @@ public class ConsoleApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation();
-                reservation.setTime(LocalTime.parse(time + ":00"));
-                reservation.setDate(LocalDate.parse(date));
-                reservation.setName(name);
+                Reservation reservation = new Reservation(null,
+                        LocalDate.parse(date),
+                        LocalTime.parse(time + ":00"),
+                        name,
+                        null);
 
                 reservation.setId(reservationDao.insertReservation(reservation));
 
