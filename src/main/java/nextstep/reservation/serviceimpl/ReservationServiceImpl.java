@@ -1,17 +1,15 @@
-package nextstep.serviceimpl;
+package nextstep.reservation.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.Reservation;
-import nextstep.Theme;
-import nextstep.dto.ReservationRequest;
-import nextstep.repository.ReservationRepository;
-import nextstep.service.ReservationService;
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.domain.Theme;
+import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.repository.ReservationRepository;
+import nextstep.reservation.service.ReservationService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class ReservationServiceImpl implements ReservationService {
         String name = request.getName();
         Reservation reservation = new Reservation(null, date, time, name, theme);
         Long id = repository.insertIfNotExistsDateTime(reservation);
-        if(Objects.isNull(id)){
+        if (Objects.isNull(id)) {
             throw new IllegalArgumentException("해당 시간에 이미 예약이 존재합니다.");
         }
 

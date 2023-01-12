@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.reservation.domain;
 
 public class Theme {
     private String name;

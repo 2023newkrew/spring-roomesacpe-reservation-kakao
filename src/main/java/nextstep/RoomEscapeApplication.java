@@ -1,9 +1,11 @@
 package nextstep;
 
-import nextstep.dao.ReservationDAO;
-import nextstep.dao.SimpleReservationDAO;
-import nextstep.repository.ReservationRepository;
-import nextstep.repository.ReservationRepositoryImpl;
+import nextstep.reservation.dao.ReservationDAO;
+import nextstep.reservation.dao.SimpleReservationDAO;
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.domain.Theme;
+import nextstep.reservation.repository.ReservationRepository;
+import nextstep.reservation.repository.ReservationRepositoryImpl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -1,4 +1,4 @@
-package nextstep.config;
+package nextstep.etc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

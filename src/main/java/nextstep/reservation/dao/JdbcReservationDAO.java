@@ -1,8 +1,8 @@
-package nextstep.dao;
+package nextstep.reservation.dao;
 
 import lombok.AllArgsConstructor;
-import nextstep.dto.ReservationDTO;
-import nextstep.dto.ThemeDTO;
+import nextstep.reservation.dto.ReservationDTO;
+import nextstep.reservation.dto.ThemeDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;

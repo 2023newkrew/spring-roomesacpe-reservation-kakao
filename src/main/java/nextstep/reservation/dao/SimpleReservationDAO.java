@@ -1,7 +1,7 @@
-package nextstep.dao;
+package nextstep.reservation.dao;
 
-import nextstep.dto.ReservationDTO;
-import nextstep.dto.ThemeDTO;
+import nextstep.reservation.dto.ReservationDTO;
+import nextstep.reservation.dto.ThemeDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.*;
@@ -20,8 +20,10 @@ public class SimpleReservationDAO implements ReservationDAO {
                 );
                 return new ReservationDTO(
                         resultSet.getLong("id"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime(),
+                        resultSet.getDate("date")
+                                .toLocalDate(),
+                        resultSet.getTime("time")
+                                .toLocalTime(),
                         resultSet.getString("name"),
                         theme
                 );

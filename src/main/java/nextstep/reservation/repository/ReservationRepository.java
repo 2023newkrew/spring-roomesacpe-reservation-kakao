@@ -1,6 +1,6 @@
-package nextstep.repository;
+package nextstep.reservation.repository;
 
-import nextstep.Reservation;
+import nextstep.reservation.domain.Reservation;
 
 public interface ReservationRepository {
 
