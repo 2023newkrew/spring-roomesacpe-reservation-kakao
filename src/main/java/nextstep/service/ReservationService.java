@@ -1,6 +1,7 @@
 package nextstep.service;
 
 import nextstep.dto.Reservation;
+import nextstep.dto.ReservationInput;
 import nextstep.dto.Theme;
 import nextstep.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,18 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation newReservation(Reservation reservation){
+    public Reservation newReservation(ReservationInput reservationInput){
         boolean isDuplicate = reservationRepository.findAll().stream()
-                .anyMatch(rsv -> rsv.getDate().equals(reservation.getDate()) && rsv.getTime().equals(reservation.getTime()));
+                .anyMatch(rsv -> rsv.getDate().equals(reservationInput.getDate()) && rsv.getTime().equals(reservationInput.getTime()));
 
         if (isDuplicate) {
             throw new IllegalArgumentException();
         }
 
+        Reservation reservation = new Reservation();
+        reservation.setTime(reservationInput.getTime());
+        reservation.setDate(reservationInput.getDate());
+        reservation.setName(reservationInput.getName());
         reservation.setTheme(theme);
         return this.reservationRepository.create(reservation);
     }

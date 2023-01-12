@@ -1,6 +1,7 @@
 package nextstep.controller;
 
 import nextstep.dto.Reservation;
+import nextstep.dto.ReservationInput;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity createReservation(@RequestBody Reservation reservation){
+    public ResponseEntity createReservation(@RequestBody ReservationInput reservation){
         Reservation ret = this.reservationService.newReservation(reservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + ret.getId())).build();
