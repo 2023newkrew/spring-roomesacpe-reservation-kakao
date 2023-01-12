@@ -21,9 +21,7 @@ public class ThemeService {
     }
 
     public Long create(ThemeRequest themeRequest) {
-        if (themeDao.findByName(themeRequest.getName()).isPresent()) {
-            throw new InvalidRequestException(ErrorCode.THEME_NAME_DUPLICATED);
-        }
+        validateNameDuplication(themeRequest.getName());
         Theme theme = new Theme(
                 themeRequest.getName(),
                 themeRequest.getDesc(),
@@ -32,12 +30,18 @@ public class ThemeService {
         return themeDao.save(theme);
     }
 
+    private void validateNameDuplication(String name) {
+        if (themeDao.findByName(name).isPresent()) {
+            throw new InvalidRequestException(ErrorCode.THEME_NAME_DUPLICATED);
+        }
+    }
+
     public ThemeResponse retrieveOne(Long id) {
-        Optional<Theme> theme = themeDao.findById(id);
-        if (theme.isEmpty()) {
+        Optional<Theme> themeFound = themeDao.findById(id);
+        if (themeFound.isEmpty()) {
             throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
         }
-        return new ThemeResponse(theme.get());
+        return new ThemeResponse(themeFound.get());
     }
 
     public List<ThemeResponse> retrieveAll() {
@@ -48,24 +52,30 @@ public class ThemeService {
     }
 
     public Long update(Long id, ThemeRequest themeRequest) {
-        if (id <= 0) {
-            throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
-        }
+        validateId(id);
         Optional<Theme> themeFound = themeDao.findById(id);
         if (themeFound.isEmpty()) {
             return create(themeRequest);
         }
-        if (!themeFound.get().getName().equals(themeRequest.getName()) &&
-                themeDao.findByName(themeRequest.getName()).isPresent()) {
-            throw new InvalidRequestException(ErrorCode.THEME_NAME_DUPLICATED);
+        if (!themeFound.get().getName().equals(themeRequest.getName())) {
+            validateNameDuplication(themeRequest.getName());
         }
-        Theme theme = new Theme(
-                id,
-                themeRequest.getName(),
-                themeRequest.getDesc(),
-                themeRequest.getPrice()
-        );
+        Theme theme = new Theme(id, themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
         themeDao.update(theme);
         return id;
+    }
+
+    private void validateId(Long id) {
+        if (id <= 0) {
+            throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
+        }
+    }
+
+    public void delete(Long id) {
+        validateId(id);
+        if (themeDao.findById(id).isEmpty()) {
+            throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
+        }
+        themeDao.delete(id);
     }
 }

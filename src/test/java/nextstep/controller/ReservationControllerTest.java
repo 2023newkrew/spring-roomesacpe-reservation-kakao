@@ -7,6 +7,7 @@ import nextstep.service.ReservationService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -51,7 +52,7 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 - 예약되어있지 않은 날짜와 시간으로 요청시 예약이 성공해야 한다")
     @Test
-    void reserveNotDuplicated() {
+    void reserveNormally() {
         Map<String, String> request = new HashMap<>() {{
             put("date", "2023-03-11");
             put("time", "13:00");
@@ -69,7 +70,7 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 - 이미 예약된 날짜와 시간으로 요청시 예외처리 되어야 한다")
     @Test
-    void reserveDuplicated() {
+    void reserveByDuplicatedDateAndTime() {
         Map<String, String> request = new HashMap<>() {{
             put("date", "2023-03-10");
             put("time", "13:00");
@@ -87,7 +88,7 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 - TimeTable 에 존재하지 않는 시간으로 요청시 예외처리 되어야 한다")
     @Test
-    void reserveInvalidTime() {
+    void reserveByInvalidTime() {
         Map<String, String> request = new HashMap<>() {{
             put("date", "2023-03-11");
             put("time", "01:00");
@@ -105,7 +106,7 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 - 과거의 날짜로 요청시 예외처리 되어야 한다")
     @Test
-    void reservePastDate() {
+    void reserveByPastDate() {
         Map<String, String> request = new HashMap<>() {{
             put("date", "2023-01-01");
             put("time", "01:00");
@@ -130,7 +131,7 @@ public class ReservationControllerTest {
             "2023-03-01;abc;jack",
             "2023-03-01;14:30;"
     }, delimiter = ';')
-    void reserveInvalidInputValue(String date, String time, String name) {
+    void reserveByInvalidInputValue(String date, String time, String name) {
         Map<String, String> request = new HashMap<>() {{
             put("date", date);
             put("time", time);
@@ -152,7 +153,7 @@ public class ReservationControllerTest {
             "date;timing;name",
             "date;time;naming"
     }, delimiter = ';')
-    void reserveInvalidInputKey(String date, String time, String name) {
+    void reserveByInvalidInputKey(String date, String time, String name) {
         Map<String, String> request = new HashMap<>() {{
             put(date, "2023-03-01");
             put(time, "13:00");
@@ -195,12 +196,13 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    @DisplayName("조회 - 숫자가 아닌 값의 id 로 조회시 예외처리 되어야 한다")
-    @Test
-    void retrieveByInvalidId() {
+    @DisplayName("조회 - 유효하지 않은 id 로 조회시 예외처리 되어야 한다")
+    @ParameterizedTest
+    @ValueSource(strings = {"abc", "-1"})
+    void retrieveByInvalidId(String id) {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/abc")
+                .when().get("/reservations/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

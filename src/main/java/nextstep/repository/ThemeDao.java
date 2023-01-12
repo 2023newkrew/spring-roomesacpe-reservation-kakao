@@ -52,4 +52,6 @@ public interface ThemeDao {
     List<Theme> findAll();
 
     void update(Theme theme);
+
+    void delete(Long id);
 }

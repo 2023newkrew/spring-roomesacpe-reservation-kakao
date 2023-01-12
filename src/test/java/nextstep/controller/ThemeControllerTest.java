@@ -77,7 +77,7 @@ class ThemeControllerTest {
             "테마이름2;테마설명;-1",
             "테마이름2;테마설명;a"
     }, delimiter = ';')
-    void createInvalidValue(String name, String desc, String price) {
+    void createByInvalidValue(String name, String desc, String price) {
         Map<String, String> request = new HashMap<>() {{
             put("name", name);
             put("desc", desc);
@@ -94,7 +94,7 @@ class ThemeControllerTest {
 
     @DisplayName("생성 - 이미 등록된 테마이름으로 요청시 예외처리 되어야 한다.")
     @Test
-    void createAlreadyCreatedName() {
+    void createByAlreadyCreatedName() {
         Map<String, String> request = new HashMap<>() {{
             put("name", "테마이름");
             put("desc", "테마설명");
@@ -125,7 +125,7 @@ class ThemeControllerTest {
 
     @DisplayName("조회(단일) - 등록되지 않은 id 로 요청시 예외처리 되어야 한다.")
     @Test
-    void retrieveOneInvalidId() {
+    void retrieveOneByInvalidId() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/themes/2")
@@ -135,7 +135,7 @@ class ThemeControllerTest {
 
     @DisplayName("조회(단일) - 잘못된 id 로 요청시 예외처리 되어야 한다.")
     @Test
-    void retrieveOneWrongParameter() {
+    void retrieveOneByWrongParameter() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/themes/a")
@@ -183,7 +183,7 @@ class ThemeControllerTest {
 
     @DisplayName("수정 - 등록되지 않은 id 와 theme 정보로 요청시 새롭게 생성이 되어야 한다.")
     @Test
-    void updateNotCreatedId() {
+    void updateByNotCreatedId() {
         Map<String, String> request = new HashMap<>() {{
             put("name", "테마이름2");
             put("desc", "테마설명2");
@@ -202,7 +202,7 @@ class ThemeControllerTest {
     @DisplayName("수정 - 유효하지 않은 id 로 요청시 예외처리 되어야 한다.")
     @ParameterizedTest
     @ValueSource(longs = {-1, 0})
-    void updateInvalidId(Long invalidId) {
+    void updateByInvalidId(Long invalidId) {
         Map<String, String> request = new HashMap<>() {{
             put("name", "테마이름2");
             put("desc", "테마설명2");
@@ -219,7 +219,7 @@ class ThemeControllerTest {
 
     @DisplayName("수정 - 이미 등록되어있는 테마 이름으로 요청시 예외처리 되어야 한다.")
     @Test
-    void updateAlreadyCreatedName() {
+    void updateByAlreadyCreatedName() {
         saveSampleTheme("테마이름2", "테마설명2", 22000);
 
         Map<String, String> request = new HashMap<>() {{
@@ -234,5 +234,36 @@ class ThemeControllerTest {
                 .when().put("/themes/2")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+    @DisplayName("삭제 - 요청이 정상적으로 이루어져야 한다")
+    @Test
+    void deleteNormally() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("삭제 - 존재하지 않는 id 로 요청시 예외처리 되어야 한다")
+    @Test
+    void deleteByUnregisteredId() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/2")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("삭제 - 유효하지 않은 id 로 요청시 예외처리 되어야 한다")
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "0", "abc"})
+    void deleteByInvalidId(String invalidId) {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/" + invalidId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

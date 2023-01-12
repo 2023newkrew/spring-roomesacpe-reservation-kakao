@@ -36,14 +36,22 @@ public class ReservationService {
     }
 
     public ReservationResponse retrieve(Long id) {
-        Optional<Reservation> reservation = reservationDao.findById(id);
-        if (reservation.isEmpty()) {
+        validateId(id);
+        Optional<Reservation> reservationFound = reservationDao.findById(id);
+        if (reservationFound.isEmpty()) {
             throw new InvalidRequestException(ErrorCode.RESERVATION_NOT_FOUND);
         }
-        return new ReservationResponse(reservation.get());
+        return new ReservationResponse(reservationFound.get());
+    }
+
+    private void validateId(Long id) {
+        if (id <= 0) {
+            throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
+        }
     }
 
     public void delete(Long id) {
+        validateId(id);
         if (reservationDao.findById(id).isEmpty()) {
             throw new InvalidRequestException(ErrorCode.RESERVATION_NOT_FOUND);
         }
