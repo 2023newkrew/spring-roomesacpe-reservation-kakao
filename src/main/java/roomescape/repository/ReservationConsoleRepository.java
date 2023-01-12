@@ -21,10 +21,10 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
     private String DB_PASSWORD;
 
     @Override
-    public Reservation save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                PreparedStatement ps = createInsertReservationPreparedStatement(con, reservation)
+                PreparedStatement ps = createSaveReservationPreparedStatement(con, reservation)
         ) {
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -35,7 +35,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
         return null;
     }
 
-    private PreparedStatement createInsertReservationPreparedStatement(
+    public PreparedStatement createSaveReservationPreparedStatement(
             Connection con,
             Reservation reservation
     ) throws SQLException {
@@ -55,7 +55,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
     public Optional<Reservation> findOne(Long id) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                PreparedStatement ps = createGetReservationPreparedStatement(con, id);
+                PreparedStatement ps = createFindOneReservationPreparedStatement(con, id);
                 ResultSet resultSet = ps.executeQuery()
         ) {
             return resultSetToReservation(resultSet);
@@ -66,7 +66,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
         return Optional.empty();
     }
 
-    private PreparedStatement createGetReservationPreparedStatement(Connection con, Long id) throws SQLException {
+    private PreparedStatement createFindOneReservationPreparedStatement(Connection con, Long id) throws SQLException {
         String sql = "SELECT * FROM reservation WHERE id = (?);";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setLong(1, id);
@@ -115,7 +115,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
     public Optional<Reservation> findReservationByDateAndTime(LocalDate date, LocalTime time) {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-                PreparedStatement ps = createGetReservationByDateAndTimePreparedStatement(con, date, time);
+                PreparedStatement ps = createFindReservationByDateAndTimePreparedStatement(con, date, time);
                 ResultSet resultSet = ps.executeQuery()
         ) {
             return resultSetToReservation(resultSet);
@@ -125,7 +125,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
         return Optional.empty();
     }
 
-    private PreparedStatement createGetReservationByDateAndTimePreparedStatement(
+    private PreparedStatement createFindReservationByDateAndTimePreparedStatement(
             Connection con,
             LocalDate date,
             LocalTime time

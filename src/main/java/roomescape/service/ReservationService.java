@@ -23,14 +23,14 @@ public class ReservationService {
     }
 
     @Transactional
-    public void createReservation(ReservationRequest reservationRequest) {
+    public Long createReservation(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
         Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
 
         checkTimeDuplication(date, time);
 
-        reservationWebRepository.save(reservation);
+        return reservationWebRepository.save(reservation);
     }
 
     private void checkTimeDuplication(LocalDate date, LocalTime time) {

@@ -1,11 +1,13 @@
 package roomescape.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/reservations")
@@ -18,10 +20,18 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Void> createReservation(
-            @RequestBody ReservationRequest reservationRequest
+            @RequestBody ReservationRequest reservationRequest,
+            HttpServletRequest httpServletRequest
     ) {
-        reservationService.createReservation(reservationRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Long reservationId = reservationService.createReservation(reservationRequest);
+        String currentURL = httpServletRequest.getRequestURL().toString();
+
+        return ResponseEntity.created(
+                UriComponentsBuilder.fromHttpUrl(currentURL)
+                        .path("/{id}")
+                        .buildAndExpand(reservationId)
+                        .toUri()
+        ).build();
     }
 
     @GetMapping("/{reservationId}")
