@@ -1,18 +1,19 @@
-package roomescape.dao;
+package roomescape.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
+import roomescape.entity.Reservation;
+import roomescape.entity.Theme;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 public class ReservationDAOTest {
@@ -26,7 +27,7 @@ public class ReservationDAOTest {
     private static final String THEME_DESC = "병맛 어드벤처 회사 코믹물";
     private static final int THEME_PRICE = 29000;
 
-    private ReservationDAO reservationDAO;
+    private ReservationRepository reservationDAO;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -36,7 +37,7 @@ public class ReservationDAOTest {
 
     @BeforeEach
     void setUp() {
-        reservationDAO = new ReservationDAO(namedParameterJdbcTemplate);
+        reservationDAO = new ReservationRepository(namedParameterJdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE RESERVATION IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE RESERVATION("
@@ -62,14 +63,16 @@ public class ReservationDAOTest {
 
     @Test
     void findReservation() {
-        Reservation reservation = reservationDAO.findReservation(1L);
-
-        assertThat(reservation.getName()).isEqualTo(NAME);
-        assertThat(reservation.getDate()).isEqualTo(DATE);
-        assertThat(reservation.getTime()).isEqualTo(TIME);
-        assertThat(reservation.getTheme().getName()).isEqualTo(THEME_NAME);
-        assertThat(reservation.getTheme().getDesc()).isEqualTo(THEME_DESC);
-        assertThat(reservation.getTheme().getPrice()).isEqualTo(THEME_PRICE);
+        assertThat(reservationDAO.findReservation(1L))
+                .isPresent()
+                .get().satisfies(reservation -> {
+                    assertThat(reservation.getName()).isEqualTo(NAME);
+                    assertThat(reservation.getDate()).isEqualTo(DATE);
+                    assertThat(reservation.getTime()).isEqualTo(TIME);
+                    assertThat(reservation.getTheme().getName()).isEqualTo(THEME_NAME);
+                    assertThat(reservation.getTheme().getDesc()).isEqualTo(THEME_DESC);
+                    assertThat(reservation.getTheme().getPrice()).isEqualTo(THEME_PRICE);
+                });
     }
 
     @Test

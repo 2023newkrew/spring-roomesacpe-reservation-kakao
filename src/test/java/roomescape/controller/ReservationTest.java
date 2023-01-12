@@ -1,11 +1,6 @@
 package roomescape.controller;
 
-import static org.hamcrest.core.Is.is;
-
 import io.restassured.RestAssured;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,12 +10,21 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
+import roomescape.SpringWebApplication;
+import roomescape.dto.ReservationsControllerPostBody;
+import roomescape.entity.Reservation;
+import roomescape.entity.Theme;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
 
 
 @DisplayName("웹 요청 / 응답 처리로 입출력 추가")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {SpringWebApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationTest {
 
     private static final String ADD_SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
@@ -61,25 +65,46 @@ public class ReservationTest {
         Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-11"),
                 LocalTime.parse("13:00:00"), "name", THEME);
 
-        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation).when().post("/reservations").then().log().all()
+        RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ReservationsControllerPostBody(
+                        LocalDate.parse("2022-08-11"),
+                        LocalTime.parse("13:00:00"),
+                        "name",
+                        THEME_NAME,
+                        THEME_DESC,
+                        THEME_PRICE
+                ))
+                .when()
+                .post("/reservations")
+                .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("예약 조회")
     @Test
     void showReservation() {
-        RestAssured.given().log().all().accept(MediaType.APPLICATION_JSON_VALUE).when()
-                .get("/reservations/1").then().log().all().statusCode(HttpStatus.OK.value())
-                .body("name", is(NAME)).body("date", is(DATE.toString()))
-                .body("time", is(TIME + ":00"));
+        RestAssured
+                .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", is(NAME))
+                .body("date", is(DATE.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                .body("time", is(TIME.format(DateTimeFormatter.ofPattern("HH:mm"))));
     }
 
     @DisplayName("예약 취소")
     @Test
     void deleteReservation() {
-        RestAssured.given().log().all().accept(MediaType.APPLICATION_JSON_VALUE).when()
-                .delete("/reservations/1").then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+        RestAssured.given()
+                   .accept(MediaType.APPLICATION_JSON_VALUE)
+                   .when()
+                   .delete("/reservations/1")
+                   .then().log().all()
+                   .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

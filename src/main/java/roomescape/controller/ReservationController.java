@@ -1,64 +1,71 @@
 package roomescape.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDAO;
-import roomescape.dto.Reservation;
-import roomescape.exception.BadRequestException;
+import org.springframework.web.bind.annotation.*;
+import roomescape.dto.ReservationControllerGetResponse;
+import roomescape.dto.ReservationsControllerPostBody;
+import roomescape.entity.Reservation;
+import roomescape.entity.Theme;
+import roomescape.exception.AlreadyExistReservationException;
+import roomescape.exception.NotExistReservationException;
+import roomescape.repository.ReservationRepository;
+
+import javax.validation.Valid;
 
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    @Autowired
-    private ReservationDAO reservationDAO;
+    private final ReservationRepository reservationDAO;
 
-    private void validateReservation(Reservation reservation) {
-        if (!reservation.isValid()) {
-            throw new BadRequestException();
-        }
+    public ReservationController(ReservationRepository reservationDAO) {
+        this.reservationDAO = reservationDAO;
     }
 
-    @PostMapping(value = "", produces = "application/json; charset=utf-8")
-    public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
-        validateReservation(reservation);
-        if (reservationDAO.findCountReservationByDateTime(reservation.getDate(),
-                reservation.getTime()) == 1) {
-            throw new BadRequestException();
+    @PostMapping(value = "", produces = "application/json;charset=utf-8")
+    public ResponseEntity<Object> createReservation(@Valid @RequestBody ReservationsControllerPostBody body) {
+        var id = reservationDAO.addReservation(
+                new Reservation(
+                        null, body.getDate(), body.getTime(), body.getName(),
+                        new Theme(body.getThemeName(), body.getThemeDesc(), body.getThemePrice())
+                )
+        );
+        if (id.isEmpty()) {
+            throw new AlreadyExistReservationException(body.getDate(), body.getTime());
         }
-
-        long id = reservationDAO.addReservation(reservation);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Location", String.format("/reservations/%d", id)).build();
+                             .header("Location", String.format("/reservations/%d", id.get()))
+                             .build();
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
-        try {
-            Reservation reservation = reservationDAO.findReservation(id);
-            return ResponseEntity.status(HttpStatus.OK).body(reservation);
-        } catch (Exception e) {
-            throw new BadRequestException();
+    @GetMapping(value = "/{id}", produces = "application/json;charset=utf-8")
+    public ResponseEntity<ReservationControllerGetResponse> showReservation(@PathVariable Long id) {
+        var reservation = reservationDAO.findReservation(id);
+        if (reservation.isEmpty()) {
+            throw new NotExistReservationException(id);
         }
+        var getReservation = reservation.get();
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(new ReservationControllerGetResponse(
+                                     getReservation.getId(),
+                                     getReservation.getDate(),
+                                     getReservation.getTime(),
+                                     getReservation.getName(),
+                                     getReservation.getTheme().getName(),
+                                     getReservation.getTheme().getDesc(),
+                                     getReservation.getTheme().getPrice()
+                             ));
     }
 
-    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @DeleteMapping(value = "/{id}", produces = "application/json;charset=utf-8")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
-        try {
-            reservationDAO.findReservation(id);
-            reservationDAO.deleteReservation(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (Exception e) {
-            throw new BadRequestException();
+        var affectedRow = reservationDAO.deleteReservation(id);
+        if (affectedRow == 0) {
+            throw new NotExistReservationException(id);
         }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                             .build();
     }
 }
