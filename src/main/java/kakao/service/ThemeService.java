@@ -28,7 +28,7 @@ public class ThemeService {
 
     public ThemeResponse updateTheme(UpdateThemeRequest updateRequest) {
         themeJDBCRepository.update(updateRequest);
-        return getTheme(updateRequest.getId());
+        return getTheme(updateRequest.id);
     }
 
     public int delete(long id) {

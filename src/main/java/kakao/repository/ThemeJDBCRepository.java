@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class ThemeJDBCRepository {
@@ -79,7 +80,20 @@ public class ThemeJDBCRepository {
     }
 
     public int update(UpdateThemeRequest request) {
-        return jdbcTemplate.update(request.getUpdateSQL());
+        return jdbcTemplate.update(getUpdateSQL(request));
+    }
+
+    private String getUpdateSQL(UpdateThemeRequest request) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("update theme set ");
+        if (!Objects.isNull(request.name)) builder.append("name='").append(request.name).append("',");
+        if (!Objects.isNull(request.desc)) builder.append("desc='").append(request.desc).append("',");
+        if (!Objects.isNull(request.price)) builder.append("price='").append(request.price).append("',");
+        builder.deleteCharAt(builder.length() - 1);
+        builder.append(" where id=").append(request.id);
+
+        return builder.toString();
     }
 
     public int delete(long id) {
