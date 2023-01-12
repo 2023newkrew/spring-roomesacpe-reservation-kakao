@@ -1,9 +1,10 @@
-package nextstep;
+package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+
     private Long id;
     private LocalDate date;
     private LocalTime time;
@@ -37,4 +38,5 @@ public class Reservation {
     public Theme getTheme() {
         return theme;
     }
+
 }

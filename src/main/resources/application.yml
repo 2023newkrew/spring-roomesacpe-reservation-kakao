@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+  session:
+    jdbc:
+      initialize-schema: always
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
