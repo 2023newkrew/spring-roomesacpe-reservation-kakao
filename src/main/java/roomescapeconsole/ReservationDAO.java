@@ -11,6 +11,7 @@ import java.time.LocalTime;
 public class ReservationDAO {
     Connection con;
 
+    private static final int INDEX_COUNT = 1;
     private static final int INDEX_ID = 1;
     private static final int INDEX_DATE = 2;
     private static final int INDEX_TIME = 3;
@@ -21,6 +22,7 @@ public class ReservationDAO {
     private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private static final String DATABASE_USERNAME = "sa";
     private static final String DATABASE_PASSWORD = "";
+    private static final String CHECK_NUMBER_QUERY = "SELECT COUNT(*) FROM RESERVATION";
     private static final String INSERT_QUERY = "INSERT INTO RESERVATION (id, date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_QUERY = "SELECT * FROM RESERVATION WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
@@ -43,6 +45,19 @@ public class ReservationDAO {
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
+    }
+
+    public int getNumberOfExistReservation() {
+        try {
+            PreparedStatement getNumberPS = con.prepareStatement(CHECK_NUMBER_QUERY);
+            ResultSet getNumberRs = getNumberPS.executeQuery();
+            if (getNumberRs.next()) {
+                return getNumberRs.getInt(INDEX_COUNT);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
     }
 
     public void addReservation(Reservation reservation) {

@@ -17,9 +17,9 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Long reservationIdIndex = 0L;
         ReservationDAO reservationDAO = new ReservationDAO();
         reservationDAO.makeConnection();
+        Long reservationIdIndex = (long) reservationDAO.getNumberOfExistReservation();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
