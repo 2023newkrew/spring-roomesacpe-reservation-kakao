@@ -102,6 +102,8 @@ class themeReservationControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
     @DisplayName("이름은 빈칸이 될 수 없다.")
     void test7(String name){
         ReservationDto reservationDto = new ReservationDto(LocalDate.parse(RESERVATION_DATE), LocalTime.parse("16:01"), name, null);
