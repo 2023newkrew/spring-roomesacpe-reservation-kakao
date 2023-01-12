@@ -27,10 +27,9 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository{
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation add(Reservation reservation) {
+    public Long add(Reservation reservation) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
-        reservation.setId(jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue());
-        return reservation;
+        return jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
     @Override
