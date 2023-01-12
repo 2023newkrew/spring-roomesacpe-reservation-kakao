@@ -5,8 +5,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
-import nextstep.web.dto.ReservationRequest;
-import nextstep.web.dto.ReservationResponse;
+import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationResponse;
+import nextstep.service.ReservationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RoomEscapeControllerTest {
+public class ReservationControllerTest {
     @LocalServerPort
     private int port;
 

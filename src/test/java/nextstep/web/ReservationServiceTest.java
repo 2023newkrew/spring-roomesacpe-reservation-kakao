@@ -2,7 +2,8 @@ package nextstep.web;
 
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
-import nextstep.web.dto.ReservationRequest;
+import nextstep.service.ReservationService;
+import nextstep.dto.ReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,24 +17,24 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-class RoomEscapeServiceTest {
+class ReservationServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private JdbcTemplateReservationRepository repository;
 
-    private RoomEscapeService roomEscapeService;
+    private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
         repository = new JdbcTemplateReservationRepository(jdbcTemplate);
-        roomEscapeService = new RoomEscapeService(repository);
+        reservationService = new ReservationService(repository);
     }
 
     @DisplayName("존재하지 않는 예약을 조회할 경우 예외가 발생한다")
     @Test
     void getNotFoundReservation() {
-        assertThatThrownBy(() -> roomEscapeService.getReservation(1L))
+        assertThatThrownBy(() -> reservationService.getReservation(1L))
                 .isInstanceOf(ReservationNotFoundException.class);
     }
 
@@ -44,9 +45,9 @@ class RoomEscapeServiceTest {
         LocalDate date = LocalDate.of(2022, 11, 11);
         LocalTime time = LocalTime.of(19, 00);
         ReservationRequest request = new ReservationRequest(name, date, time);
-        roomEscapeService.createReservation(request);
+        reservationService.createReservation(request);
 
-        assertThatThrownBy(() -> roomEscapeService.createReservation(request))
+        assertThatThrownBy(() -> reservationService.createReservation(request))
                 .isInstanceOf(ReservationDuplicateException.class);
     }
 }
