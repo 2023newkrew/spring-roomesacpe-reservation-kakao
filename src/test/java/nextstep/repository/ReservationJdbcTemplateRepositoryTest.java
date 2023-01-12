@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,9 +17,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@TestExecutionListeners(listeners = RepositoryTestExecutionListener.class,
-//        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-@Sql("classpath:tableInit.sql")
+@TestExecutionListeners(listeners = RepositoryTestExecutionListener.class,
+        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class ReservationJdbcTemplateRepositoryTest {
 
     @Autowired
