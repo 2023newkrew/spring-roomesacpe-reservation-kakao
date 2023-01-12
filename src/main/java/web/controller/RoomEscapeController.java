@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalTime;
 
+@RequestMapping("/reservations")
 @RequiredArgsConstructor
 @RestController
 public class RoomEscapeController {
@@ -21,7 +22,7 @@ public class RoomEscapeController {
 
     private final RoomEscapeService roomEscapeService;
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Void> reservation(@RequestBody @Valid ReservationRequestDto requestDto) {
         if (isInvalidTime(requestDto.getTime())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -46,7 +47,7 @@ public class RoomEscapeController {
         return time.getMinute() % 30 != 0;
     }
 
-    @GetMapping("/reservations/{reservationId}")
+    @GetMapping("/{reservationId}")
     public ResponseEntity<ReservationResponseDto> findReservationById(@PathVariable long reservationId) {
         ReservationResponseDto responseDto = roomEscapeService.findReservationById(reservationId);
         return ResponseEntity.ok()
@@ -54,7 +55,7 @@ public class RoomEscapeController {
                 .body(responseDto);
     }
 
-    @DeleteMapping("/reservations/{reservationId}")
+    @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> cancelReservation(@PathVariable long reservationId) {
         roomEscapeService.cancelReservation(reservationId);
         return ResponseEntity.noContent()
