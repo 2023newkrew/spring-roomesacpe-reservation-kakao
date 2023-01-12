@@ -3,11 +3,12 @@ package nextstep.repository;
 import nextstep.domain.Reservation;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ReservationMemoryRepository implements ReservationRepository {
 
-    private final Map<Long, Reservation> repository = new HashMap<>();
+    private final Map<Long, Reservation> repository = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(0L);
 
     @Override
