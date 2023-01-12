@@ -90,9 +90,11 @@ public class ReservationControllerUnitTest {
     @DisplayName("올바른 값이 들어오지 않을 경우 예약 생성에 실패한다.")
     void create(ReservationCreateRequest request) throws Exception {
         // given
+        Long id = 1L;
         String content = objectMapper.writeValueAsString(request);
+
         given(reservationService.save(any(ReservationCreateRequest.class)))
-                .willReturn(1L);
+                .willReturn(id);
 
         // when
         MvcResult result = mockMvc.perform(post("/reservations")

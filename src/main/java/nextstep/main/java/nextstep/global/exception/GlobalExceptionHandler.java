@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(generateMethodArgumentExceptionResponseBody(exception));
     }
 
-
     private ResponseEntity<Object> handleExceptionInternal(Error error) {
         return ResponseEntity.status(error.getHttpStatus())
                 .body(new ErrorResponse(error.getErrorCode(), error.getErrorMessage()));
