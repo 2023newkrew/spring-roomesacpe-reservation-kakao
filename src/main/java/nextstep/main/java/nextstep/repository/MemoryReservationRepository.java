@@ -9,16 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
     public static Map<Long, Reservation> reservationMap = new HashMap<>();
-    private static Long count = 1L;
+    private static AtomicLong id = new AtomicLong(1L);
 
     @Override
     public Reservation save(Reservation reservation) {
-        reservationMap.put(count, reservation);
-        return new Reservation(count++, reservation);
+        reservationMap.put(id.get(), reservation);
+        return new Reservation(id.getAndIncrement(), reservation);
     }
 
     @Override
