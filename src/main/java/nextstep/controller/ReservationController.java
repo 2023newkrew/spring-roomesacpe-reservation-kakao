@@ -5,6 +5,7 @@ import nextstep.exception.DuplicateReservationException;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.NoSuchElementException;
@@ -22,7 +23,10 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Object> reserve(@RequestBody Reservation reservation){
         Reservation confirmedReservation = reservationService.reserve(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + confirmedReservation.getId())).build();
+        URI locationUri = UriComponentsBuilder.fromPath("/reservations/{id}")
+                .buildAndExpand(confirmedReservation.getId())
+                .toUri();
+        return ResponseEntity.created(locationUri).build();
     }
 
     @GetMapping("/{id}")
