@@ -1,6 +1,6 @@
 package roomservice.repository;
 
-import roomservice.domain.Reservation;
+import roomservice.domain.entity.Reservation;
 
 /**
  * ReservationDao lists what to do with DB.
