@@ -25,4 +25,8 @@ public class ThemeService {
                 .map(ThemeResponseDto::of)
                 .collect(Collectors.toList());
     }
+
+    public void deleteById(long themeId) {
+        themeRepository.delete(themeId);
+    }
 }

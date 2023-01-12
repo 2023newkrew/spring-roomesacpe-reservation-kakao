@@ -35,4 +35,12 @@ public class ThemeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(findThemes);
     }
+
+    @DeleteMapping("/{themeId}")
+    public ResponseEntity<Void> deleteById(@PathVariable long themeId) {
+        themeService.deleteById(themeId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }

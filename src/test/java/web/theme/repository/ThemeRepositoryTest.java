@@ -98,4 +98,25 @@ class ThemeRepositoryTest {
         }
     }
 
+    @Nested
+    class Delete {
+
+        @Test
+        void should_successfully_when_existTheme() {
+            String name = "테마이름";
+            String desc = "테마설명";
+            int price = 22000;
+            Theme theme = Theme.of(null, name, desc, price);
+            long themeId = themeRepository.save(theme);
+
+            long deleteThemeCount = themeRepository.delete(themeId);
+            assertThat(deleteThemeCount).isEqualTo(1L);
+            assertThat(themeRepository.findById(themeId)).isEmpty();
+        }
+
+        @Test
+        void should_return0_when_notExistTheme() {
+            assertThat(themeRepository.delete(-1)).isEqualTo(0L);
+        }
+    }
 }

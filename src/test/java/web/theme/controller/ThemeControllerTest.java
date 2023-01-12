@@ -23,11 +23,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static web.theme.exception.ErrorCode.THEME_DUPLICATE;
+import static web.theme.exception.ErrorCode.THEME_NOT_FOUND;
 
 @WebMvcTest(ThemeController.class)
 @ExtendWith(MockitoExtension.class)
@@ -193,6 +194,25 @@ class ThemeControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$").isArray())
                     .andExpect(jsonPath("$").isEmpty());
+        }
+    }
+
+    @Nested
+    class Delete {
+
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            doNothing().when(themeService).deleteById(anyLong());
+            mockMvc.perform(delete("/themes/1"))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        void shoud_responseNotFound_then_notExistId() throws Exception {
+            doThrow(new ThemeException(THEME_NOT_FOUND)).when(themeService).deleteById(anyLong());
+            mockMvc.perform(delete("/themes/-1"))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value(THEME_NOT_FOUND.getMessage()));
         }
     }
 }

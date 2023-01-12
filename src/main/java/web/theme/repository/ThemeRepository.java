@@ -77,7 +77,8 @@ public class ThemeRepository {
     }
 
     public Long delete(long themeId) {
-        return null;
+        String sql = "DELETE FROM THEME WHERE ID = ?";
+        return (long) jdbcTemplate.update(sql, themeId);
     }
 
     public void clearAll() {
