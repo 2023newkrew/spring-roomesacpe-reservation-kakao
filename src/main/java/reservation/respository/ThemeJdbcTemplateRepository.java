@@ -57,6 +57,22 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository{
         return this.jdbcTemplate.update(sql, themeId);
     }
 
+    public Theme findById(Long id){
+        String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?";
+        try {
+            return this.jdbcTemplate.queryForObject(sql,
+                    (rs, rowNum) -> new Theme(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("desc"),
+                            rs.getInt("price")
+                    ), id
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     public boolean checkDuplicateName(String name){
         String sql = "SELECT EXISTS (SELECT 1 FROM theme WHERE name = ?)";
         return Boolean.TRUE.equals(this.jdbcTemplate.queryForObject(sql, Boolean.class, name));
