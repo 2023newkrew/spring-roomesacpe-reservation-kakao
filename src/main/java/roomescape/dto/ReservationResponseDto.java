@@ -11,14 +11,18 @@ public class ReservationResponseDto {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final Theme theme;
+    private final String themeName;
+    private final String themeDesc;
+    private final Integer themePrice;
 
-    public ReservationResponseDto(Reservation reservation) {
+    public ReservationResponseDto(Reservation reservation, Theme theme) {
         this.id = reservation.getId();
         this.date = reservation.getDate();
         this.time = reservation.getTime();
         this.name = reservation.getName();
-        this.theme = reservation.getTheme();
+        this.themeName = theme.getName();
+        this.themeDesc = theme.getDesc();
+        this.themePrice = theme.getPrice();
     }
 
     public Long getId() {
@@ -38,14 +42,14 @@ public class ReservationResponseDto {
     }
 
     public String getThemeName() {
-        return theme.getName();
+        return themeName;
     }
 
     public String getThemeDesc() {
-        return theme.getDesc();
+        return themeDesc;
     }
 
     public Integer getThemePrice() {
-        return theme.getPrice();
+        return themePrice;
     }
 }

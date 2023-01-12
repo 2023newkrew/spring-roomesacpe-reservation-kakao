@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
-import roomescape.model.Theme;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
@@ -27,19 +26,15 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
+    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> (
+        new Reservation(
+                resultSet.getLong("id"),
                 resultSet.getDate("date").toLocalDate(),
                 resultSet.getTime("time").toLocalTime(),
                 resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
-        );
-        return reservation;
-    };
+                resultSet.getLong("theme_id")
+        )
+    );
 
     @Override
     public Long save(Reservation reservation) {
@@ -47,9 +42,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         parameters.put("date", reservation.getDate().toString());
         parameters.put("time", reservation.getTime().toString());
         parameters.put("name", reservation.getName());
-        parameters.put("theme_name", reservation.getTheme().getName());
-        parameters.put("theme_desc", reservation.getTheme().getDesc());
-        parameters.put("theme_price", reservation.getTheme().getPrice().toString());
+        parameters.put("theme_id", reservation.getThemeId().toString());
         return insertActor.executeAndReturnKey(parameters).longValue();
     }
 

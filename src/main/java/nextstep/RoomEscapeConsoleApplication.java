@@ -3,11 +3,14 @@ package nextstep;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
-import roomescape.model.Theme;
 import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ThemeJdbcRepository;
 import roomescape.repository.ThemeRepository;
+import roomescape.service.ReservationService;
+import roomescape.service.ThemeService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,26 +23,32 @@ public class RoomEscapeConsoleApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
+    private final ReservationService reservationService;
+    private final ThemeService themeService;
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
 
-    public RoomEscapeConsoleApplication(ReservationJdbcRepository reservationRepository, ThemeRepository themeRepository) {
+    public RoomEscapeConsoleApplication(
+            ReservationService reservationService,
+            ReservationJdbcRepository reservationRepository,
+            ThemeService themeService,
+            ThemeJdbcRepository themeRepository
+    ) {
+        this.reservationService = reservationService;
         this.reservationRepository = reservationRepository;
+        this.themeService = themeService;
         this.themeRepository = themeRepository;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        Theme theme = themeRepository.find(1L).orElseThrow(() -> {
-            throw new RuntimeException("테마를 불러오는데 실패했습니다.");
-        });
 
         // todo 리팩토링
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
+            System.out.println("- 예약하기: add {date},{time},{name},{theme_id} ex) add 2022-08-11,13:00,류성현,1");
             System.out.println("- 예약조회: find {id} ex) find 1");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
@@ -47,18 +56,20 @@ public class RoomEscapeConsoleApplication {
 
             // 예약하기
             if (input.startsWith(ADD)) {
-                String params = input.split(" ")[1];
-                LocalDate date = LocalDate.parse(params.split(",")[0]);
-                LocalTime time = LocalTime.parse(params.split(",")[1] + ":00");
-                String name = params.split(",")[2];
-                Reservation reservation = new Reservation(date, time, name, theme);
-                Long id = reservationRepository.save(reservation);
-                if (id == null) {
+                String[] params = input.split(" ")[1].split(",");
+                LocalDate date = LocalDate.parse(params[0]);
+                LocalTime time = LocalTime.parse(params[1] + ":00");
+                String name = params[2];
+                Long themeId = Long.valueOf(params[3]);
+                ReservationRequestDto req = new ReservationRequestDto(date, time, name, themeId);
+                Reservation reservation;
+                try {
+                    reservation = reservationService.createReservation(req);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
                     System.out.println("예약 생성에 실패하였습니다.");
                     continue;
                 }
-                reservation.setId(id);
-
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -81,9 +92,9 @@ public class RoomEscapeConsoleApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 id: " + reservation.getThemeId());
+//                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
+//                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
             }
 
             // 예약취소
@@ -109,5 +120,6 @@ public class RoomEscapeConsoleApplication {
                 break;
             }
         }
+        scanner.close();
     }
 }

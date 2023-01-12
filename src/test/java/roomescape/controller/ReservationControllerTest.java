@@ -32,7 +32,7 @@ public class ReservationControllerTest {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         String name = "tester";
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(date, time, name);
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(date, time, name, 1L);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationRequestDto)

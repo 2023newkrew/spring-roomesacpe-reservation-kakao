@@ -26,10 +26,11 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto dto) {
-        Reservation reservation = reservationService.createReservation(dto);
-        ReservationResponseDto res = new ReservationResponseDto(reservation);
-        return ResponseEntity.created(URI.create("/reservations").resolve(res.getId().toString())).body(res);
+    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto req) {
+        Reservation reservation = reservationService.createReservation(req);
+        ReservationResponseDto res = reservationService.getReservationDto(reservation);
+        String id = res.getId().toString();
+        return ResponseEntity.created(URI.create("/reservations").resolve(id)).body(res);
     }
 
     @DeleteMapping("/reservations/{id}")

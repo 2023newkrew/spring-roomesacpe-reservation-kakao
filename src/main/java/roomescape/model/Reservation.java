@@ -10,17 +10,18 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
+        this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = themeId;
     }
 
-    public Reservation(ReservationRequestDto req, Theme theme) {
-        this(req.getDate(), req.getTime(), req.getName(), theme);
+    public Reservation(ReservationRequestDto req) {
+        this(null, req.getDate(), req.getTime(), req.getName(), req.getThemeId());  //
     }
 
     public Long getId() {
@@ -39,8 +40,8 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Long getThemeId() {
+        return themeId;
     }
 
     public void setId(Long id) {
