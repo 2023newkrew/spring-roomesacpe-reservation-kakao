@@ -1,6 +1,7 @@
 package kakao.repository;
 
 import domain.Theme;
+import kakao.dto.request.UpdateThemeRequest;
 import kakao.error.exception.RecordNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +20,18 @@ public class ThemeJDBCRepositoryTest {
     @Autowired
     private ThemeJDBCRepository themeJDBCRepository;
 
-    private Theme themeModel = new Theme("name", "desc", 1000);
+    private final Theme themeModel = new Theme("name", "desc", 1000);
 
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("TRUNCATE TABLE theme");
         jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
+    }
+
+    private void compareThemeWithoutId(Theme a, Theme b) {
+        Assertions.assertThat(a.getName()).isEqualTo(b.getName());
+        Assertions.assertThat(a.getDesc()).isEqualTo(b.getDesc());
+        Assertions.assertThat(a.getPrice()).isEqualTo(b.getPrice());
     }
 
     @DisplayName("이름, 설명, 가격정보를 받아 새 Theme을 저장하고 해당하는 id를 반환한다")
@@ -38,9 +45,7 @@ public class ThemeJDBCRepositoryTest {
     void findById() {
         themeJDBCRepository.save(themeModel);
         Theme cp = themeJDBCRepository.findById(1L);
-        Assertions.assertThat(cp.getName()).isEqualTo(themeModel.getName());
-        Assertions.assertThat(cp.getDesc()).isEqualTo(themeModel.getDesc());
-        Assertions.assertThat(cp.getPrice()).isEqualTo(themeModel.getPrice());
+        compareThemeWithoutId(themeModel, cp);
     }
 
     @DisplayName("id에 해당하는 Theme이 존재하지 않으면 RecordNotFound Exception을 반환한다")
@@ -87,6 +92,26 @@ public class ThemeJDBCRepositoryTest {
         Assertions.assertThat(themeJDBCRepository.updatePrice(1L, 2000)).isOne();
 
         Assertions.assertThat(themeJDBCRepository.findById(1L).getPrice()).isEqualTo(2000);
+    }
+
+    @DisplayName("UpdateThemeRequest에 해당하는 내용으로 업데이트하고 업데이트된 count를 반환한다")
+    @Test
+    void update() {
+        UpdateThemeRequest request = UpdateThemeRequest.builder()
+                .id(1L)
+                .name("updatedName")
+                .desc("updatedDesc")
+                .price(3000)
+                .build();
+
+        themeJDBCRepository.save(themeModel);
+        Assertions.assertThat(themeJDBCRepository.update(request)).isOne();
+
+        Theme cp = themeJDBCRepository.findById(1L);
+        Assertions.assertThat(cp.getName()).isEqualTo("updatedName");
+        Assertions.assertThat(cp.getDesc()).isEqualTo("updatedDesc");
+        Assertions.assertThat(cp.getPrice()).isEqualTo(3000);
+
     }
 
     @DisplayName("id에 해당하는 Theme을 삭제하고, 삭제된 count를 반환한다")

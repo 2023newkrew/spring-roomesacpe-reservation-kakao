@@ -1,6 +1,7 @@
 package kakao.repository;
 
 import domain.Theme;
+import kakao.dto.request.UpdateThemeRequest;
 import kakao.error.ErrorCode;
 import kakao.error.exception.RecordNotFoundException;
 import org.springframework.dao.DataAccessException;
@@ -75,6 +76,10 @@ public class ThemeJDBCRepository {
         String UPDATE_SQL = "update theme set price=? where id=?";
 
         return jdbcTemplate.update(UPDATE_SQL, updatePrice, id);
+    }
+
+    public int update(UpdateThemeRequest request) {
+        return jdbcTemplate.update(request.getUpdateSQL());
     }
 
     public int delete(long id) {
