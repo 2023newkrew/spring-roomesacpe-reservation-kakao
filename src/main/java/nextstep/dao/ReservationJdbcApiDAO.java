@@ -16,85 +16,65 @@ public class ReservationJdbcApiDAO implements ReservationDAO {
 
     @Override
     public Long save(Reservation reservation) {
-        Connection con = getConnection();
-        Long id = -1L;
-
-        try {
+        try (Connection con = getConnection()) {
             PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservation);
             PreparedStatement ps = insertPreparedStatementCreator.createPreparedStatement(con);
 
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
-                id = generatedKeys.getLong(1);
+                return generatedKeys.getLong(1);
             }
+            return -1L;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        closeConnection(con);
-        return id;
     }
 
     @Override
     public Reservation findById(Long id) {
-        Connection con = getConnection();
-        Reservation reservation = null;
-
-        try {
+        try (Connection con = getConnection()) {
             PreparedStatement ps = con.prepareStatement(FIND_BY_ID_SQL);
             ps.setLong(1, id);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                reservation = RESERVATION_ROW_MAPPER.mapRow(rs, rs.getRow());
+                return RESERVATION_ROW_MAPPER.mapRow(rs, rs.getRow());
             }
+            return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        closeConnection(con);
-        return reservation;
     }
 
     @Override
     public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        Connection con = getConnection();
-        List<Reservation> reservations = new ArrayList<>();
-
-        try {
+        try (Connection con = getConnection()) {
             PreparedStatement ps = con.prepareStatement(FIND_BY_DATE_TIME_SQL);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
 
             ResultSet rs = ps.executeQuery();
+            List<Reservation> reservations = new ArrayList<>();
             while (rs.next()) {
                 reservations.add(RESERVATION_ROW_MAPPER.mapRow(rs, rs.getRow()));
             }
+            return reservations;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        closeConnection(con);
-        return reservations;
     }
 
     @Override
     public int deleteById(Long id) {
-        Connection con = getConnection();
-        int rowCount;
-
-        try {
+        try (Connection con = getConnection()) {
             PreparedStatement ps = con.prepareStatement(DELETE_BY_ID_SQL);
             ps.setLong(1, id);
 
-            rowCount = ps.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        closeConnection(con);
-        return rowCount;
     }
 
     private static Connection getConnection() {
@@ -107,15 +87,5 @@ public class ReservationJdbcApiDAO implements ReservationDAO {
             e.printStackTrace();
         }
         return con;
-    }
-
-    private static void closeConnection(Connection con) {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
     }
 }
