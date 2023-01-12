@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @Repository
+@Primary
 public class ReservationJdbcRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
