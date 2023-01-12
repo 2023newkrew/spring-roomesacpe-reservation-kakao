@@ -4,16 +4,20 @@ import io.restassured.RestAssured;
 import nextstep.domain.dto.CreateReservationDTO;
 import nextstep.repository.WebAppReservationRepository;
 import org.junit.jupiter.api.*;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 매 테스트 전 해당 경로의 스크립트 실행
+@Sql(scripts = {"classpath:recreate.sql"})
 public class ReservationControllerTest {
     @LocalServerPort
     int port;
@@ -21,8 +25,6 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured.given().log().all()
-                .when().delete("/reservations/all");
     }
 
     @DisplayName("create reservation test")

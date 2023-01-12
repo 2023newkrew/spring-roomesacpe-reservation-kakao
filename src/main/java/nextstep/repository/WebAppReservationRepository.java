@@ -69,21 +69,4 @@ public class WebAppReservationRepository implements ReservationRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
-    public void deleteAll() {
-//        String sql = "TRUNCATE TABLE reservation;";
-        String sql = "DROP TABLE reservation;";
-        sql += "CREATE TABLE RESERVATION\n" +
-                "(\n" +
-                "    id          bigint not null auto_increment,\n" +
-                "    date        date,\n" +
-                "    time        time,\n" +
-                "    name        varchar(20),\n" +
-                "    theme_name  varchar(20),\n" +
-                "    theme_desc  varchar(255),\n" +
-                "    theme_price int,\n" +
-                "    primary key (id)\n" +
-                ");";
-        jdbcTemplate.update(sql);
-    }
-
 }

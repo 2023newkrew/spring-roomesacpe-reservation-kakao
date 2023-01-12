@@ -119,21 +119,4 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
         return result;
     }
-
-    public void deleteAll() {
-        Connection con = ConnectionManager.getConnection();
-        PreparedStatement ps = null;
-
-        try {
-            String sql = "TRUNCATE TABLE reservation;";
-            ps = con.prepareStatement(sql);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        ConnectionManager.closeAll(ps, con);
-    }
-
 }

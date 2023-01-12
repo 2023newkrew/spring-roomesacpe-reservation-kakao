@@ -4,6 +4,7 @@ import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.*;
@@ -12,7 +13,7 @@ import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
+@JdbcTest
 public class ConsoleReservationRepositoryTest {
     private final ReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
 

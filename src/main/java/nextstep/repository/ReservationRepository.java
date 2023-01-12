@@ -15,5 +15,4 @@ public interface ReservationRepository {
 
     int countByDateAndTime(Date date, Time time);
 
-    void deleteAll();
 }
