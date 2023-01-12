@@ -34,13 +34,14 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
-                        1L,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
+//                Reservation reservation = new Reservation(
+//                        1L,
+//                        LocalDate.parse(date),
+//                        LocalTime.parse(time + ":00"),
+//                        name,
+//                        theme
+//                );
+                Reservation reservation = null;
 
                 if (reservationDAO.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time))) {
                     throw new DuplicateReservationException(DUPLICATE_RESERVATION_MESSAGE);

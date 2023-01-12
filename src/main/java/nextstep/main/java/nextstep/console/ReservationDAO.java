@@ -53,16 +53,17 @@ public class ReservationDAO implements ReservationRepository {
             ResultSet rs = ps.executeQuery();
             rs.first();
             return Optional.of(
-                    new Reservation(rs.getLong("id"),
-                            rs.getDate("date").toLocalDate(),
-                            rs.getTime("time").toLocalTime(),
-                            rs.getString("name"),
-                            new Theme(
+                    Reservation.builder()
+                            .id(rs.getLong("id"))
+                            .date(rs.getDate("date").toLocalDate())
+                            .time(rs.getTime("time").toLocalTime())
+                            .name(rs.getString("name"))
+                            .theme(new Theme(
                                     rs.getLong("id"),
                                     rs.getString("theme_name"),
                                     rs.getString("theme_desc"),
-                                    rs.getInt("theme_price")
-                            ))
+                                    rs.getInt("theme_price")))
+                            .build()
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);

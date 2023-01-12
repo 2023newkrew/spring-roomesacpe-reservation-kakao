@@ -2,11 +2,8 @@ package nextstep.main.java.nextstep.mvc.controller.reservation;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
-import nextstep.main.java.nextstep.mvc.domain.validator.RequestValidator;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

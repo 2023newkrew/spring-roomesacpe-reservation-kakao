@@ -31,18 +31,17 @@ public class JdbcReservationRepository implements ReservationRepository {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
-            resultSet.getDate("date").toLocalDate(),
-            resultSet.getTime("time").toLocalTime(),
-            resultSet.getString("name"),
-            new Theme(
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> Reservation.builder()
+            .id(resultSet.getLong("id"))
+            .date(resultSet.getDate("date").toLocalDate())
+            .time(resultSet.getTime("time").toLocalTime())
+            .name(resultSet.getString("name"))
+            .theme(new Theme(
                     resultSet.getLong("theme_id"),
                     resultSet.getString("theme_name"),
                     resultSet.getString("desc"),
                     resultSet.getInt("price")
-            )
-    );
+            )).build();
 
     @Override
     public Long save(ReservationCreateRequest request) {
