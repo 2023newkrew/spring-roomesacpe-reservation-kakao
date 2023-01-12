@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 @PropertySource("classpath:application.properties")
 @EnableAutoConfiguration
-public class AppConfig {
+public class ConsoleConfig {
 
     @Bean
     public ReservationRepository reservationRepository() {

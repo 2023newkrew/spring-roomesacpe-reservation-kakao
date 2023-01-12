@@ -17,7 +17,7 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
 
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ConsoleConfig.class);
 
         ReservationService reservationService = ctx.getBean(ReservationService.class);
 
