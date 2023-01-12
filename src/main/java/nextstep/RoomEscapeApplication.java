@@ -7,7 +7,7 @@ import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationH2Repository;
 import nextstep.repository.ReservationRepository;
-import nextstep.service.RoomEscapeService;
+import nextstep.service.ReservationService;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -20,7 +20,7 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationRepository repository = new ReservationH2Repository();
-        RoomEscapeService roomEscapeService = new RoomEscapeService(repository);
+        ReservationService reservationService = new ReservationService(repository);
 
         while (true) {
             System.out.println();
@@ -39,7 +39,7 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 try {
-                    ReservationConsoleResponse reservation = roomEscapeService.createReservationForConsole(CreateReservationRequest.of(date, time, name));
+                    ReservationConsoleResponse reservation = reservationService.createReservationForConsole(CreateReservationRequest.of(date, time, name));
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());
@@ -58,7 +58,7 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    ReservationConsoleResponse reservation = roomEscapeService.findReservationForConsole(id);
+                    ReservationConsoleResponse reservation = reservationService.findReservationForConsole(id);
 
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());
@@ -78,7 +78,7 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    roomEscapeService.cancelReservation(id);
+                    reservationService.cancelReservation(id);
                     System.out.println("예약이 취소되었습니다.");
                 } catch (DatabaseException e) {
                     System.out.println(e.getMessage());

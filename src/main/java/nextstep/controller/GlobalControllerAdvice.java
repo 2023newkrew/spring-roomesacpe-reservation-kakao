@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class RoomEscapeControllerAdvice {
+public class GlobalControllerAdvice {
 
     @ExceptionHandler(DuplicateReservationException.class)
     public ResponseEntity<String> handleDuplicateReservationException(DuplicateReservationException exception) {
