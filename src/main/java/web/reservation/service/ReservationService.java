@@ -2,9 +2,9 @@ package web.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import web.entity.Reservation;
 import web.reservation.dto.ReservationRequestDto;
 import web.reservation.dto.ReservationResponseDto;
-import web.entity.Reservation;
 import web.reservation.exception.ReservationException;
 import web.reservation.repository.ReservationRepository;
 

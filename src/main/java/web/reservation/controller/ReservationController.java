@@ -21,6 +21,7 @@ import static web.reservation.exception.ErrorCode.OUT_OF_BUSINESS_HOURS;
 @RequiredArgsConstructor
 @RestController
 public class ReservationController {
+
     public static final LocalTime BEGIN_TIME = LocalTime.of(11, 0, 0);
     public static final LocalTime LAST_TIME = LocalTime.of(20, 30, 0);
 

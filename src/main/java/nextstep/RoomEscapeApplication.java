@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
+
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";

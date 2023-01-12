@@ -14,8 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import web.reservation.dto.ReservationResponseDto;
 import web.entity.Reservation;
+import web.reservation.dto.ReservationResponseDto;
 import web.reservation.exception.ReservationException;
 import web.reservation.service.ReservationService;
 
@@ -203,6 +203,7 @@ public class ReservationControllerTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class CancelReservation {
+
         @Test
         void should_successfully_when_validRequest() throws Exception {
             doNothing().when(reservationService).cancelReservation(anyLong());
