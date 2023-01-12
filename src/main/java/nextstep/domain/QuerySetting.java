@@ -18,6 +18,7 @@ public class QuerySetting {
         public static final String SELECT_BY_NAME = "SELECT * FROM theme WHERE name = ?";
         public static final String SELECT_ALL = "SELECT * FROM theme LIMIT ? OFFSET ?";
         public static final String DELETE_BY_ID = "DELETE FROM theme WHERE id = ?";
+        public static final String UPDATE_BY_ID = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?";
     }
 
 }

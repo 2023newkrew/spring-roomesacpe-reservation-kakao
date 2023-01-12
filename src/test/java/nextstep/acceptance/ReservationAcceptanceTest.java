@@ -6,7 +6,7 @@ import io.restassured.response.Response;
 import nextstep.common.DatabaseExecutor;
 import nextstep.domain.QuerySetting.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
-import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,7 +40,7 @@ public class ReservationAcceptanceTest {
         RestAssured.port = port;
         databaseExecutor.clearTable(Reservation.TABLE_NAME);
         databaseExecutor.clearTable(Theme.TABLE_NAME);
-        테마_생성을_요청한다(new CreateThemeRequest(themeName, "테마 설명", 23_000));
+        테마_생성을_요청한다(new CreateOrUpdateThemeRequest(themeName, "테마 설명", 23_000));
     }
 
     @Test

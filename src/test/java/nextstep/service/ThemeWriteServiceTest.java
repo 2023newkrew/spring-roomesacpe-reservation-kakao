@@ -2,7 +2,7 @@ package nextstep.service;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.theme.repository.ThemeRepository;
-import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import nextstep.error.ApplicationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,14 +31,14 @@ public class ThemeWriteServiceTest {
     @Test
     void 테마_생성에_성공한다() {
         // given
-        CreateThemeRequest createThemeRequest = new CreateThemeRequest("테마 이름", "테마 설명", 22_000);
-        Theme theme = new Theme(5L, createThemeRequest.getName(), createThemeRequest.getDesc(), createThemeRequest.getPrice());
+        CreateOrUpdateThemeRequest createtThemeRequest = new CreateOrUpdateThemeRequest("테마 이름", "테마 설명", 22_000);
+        Theme theme = new Theme(5L, createtThemeRequest.getName(), createtThemeRequest.getDesc(), createtThemeRequest.getPrice());
 
         given(themeRepository.save(any(Theme.class)))
                 .willReturn(theme);
 
         // when
-        Long themeId = themeWriteService.createTheme(createThemeRequest);
+        Long themeId = themeWriteService.createTheme(createtThemeRequest);
 
         // then
         assertThat(themeId).isEqualTo(theme.getId());
@@ -47,7 +47,7 @@ public class ThemeWriteServiceTest {
     @Test
     void 동일한_이름을_가진_테마가_존재할_경우_테마_생성에_실패한다() {
         // given
-        CreateThemeRequest createThemeRequest = new CreateThemeRequest("혜화 잡화점", "중복 테마 설명", 27_000);
+        CreateOrUpdateThemeRequest createThemeRequest = new CreateOrUpdateThemeRequest("혜화 잡화점", "중복 테마 설명", 27_000);
         Theme savedTheme = new Theme(5L, "혜화 잡화점", "테마 설명", 22_000);
 
         given(themeRepository.findByName(eq(savedTheme.getName())))
@@ -68,6 +68,19 @@ public class ThemeWriteServiceTest {
 
         // when, then
         assertThatThrownBy(() -> themeWriteService.deleteThemeById(themeId))
+                .isInstanceOf(ApplicationException.class);
+    }
+
+    @Test
+    void 테마와_관련된_예약_정보가_있을_경우_테마를_삭제할_수_없다() {
+        // given
+        Long themeId = 7L;
+        CreateOrUpdateThemeRequest updateThemeRequest = new CreateOrUpdateThemeRequest("새로운 테마 제목", "새로운 테마 설명", 32_000);
+        given(reservationReadService.existsByThemeId(any(Long.class)))
+                .willReturn(true);
+
+        // when, then
+        assertThatThrownBy(() -> themeWriteService.updateTheme(themeId, updateThemeRequest))
                 .isInstanceOf(ApplicationException.class);
     }
 

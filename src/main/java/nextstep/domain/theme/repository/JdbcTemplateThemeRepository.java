@@ -1,6 +1,5 @@
 package nextstep.domain.theme.repository;
 
-import nextstep.domain.QuerySetting;
 import nextstep.domain.theme.Theme;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,4 +58,10 @@ public class JdbcTemplateThemeRepository implements ThemeRepository {
     public void deleteById(Long id) {
         jdbcTemplate.update(DELETE_BY_ID, id);
     }
+
+    @Override
+    public void update(Theme theme) {
+        jdbcTemplate.update(UPDATE_BY_ID, theme.getName(), theme.getDesc(), theme.getPrice(), theme.getId());
+    }
+
 }

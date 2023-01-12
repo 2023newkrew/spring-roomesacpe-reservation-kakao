@@ -1,6 +1,6 @@
 package nextstep.presentation;
 
-import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import nextstep.service.ThemeWriteService;
 import nextstep.utils.ThemeRequestValidator;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class ThemeWriteController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTheme(@RequestBody CreateThemeRequest createThemeRequest) {
-        themeRequestValidator.validateCreateRequest(createThemeRequest);
+    public ResponseEntity<Void> createTheme(@RequestBody CreateOrUpdateThemeRequest createThemeRequest) {
+        themeRequestValidator.validateCreateOrUpdateRequest(createThemeRequest);
         Long themeId = themeWriteService.createTheme(createThemeRequest);
 
         return ResponseEntity.created(URI.create("/themes/" + themeId))
@@ -32,6 +32,15 @@ public class ThemeWriteController {
     @DeleteMapping("/{themeId}")
     public ResponseEntity<Void> deleteThemeById(@PathVariable Long themeId) {
         themeWriteService.deleteThemeById(themeId);
+
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @PutMapping("{themeId}")
+    public ResponseEntity<Void> updateTheme(@PathVariable Long themeId, @RequestBody CreateOrUpdateThemeRequest updateThemeRequest) {
+        themeRequestValidator.validateCreateOrUpdateRequest(updateThemeRequest);
+        themeWriteService.updateTheme(themeId, updateThemeRequest);
 
         return ResponseEntity.noContent()
                 .build();

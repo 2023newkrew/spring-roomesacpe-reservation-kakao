@@ -2,7 +2,7 @@ package nextstep.service;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.theme.repository.ThemeRepository;
-import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import nextstep.error.ApplicationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class ThemeWriteService {
     }
 
     @Transactional
-    public Long createTheme(CreateThemeRequest createThemeRequest) {
+    public Long createTheme(CreateOrUpdateThemeRequest createThemeRequest) {
         if (themeRepository.findByName(createThemeRequest.getName()).isPresent()) {
             throw new ApplicationException(DUPLICATE_THEME);
         }
@@ -38,6 +38,15 @@ public class ThemeWriteService {
         }
 
         themeRepository.deleteById(themeId);
+    }
+
+    @Transactional
+    public void updateTheme(Long themeId, CreateOrUpdateThemeRequest updateThemeRequest) {
+        if (reservationReadService.existsByThemeId(themeId)) {
+            throw new ApplicationException(THEME_REFERENTIAL_ERROR);
+        }
+
+        themeRepository.update(new Theme(themeId, updateThemeRequest.getName(), updateThemeRequest.getDesc(), updateThemeRequest.getPrice()));
     }
 
 }

@@ -115,4 +115,35 @@ public class ThemeRepositoryTest {
         assertThat(themeRepository.findByName(savedTheme.getName())).isEqualTo(Optional.empty());
     }
 
+    @Test
+    void 테마_이름를_수정한다() {
+        // given
+        Theme savedTheme = themeRepository.save(new Theme("이전 테마", "테마 설명", 22_000));
+        String newName = "새로운 테마 제목";
+
+        // when
+        themeRepository.update(new Theme(savedTheme.getId(), newName, "테마 설명", 22_000));
+
+        // then
+        assertThat(themeRepository.findByName(savedTheme.getName())).isEqualTo(Optional.empty());
+        assertThat(themeRepository.findByName(newName)).isNotNull();
+    }
+
+
+    @Test
+    void 테마_설명과_가격을_수정한다() {
+        // given
+        Theme savedTheme = themeRepository.save(new Theme("테마 제목", "테마 설명", 22_000));
+        String newDesc = "새로운 테마 설명";
+        int newPrice = savedTheme.getPrice() + 10000;
+
+        // when
+        themeRepository.update(new Theme(savedTheme.getId(), savedTheme.getName(), newDesc, newPrice));
+
+        // then
+        Theme theme = themeRepository.findByName(savedTheme.getName())
+                .orElseThrow();
+        assertThat(theme.getDesc()).isEqualTo(newDesc);
+        assertThat(theme.getPrice()).isEqualTo(newPrice);
+    }
 }

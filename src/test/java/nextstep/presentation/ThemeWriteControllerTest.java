@@ -1,7 +1,7 @@
 package nextstep.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import nextstep.error.ApplicationException;
 import nextstep.error.ErrorType;
 import nextstep.service.ThemeWriteService;
@@ -42,11 +42,11 @@ public class ThemeWriteControllerTest {
     void 테마_생성에_성공한다() throws Exception  {
         // given
         Long themeId = 6L;
-        CreateThemeRequest createThemeRequest = new CreateThemeRequest("테마 이름", "테마 설명", 22_000);
+        CreateOrUpdateThemeRequest createThemeRequest = new CreateOrUpdateThemeRequest("테마 이름", "테마 설명", 22_000);
 
         doNothing().when(themeRequestValidator)
-                        .validateCreateRequest(any(CreateThemeRequest.class));
-        given(themeWriteService.createTheme(any(CreateThemeRequest.class)))
+                        .validateCreateOrUpdateRequest(any(CreateOrUpdateThemeRequest.class));
+        given(themeWriteService.createTheme(any(CreateOrUpdateThemeRequest.class)))
                 .willReturn(themeId);
 
         // when
@@ -65,11 +65,11 @@ public class ThemeWriteControllerTest {
     void 테마_정보가_모두_기입되지_않으면_테마_생성에_실패한다() throws Exception {
         // given
         Long themeId = 6L;
-        CreateThemeRequest createThemeRequest = new CreateThemeRequest("테마 이름", "테마 설명", null);
+        CreateOrUpdateThemeRequest createThemeRequest = new CreateOrUpdateThemeRequest("테마 이름", "테마 설명", null);
 
         doThrow(new ApplicationException(ErrorType.INVALID_REQUEST_PARAMETER))
                 .when(themeRequestValidator)
-                .validateCreateRequest(any(CreateThemeRequest.class));
+                .validateCreateOrUpdateRequest(any(CreateOrUpdateThemeRequest.class));
 
         // when
         ResultActions perform = mockMvc.perform(post("/themes")
@@ -78,7 +78,7 @@ public class ThemeWriteControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest());
-        verify(themeWriteService, times(0)).createTheme(any(CreateThemeRequest.class));
+        verify(themeWriteService, times(0)).createTheme(any(CreateOrUpdateThemeRequest.class));
     }
 
 }

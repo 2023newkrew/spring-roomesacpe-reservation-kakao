@@ -1,6 +1,6 @@
 package nextstep.utils;
 
-import nextstep.dto.request.CreateThemeRequest;
+import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import nextstep.error.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,11 +11,11 @@ public class ThemeRequestValidator {
 
     private static final int SIZE_LIMIT = 20;
 
-    public void validateCreateRequest(CreateThemeRequest createThemeRequest) {
-        if (StringUtils.isEmpty(createThemeRequest.getName())
-                || StringUtils.isEmpty(createThemeRequest.getDesc())
-                || NumberUtils.isNullOrLessThanZero(createThemeRequest.getPrice())) {
-            throw new ApplicationException(INVALID_THEME_REQUEST_DATA, createThemeRequest.toString());
+    public void validateCreateOrUpdateRequest(CreateOrUpdateThemeRequest createOrUpdateThemeRequest) {
+        if (StringUtils.isEmpty(createOrUpdateThemeRequest.getName())
+                || StringUtils.isEmpty(createOrUpdateThemeRequest.getDesc())
+                || NumberUtils.isNullOrLessThanZero(createOrUpdateThemeRequest.getPrice())) {
+            throw new ApplicationException(INVALID_THEME_REQUEST_DATA, createOrUpdateThemeRequest.toString());
         }
     }
 

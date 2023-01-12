@@ -1,12 +1,12 @@
 package nextstep.dto.request;
 
-public class CreateThemeRequest {
+public class CreateOrUpdateThemeRequest {
 
     private String name;
     private String desc;
     private Integer price;
 
-    public CreateThemeRequest(String name, String desc, Integer price) {
+    public CreateOrUpdateThemeRequest(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
