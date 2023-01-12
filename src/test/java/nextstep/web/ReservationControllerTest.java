@@ -71,6 +71,28 @@ public class ReservationControllerTest {
         assertThat(reservation.getTheme()).isEqualTo(theme);
     }
 
+    @DisplayName("중복된 예약 생성은 예외를 응답한다")
+    @Test
+    void createDuplicateReservation() {
+        String name = "예약_이름";
+        LocalDate date = LocalDate.of(2022, 12, 14);
+        LocalTime time = LocalTime.of(15, 5);
+        예약_생성_후_번호를_반환한다(name, date, time);
+
+        ReservationRequest request = new ReservationRequest(name, date, time);
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/reservations")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(response.body()).isNotNull();
+    }
+
     @DisplayName("예약을 조회한다")
     @Test
     void getReservation() {
@@ -95,6 +117,22 @@ public class ReservationControllerTest {
         assertThat(reservation.getThemeName()).isEqualTo(theme.getName());
         assertThat(reservation.getThemeDesc()).isEqualTo(theme.getDesc());
         assertThat(reservation.getThemePrice()).isEqualTo(theme.getPrice());
+    }
+
+    @DisplayName("없는 예약을 조회하면 예외를 응답한다")
+    @Test
+    void getNotFoundReservation() {
+        Long id = 1L;
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/reservations/" + id)
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.body()).isNotNull();
     }
 
     @DisplayName("에약을 삭제한다")
