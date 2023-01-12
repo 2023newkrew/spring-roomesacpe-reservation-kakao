@@ -19,6 +19,8 @@ import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.is;
+
 @DisplayName("Theme Test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ThemeControllerTest {
@@ -104,5 +106,50 @@ class ThemeControllerTest {
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+    @DisplayName("조회(단일) - 등록된 테마의 id 로 요청시 조회 되어야 한다.")
+    @Test
+    void retrieveOneNormally() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(1))
+                .body("name", is("테마이름"))
+                .body("desc", is("테마설명"))
+                .body("price", is(22000));
+    }
+
+    @DisplayName("조회(단일) - 등록되지 않은 id 로 요청시 예외처리 되어야 한다.")
+    @Test
+    void retrieveOneInvalidId() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes/2")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("조회(단일) - 잘못된 id 로 요청시 예외처리 되어야 한다.")
+    @Test
+    void retrieveOneWrongParameter() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes/a")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("조회(목록) - 목록 조회 요청시 조회 되어야 한다.")
+    @Test
+    void retrieveAllNormally() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 }

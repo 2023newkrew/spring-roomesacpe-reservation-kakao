@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -33,4 +34,8 @@ public interface ThemeDao {
     Long save(Theme theme);
 
     Optional<Theme> findByName(String name);
+
+    Optional<Theme> findById(Long id);
+
+    List<Theme> findAll();
 }
