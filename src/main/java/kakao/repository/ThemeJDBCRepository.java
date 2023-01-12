@@ -1,10 +1,13 @@
 package kakao.repository;
 
+import domain.Reservation;
 import domain.Theme;
 import kakao.dto.request.UpdateThemeRequest;
 import kakao.error.ErrorCode;
 import kakao.error.exception.RecordNotFoundException;
+import kakao.error.exception.UsingThemeException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,6 +16,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,12 +25,14 @@ import java.util.Objects;
 public class ThemeJDBCRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final ReservationJDBCRepository reservationJDBCRepository;
 
-    public ThemeJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ThemeJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationJDBCRepository reservationJDBCRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("theme")
                 .usingGeneratedKeyColumns("id");
+        this.reservationJDBCRepository = reservationJDBCRepository;
     }
 
     private static final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) ->
@@ -35,6 +42,25 @@ public class ThemeJDBCRepository {
                     resultSet.getString("desc"),
                     resultSet.getInt("price")
             );
+
+    private static final RowMapper<Reservation> customerRowMapper = (resultSet, rowNum) -> {
+        Long id = resultSet.getLong("id");
+        LocalDate date = resultSet.getDate("date").toLocalDate();
+        LocalTime time = resultSet.getTime("time").toLocalTime();
+        String name = resultSet.getString("name");
+        String themeName = resultSet.getString("theme_name");
+        String themeDesc = resultSet.getString("theme_desc");
+        Integer themePrice = resultSet.getInt("theme_price");
+        Long themeId = resultSet.getLong("theme_id");
+
+        return Reservation.builder()
+                .id(id)
+                .date(date)
+                .time(time)
+                .name(name)
+                .theme(new Theme(themeId, themeName, themeDesc, themePrice))
+                .build();
+    };
 
     public long save(Theme theme) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(theme);
@@ -80,6 +106,9 @@ public class ThemeJDBCRepository {
     }
 
     public int update(UpdateThemeRequest request) {
+        if (reservationJDBCRepository.findByRequestId(request.id).size() > 0) {
+            throw new UsingThemeException();
+        }
         return jdbcTemplate.update(getUpdateSQL(request));
     }
 
@@ -99,6 +128,10 @@ public class ThemeJDBCRepository {
     public int delete(long id) {
         String DELETE_SQL = "delete theme where id=?";
 
-        return jdbcTemplate.update(DELETE_SQL, id);
+        try {
+            return jdbcTemplate.update(DELETE_SQL, id);
+        } catch (DataIntegrityViolationException e) {
+            throw new UsingThemeException();
+        }
     }
 }

@@ -17,7 +17,7 @@ CREATE TABLE IF Not Exists RESERVATION
     theme_desc  varchar(255),
     theme_price int,
     theme_id    bigint null_to_default,
-    foreign key (theme_id) REFERENCES THEME (id),
+    foreign key (theme_id) REFERENCES THEME (id) on delete restrict,
     primary key (id)
 );
 

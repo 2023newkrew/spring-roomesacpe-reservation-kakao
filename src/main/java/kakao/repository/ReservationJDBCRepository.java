@@ -69,6 +69,12 @@ public class ReservationJDBCRepository {
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
     }
 
+    public List<Reservation> findByRequestId(Long requestId) {
+        String SELECT_SQL = "select * from reservation where theme_id=?";
+
+        return jdbcTemplate.query(SELECT_SQL, customerRowMapper, requestId);
+    }
+
     public int delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
 

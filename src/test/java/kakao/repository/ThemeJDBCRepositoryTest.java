@@ -1,8 +1,10 @@
 package kakao.repository;
 
+import domain.Reservation;
 import domain.Theme;
 import kakao.dto.request.UpdateThemeRequest;
 import kakao.error.exception.RecordNotFoundException;
+import kakao.error.exception.UsingThemeException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @SpringBootTest
 public class ThemeJDBCRepositoryTest {
@@ -19,6 +24,9 @@ public class ThemeJDBCRepositoryTest {
 
     @Autowired
     private ThemeJDBCRepository themeJDBCRepository;
+
+    @Autowired
+    private ReservationJDBCRepository reservationJDBCRepository;
 
     private final Theme themeModel = new Theme("name", "desc", 1000);
 
@@ -113,7 +121,30 @@ public class ThemeJDBCRepositoryTest {
         Assertions.assertThat(cp.getName()).isEqualTo("updatedName");
         Assertions.assertThat(cp.getDesc()).isEqualTo("updatedDesc");
         Assertions.assertThat(cp.getPrice()).isEqualTo(3000);
+    }
 
+    @DisplayName("이미 예약된 테마를 update 하면 UsingTheme 예외를 발생한다")
+    @Test
+    void updateUsedTheme() {
+        UpdateThemeRequest request = UpdateThemeRequest.builder()
+                .id(1L)
+                .name("updatedName")
+                .desc("updatedDesc")
+                .price(3000)
+                .build();
+
+        themeJDBCRepository.save(themeModel);
+        reservationJDBCRepository.save(
+                Reservation.builder()
+                        .name("name")
+                        .date(LocalDate.of(2022, 10, 13))
+                        .time(LocalTime.of(13, 00))
+                        .theme(themeJDBCRepository.findById(1L))
+                        .build()
+        );
+
+        Assertions.assertThatExceptionOfType(UsingThemeException.class)
+                .isThrownBy(() -> themeJDBCRepository.update(request));
     }
 
     @DisplayName("id에 해당하는 Theme을 삭제하고, 삭제된 count를 반환한다")
@@ -123,5 +154,22 @@ public class ThemeJDBCRepositoryTest {
 
         Assertions.assertThat(themeJDBCRepository.delete(1L)).isOne();
         Assertions.assertThat(themeJDBCRepository.delete(1L)).isZero();
+    }
+
+    @DisplayName("이미 예약된 theme을 삭제하면 UsingTheme 예외를 발생한다")
+    @Test
+    void deleteUsingTheme() {
+        themeJDBCRepository.save(themeModel);
+        reservationJDBCRepository.save(
+                Reservation.builder()
+                        .name("name")
+                        .date(LocalDate.of(2022, 10, 13))
+                        .time(LocalTime.of(13, 00))
+                        .theme(themeJDBCRepository.findById(1L))
+                        .build()
+        );
+
+        Assertions.assertThatExceptionOfType(UsingThemeException.class)
+                .isThrownBy(() -> themeJDBCRepository.delete(1L));
     }
 }
