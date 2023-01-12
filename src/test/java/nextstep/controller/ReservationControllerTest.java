@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import nextstep.RoomEscapeWebApplication;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.dto.ReservationRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,25 +27,23 @@ class ReservationControllerTest {
         RestAssured.port = port;
     }
 
-    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
-        return new Reservation(
-                id,
+    private ReservationRequestDto generateReservationRequestDto(String date, String time, String name) {
+        return new ReservationRequestDto(
                 LocalDate.parse(date),
                 LocalTime.parse(time),
-                name,
-                theme
+                name
         );
     }
 
     @DisplayName("예약 생성 요청이 성공하면 201 코드와 Location 헤더 반환")
     @Test
     void reserveRequest() {
-        Reservation reservation = generateReservation(
-                null, "2023-01-01", "13:00", "john", null);
+        ReservationRequestDto reservationRequestDto =
+                generateReservationRequestDto("2023-01-01", "13:00", "john");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservation)
+                .body(reservationRequestDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())

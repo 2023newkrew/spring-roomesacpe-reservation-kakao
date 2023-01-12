@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.dto.ReservationRequestDto;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.NotFoundReservationException;
 import nextstep.service.ReservationService;
@@ -23,8 +24,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> reserve(@RequestBody Reservation reservation){
-        reservation.setTheme(DEFAULT_THEME);
+    public ResponseEntity<Object> reserve(@RequestBody ReservationRequestDto reservationRequestDto){
+        Reservation reservation = generateReservationFromRequestDto(reservationRequestDto);
         Reservation confirmedReservation = reservationService.reserve(reservation);
         URI locationUri = UriComponentsBuilder.fromPath("/reservations/{id}")
                 .buildAndExpand(confirmedReservation.getId())
@@ -54,5 +55,14 @@ public class ReservationController {
     @ExceptionHandler
     public ResponseEntity<Object> handle(NotFoundReservationException exception) {
         return ResponseEntity.notFound().build();
+    }
+
+    private Reservation generateReservationFromRequestDto(ReservationRequestDto reservationRequestDto) {
+        Reservation reservation = new Reservation();
+        reservation.setDate(reservationRequestDto.getDate());
+        reservation.setTime(reservationRequestDto.getTime());
+        reservation.setName(reservationRequestDto.getName());
+        reservation.setTheme(DEFAULT_THEME);
+        return reservation;
     }
 }
