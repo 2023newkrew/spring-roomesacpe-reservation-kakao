@@ -3,6 +3,7 @@ package nextstep.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import nextstep.web.theme.dto.CreateThemeRequestDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,9 @@ import java.sql.SQLException;
 @Getter
 @AllArgsConstructor
 public class Theme {
+
+    public static final String BASE_URL = "/themes";
+
     private Long id;
     private String name;
     private String desc;
@@ -32,6 +36,14 @@ public class Theme {
                 .name(rs.getString("name"))
                 .desc(rs.getString("desc"))
                 .price(rs.getInt("price"))
+                .build();
+    }
+
+    public static Theme from(CreateThemeRequestDto requestDto) {
+        return Theme.builder()
+                .name(requestDto.getName())
+                .desc(requestDto.getDesc())
+                .price(requestDto.getPrice())
                 .build();
     }
 }

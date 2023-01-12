@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReservationService {
 
-    private static final String BASE_URI = "/reservations";
-
     private final RoomEscapeRepository<Reservation> reservationRepository;
 
     @Autowired
@@ -22,18 +20,9 @@ public class ReservationService {
     }
 
     public CreateReservationResponseDto createReservation(CreateReservationRequestDto requestDto) {
-        Reservation reservation = Reservation.of(
-                requestDto.getDate(),
-                requestDto.getTime(),
-                requestDto.getName(),
-                requestDto.getThemeId()
-        );
+        Reservation reservation = Reservation.from(requestDto);
 
-        CreateReservationResponseDto responseDto = new CreateReservationResponseDto(
-                 BASE_URI + "/" + reservationRepository.save(reservation)
-        );
-
-        return responseDto;
+        return CreateReservationResponseDto.from(reservationRepository.save(reservation));
     }
 
     public FindReservationResponseDto findReservation(Long id) {

@@ -3,6 +3,7 @@ package nextstep.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import nextstep.web.reservation.dto.CreateReservationRequestDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,9 @@ import java.time.LocalTime;
 @Getter
 @AllArgsConstructor
 public class Reservation {
+
+    public static final String BASE_URL = "/reservations";
+
     private Long id;
     private LocalDate date;
     private LocalTime time;
@@ -37,6 +41,15 @@ public class Reservation {
                 .time(rs.getTime("time").toLocalTime())
                 .name(rs.getString("name"))
                 .themeId(rs.getLong("theme_id"))
+                .build();
+    }
+
+    public static Reservation from(CreateReservationRequestDto requestDto){
+        return Reservation.builder()
+                .date(requestDto.getDate())
+                .time(requestDto.getTime())
+                .name(requestDto.getName())
+                .themeId(requestDto.getThemeId())
                 .build();
     }
 }

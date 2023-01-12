@@ -22,7 +22,8 @@ CREATE TABLE THEME
 
 ALTER TABLE RESERVATION
     ADD FOREIGN KEY (theme_id)
-    REFERENCES THEME (id);
+    REFERENCES THEME (id)
+    ON DELETE NO ACTION;
 
 INSERT INTO THEME(name, desc, price) VALUES ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000);
 INSERT INTO THEME(name, desc, price) VALUES ('넥스트스텝', '아찔한 개발여행', 99000);

@@ -14,6 +14,7 @@ public class ReservationAdvice {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        System.out.println(e.getMessage());
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
@@ -21,7 +22,8 @@ public class ReservationAdvice {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException() {
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
+        System.out.println(e.getMessage());
         ErrorCode errorCode = CommonErrorCode.SERVER_ERROR;
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
@@ -29,7 +31,8 @@ public class ReservationAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleArgumentNotValidException() {
+    public ResponseEntity<ErrorResponse> handleArgumentNotValidException(MethodArgumentNotValidException e) {
+        System.out.println(e.getMessage());
         ErrorCode errorCode = CommonErrorCode.BAD_PARAMETER_REQUEST;
         return ResponseEntity
                 .status(errorCode.getHttpStatus())

@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ThemeService {
 
-    private static final String BASE_URI = "/themes";
-
     private final RoomEscapeRepository<Theme> themeRepository;
 
     @Autowired
@@ -23,17 +21,9 @@ public class ThemeService {
     }
 
     public CreateThemeResponseDto createTheme(CreateThemeRequestDto requestDto) {
-        Theme theme = Theme.of(
-                requestDto.getName(),
-                requestDto.getDesc(),
-                requestDto.getPrice()
-        );
+        Theme theme = Theme.from(requestDto);
 
-        CreateThemeResponseDto responseDto = new CreateThemeResponseDto(
-                BASE_URI + "/" + themeRepository.save(theme)
-        );
-
-        return responseDto;
+        return CreateThemeResponseDto.from(themeRepository.save(theme));
     }
 
     public FindThemeResponseDto findTheme(Long id) {
