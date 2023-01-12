@@ -3,6 +3,7 @@ package nextstep.controller;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequestDto;
+import nextstep.dto.ReservationResponseDto;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.NotFoundReservationException;
 import nextstep.service.ReservationService;
@@ -34,8 +35,8 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public Reservation findReservation(@PathVariable long id){
-        return reservationService.findReservation(id);
+    public ReservationResponseDto findReservation(@PathVariable long id){
+        return generateReservationResponseDtoFrom(reservationService.findReservation(id));
     }
 
     @DeleteMapping("/{id}")
@@ -64,5 +65,15 @@ public class ReservationController {
         reservation.setName(reservationRequestDto.getName());
         reservation.setTheme(DEFAULT_THEME);
         return reservation;
+    }
+
+    private ReservationResponseDto generateReservationResponseDtoFrom(Reservation reservation) {
+        return new ReservationResponseDto(
+                reservation.getId(),
+                reservation.getDate(),
+                reservation.getTime(),
+                reservation.getName(),
+                reservation.getTheme()
+        );
     }
 }
