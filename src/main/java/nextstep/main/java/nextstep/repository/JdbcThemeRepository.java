@@ -45,7 +45,8 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public int update(Theme theme) {
-        return jdbcTemplate.update((con -> CustomPreparedStatementCreator.updateThemePreparedStatement(con, theme)));
+        final String sql = "UPDATE theme SET (name, desc, price) = (?, ?, ?) WHERE id = ?;";
+        return jdbcTemplate.update(sql, theme.getName(), theme.getDesc(), theme.getPrice(), theme.getId());
     }
 
     @Override

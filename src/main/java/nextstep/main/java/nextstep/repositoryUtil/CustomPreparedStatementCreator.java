@@ -30,15 +30,4 @@ public class CustomPreparedStatementCreator {
 
         return preparedStatement;
     }
-
-    public static PreparedStatement updateThemePreparedStatement(Connection con, Theme theme) throws SQLException {
-        final String sql = "UPDATE theme SET (name, desc, price) = (?, ?, ?) WHERE id = ?;";
-        PreparedStatement preparedStatement = con.prepareStatement(sql);
-        preparedStatement.setString(1, theme.getName());
-        preparedStatement.setString(2, theme.getDesc());
-        preparedStatement.setInt(3, theme.getPrice());
-        preparedStatement.setLong(4, theme.getId());
-
-        return preparedStatement;
-    }
 }
