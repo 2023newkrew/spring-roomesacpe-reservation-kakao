@@ -1,19 +1,19 @@
-package nextstep.web;
+package nextstep.service;
 
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
-import nextstep.web.dto.ReservationRequest;
+import nextstep.dto.ReservationRequest;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoomEscapeService {
+public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomEscapeService(JdbcTemplateReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

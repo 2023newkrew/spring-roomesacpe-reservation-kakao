@@ -1,15 +1,14 @@
 package nextstep.console;
 
-import nextstep.exception.ReservationDuplicateException;
-import nextstep.exception.ReservationNotFoundException;
 import nextstep.exception.RoomEscapeException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
+import nextstep.service.ReservationService;
+import nextstep.dto.ReservationRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -21,21 +20,25 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationRepository reservationRepository = new JdbcReservationRepository();
+        ReservationService reservationService = new ReservationService(reservationRepository);
 
         while (true) {
             String input = getInput(scanner);
             try {
                 if (input.startsWith(ADD)) {
-                    Reservation reservation = addReservation(input, reservationRepository);
+                    ReservationRequest request = parseReservationRequestFromInput(input);
+                    Reservation reservation = reservationService.createReservation(request);
                     printReservation(reservation);
                 }
                 if (input.startsWith(FIND)) {
-                    Reservation reservation = findReservation(input, reservationRepository);
+                    Long id = parseIdFromInput(input);
+                    Reservation reservation = reservationService.getReservation(id);
                     printReservation(reservation);
                     printReservationTheme(reservation.getTheme());
                 }
                 if (input.startsWith(DELETE)) {
-                    deleteReservation(input, reservationRepository);
+                    Long id = parseIdFromInput(input);
+                    reservationService.deleteReservation(id);
                 }
                 if (input.equals(QUIT)) {
                     break;
@@ -58,44 +61,17 @@ public class RoomEscapeApplication {
         return scanner.nextLine();
     }
 
-    public static Reservation addReservation(String input, ReservationRepository reservationRepository) {
+    public static ReservationRequest parseReservationRequestFromInput(String input) {
         String params = input.split(" ")[1];
         String date = params.split(",")[0];
         String time = params.split(",")[1];
         String name = params.split(",")[2];
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
-        if (reservationRepository.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time + ":00"))) {
-            throw new ReservationDuplicateException();
-        }
-
-        Reservation reservation = reservationRepository.save(new Reservation(
-                0L,
-                LocalDate.parse(date),
-                LocalTime.parse(time + ":00"),
-                name,
-                theme
-        ));
-        System.out.println("예약이 등록되었습니다.");
-        return reservation;
+        return new ReservationRequest(name, LocalDate.parse(date), LocalTime.parse(time));
     }
 
-    public static Reservation findReservation(String input, ReservationRepository reservationRepository) {
+    public static Long parseIdFromInput(String input) {
         String params = input.split(" ")[1];
-        Long id = Long.parseLong(params.split(",")[0]);
-
-        Optional<Reservation> result = reservationRepository.findById(id);
-        return result.orElseThrow(() -> new ReservationNotFoundException(id));
-    }
-
-    public static void deleteReservation(String input, ReservationRepository reservationRepository) {
-        String params = input.split(" ")[1];
-        Long id = Long.parseLong(params.split(",")[0]);
-
-        reservationRepository.deleteById(id);
-
-        System.out.println("예약이 취소되었습니다.");
+        return Long.parseLong(params.split(",")[0]);
     }
 
     public static void printReservation(Reservation reservation) {

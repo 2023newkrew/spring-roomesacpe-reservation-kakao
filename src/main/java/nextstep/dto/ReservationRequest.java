@@ -1,4 +1,4 @@
-package nextstep.web.dto;
+package nextstep.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
