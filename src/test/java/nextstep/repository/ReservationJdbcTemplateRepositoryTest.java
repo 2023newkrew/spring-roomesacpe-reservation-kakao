@@ -53,16 +53,6 @@ class ReservationJdbcTemplateRepositoryTest {
 
     }
 
-    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date),
-                LocalTime.parse(time),
-                name,
-                theme
-        );
-    }
-
     @DisplayName("예약을 저장한다.")
     @Test
     void save() {
@@ -158,5 +148,15 @@ class ReservationJdbcTemplateRepositoryTest {
     void delete_fail() {
         boolean result = repository.delete(1L);
         assertThat(result).isFalse();
+    }
+
+    private Reservation generateReservation(Long id, String date, String time, String name, Theme theme) {
+        return new Reservation(
+                id,
+                LocalDate.parse(date),
+                LocalTime.parse(time),
+                name,
+                theme
+        );
     }
 }
