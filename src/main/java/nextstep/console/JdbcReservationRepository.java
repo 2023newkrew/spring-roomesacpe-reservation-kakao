@@ -14,7 +14,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
@@ -24,7 +24,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             ResultSet resultSet = ps.getGeneratedKeys();
             resultSet.next();
             Long id = resultSet.getLong("id");
-            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -32,7 +32,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+        String sql = "SELECT date, time, name, theme_id FROM reservation WHERE id = ?";
 
         try (Connection con = createConnection();
             PreparedStatement ps = con.prepareStatement(sql)) {

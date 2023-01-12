@@ -1,6 +1,8 @@
 package nextstep.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import nextstep.model.Reservation;
+import nextstep.model.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,11 +16,12 @@ public class ReservationResponse {
     private String themeDesc;
     private Integer themePrice;
 
-    public ReservationResponse(Reservation reservation) {
+    public ReservationResponse(Reservation reservation, Theme theme) {
         this(reservation.getId(), reservation.getDate(), reservation.getTime(), reservation.getName(),
-                reservation.getTheme().getName(), reservation.getTheme().getDesc(), reservation.getTheme().getPrice());
+                theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
+    @JsonCreator
     public ReservationResponse(Long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc, Integer themePrice) {
         this.id = id;
         this.date = date;

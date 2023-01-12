@@ -6,6 +6,9 @@ import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.ReservationService;
 import nextstep.dto.ReservationRequest;
+import nextstep.service.ThemeService;
+import nextstep.web.JdbcTemplateThemeRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,22 +22,29 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
         ReservationRepository reservationRepository = new JdbcReservationRepository();
         ReservationService reservationService = new ReservationService(reservationRepository);
+        JdbcTemplateThemeRepository themeRepository = new JdbcTemplateThemeRepository(new JdbcTemplate());
+        ThemeService themeService = new ThemeService(themeRepository);
 
         while (true) {
             String input = getInput(scanner);
             try {
                 if (input.startsWith(ADD)) {
                     ReservationRequest request = parseReservationRequestFromInput(input);
+                    // TODO : theme 조회
                     Reservation reservation = reservationService.createReservation(request);
                     printReservation(reservation);
                 }
                 if (input.startsWith(FIND)) {
                     Long id = parseIdFromInput(input);
+
                     Reservation reservation = reservationService.getReservation(id);
                     printReservation(reservation);
-                    printReservationTheme(reservation.getTheme());
+
+                    Theme theme = themeService.getTheme(reservation.getThemeId());
+                    printReservationTheme(theme);
                 }
                 if (input.startsWith(DELETE)) {
                     Long id = parseIdFromInput(input);
@@ -66,7 +76,9 @@ public class RoomEscapeApplication {
         String date = params.split(",")[0];
         String time = params.split(",")[1];
         String name = params.split(",")[2];
-        return new ReservationRequest(name, LocalDate.parse(date), LocalTime.parse(time));
+        String themeId = params.split(",")[3];
+
+        return new ReservationRequest(name, LocalDate.parse(date), LocalTime.parse(time), Long.parseLong(themeId));
     }
 
     public static Long parseIdFromInput(String input) {

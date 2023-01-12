@@ -24,7 +24,7 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -32,15 +32,15 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
             JdbcRemoveDuplicateUtils.setReservationToStatement(ps, reservation);
             return ps;
         }, keyHolder);
-        Long id = keyHolder.getKey().longValue();
+        Long id = keyHolder.getKeyAs(Long.class);
 
-        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
         try {
-            String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+            String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE id = ?";
             RowMapper<Reservation> rowMapper = (rs, rowNum) -> JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, rs.getLong("id"));
             return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {
@@ -59,10 +59,5 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
         String sql = "SELECT count(*) FROM reservation WHERE date=? AND time=?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, time);
         return  count > 0;
-    }
-
-    public void deleteAll() {
-        String sql = "DELETE FROM reservation";
-        jdbcTemplate.update(sql);
     }
 }

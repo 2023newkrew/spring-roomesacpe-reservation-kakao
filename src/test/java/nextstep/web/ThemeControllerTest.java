@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import nextstep.dto.ThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.model.Theme;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,14 +25,21 @@ public class ThemeControllerTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    JdbcTemplateThemeRepository repository;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
 
-    @Autowired
-    JdbcTemplateThemeRepository repository;
-
+    @AfterEach
+    void tearDown() {
+        jdbcTemplate.execute("DELETE FROM theme");
+    }
     @DisplayName("테마를 생성한다")
     @Test
     void createTheme() {
@@ -108,6 +117,8 @@ public class ThemeControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+    // TODO : 예약이 존재하는 테마는 삭제되지 않는다
 
     private Long 샏성된_테마의_번호를_반환한다(ExtractableResponse<Response> response) {
         String id = response

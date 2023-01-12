@@ -4,7 +4,6 @@ import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.service.ReservationService;
 import nextstep.dto.ReservationRequest;
-import nextstep.web.JdbcTemplateReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,14 +21,14 @@ class ReservationServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private JdbcTemplateReservationRepository repository;
+    private JdbcTemplateReservationRepository reservationRepository;
 
     private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
-        repository = new JdbcTemplateReservationRepository(jdbcTemplate);
-        reservationService = new ReservationService(repository);
+        reservationRepository = new JdbcTemplateReservationRepository(jdbcTemplate);
+        reservationService = new ReservationService(reservationRepository);
     }
 
     @DisplayName("존재하지 않는 예약을 조회할 경우 예외가 발생한다")
@@ -45,7 +44,8 @@ class ReservationServiceTest {
         String name = "겹치는 예약";
         LocalDate date = LocalDate.of(2022, 11, 11);
         LocalTime time = LocalTime.of(19, 00);
-        ReservationRequest request = new ReservationRequest(name, date, time);
+        Long themeId = 1L;
+        ReservationRequest request = new ReservationRequest(name, date, time, themeId);
         reservationService.createReservation(request);
 
         assertThatThrownBy(() -> reservationService.createReservation(request))

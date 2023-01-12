@@ -7,7 +7,6 @@ import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.dto.ReservationRequest;
 import nextstep.dto.ReservationResponse;
-import nextstep.service.ReservationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,9 +30,13 @@ public class ReservationControllerTest {
     private int port;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private JdbcTemplateReservationRepository repository;
 
-    Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    @Autowired
+    private JdbcTemplateThemeRepository themeRepository;
 
     @BeforeEach
     void setUp() {
@@ -41,16 +45,19 @@ public class ReservationControllerTest {
 
     @AfterEach
     void tearDown() {
-        repository.deleteAll();
+        jdbcTemplate.execute("DELETE FROM reservation");
+        jdbcTemplate.execute("DELETE FROM theme");
     }
 
     @DisplayName("예약을 생성한다")
     @Test
     void createReservation() {
+        Theme theme = themeRepository.save(new Theme(null, "새로운 테마", "테마테마", 23100));
+
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 12, 14);
         LocalTime time = LocalTime.of(15, 5);
-        ReservationRequest request = new ReservationRequest(name, date, time);
+        ReservationRequest request = new ReservationRequest(name, date, time, theme.getId());
 
         ExtractableResponse<Response> response = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -68,18 +75,20 @@ public class ReservationControllerTest {
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
         assertThat(reservation.getName()).isEqualTo(name);
-        assertThat(reservation.getTheme()).isEqualTo(theme);
+        assertThat(reservation.getThemeId()).isEqualTo(theme.getId());
     }
 
     @DisplayName("중복된 예약 생성은 예외를 응답한다")
     @Test
     void createDuplicateReservation() {
+        Theme theme = themeRepository.save(new Theme(null, "새로운 테마", "테마테마", 23100));
+
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 12, 14);
         LocalTime time = LocalTime.of(15, 5);
-        예약_생성_후_번호를_반환한다(name, date, time);
+        예약_생성_후_번호를_반환한다(name, date, time, theme.getId());
 
-        ReservationRequest request = new ReservationRequest(name, date, time);
+        ReservationRequest request = new ReservationRequest(name, date, time, theme.getId());
 
         ExtractableResponse<Response> response = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -96,10 +105,12 @@ public class ReservationControllerTest {
     @DisplayName("예약을 조회한다")
     @Test
     void getReservation() {
+        Theme theme = themeRepository.save(new Theme(null, "새로운 테마", "테마테마", 23100));
+
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 4, 3);
         LocalTime time = LocalTime.of(12, 15);
-        Long id = 예약_생성_후_번호를_반환한다(name, date, time);
+        Long id = 예약_생성_후_번호를_반환한다(name, date, time, theme.getId());
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -138,10 +149,12 @@ public class ReservationControllerTest {
     @DisplayName("에약을 삭제한다")
     @Test
     void deleteReservation() {
+        Theme theme = themeRepository.save(new Theme(null, "새로운 테마", "테마테마", 23100));
+
         String name = "취소될 예약";
         LocalDate date = LocalDate.of(2023, 5, 29);
         LocalTime time = LocalTime.of(8, 30);
-        Long id = 예약_생성_후_번호를_반환한다(name, date, time);
+        Long id = 예약_생성_후_번호를_반환한다(name, date, time, theme.getId());
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -161,8 +174,8 @@ public class ReservationControllerTest {
         return Long.parseLong(id);
     }
 
-    private Long 예약_생성_후_번호를_반환한다(String name, LocalDate date, LocalTime time) {
-        ReservationRequest request = new ReservationRequest(name, date, time);
+    private Long 예약_생성_후_번호를_반환한다(String name, LocalDate date, LocalTime time, Long themeId) {
+        ReservationRequest request = new ReservationRequest(name, date, time, themeId);
 
         String id =  RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

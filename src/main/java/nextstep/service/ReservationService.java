@@ -18,11 +18,10 @@ public class ReservationService {
     }
 
     public Reservation createReservation(ReservationRequest request) {
-        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
             throw new ReservationDuplicateException();
         }
-        return reservationRepository.save(new Reservation(0L, request.getDate(), request.getTime(), request.getName(), theme));
+        return reservationRepository.save(new Reservation(0L, request.getDate(), request.getTime(), request.getName(), request.getThemeId()));
     }
 
     public Reservation getReservation(Long id) {
