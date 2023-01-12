@@ -1,5 +1,6 @@
 package nextstep.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import nextstep.domain.Theme;
 
 import java.time.LocalDate;
@@ -8,7 +9,9 @@ import java.util.Objects;
 
 public class ReservationResponseDto {
     private Long id;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime time;
     private String name;
     private String themeName;
