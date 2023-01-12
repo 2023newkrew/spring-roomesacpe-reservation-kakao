@@ -51,8 +51,8 @@ public class SimpleReservationDAO implements ReservationDAO {
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Date date, Time time) {
         return connection -> {
             var ps = StatementCreator.createSelectByDateAndTimeStatement(connection, date, time);
-            ps.executeUpdate();
-            var rs = ps.getGeneratedKeys();
+            ps.executeQuery();
+            var rs = ps.getResultSet();
             rs.next();
             return ResultSetParser.existsRow(rs);
         };
