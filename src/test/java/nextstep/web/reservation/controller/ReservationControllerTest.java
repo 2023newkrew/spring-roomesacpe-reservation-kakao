@@ -1,4 +1,4 @@
-package nextstep.web.controller;
+package nextstep.web.reservation.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.Reservation;
