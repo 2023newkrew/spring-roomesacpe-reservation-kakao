@@ -1,7 +1,7 @@
 package nextstep.reservation.controller;
 
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.exception.CreateReservationException;
+import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +43,8 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(CreateReservationException.class)
-    public ResponseEntity<String> handle(CreateReservationException exception) {
+    @ExceptionHandler(ReservationException.class)
+    public ResponseEntity<String> handle(ReservationException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

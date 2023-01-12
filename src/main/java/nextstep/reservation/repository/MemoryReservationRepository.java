@@ -1,7 +1,7 @@
 package nextstep.reservation.repository;
 
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.exception.CreateReservationException;
+import nextstep.reservation.exception.ReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +19,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public Reservation create(Reservation reservation) {
         if (findByDateTime(reservation.getDate(), reservation.getTime())) {
-            throw new CreateReservationException(DUPLICATE_TIME_RESERVATION);
+            throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
         Long id = reservationCount.getAndIncrement();
         Reservation creatteReservation = new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());

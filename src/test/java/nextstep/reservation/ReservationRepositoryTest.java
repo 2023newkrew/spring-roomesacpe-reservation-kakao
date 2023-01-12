@@ -2,7 +2,7 @@ package nextstep.reservation;
 
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.exception.CreateReservationException;
+import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -73,7 +73,7 @@ class ReservationRepositoryTest {
         reservationRepository.create(reservation);
         Assertions.assertThatThrownBy(
                 () -> reservationRepository.create(reservationDuplicated)
-        ).isInstanceOf(CreateReservationException.class);
+        ).isInstanceOf(ReservationException.class);
     }
 
     @Test
