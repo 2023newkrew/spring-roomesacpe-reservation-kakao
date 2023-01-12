@@ -15,6 +15,7 @@ public class ReservationResultSetMapper {
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
                 Theme.of(
+                        0L,
                         rs.getString("theme_name"),
                         rs.getString("theme_desc"),
                         rs.getInt("theme_price")
