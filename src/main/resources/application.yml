@@ -4,7 +4,7 @@ spring:
       enabled: true
   datasource:
     url: jdbc:h2:tcp://localhost/~/roomescape
-    drive_class_name: org.h2.Driver
+    driver_class_name: org.h2.Driver
     username: sa
     password:
   sql:

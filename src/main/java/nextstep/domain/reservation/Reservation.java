@@ -5,6 +5,7 @@ import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
     private final Long id;
@@ -41,15 +42,6 @@ public class Reservation {
         return theme;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        Reservation reservation = (Reservation) obj;
-        return this.name.equals(reservation.getName())
-        && this.date.equals(reservation.getDate())
-        && this.time.equals(reservation.getTime())
-        && this.theme.equals(reservation.getTheme());
-    }
-
     public static Reservation createReservation(CreateReservationDto createReservationDto) {
         return new Reservation(
                 null,
@@ -58,5 +50,19 @@ public class Reservation {
                 createReservationDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Reservation reservation = (Reservation) obj;
+        return this.name.equals(reservation.getName())
+                && this.date.equals(reservation.getDate())
+                && this.time.equals(reservation.getTime())
+                && this.theme.equals(reservation.getTheme());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name,date,time,theme);
     }
 }

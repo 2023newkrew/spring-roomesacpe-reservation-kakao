@@ -56,7 +56,7 @@
   - [x] Reservation insert 실패시 예외로 처리하도록 수정
   - [x] 자원을 해제하는 코드를 finally 블록 안으로 이동
   - [x] 테스트 이름을 목적과 예상 결과를 포함하도록 수정
-  - [ ] equals() 오버라이딩 시 hashcode() 함께 오버라이딩
+  - [x] equals() 오버라이딩 시 hashcode() 함께 오버라이딩
 
 
 - [x] 콘솔 앱과 웹 앱이 같은 Service를 공유하도록 리팩토링
