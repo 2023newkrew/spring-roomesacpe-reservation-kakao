@@ -17,12 +17,12 @@ import nextstep.reservation.entity.Theme;
 public class ReservationRequestDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDate date;
+    private LocalDate date;
 
     @JsonFormat(pattern = "HH:mm")
-    LocalTime time;
+    private LocalTime time;
 
-    String name;
+    private String name;
 
     public Reservation toEntity() {
         return Reservation.builder()
