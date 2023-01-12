@@ -4,6 +4,16 @@
 
 - 기존에는 로컬 환경에서 콘솔 애플리케이션을 이용하여 예약 정보를 관리해왔다.
 - 콘솔 애플리케이션을 웹 애플리케이션으로 전환하여 집에서도 웹을 통해 예약 관리를 할 수 있도록 해야한다.
+- 기존 콘솔 어플리케이션은 아래와 같은 기능을 지원하고 있었다.
+
+  ```
+  ### 명령어를 입력하세요. ###
+  예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현
+  예약조회: find {id} ex) find 1
+  예약취소: delete {id} ex) delete 1
+  종료: quit
+  ```
+  위와 같이 3개의 기능을 지원하며 각각 예약, 예약 조회, 예약 취소의 동작을 CLI 기반의 인터페이스로 수행 가능했다.
 
 ## 요구사항
 
@@ -11,15 +21,18 @@
     - [X] 예약 하기
       ```
       POST /reservations HTTP/1.1
-      content-type: application/json; charset=UTF-8
-      host: localhost:8080
-      
+      Content-Type: application/json; charset=UTF-8
+      Host: localhost:8080
       {
         "date" : "2022-08-11",
         "time" : "12:34:56",
-        "name" : "사람 이름"
+        "name" : "사람 이름",
+        "theme_name" : "테마 이름",
+        "theme_desc" : "테마 설명",
+        "theme_price" : "테마 가격",
       }
       ```
+
       ```
       HTTP/1.1 201 Created
       Location: /reservations/1
@@ -28,10 +41,10 @@
       ```
       GET /reservations/1 HTTP/1.1
       ```
+
       ```
       HTTP/1.1 200 
       Content-Type: application/json
-      
       {
         "id": 1,
         "date": "2022-08-11",
@@ -58,11 +71,6 @@
     - [X] 예약 조회) ID가 잘못된 경우 (float, string)
     - [X] 예약 삭제) ID가 없는 경우 삭제 불가
     - [X] 예약 삭제) ID가 잘못된 경우 (float, string)
-- [X] 콘솔 애플리케이션에 데이터베이스를 적용한다.
-    - [X] 직접 커넥션을 만들어서 데이터베이스에 접근한다.
-        - [X] 예약 생성
-        - [X] 예약 조회
-        - [X] 예약 삭제
 - [X] 웹 애플리케이션에 데이터베이스를 적용한다.
     -  [X] 스프링이 제공하는 기능을 활용하여 데이터베이스에 접근한다.
         - [X] 예약 생성
