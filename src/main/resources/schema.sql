@@ -9,3 +9,12 @@ CREATE TABLE IF NOT EXISTS RESERVATION
     theme_price int, -- 예약된 방탈출 테마 가격
     primary key (id)
 );
+
+CREATE TABLE IF NOT EXISTS THEME
+(
+    id    bigint not null auto_increment, -- 방탈출 테마 번호
+    name  varchar(20), -- 방탈출 테마 이름
+    desc  varchar(255), -- 방탈출 테마 설명
+    price int, -- 방탈출 테마 가격
+    primary key (id)
+);
