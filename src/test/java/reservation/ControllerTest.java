@@ -13,9 +13,9 @@ import reservation.model.dto.RequestReservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 
-@DisplayName("Reservation Controller Test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControllerTest {
     @LocalServerPort
@@ -34,7 +34,7 @@ public class ControllerTest {
 
         RequestReservation requestReservation = new RequestReservation(localDate, localTime, "TEST", 1L);
 
-        RestAssured.given().log().all()
+        given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestReservation)
                 .when().post("/reservations")
@@ -46,7 +46,7 @@ public class ControllerTest {
     @DisplayName("GET /reservations/1")
     @Test
     void getReservation() {
-        RestAssured.given().log().all()
+        given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
                 .then().log().all()
@@ -58,14 +58,14 @@ public class ControllerTest {
     @DisplayName("DELETE /reservations/1 → GET /reservations/1")
     @Test
     void deleteReservation() {
-        RestAssured.given().log().all()
+        given().log().all()
                 .accept(MediaType.TEXT_PLAIN_VALUE)
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .body(is(""));
 
-        RestAssured.given().log().all()
+        given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
                 .then().log().all()
