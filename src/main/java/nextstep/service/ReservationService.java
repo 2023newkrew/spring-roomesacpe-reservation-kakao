@@ -4,6 +4,7 @@ import nextstep.dao.ReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.ReservationSaveForm;
 import nextstep.exceptions.DataConflictException;
+import nextstep.exceptions.DataNotExistException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,10 +31,13 @@ public class ReservationService {
     }
 
     public Reservation findReservation(Long id) {
-        return reservationDAO.findById(id);
+        return reservationDAO.findById(id)
+                .orElseThrow(() -> new DataNotExistException("예약이 존재하지 않습니다."));
     }
 
     public void deleteReservation(Long id) {
-        reservationDAO.deleteById(id);
+        if (reservationDAO.deleteById(id) == 0) {
+            throw new DataNotExistException("예약이 존재하지 않습니다.");
+        }
     }
 }

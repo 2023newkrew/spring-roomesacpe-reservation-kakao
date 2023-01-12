@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
     @Override
@@ -29,16 +30,16 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         try (Connection con = getConnection()) {
             PreparedStatement ps = con.prepareStatement(FIND_BY_ID_SQL);
             ps.setLong(1, id);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return RESERVATION_ROW_MAPPER.mapRow(rs, rs.getRow());
+                return Optional.of(RESERVATION_ROW_MAPPER.mapRow(rs, rs.getRow()));
             }
-            return null;
+            return Optional.empty();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

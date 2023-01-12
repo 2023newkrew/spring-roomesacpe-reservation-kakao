@@ -81,6 +81,17 @@ class ReservationControllerTest {
                 .body("themePrice", is(22_000));
     }
 
+    @DisplayName("존재하지 않는 예약 조회")
+    @Test
+    void reservationNotExistsWhenFind() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/10")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(is("예약이 존재하지 않습니다."));
+    }
+
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {
@@ -88,5 +99,15 @@ class ReservationControllerTest {
                 .when().delete("/reservations/2")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("존재하지 않는 예약 삭제")
+    @Test
+    void reservationNotExistsWhenDelete() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/10")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(is("예약이 존재하지 않습니다."));
     }
 }

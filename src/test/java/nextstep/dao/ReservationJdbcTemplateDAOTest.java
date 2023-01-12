@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,10 +44,10 @@ public class ReservationJdbcTemplateDAOTest {
     @DisplayName("id로 예약 조회")
     @Test
     void findById() {
-        Reservation reservation = reservationJdbcTemplateDAO.findById(1L);
+        Optional<Reservation> reservation = reservationJdbcTemplateDAO.findById(1L);
 
-        assertThat(reservation).isNotNull();
-        assertThat(reservation.getName()).isEqualTo("name");
+        assertThat(reservation.isPresent()).isTrue();
+        assertThat(reservation.get().getName()).isEqualTo("name");
     }
 
     @DisplayName("날짜, 시간, 테마 아이디로 예약 조회")

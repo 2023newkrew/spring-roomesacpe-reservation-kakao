@@ -12,6 +12,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationDAO {
     String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
@@ -37,7 +38,7 @@ public interface ReservationDAO {
 
     Long save(ReservationSaveForm reservationSaveForm);
 
-    Reservation findById(Long id);
+    Optional<Reservation> findById(Long id);
 
     List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
 

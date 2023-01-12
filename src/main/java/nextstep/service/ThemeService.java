@@ -2,6 +2,7 @@ package nextstep.service;
 
 import nextstep.dao.ThemeDAO;
 import nextstep.domain.Theme;
+import nextstep.exceptions.DataNotExistException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class ThemeService {
     }
 
     public void deleteTheme(Long id) {
-        themeDAO.deleteById(id);
+        if (themeDAO.deleteById(id) == 0) {
+            throw new DataNotExistException("테마가 존재하지 않습니다.");
+        }
     }
 }

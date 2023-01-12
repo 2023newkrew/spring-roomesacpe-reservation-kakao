@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ThemeControllerTest {
@@ -58,5 +59,15 @@ class ThemeControllerTest {
                 .when().delete("/themes/2")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("존재하지 않는 테마 삭제")
+    @Test
+    void reservationNotExistsWhenDelete() {
+        RestAssured.given().log().all()
+                .when().delete("/themes/10")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(is("테마가 존재하지 않습니다."));
     }
 }

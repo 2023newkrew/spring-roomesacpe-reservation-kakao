@@ -11,4 +11,9 @@ public class CustomAdvice {
     public ResponseEntity handle(DataConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
+    @ExceptionHandler(DataNotExistException.class)
+    public ResponseEntity handle(DataNotExistException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }

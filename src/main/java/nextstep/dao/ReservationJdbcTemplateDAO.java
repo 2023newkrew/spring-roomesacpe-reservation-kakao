@@ -2,6 +2,7 @@ package nextstep.dao;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.ReservationSaveForm;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcTemplateDAO implements ReservationDAO {
@@ -30,8 +32,12 @@ public class ReservationJdbcTemplateDAO implements ReservationDAO {
     }
 
     @Override
-    public Reservation findById(Long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, RESERVATION_ROW_MAPPER, id);
+    public Optional<Reservation> findById(Long id) {
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID_SQL, RESERVATION_ROW_MAPPER, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
