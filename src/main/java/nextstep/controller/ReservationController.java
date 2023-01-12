@@ -13,8 +13,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    @Autowired
     private WebAppReservationService webAppReservationService;
+
+    @Autowired
+    public ReservationController(WebAppReservationService webAppReservationService) {
+        this.webAppReservationService = webAppReservationService;
+    }
 
     @PostMapping()
     public ResponseEntity createReservation(@RequestBody CreateReservationDTO reservationDto) {

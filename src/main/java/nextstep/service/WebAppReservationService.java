@@ -16,8 +16,12 @@ import java.time.LocalTime;
 @Service
 public class WebAppReservationService {
 
-    @Autowired
     private WebAppReservationRepository webAppReservationRepository;
+
+    @Autowired
+    public WebAppReservationService(WebAppReservationRepository webAppReservationRepository) {
+        this.webAppReservationRepository = webAppReservationRepository;
+    }
 
     public long addReservation(CreateReservationDTO reservationDto) {
         Reservation reservation = new Reservation(

@@ -16,8 +16,12 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class WebAppReservationRepositoryTest {
-    @Autowired
     private ReservationRepository webAppReservationRepository;
+
+    @Autowired
+    public WebAppReservationRepositoryTest(WebAppReservationRepository webAppReservationRepository) {
+        this.webAppReservationRepository = webAppReservationRepository;
+    }
 
     @DisplayName("reservation test")
     @Test
