@@ -35,4 +35,13 @@ public class ThemeController {
         List<ThemeResponse> themeResponses = themeService.retrieveAll();
         return ResponseEntity.ok().body(themeResponses);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ThemeRequest themeRequest) {
+        Long newId = themeService.update(id, themeRequest);
+        if (id.equals(newId)) {
+            return ResponseEntity.created(URI.create("/themes/" + newId)).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }

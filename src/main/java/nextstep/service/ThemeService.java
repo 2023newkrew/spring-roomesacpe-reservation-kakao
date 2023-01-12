@@ -46,4 +46,26 @@ public class ThemeService {
                 .map(ThemeResponse::new)
                 .collect(Collectors.toList());
     }
+
+    public Long update(Long id, ThemeRequest themeRequest) {
+        if (id <= 0) {
+            throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
+        }
+        Optional<Theme> themeFound = themeDao.findById(id);
+        if (themeFound.isEmpty()) {
+            return create(themeRequest);
+        }
+        if (!themeFound.get().getName().equals(themeRequest.getName()) &&
+                themeDao.findByName(themeRequest.getName()).isPresent()) {
+            throw new InvalidRequestException(ErrorCode.THEME_NAME_DUPLICATED);
+        }
+        Theme theme = new Theme(
+                id,
+                themeRequest.getName(),
+                themeRequest.getDesc(),
+                themeRequest.getPrice()
+        );
+        themeDao.update(theme);
+        return id;
+    }
 }

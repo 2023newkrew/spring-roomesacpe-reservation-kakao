@@ -38,6 +38,10 @@ public class ThemeJdbcTemplateDao implements ThemeDao{
         return jdbcTemplate.query(sql, getRowMapper());
     }
 
+    public void update(Theme theme) {
+        jdbcTemplate.update(getPreparedStatementCreatorForUpdate(theme));
+    }
+
     public void clear() {
         String sql = "DELETE FROM theme";
         jdbcTemplate.update(sql);

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -36,11 +37,11 @@ class ThemeControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        ThemeRequest requestDto = new ThemeRequest(
-                "테마이름",
-                "테마설명",
-                22000
-        );
+        saveSampleTheme("테마이름", "테마설명", 22000);
+    }
+
+    private void saveSampleTheme(String name, String desc, int price) {
+        ThemeRequest requestDto = new ThemeRequest(name, desc, price);
         themeService.create(requestDto);
     }
 
@@ -151,5 +152,87 @@ class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
+    }
+
+    @DisplayName("수정 - 등록되어있는 id 와 올바른 theme 정보로 요청시 수정이 되어야 한다.")
+    @Test
+    void updateNormally() {
+        Map<String, String> request = new HashMap<>() {{
+            put("name", "테마이름2");
+            put("desc", "테마설명2");
+            put("price", "23000");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(1))
+                .body("name", is("테마이름2"))
+                .body("desc", is("테마설명2"))
+                .body("price", is(23000));
+    }
+
+    @DisplayName("수정 - 등록되지 않은 id 와 theme 정보로 요청시 새롭게 생성이 되어야 한다.")
+    @Test
+    void updateNotCreatedId() {
+        Map<String, String> request = new HashMap<>() {{
+            put("name", "테마이름2");
+            put("desc", "테마설명2");
+            put("price", "23000");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/themes/100")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/themes/2");
+    }
+
+    @DisplayName("수정 - 유효하지 않은 id 로 요청시 예외처리 되어야 한다.")
+    @ParameterizedTest
+    @ValueSource(longs = {-1, 0})
+    void updateInvalidId(Long invalidId) {
+        Map<String, String> request = new HashMap<>() {{
+            put("name", "테마이름2");
+            put("desc", "테마설명2");
+            put("price", "23000");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/themes/" + invalidId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("수정 - 이미 등록되어있는 테마 이름으로 요청시 예외처리 되어야 한다.")
+    @Test
+    void updateAlreadyCreatedName() {
+        saveSampleTheme("테마이름2", "테마설명2", 22000);
+
+        Map<String, String> request = new HashMap<>() {{
+            put("name", "테마이름");
+            put("desc", "테마설명2");
+            put("price", "23000");
+        }};
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/themes/2")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
     }
 }

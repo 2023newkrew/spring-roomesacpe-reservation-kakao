@@ -31,6 +31,18 @@ public interface ThemeDao {
         };
     }
 
+    default PreparedStatementCreator getPreparedStatementCreatorForUpdate(Theme theme) {
+        return (connection) -> {
+            final String sql = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, theme.getName());
+            ps.setString(2, theme.getDesc());
+            ps.setInt(3, theme.getPrice());
+            ps.setLong(4, theme.getId());
+            return ps;
+        };
+    }
+
     Long save(Theme theme);
 
     Optional<Theme> findByName(String name);
@@ -38,4 +50,6 @@ public interface ThemeDao {
     Optional<Theme> findById(Long id);
 
     List<Theme> findAll();
+
+    void update(Theme theme);
 }
