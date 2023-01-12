@@ -25,7 +25,7 @@ public class ReservationService {
         return new ReservationResponse(reservationJDBCRepository.findById(id));
     }
 
-    public void deleteReservation(Long id) {
-        reservationJDBCRepository.delete(id);
+    public int deleteReservation(Long id) {
+        return reservationJDBCRepository.delete(id);
     }
 }

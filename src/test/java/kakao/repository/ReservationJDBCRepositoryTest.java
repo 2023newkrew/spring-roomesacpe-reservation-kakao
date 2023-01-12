@@ -1,7 +1,6 @@
 package kakao.repository;
 
 import domain.Reservation;
-import kakao.error.exception.RecordNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +20,7 @@ public class ReservationJDBCRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
+
     private final Reservation reservation = Reservation.builder()
             .name("baker")
             .date(LocalDate.of(2022, 10, 13))
@@ -68,20 +67,12 @@ public class ReservationJDBCRepositoryTest {
         Assertions.assertThat(savedReservations.size()).isOne();
     }
 
-    @DisplayName("저장된 id에 해당하는 데이터를 삭제한다")
+    @DisplayName("저장된 id에 해당하는 데이터를 삭제하고 삭제된 개수를 반환한다")
     @Test
     void delete() {
         reservationJDBCRepository.save(reservation);
 
-        Assertions.assertThatNoException().isThrownBy(() -> reservationJDBCRepository.delete(1L));
+        Assertions.assertThat(reservationJDBCRepository.delete(1L)).isOne();
+        Assertions.assertThat(reservationJDBCRepository.delete(1L)).isZero();
     }
-
-    @DisplayName("저장된 id에 해당하는 데이터가 없으면 RecordNotFound 예외를 발생한다")
-    @Test
-    void deleteInvalidId() {
-        reservationJDBCRepository.save(reservation);
-
-        Assertions.assertThatExceptionOfType(RecordNotFoundException.class).isThrownBy(() -> reservationJDBCRepository.delete(10L));
-    }
-
 }
