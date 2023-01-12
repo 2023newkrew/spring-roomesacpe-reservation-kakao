@@ -1,6 +1,6 @@
 package nextstep.exception;
 
-public class DuplicateReservationException extends RuntimeException {
+public class DuplicateReservationException extends RoomEscapeException {
     public DuplicateReservationException() {
         super();
     }
