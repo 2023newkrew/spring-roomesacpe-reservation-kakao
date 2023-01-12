@@ -5,9 +5,12 @@ import nextstep.web.common.exception.CommonErrorCode;
 import nextstep.web.common.exception.ErrorCode;
 import nextstep.web.common.exception.ErrorResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ReservationAdvice {
@@ -34,8 +37,16 @@ public class ReservationAdvice {
     public ResponseEntity<ErrorResponse> handleArgumentNotValidException(MethodArgumentNotValidException e) {
         System.out.println(e.getMessage());
         ErrorCode errorCode = CommonErrorCode.BAD_PARAMETER_REQUEST;
+
+        String message = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.toList())
+                .get(0);
+
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(new ErrorResponse(errorCode.getHttpStatus().value(), errorCode.getMessage()));
+                .body(new ErrorResponse(errorCode.getHttpStatus().value(), message));
     }
 }

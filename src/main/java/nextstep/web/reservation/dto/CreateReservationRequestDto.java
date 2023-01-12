@@ -22,7 +22,7 @@ public class CreateReservationRequestDto {
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime time;
 
-    @NotBlank
+    @NotBlank(message = "이름을 확인해 주세요.")
     private String name;
 
     @NotNull
