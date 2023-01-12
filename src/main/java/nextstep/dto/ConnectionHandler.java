@@ -4,12 +4,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+@ComponentScan
 public class ConnectionHandler {
 
-    private static final String CONNECTION_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
-    private static final String USERNAME = "sa";
-    private static final String PASSWORD = "";
+    @Value("${spring.datasource.hikari.jdbc-url}")
+    private String CONNECTION_URL;
+    @Value("${spring.datasource.hikari.username}")
+    private String USERNAME;
+
+    @Value("${spring.datasource.hikari.password}")
+    private String PASSWORD;
     private final Connection connection;
 
     public ConnectionHandler() {

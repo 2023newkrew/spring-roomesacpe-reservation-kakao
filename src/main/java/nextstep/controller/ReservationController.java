@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/reservations")
+@RestController
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -24,14 +26,14 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO)
             throws SQLException {
         Long roomId = reservationService.createReservation(reservationRequestDTO);
         return ResponseEntity.created(URI.create(String.format("/reservations/%d", roomId))).build();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "{id}")
     public ResponseEntity<ReservationResponseDTO> findReservation(@PathVariable(value = "id") Long id)
             throws SQLException {
         ReservationResponseDTO response = reservationService.findReservation(id);
@@ -39,7 +41,7 @@ public class ReservationController {
     }
 
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "{id}")
     public ResponseEntity deleteReservation(@PathVariable(value = "id") Long id) throws SQLException {
         reservationService.deleteById(id);
         return ResponseEntity.noContent().build();

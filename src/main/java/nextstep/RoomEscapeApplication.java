@@ -18,7 +18,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-
 public class RoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
@@ -26,8 +25,10 @@ public class RoomEscapeApplication {
     private static final String QUIT = "quit";
 
     private static final ConnectionHandler connectionHandler = new ConnectionHandler();
-    private static final ReservationRepository reservationJDBCRepository = new ReservationJDBCRepositoryImpl(connectionHandler);
+    private static final ReservationRepository reservationJDBCRepository = new ReservationJDBCRepositoryImpl(
+            connectionHandler);
     private static final ReservationService reservationService = new ReservationServiceImpl(reservationJDBCRepository);
+
 
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(RoomEscapeApplication.class, args);
