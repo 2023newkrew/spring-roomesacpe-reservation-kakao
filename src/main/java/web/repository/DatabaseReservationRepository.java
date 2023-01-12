@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 
 import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
@@ -41,7 +42,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
                 ps.setString(3, reservation.getName());
                 return ps;
             }, keyHolder);
-            return new Long(keyHolder.getKey().longValue());
+            return Objects.requireNonNull(keyHolder.getKey()).longValue();
         } catch (Exception E) {
             return -1;
         }

@@ -100,7 +100,7 @@ public class ReservationDAO {
             String sql = "DELETE FROM RESERVATION WHERE id=?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, reservationId);
-            res = new Long(ps.executeUpdate());
+            res = (long) ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
