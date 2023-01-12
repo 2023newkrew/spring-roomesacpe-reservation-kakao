@@ -28,24 +28,18 @@ public class ReservationJDBCRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private static final RowMapper<Reservation> customerRowMapper = (resultSet, rowNum) -> {
-        Long id = resultSet.getLong("id");
-        LocalDate date = resultSet.getDate("date").toLocalDate();
-        LocalTime time = resultSet.getTime("time").toLocalTime();
-        String name = resultSet.getString("name");
-        String themeName = resultSet.getString("theme.name");
-        String themeDesc = resultSet.getString("theme.desc");
-        Integer themePrice = resultSet.getInt("theme.price");
-        Long themeId = resultSet.getLong("theme.id");
-
-        return Reservation.builder()
-                .id(id)
-                .date(date)
-                .time(time)
-                .name(name)
-                .theme(new Theme(themeId, themeName, themeDesc, themePrice))
-                .build();
-    };
+    private static final RowMapper<Reservation> customerRowMapper = (resultSet, rowNum) ->
+            Reservation.builder()
+                    .id(resultSet.getLong("id"))
+                    .date(resultSet.getDate("date").toLocalDate())
+                    .time(resultSet.getTime("time").toLocalTime())
+                    .name(resultSet.getString("name"))
+                    .theme(new Theme(
+                            resultSet.getLong("theme.id"),
+                            resultSet.getString("theme.name"),
+                            resultSet.getString("theme.desc"),
+                            resultSet.getInt("theme.price")))
+                    .build();
 
     public long save(Reservation reservation) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
