@@ -21,14 +21,15 @@ public class ReservationService {
         this.themeService = themeService;
     }
 
-    public Reservation createReservation(ReservationRequestDto req) {
+    public ReservationResponseDto createReservation(ReservationRequestDto req) {
         if (reservationRepository.has(req.getDate(), req.getTime())) {
             throw new IllegalArgumentException("Already have reservation at that date & time");
         }
         Reservation reservation = new Reservation(req);
         Long id = reservationRepository.save(reservation);
         reservation.setId(id);
-        return reservation;
+        Theme theme = themeService.getTheme(reservation.getThemeId());
+        return new ReservationResponseDto(reservation, theme);
     }
 
     public ReservationResponseDto findReservation(Long id) {
@@ -37,8 +38,8 @@ public class ReservationService {
         return new ReservationResponseDto(reservation, theme);
     }
 
-    public void cancelReservation(Long id) {
-        reservationRepository.delete(id);
+    public Integer cancelReservation(Long id) {
+        return reservationRepository.delete(id);
     }
 
     public Reservation getReservation(Long id) {
