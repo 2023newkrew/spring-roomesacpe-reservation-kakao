@@ -1,13 +1,15 @@
 package nextstep.console;
 
+import nextstep.dto.ReservationRequest;
 import nextstep.exception.RoomEscapeException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.ReservationService;
-import nextstep.dto.ReservationRequest;
 import nextstep.service.ThemeService;
 import nextstep.web.JdbcTemplateThemeRepository;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
@@ -25,7 +27,9 @@ public class RoomEscapeApplication {
 
         ReservationRepository reservationRepository = new JdbcReservationRepository();
         ReservationService reservationService = new ReservationService(reservationRepository);
-        JdbcTemplateThemeRepository themeRepository = new JdbcTemplateThemeRepository(new JdbcTemplate());
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(JdbcTemplateConfig.class);
+        JdbcTemplateThemeRepository themeRepository = new JdbcTemplateThemeRepository(context.getBean(JdbcTemplate.class));
         ThemeService themeService = new ThemeService(themeRepository);
 
         while (true) {
@@ -33,7 +37,8 @@ public class RoomEscapeApplication {
             try {
                 if (input.startsWith(ADD)) {
                     ReservationRequest request = parseReservationRequestFromInput(input);
-                    // TODO : theme 조회
+                    themeService.getTheme(request.getThemeId());
+
                     Reservation reservation = reservationService.createReservation(request);
                     printReservation(reservation);
                 }
