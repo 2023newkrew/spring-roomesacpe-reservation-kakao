@@ -1,9 +1,12 @@
 package kakao.dto.request;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class CreateThemeRequest {
-    public final String name;
-    public final String desc;
-    public final int price;
+    public String name;
+    public String desc;
+    public int price;
 
     public CreateThemeRequest(String name, String desc, int price) {
         this.name = name;
