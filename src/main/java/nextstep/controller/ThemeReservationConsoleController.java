@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 @Component
@@ -39,7 +42,7 @@ public class ThemeReservationConsoleController {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                ReservationDto reservationDto = new ReservationDto(date, time, name, null);
+                ReservationDto reservationDto = new ReservationDto(parseDate(date), parseTime(time), name, null);
 
                 Long reservationId = themeReservationService.reserve(reservationDto);
                 ReservationDetail findReservation = themeReservationService.findById(reservationId);
@@ -77,6 +80,13 @@ public class ThemeReservationConsoleController {
                 break;
             }
         }
+    }
 
+    private LocalDate parseDate(String date){
+        return java.time.LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+    }
+
+    private LocalTime parseTime(String time){
+        return LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME);
     }
 }

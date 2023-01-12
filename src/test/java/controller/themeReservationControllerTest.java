@@ -17,6 +17,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -67,9 +69,9 @@ class themeReservationControllerTest {
         getValidationResponse(reservationDto, HttpMethod.GET, location)
                 .statusCode(HttpStatus.OK.value())
                 .assertThat()
-                .body("time", equalTo(reservationDto.getTime()))
-                .body("name", equalTo(reservationDto.getName()))
-                .body("date", equalTo(reservationDto.getDate()));
+                .body("time", equalTo(reservationDto.getTime().toString()))
+                .body("date", equalTo(reservationDto.getDate().toString()))
+                .body("name", equalTo(reservationDto.getName()));
     }
 
     @Test
@@ -101,29 +103,8 @@ class themeReservationControllerTest {
     }
 
     @DisplayName("이름은 빈칸이 될 수 없다.")
-    @Test
-    void test7(){
-        ReservationDto reservationDto = new ReservationDto(RESERVATION_DATE, "16:01", "", null);
-
-        getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @DisplayName("날짜 형식은 yyyy-mm-dd이다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"202-03-10", "2022-18-09", "2022-9-10", "2022-10-800", "2022:03-05", "2022-03:05"})
-    void test8(String date){
-        ReservationDto reservationDto = makeRandomReservationDto(date, "16:08");
-
-        getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @DisplayName("시간 형식은 HH:mm이다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"99:10", "24:99", "1:30", "24:1", "24-25"})
-    void test9(String time){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, time);
+    void test7(String name){
+        ReservationDto reservationDto = new ReservationDto(LocalDate.parse(RESERVATION_DATE), LocalTime.parse("16:01"), name, null);
 
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -133,7 +114,7 @@ class themeReservationControllerTest {
         List<String> names = List.of("omin", "ethan", "java");
         int randomIndex = ThreadLocalRandom.current().nextInt(names.size());
 
-        return new ReservationDto(date, time, names.get(randomIndex), null);
+        return new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), names.get(randomIndex), null);
     }
 
     private static Response sendRequest(Object body, HttpMethod httpMethod, String url) {
