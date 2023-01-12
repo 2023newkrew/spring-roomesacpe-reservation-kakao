@@ -3,6 +3,7 @@ package nextstep.controller;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import nextstep.dto.Reservation;
+import nextstep.dto.ReservationInput;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.junit.jupiter.api.AfterEach;
@@ -35,11 +36,7 @@ class ReservationControllerTest {
 
     @Test
     void createReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setDate(LocalDate.parse("2022-08-11"));
-        reservation.setName("jordy");
-        reservation.setTime(LocalTime.parse("22:24"));
-
+        ReservationInput reservation = new ReservationInput(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation).when().post("/reservations").
@@ -49,11 +46,7 @@ class ReservationControllerTest {
 
     @Test
     void getReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setDate(LocalDate.parse("2022-08-11"));
-        reservation.setName("jordy");
-        reservation.setTime(LocalTime.parse("22:24"));
-
+        ReservationInput reservation = new ReservationInput(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all().
@@ -71,11 +64,7 @@ class ReservationControllerTest {
 
     @Test
     void deleteReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setDate(LocalDate.parse("2022-08-11"));
-        reservation.setName("jordy");
-        reservation.setTime(LocalTime.parse("22:24"));
-
+        ReservationInput reservation = new ReservationInput(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all()
@@ -86,11 +75,7 @@ class ReservationControllerTest {
 
     @Test
     void duplicateReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setDate(LocalDate.parse("2022-08-11"));
-        reservation.setName("jordy");
-        reservation.setTime(LocalTime.parse("22:24"));
-
+        ReservationInput reservation = new ReservationInput(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all()

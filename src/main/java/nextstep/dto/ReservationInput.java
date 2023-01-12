@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationInput {
-    private final LocalDate date;
-    private final LocalTime time;
-    private final String name;
+    private LocalDate date;
+    private LocalTime time;
+    private String name;
+
+    public ReservationInput() {
+    }
 
     public ReservationInput(LocalDate date, LocalTime time, String name) {
         this.date = date;
