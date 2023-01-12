@@ -7,6 +7,7 @@ import nextstep.domain.Theme;
 import nextstep.exceptions.ErrorCode;
 import nextstep.exceptions.ReservationException;
 import nextstep.repository.WebReservationDAO;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,13 +31,21 @@ public class ReservationService {
     }
 
     public ReservationInfo lookupReservation(Long id) {
-        Reservation reservation = webReservationDAO.findById(id);
-        return new ReservationInfo(reservation);
+        try {
+            Reservation reservation = webReservationDAO.findById(id);
+            return new ReservationInfo(reservation);
+        } catch(EmptyResultDataAccessException e) {
+            throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
     }
 
     public ReservationInfo deleteReservation(Long id) {
-        Reservation reservation = webReservationDAO.findById(id);
-        webReservationDAO.delete(id);
-        return new ReservationInfo(reservation);
+        try {
+            Reservation reservation = webReservationDAO.findById(id);
+            webReservationDAO.delete(id);
+            return new ReservationInfo(reservation);
+        } catch(EmptyResultDataAccessException e) {
+            throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
     }
 }
