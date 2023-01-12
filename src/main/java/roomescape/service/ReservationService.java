@@ -44,7 +44,10 @@ public class ReservationService {
         return ReservationResponse.fromEntity(reservation);
     }
 
+    @Transactional
     public void deleteReservation(Long reservationId) {
+        reservationWebRepository.getReservation(reservationId)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
         reservationWebRepository.deleteReservation(reservationId);
     }
 }
