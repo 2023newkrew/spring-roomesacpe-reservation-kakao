@@ -1,11 +1,12 @@
-package nextstep.console;
+package roomescape.dao;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
+import roomescape.dto.ReservationRequest;
 
 import java.sql.*;
 
-public class ReservationDAO {
+public class ReservationConsoleDAO implements ReservationDAO {
 
     private Connection getConnection() {
         Connection con = null;
@@ -28,8 +29,10 @@ public class ReservationDAO {
         }
     }
 
-    public void addReservation(Reservation reservation) {
+    @Override
+    public Long addReservation(Reservation reservation) {
         Connection con = getConnection();
+        Long id = null;
         try {
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
@@ -40,12 +43,36 @@ public class ReservationDAO {
             ps.setString(5, reservation.getTheme().getDesc());
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            id = rs.getLong("id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         close(con);
+        return id;
     }
 
+    @Override
+    public int checkSchedule(ReservationRequest reservationRequest) {
+        int count = 0;
+        Connection con = getConnection();
+        try {
+            String sql = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setDate(1, Date.valueOf(reservationRequest.getDate()));
+            ps.setTime(2, Time.valueOf(reservationRequest.getTime()));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        close(con);
+        return count;
+    }
+
+    @Override
     public Reservation findReservation(Long id) {
         Reservation reservation = null;
         Connection con = getConnection();
@@ -76,6 +103,7 @@ public class ReservationDAO {
         return reservation;
     }
 
+    @Override
     public int removeReservation(Long id) {
         int count = 0;
         Connection con = getConnection();

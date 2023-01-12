@@ -1,6 +1,7 @@
 package nextstep;
 
-import nextstep.console.ReservationDAO;
+import roomescape.dao.ReservationConsoleDAO;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
 import java.util.Scanner;
@@ -11,7 +12,7 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static ReservationDAO reservationDAO = new ReservationDAO();
+    private static ReservationConsoleDAO reservationConsoleDAO = new ReservationConsoleDAO();
 
     public static void main(String[] args) {
 
@@ -36,7 +37,7 @@ public class RoomEscapeApplication {
 
                 ReservationRequest reservationRequest = new ReservationRequest(date, time, name);
                 Reservation reservation = reservationRequest.toReservation();
-                reservationDAO.addReservation(reservation);
+                reservationConsoleDAO.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -51,7 +52,7 @@ public class RoomEscapeApplication {
 
                 Reservation reservation = null;
                 try {
-                    reservation = reservationDAO.findReservation(id);
+                    reservation = reservationConsoleDAO.findReservation(id);
                 } catch (IllegalArgumentException e) {
                     System.out.println("WARNING: 해당 예약은 없는 예약입니다.");
                     e.printStackTrace();
@@ -71,7 +72,7 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                reservationDAO.removeReservation(id);
+                reservationConsoleDAO.removeReservation(id);
 
                 System.out.println("예약이 취소되었습니다.");
             }
