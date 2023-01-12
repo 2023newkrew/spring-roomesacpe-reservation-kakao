@@ -13,7 +13,7 @@ import java.sql.Time;
 import java.util.List;
 
 @Repository
-public class WebAppThemeRepository implements ThemeRepository{
+public class WebAppThemeRepository implements ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -38,7 +38,15 @@ public class WebAppThemeRepository implements ThemeRepository{
 
     @Override
     public List<Theme> findAll() {
-        return null;
+        String sql = "SELECT * FROM theme;";
+        return jdbcTemplate.query(sql, (rs, rowNum)
+                        -> new Theme(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("desc"),
+                        rs.getInt("price")
+                )
+        );
     }
 
     @Override

@@ -5,7 +5,9 @@ import nextstep.domain.theme.Theme;
 import nextstep.repository.ConnectionManager;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ConsoleThemeRepository implements ThemeRepository {
 
@@ -40,7 +42,33 @@ public class ConsoleThemeRepository implements ThemeRepository {
 
     @Override
     public List<Theme> findAll() {
-        return null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Theme> themeList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM theme;";
+            con = ConnectionManager.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                themeList.add(new Theme(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4)
+                ));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(rs, ps, con);
+        }
+
+        return themeList;
     }
 
     @Override

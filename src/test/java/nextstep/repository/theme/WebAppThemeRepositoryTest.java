@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -32,5 +34,20 @@ public class WebAppThemeRepositoryTest {
     @Test
     void addTheme() {
         assertThatNoException().isThrownBy(() -> webAppThemeRepository.add(newTheme));
+    }
+
+    @DisplayName("3개의 테마 추가 후 전체 조회시 개수 일치 확인")
+    @Test
+    void findAllTheme() {
+        // given
+        webAppThemeRepository.add(newTheme);
+        webAppThemeRepository.add(newTheme);
+        webAppThemeRepository.add(newTheme);
+
+        // when
+        List<Theme> themeList = webAppThemeRepository.findAll();
+
+        // then
+        assertThat(themeList.size()).isEqualTo(3);
     }
 }

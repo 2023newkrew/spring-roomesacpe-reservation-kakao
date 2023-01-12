@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -25,5 +26,20 @@ public class ConsoleThemeRepositoryTest {
     @Test
     void addTheme() {
         assertThatNoException().isThrownBy(() -> consoleThemeRepository.add(newTheme));
+    }
+
+    @DisplayName("3개의 테마 추가 후 전체 조회시 개수 일치 확인")
+    @Test
+    void findAllTheme() {
+        // given
+        consoleThemeRepository.add(newTheme);
+        consoleThemeRepository.add(newTheme);
+        consoleThemeRepository.add(newTheme);
+
+        // when
+        List<Theme> themeList = consoleThemeRepository.findAll();
+
+        // then
+        assertThat(themeList.size()).isEqualTo(3);
     }
 }
