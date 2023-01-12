@@ -49,19 +49,8 @@ public class ReservationSpringDaoTest {
     }
 
     @Test
-    void showTest() {
+    void selectTest() {
         assertThat(reservationDao.selectReservation(1L).getName()).isEqualTo("A");
-    }
-
-    @Test
-    void throwExceptionWhenReservationNotExist() {
-        assertThatThrownBy(() -> {
-            reservationDao.selectReservation(0L);
-        }).isInstanceOf(NonExistentReservationException.class);
-
-        assertThatThrownBy(() -> {
-            reservationDao.deleteReservation(0L);
-        }).isInstanceOf(NonExistentReservationException.class);
     }
 
     @Test

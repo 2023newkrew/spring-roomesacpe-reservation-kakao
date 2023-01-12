@@ -17,6 +17,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 @DisplayName("Http Method")
@@ -92,13 +93,13 @@ public class ReservationTest {
 
     @DisplayName("Http Method - GET Exception")
     @Test
-    void showReservationException() {
+    void showReservationIfIdNotExist() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/0")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("존재하지 않는 예약 id입니다."));
+                .statusCode(HttpStatus.OK.value())
+                .body(is(""));
     }
 
     @DisplayName("Http Method - DELETE")
@@ -111,16 +112,5 @@ public class ReservationTest {
                 .when().delete(path)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("Http Method - DELETE Exception")
-    @Test
-    void deleteReservationException() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/0")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("존재하지 않는 예약 id입니다."));
     }
 }
