@@ -53,7 +53,7 @@
   - [ ] 테스트시 테이블 재생성하는 부분을 프로덕션 코드에서 제거
   - [ ] WebAppReservationService에서 예약 중복 비교시 변수를 통해 가독성 향상
   - [ ] 프로덕션 코드성에서 Reservation equals 오버라이드 메서드 제거
-  - [ ] WebAppReservationRepository에서 예외 catch시 로그 출력
+  - [x] WebAppReservationRepository에서 예외 catch시 로그 출력
   - [ ] 필드 주입을 생성자 주입으로 변경
   - [ ] ReservationController에서 insert 실패시 예외로 처리하도록 수정
   - [ ] 자원을 해제하는 코드를 finally 블록 안으로 이동

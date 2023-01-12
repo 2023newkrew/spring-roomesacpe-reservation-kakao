@@ -38,6 +38,7 @@ public class WebAppReservationRepository implements ReservationRepository {
                     )
             ), id);
         } catch (IncorrectResultSizeDataAccessException ex) {
+            ex.printStackTrace();
         }
         return Optional.ofNullable(reservation);
     }
