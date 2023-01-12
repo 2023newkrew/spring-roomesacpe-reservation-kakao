@@ -11,17 +11,21 @@ public class ReservationResponseDto {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private String themeName;
+    private String themeDesc;
+    private Integer themePrice;
 
     public ReservationResponseDto() {
     }
 
-    public ReservationResponseDto(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public ReservationResponseDto(Long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc, Integer themePrice) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeName = themeName;
+        this.themeDesc = themeDesc;
+        this.themePrice = themePrice;
     }
 
     public Long getId() {
@@ -40,8 +44,16 @@ public class ReservationResponseDto {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public String getThemeDesc() {
+        return themeDesc;
+    }
+
+    public Integer getThemePrice() {
+        return themePrice;
     }
 
     @Override
@@ -49,12 +61,12 @@ public class ReservationResponseDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReservationResponseDto that = (ReservationResponseDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(theme, that.theme);
+        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(themeName, that.themeName) && Objects.equals(themeDesc, that.themeDesc) && Objects.equals(themePrice, that.themePrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, time, name, theme);
+        return Objects.hash(id, date, time, name, themeName, themeDesc, themePrice);
     }
 
     @Override
@@ -64,7 +76,9 @@ public class ReservationResponseDto {
                 ", date=" + date +
                 ", time=" + time +
                 ", name='" + name + '\'' +
-                ", theme=" + theme +
+                ", themeName='" + themeName + '\'' +
+                ", themeDesc='" + themeDesc + '\'' +
+                ", themePrice=" + themePrice +
                 '}';
     }
 }

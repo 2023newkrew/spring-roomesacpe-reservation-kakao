@@ -70,12 +70,15 @@ public class ReservationController {
     }
 
     private ReservationResponseDto convertToDtoFromReservation(Reservation reservation) {
+        Theme theme = reservation.getTheme();
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                reservation.getTheme()
+                theme.getName(),
+                theme.getDesc(),
+                theme.getPrice()
         );
     }
 }
