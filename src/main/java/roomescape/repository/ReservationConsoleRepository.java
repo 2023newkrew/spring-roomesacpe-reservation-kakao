@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 import roomescape.dto.ReservationRequest;
 
 import java.sql.*;
@@ -76,7 +77,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
         Reservation reservation = null;
         Connection con = getConnection();
         try {
-            String sql = "SELECT * FROM reservation WHERE id = ?;";
+            String sql = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -86,12 +87,12 @@ public class ReservationConsoleRepository implements ReservationRepository {
                         rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(),
                         rs.getString("name"),
-null
-//                        new Theme(
-//                                rs.getString("theme_name"),
-//                                rs.getString("theme_desc"),
-//                                rs.getInt("theme_price")
-//                        )
+                        new Theme(
+                                rs.getLong("tid"),
+                                rs.getString("theme_name"),
+                                rs.getString("theme_desc"),
+                                rs.getInt("theme_price")
+                        )
                 );
             } else {
                 throw new IllegalArgumentException("데이터 없음 비상비상");
