@@ -25,9 +25,7 @@ public class ReservationService {
         Theme theme = themeRepository
                 .findOneByName("워너고홈")
                 .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that Name");});
-        if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
-            throw new IllegalArgumentException("Already have reservation at that date & time");
-        }
+        checkForOverlappingReservation(reservationRequest);
         return reservationRepository.save(reservationRequest.toEntity(theme));
     }
 
@@ -40,5 +38,11 @@ public class ReservationService {
 
     public void deleteReservation(Long reservationId) {
         reservationRepository.delete(reservationId);
+    }
+
+    private void checkForOverlappingReservation(ReservationRequestDto reservationRequest) {
+        if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
+            throw new IllegalArgumentException("Already have reservation at that date & time");
+        }
     }
 }
