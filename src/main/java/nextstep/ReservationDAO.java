@@ -53,12 +53,13 @@ public class ReservationDAO {
             ) {
                 if (!rs.next()) return null;
 
-                return new Reservation(
-                        rs.getLong(1),
-                        rs.getDate(2).toLocalDate(),
-                        rs.getTime(3).toLocalTime(),
-                        rs.getString(4),
-                        new Theme(rs.getString(5), rs.getString(6), rs.getInt(7)));
+                return Reservation.builder()
+                        .id(rs.getLong(1))
+                        .date(rs.getDate(2).toLocalDate())
+                        .time(rs.getTime(3).toLocalTime())
+                        .name(rs.getString(4))
+                        .theme(new Theme(rs.getString(5), rs.getString(6), rs.getInt(7)))
+                        .build();
             } catch (SQLException e) {
                 System.err.println("반환 오류:" + e.getMessage());
                 e.printStackTrace();

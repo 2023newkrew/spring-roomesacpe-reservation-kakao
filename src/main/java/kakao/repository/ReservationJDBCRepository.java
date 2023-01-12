@@ -37,7 +37,14 @@ public class ReservationJDBCRepository {
         String themeName = resultSet.getString("theme_name");
         String themeDesc = resultSet.getString("theme_desc");
         Integer themePrice = resultSet.getInt("theme_price");
-        return new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice));
+
+        return Reservation.builder()
+                .id(id)
+                .date(date)
+                .time(time)
+                .name(name)
+                .theme(new Theme(themeName, themeDesc, themePrice))
+                .build();
     };
 
     public long save(Reservation reservation) {
@@ -63,7 +70,7 @@ public class ReservationJDBCRepository {
 
     public void delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
-        
+
         if (jdbcTemplate.update(DELETE_SQL, id) == 0) {
             throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
         }

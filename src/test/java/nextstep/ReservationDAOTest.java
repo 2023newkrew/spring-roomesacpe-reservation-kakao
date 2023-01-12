@@ -18,12 +18,12 @@ public class ReservationDAOTest {
     private static final String DB_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private final ReservationDAO reservationDAO = new ReservationDAO();
 
-    private final Reservation reservation = new Reservation(
-            LocalDate.of(2022, 10, 13),
-            LocalTime.of(13, 00),
-            "baker",
-            ThemeRepository.theme
-    );
+    private final Reservation reservation = Reservation.builder()
+            .name("baker")
+            .date(LocalDate.of(2022, 10, 13))
+            .time(LocalTime.of(13, 00))
+            .theme(ThemeRepository.theme)
+            .build();
 
     @BeforeEach
     void setUp() {
