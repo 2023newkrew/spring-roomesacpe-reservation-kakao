@@ -6,13 +6,17 @@ import roomescape.dto.ThemeResponseDto;
 import roomescape.dto.ThemesResponseDto;
 import roomescape.model.Theme;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 @Component("consoleView")
 public class ConsoleView {
-    private Scanner scanner;
+    public static final String FAILED_TO_CREATE_RESERVATION = "예약 생성에 실패하였습니다.";
+    public static final String FAILED_TO_FIND_RESERVATION = "예약 조회에 실패하였습니다.";
+    public static final String FAILED_TO_CANCEL_RESERVATION = "예약 취소에 실패하였습니다.";
+    public static final String FAILED_TO_CREATE_THEME = "테마 생성에 실패하였습니다.";
+    public static final String FAILED_TO_SHOW_THEME = "테마 조회에 실패하였습니다.";
+    public static final String FAILED_TO_DELETE_THEME = "테마 삭제에 실패하였습니다.";
+    private final Scanner scanner;
 
     public ConsoleView() {
         scanner = new Scanner(System.in);
@@ -31,63 +35,38 @@ public class ConsoleView {
         return scanner.nextLine();
     }
 
-    public void showCreatedReservation(Optional<ReservationResponseDto> optionalRes) {
-        if (optionalRes.isEmpty()) {
-            System.out.println("예약 생성에 실패하였습니다.");
-            return;
-        }
-        ReservationResponseDto res = optionalRes.get();
+    public void showCreatedReservation(ReservationResponseDto reservation) {
         System.out.println("예약이 등록되었습니다.");
-        System.out.println("예약 번호: " + res.getId());
-        System.out.println("예약 날짜: " + res.getDate());
-        System.out.println("예약 시간: " + res.getTime());
-        System.out.println("예약자 이름: " + res.getName());
+        System.out.println("예약 번호: " + reservation.getId());
+        System.out.println("예약 날짜: " + reservation.getDate());
+        System.out.println("예약 시간: " + reservation.getTime());
+        System.out.println("예약자 이름: " + reservation.getName());
     }
 
-    public void showFoundReservation(Optional<ReservationResponseDto> optionalRes) {
-        if (optionalRes.isEmpty()) {
-            System.out.println("예약 조회에 실패하였습니다.");
-            return;
-        }
-        ReservationResponseDto res = optionalRes.get();
-        System.out.println("예약 번호: " + res.getId());
-        System.out.println("예약 날짜: " + res.getDate());
-        System.out.println("예약 시간: " + res.getTime());
-        System.out.println("예약자 이름: " + res.getName());
-        System.out.println("예약 테마 이름: " + res.getThemeName());
-        System.out.println("예약 테마 설명: " + res.getThemeDesc());
-        System.out.println("예약 테마 가격: " + res.getThemePrice());
+    public void showFoundReservation(ReservationResponseDto reservation) {
+        System.out.println("예약 번호: " + reservation.getId());
+        System.out.println("예약 날짜: " + reservation.getDate());
+        System.out.println("예약 시간: " + reservation.getTime());
+        System.out.println("예약자 이름: " + reservation.getName());
+        System.out.println("예약 테마 이름: " + reservation.getThemeName());
+        System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+        System.out.println("예약 테마 가격: " + reservation.getThemePrice());
     }
 
-    public void showIsReservationCanceled(Boolean success) {
-        if (success) {
-            System.out.println("예약이 취소되었습니다.");
-        } else {
-            System.out.println("예약 취소에 실패하였습니다.");
-        }
+    public void showReservationCanceled() {
+        System.out.println("예약이 취소되었습니다.");
     }
 
-    public void showCreatedTheme(Optional<ThemeResponseDto> optionalRes) {
-        if (optionalRes.isEmpty()) {
-            System.out.println("테마 생성에 실패하였습니다.");
-            return;
-        }
-        ThemeResponseDto res = optionalRes.get();
+    public void showCreatedTheme(ThemeResponseDto theme) {
         System.out.println("테마가 생성되었습니다.");
-        System.out.println("테마 번호: " + res.getId());
-        System.out.println("테마 이름: " + res.getName());
-        System.out.println("테마 설명: " + res.getDesc());
-        System.out.println("테마 가격: " + res.getPrice());
+        System.out.println("테마 번호: " + theme.getId());
+        System.out.println("테마 이름: " + theme.getName());
+        System.out.println("테마 설명: " + theme.getDesc());
+        System.out.println("테마 가격: " + theme.getPrice());
     }
 
-    public void showThemes(Optional<ThemesResponseDto> optionalRes) {
-        if (optionalRes.isEmpty()) {
-            System.out.println("테마 조회에 실패하였습니다.");
-            return;
-        }
-        ThemesResponseDto res = optionalRes.get();
-        List<Theme> themes = res.getThemes();
-        for (Theme theme : themes) {
+    public void showThemes(ThemesResponseDto themes) {
+        for (Theme theme : themes.getThemes()) {
             System.out.println();
             System.out.println("테마 번호: " + theme.getId());
             System.out.println("테마 이름: " + theme.getName());
@@ -96,16 +75,17 @@ public class ConsoleView {
         }
     }
 
-    public void showIsThemeDeleted(Boolean success) {
-        if (success) {
-            System.out.println("테마가 삭제되었습니다.");
-        } else {
-            System.out.println("테마 삭제에 실패하였습니다.");
-        }
+    public void showThemeDeleted() {
+        System.out.println("테마가 삭제되었습니다.");
     }
 
     public void showInvalidInput() {
         System.out.println("잘못된 입력입니다.");
+    }
+
+    public void showErrorMessage(String message, String reason) {
+        System.err.println(reason);
+        System.out.println(message);
     }
 
     public void close() {

@@ -4,103 +4,107 @@ import org.springframework.stereotype.Controller;
 import roomescape.dto.*;
 import roomescape.service.ReservationService;
 import roomescape.service.ThemeService;
+import roomescape.view.ConsoleView;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.Optional;
 
 @Controller
 public class ConsoleController {
     private final ReservationService reservationService;
     private final ThemeService themeService;
+    private final ConsoleView consoleView;
 
-    public ConsoleController(ReservationService reservationService, ThemeService themeService) {
+    public ConsoleController(ReservationService reservationService, ThemeService themeService, ConsoleView consoleView) {
         this.reservationService = reservationService;
         this.themeService = themeService;
+        this.consoleView = consoleView;
     }
 
-    public Optional<ReservationResponseDto> createReservation(String input) {
+    public String getCommand() {
+        return consoleView.inputCommand();
+    }
+
+    public void createReservation(String input) {
         String[] params = splitParams(input);
         LocalDate date = LocalDate.parse(params[0]);
         LocalTime time = LocalTime.parse(params[1] + ":00");
         String name = params[2];
         Long themeId = Long.valueOf(params[3]);
         ReservationRequestDto req = new ReservationRequestDto(date, time, name, themeId);
-        Optional<ReservationResponseDto> res = Optional.empty();
+        ReservationResponseDto res;
         try {
-            res = Optional.ofNullable(reservationService.createReservation(req));
+            res = reservationService.createReservation(req);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+            consoleView.showErrorMessage(ConsoleView.FAILED_TO_CREATE_RESERVATION, e.getMessage());
+            return;
         }
-        return res;
+        consoleView.showCreatedReservation(res);
     }
 
-    public Optional<ReservationResponseDto> findReservation(String input) {
+    public void findReservation(String input) {
         String[] params = splitParams(input);
         Long id = Long.parseLong(params[0]);
-        Optional<ReservationResponseDto> res = Optional.empty();
+        ReservationResponseDto res;
         try {
-            res = Optional.ofNullable(reservationService.findReservation(id));
+            res = reservationService.findReservation(id);
         } catch (Exception e) {
-            e.printStackTrace();
+            consoleView.showErrorMessage(ConsoleView.FAILED_TO_FIND_RESERVATION, e.getMessage());
+            return;
         }
-        return res;
+        consoleView.showFoundReservation(res);
     }
 
-    public Boolean cancelReservation(String input) {
+    public void cancelReservation(String input) {
         String[] params = splitParams(input);
         Long id = Long.parseLong(params[0]);
-        Boolean res;
         try {
             reservationService.cancelReservation(id);
-            res = true;
         } catch (Exception e) {
-            e.printStackTrace();
-            res = false;
+            consoleView.showErrorMessage(ConsoleView.FAILED_TO_CANCEL_RESERVATION, e.getMessage());
+            return;
         }
-        return res;
+        consoleView.showReservationCanceled();
     }
 
-    public Optional<ThemeResponseDto> createTheme(String input) {
+    public void createTheme(String input) {
         String[] params = splitParams(input);
         String name = params[0];
         String desc = params[1];
         Integer price = Integer.valueOf(params[2]);
         ThemeRequestDto req = new ThemeRequestDto(name, desc, price);
-        Optional<ThemeResponseDto> res = Optional.empty();
+        ThemeResponseDto res;
         try {
-            res = Optional.ofNullable(themeService.createTheme(req));
+            res = themeService.createTheme(req);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+            consoleView.showErrorMessage(ConsoleView.FAILED_TO_CREATE_THEME, e.getMessage());
+            return;
         }
-        return res;
+        consoleView.showCreatedTheme(res);
     }
 
-    public Optional<ThemesResponseDto> findThemes() {
-        Optional<ThemesResponseDto> res = Optional.empty();
+    public void findThemes() {
+        ThemesResponseDto res;
         try {
-            res = Optional.ofNullable(themeService.findThemes());
+            res = themeService.findThemes();
         } catch (Exception e) {
-            e.printStackTrace();
+            consoleView.showErrorMessage(ConsoleView.FAILED_TO_SHOW_THEME, e.getMessage());
+            return;
         }
-        return res;
+        consoleView.showThemes(res);
     }
 
-    public Boolean deleteTheme(String input) {
+    public void deleteTheme(String input) {
         String[] params = splitParams(input);
         Long id = Long.parseLong(params[0]);
-        Boolean res;
         try {
             themeService.deleteTheme(id);
-            res = true;
         } catch (Exception e) {
-            e.printStackTrace();
-            res = false;
+            consoleView.showErrorMessage(ConsoleView.FAILED_TO_DELETE_THEME, e.getMessage());
+            return;
         }
-        return res;
+        consoleView.showThemeDeleted();
     }
 
     // 이름, 설명 등의 공백은 유지
@@ -110,5 +114,13 @@ public class ConsoleController {
         return Arrays.stream(String.join(" ", subArray).split(","))
                 .map(String::strip)
                 .toArray(String[]::new);
+    }
+
+    public void close() {
+        consoleView.close();
+    }
+
+    public void receivedInvalidInput() {
+        consoleView.showInvalidInput();
     }
 }
