@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.Reservation;
+import nextstep.exceptions.ErrorCode;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -71,7 +72,7 @@ class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("ReservationException"));
+                .body(is(ErrorCode.ALREADY_RESERVATION_EXISTS.getMessage()));
     }
 
     @Order(4)

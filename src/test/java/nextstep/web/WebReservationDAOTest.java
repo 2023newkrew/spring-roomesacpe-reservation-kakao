@@ -3,9 +3,11 @@ package nextstep.web;
 import nextstep.repository.WebReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,6 +31,18 @@ class WebReservationDAOTest {
     void setUp() {
         webReservationDAO = new WebReservationDAO(jdbcTemplate);
 
+        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE RESERVATION("
+                + "    id          bigint not null auto_increment,"
+                + "    date        date,"
+                + "    time        time,"
+                + "    name        varchar(20),"
+                + "    theme_name  varchar(20),"
+                + "    theme_desc  varchar(255),"
+                + "    theme_price int,"
+                + "    primary key (id)"
+                + ")");
+
         List<Object[]> reservations = List.of(
                 new Object[]{Date.valueOf("2022-08-11"), Time.valueOf("13:00:00"), "name", "워너고홈", "병맛 어드벤처 회사 코믹물",
                         29_000},
@@ -44,10 +58,10 @@ class WebReservationDAOTest {
     @Test
     @DisplayName("ID를 통해 예약 정보를 잘 받아오는지 테스트")
     void findByIdTest() {
-        Reservation reservation = webReservationDAO.findById(1L);
+        Reservation reservation = webReservationDAO.findById(2L);
 
         assertThat(reservation).isNotNull();
-        assertThat(reservation.getName()).isEqualTo("name");
+        assertThat(reservation.getName()).isEqualTo("name2");
     }
 
     @Test
