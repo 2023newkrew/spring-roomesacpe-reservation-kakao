@@ -20,7 +20,7 @@ public class ThemeController {
     private final ThemeService themeService;
 
     @PostMapping
-    public ResponseEntity<Void> reservation(@RequestBody @Valid ThemeRequestDto requestDto) {
+    public ResponseEntity<Void> save(@RequestBody @Valid ThemeRequestDto requestDto) {
         long createdId = themeService.save(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -29,7 +29,7 @@ public class ThemeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ThemeResponseDto>> reservation() {
+    public ResponseEntity<List<ThemeResponseDto>> findThemes() {
         List<ThemeResponseDto> findThemes = themeService.findThemes();
 
         return ResponseEntity.status(HttpStatus.OK)
