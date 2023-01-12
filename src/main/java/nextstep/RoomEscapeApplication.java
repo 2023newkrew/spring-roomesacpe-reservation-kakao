@@ -1,7 +1,14 @@
 package nextstep;
 
-import nextstep.dao.ReservationDAO;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import web.entity.Reservation;
+import web.entity.Theme;
+import web.reservation.repository.DatabaseReservationRepository;
+import web.reservation.repository.ReservationRepository;
+import web.theme.repository.ThemeRepository;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -15,10 +22,15 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationDAO reservationDAO = new ReservationDAO();
+        DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+                .addScript("classpath:schema.sql")
+                .build();
+        ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
+        ThemeRepository themeRepository = new ThemeRepository();
         Long reservationIdIndex = 0L;
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme defaultTheme = Theme.of(0L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        themeRepository.save(defaultTheme);
 
         while (true) {
             System.out.println();
@@ -36,15 +48,15 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
+                Reservation reservation = Reservation.of(
                         ++reservationIdIndex,
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        defaultTheme.getId()
                 );
 
-                reservationDAO.addReservation(reservation);
+                reservationRepository.save(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -58,16 +70,18 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findReservation(id)
+                Reservation reservation = reservationRepository.findById(id)
                         .orElseThrow(RuntimeException::new);
+                Theme theme = themeRepository.findById(reservation.getThemeId())
+                        .orElseThrow();
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 이름: " + theme.getName());
+                System.out.println("예약 테마 설명: " + theme.getDesc());
+                System.out.println("예약 테마 가격: " + theme.getPrice());
             }
 
             if (input.startsWith(DELETE)) {
@@ -75,7 +89,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationDAO.deleteReservation(id) != 0) {
+                if (reservationRepository.delete(id) != 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }
