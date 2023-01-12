@@ -1,6 +1,8 @@
 package nextstep.reservation.service;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.etc.exception.ErrorMessage;
+import nextstep.etc.exception.ReservationConflictException;
 import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.domain.Theme;
 import nextstep.reservation.dto.ReservationDTO;
@@ -21,7 +23,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Long create(ReservationRequest request) {
         Reservation reservation = ReservationMapper.INSTANCE.fromRequest(request, THEME);
         if (repository.existsByDateAndTime(reservation.getDate(), reservation.getTime())) {
-            throw new RuntimeException("해당 시각에는 이미 예약이 존재합니다.");
+            throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
         }
 
         return repository.insert(reservation);

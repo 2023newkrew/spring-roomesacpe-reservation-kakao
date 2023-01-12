@@ -57,10 +57,7 @@ public class JdbcReservationDAO implements ReservationDAO {
 
     @Override
     public Boolean deleteById(Long id) {
-        return jdbcTemplate.query(
-                getDeleteByIdStatementCreator(id),
-                ResultSetParser::existsRow
-        );
+        return jdbcTemplate.update(getDeleteByIdStatementCreator(id)) > 0;
     }
 
     private static PreparedStatementCreator getDeleteByIdStatementCreator(Long id) {
