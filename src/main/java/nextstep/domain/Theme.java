@@ -25,7 +25,7 @@ public class Theme {
         if (name == null || name.length() == 0 || desc == null || desc.length() == 0 || price == null) {
             throw new InvalidRequestException(ErrorCode.INPUT_PARAMETER_INVALID);
         }
-        if (price < 0) {
+        if (price <= 0) {
             throw new InvalidRequestException(ErrorCode.PRICE_INVALID);
         }
     }
