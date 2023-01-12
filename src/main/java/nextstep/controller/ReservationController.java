@@ -14,7 +14,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private WebAppReservationService webAppReservationService;
+    private final WebAppReservationService webAppReservationService;
 
     @Autowired
     public ReservationController(WebAppReservationService webAppReservationService) {

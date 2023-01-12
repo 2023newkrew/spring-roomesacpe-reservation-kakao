@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @Service
 public class WebAppReservationService {
 
-    private WebAppReservationRepository webAppReservationRepository;
+    private final WebAppReservationRepository webAppReservationRepository;
 
     @Autowired
     public WebAppReservationService(WebAppReservationRepository webAppReservationRepository) {
