@@ -3,6 +3,7 @@ package nextstep.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
@@ -13,6 +14,7 @@ import java.time.LocalTime;
 @ToString
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ReservationDetail {
     private Long id;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")

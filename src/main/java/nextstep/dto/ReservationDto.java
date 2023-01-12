@@ -12,8 +12,8 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @RequiredArgsConstructor
+@EqualsAndHashCode
 public class ReservationDto {
     @NonNull
     @Pattern(regexp = "\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")

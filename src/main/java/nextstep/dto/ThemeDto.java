@@ -1,11 +1,13 @@
 package nextstep.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public class ThemeDto {
     @Setter
     private Long id;

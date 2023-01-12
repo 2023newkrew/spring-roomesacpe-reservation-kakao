@@ -1,5 +1,6 @@
 package nextstep.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,16 +8,13 @@ import nextstep.dto.ThemeDto;
 
 @ToString
 @Getter
+@EqualsAndHashCode
 public class Theme {
     @Setter
     private Long id;
     private String name;
     private String desc;
     private Integer price;
-
-    public Theme(String name, String desc, Integer price) {
-        this(0L, name, desc, price);
-    }
 
     public Theme(Long id, String name, String desc, Integer price) {
         this.id = id;
