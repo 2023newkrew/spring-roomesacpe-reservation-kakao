@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/themes")
@@ -22,6 +23,11 @@ public class ThemeController {
     public ResponseEntity<Long> createTheme(@RequestBody CreateThemeRequest request) {
         long generatedId = themeService.createTheme(request);
         return ResponseEntity.created(URI.create("/themes/" + generatedId)).body(generatedId);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ThemeResponse>> listThemes() {
+        return ResponseEntity.ok(themeService.getThemes());
     }
 
     @GetMapping("/{id}")

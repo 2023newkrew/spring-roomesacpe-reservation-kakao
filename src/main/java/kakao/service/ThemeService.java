@@ -7,6 +7,9 @@ import kakao.dto.response.ThemeResponse;
 import kakao.repository.ThemeJDBCRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ThemeService {
 
@@ -20,6 +23,13 @@ public class ThemeService {
 
     public long createTheme(CreateThemeRequest request) {
         return themeJDBCRepository.save(themeFactory.create(request));
+    }
+
+    public List<ThemeResponse> getThemes() {
+        return themeJDBCRepository.themes()
+                .stream().
+                map(ThemeResponse::new).
+                collect(Collectors.toList());
     }
 
     public ThemeResponse getTheme(long id) {

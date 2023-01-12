@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.Is.is;
 
@@ -44,6 +45,7 @@ public class ThemeControllerTest {
 
     @DisplayName("예약이 정상적으로 생성되면 201 status를 반환한다")
     @Test
+    @Transactional
     void createTheme() {
         RestAssured.given()
                 .contentType("application/json")
@@ -56,6 +58,7 @@ public class ThemeControllerTest {
 
     @DisplayName("중복된 이름의 예약을 생성하면 409 status를 반환한다")
     @Test
+    @Transactional
     void createDuplicatedNameTheme() {
         RestAssured.given()
                 .contentType("application/json")
@@ -68,6 +71,22 @@ public class ThemeControllerTest {
                 .when().post(path)
                 .then()
                 .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+    @DisplayName("저장된 모든 Theme을 조회한다")
+    @Test
+    void List() {
+        RestAssured.given()
+                .contentType("application/json")
+                .body(createRequest)
+                .when().post(path);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .when().get(path)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size", is(1));
     }
 
     @DisplayName("pathvariable의 id로 Theme을 조회하면 200 status를 반환한다")

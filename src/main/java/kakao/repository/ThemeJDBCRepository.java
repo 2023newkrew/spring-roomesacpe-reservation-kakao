@@ -1,6 +1,5 @@
 package kakao.repository;
 
-import domain.Reservation;
 import domain.Theme;
 import kakao.dto.request.UpdateThemeRequest;
 import kakao.error.ErrorCode;
@@ -16,8 +15,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,29 +40,16 @@ public class ThemeJDBCRepository {
                     resultSet.getInt("price")
             );
 
-    private static final RowMapper<Reservation> customerRowMapper = (resultSet, rowNum) -> {
-        Long id = resultSet.getLong("id");
-        LocalDate date = resultSet.getDate("date").toLocalDate();
-        LocalTime time = resultSet.getTime("time").toLocalTime();
-        String name = resultSet.getString("name");
-        String themeName = resultSet.getString("theme_name");
-        String themeDesc = resultSet.getString("theme_desc");
-        Integer themePrice = resultSet.getInt("theme_price");
-        Long themeId = resultSet.getLong("theme_id");
-
-        return Reservation.builder()
-                .id(id)
-                .date(date)
-                .time(time)
-                .name(name)
-                .theme(new Theme(themeId, themeName, themeDesc, themePrice))
-                .build();
-    };
-
     public long save(Theme theme) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(theme);
 
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+    }
+
+    public List<Theme> themes() {
+        String SELECT_SQL = "select * from theme";
+
+        return jdbcTemplate.query(SELECT_SQL, themeRowMapper);
     }
 
     public Theme findById(long id) {
