@@ -70,18 +70,12 @@ public class ReservationServiceTest {
                 .isThrownBy(() -> reservationService.getReservation(10L));
     }
 
-    @DisplayName("id에 해당되는 예약을 삭제한다")
+    @DisplayName("id에 해당되는 예약을 삭제한다, 결과로 삭제된 count를 반환한다")
     @Test
     void delete() {
         reservationService.createReservation(request);
-        Assertions.assertThatNoException().isThrownBy(() ->
-                reservationService.deleteReservation(1L));
-    }
-
-    @DisplayName("존재하지 않는 id 삭제를 시도하면 RecordNotFound 예외를 발생한다")
-    @Test
-    void deleteNoId() {
-        Assertions.assertThatExceptionOfType(RecordNotFoundException.class)
-                .isThrownBy(() -> reservationService.deleteReservation(10L));
+        
+        Assertions.assertThat(reservationService.deleteReservation(1L)).isOne();
+        Assertions.assertThat(reservationService.deleteReservation(1L)).isZero();
     }
 }
