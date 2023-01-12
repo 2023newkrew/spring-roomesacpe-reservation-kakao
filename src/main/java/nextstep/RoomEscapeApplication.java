@@ -2,6 +2,7 @@ package nextstep;
 
 import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
+import reservation.respository.ReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,7 +15,7 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final ReservationJdbcRepository RESERVATION_JDBC_REPOSITORY = new ReservationJdbcRepository();
+    private static final ReservationRepository RESERVATION_JDBC_REPOSITORY = new ReservationJdbcRepository();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
