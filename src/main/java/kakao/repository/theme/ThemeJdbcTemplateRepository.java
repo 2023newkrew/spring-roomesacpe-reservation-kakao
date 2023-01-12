@@ -1,6 +1,7 @@
-package kakao.repository;
+package kakao.repository.theme;
 
 import java.util.List;
+import java.util.Objects;
 import javax.sql.DataSource;
 import kakao.domain.Theme;
 import org.springframework.dao.DataAccessException;
@@ -13,14 +14,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ThemeJDBCRepository implements ThemeRepository{
+public class ThemeJdbcTemplateRepository implements ThemeRepository{
     private final JdbcTemplate jdbcTemplate;
 
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ThemeJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ThemeJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+        this.jdbcInsert = new SimpleJdbcInsert(Objects.requireNonNull(jdbcTemplate.getDataSource()))
                 .withTableName("THEME")
                 .usingGeneratedKeyColumns("id");
     }

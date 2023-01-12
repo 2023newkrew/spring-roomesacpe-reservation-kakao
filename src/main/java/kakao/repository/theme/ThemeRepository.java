@@ -1,4 +1,4 @@
-package kakao.repository;
+package kakao.repository.theme;
 
 import java.util.List;
 import kakao.domain.Theme;

@@ -9,9 +9,8 @@ import kakao.dto.response.ReservationResponse;
 import kakao.error.ErrorCode;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.RecordNotFoundException;
-import kakao.repository.ReservationRepository;
-import kakao.repository.ThemeJDBCRepository;
-import kakao.repository.ThemeRepository;
+import kakao.repository.reservation.ReservationRepository;
+import kakao.repository.theme.ThemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,15 +26,16 @@ public class ReservationService {
 
     private final ThemeRepository themeRepository;
 
-    public Reservation createReservation(CreateReservationRequest request) {
+    public ReservationResponse createReservation(CreateReservationRequest request) {
         checkDuplicatedReservation(request.themeId, request.date, request.time);
+        System.out.println(request.themeId);
         Theme theme = getExistTheme(request.themeId);
-        return reservationRepository.save(Reservation.builder()
+        return new ReservationResponse(reservationRepository.save(Reservation.builder()
                 .date(request.date)
                 .time(request.time)
                 .name(request.name)
                 .theme(theme)
-                .build()
+                .build())
         );
     }
 

@@ -1,4 +1,4 @@
-package kakao.repository;
+package kakao.repository.reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

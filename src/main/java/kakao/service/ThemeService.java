@@ -8,7 +8,7 @@ import kakao.dto.request.CreateThemeRequest;
 import kakao.dto.response.ThemeResponse;
 import kakao.error.ErrorCode;
 import kakao.error.exception.RecordNotFoundException;
-import kakao.repository.ThemeRepository;
+import kakao.repository.theme.ThemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package kakao.repository;
+package kakao.repository.reservation;
 
 import javax.sql.DataSource;
 import kakao.domain.Reservation;
@@ -8,30 +8,23 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 @Profile("default")
-public class ReservationJDBCRepository implements ReservationRepository {
+public class ReservationJdbcTemplateRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationJDBCRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("RESERVATION")
@@ -75,11 +68,6 @@ public class ReservationJDBCRepository implements ReservationRepository {
         } catch (DataAccessException e) {
             return null;
         }
-    }
-
-    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where date=? and time=?";
-        return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, date, time);
     }
 
     public List<Reservation> findByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {

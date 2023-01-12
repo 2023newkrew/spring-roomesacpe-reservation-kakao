@@ -1,4 +1,4 @@
-package kakao.repository;
+package kakao.repository.reservation;
 
 import kakao.domain.Reservation;
 import org.springframework.context.annotation.Profile;
