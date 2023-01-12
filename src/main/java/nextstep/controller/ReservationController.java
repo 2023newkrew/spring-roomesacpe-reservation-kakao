@@ -40,7 +40,6 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-
     @DeleteMapping(value = "{id}")
     public ResponseEntity deleteReservation(@PathVariable(value = "id") Long id) throws SQLException {
         reservationService.deleteById(id);

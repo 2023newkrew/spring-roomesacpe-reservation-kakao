@@ -18,13 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
 
     @Autowired
     public ReservationRepositoryImpl(DataSource dataSource) {

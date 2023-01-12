@@ -6,9 +6,7 @@ public final class ReservationJdbcSql {
     public static final String DELETE_BY_ID = "DELETE FROM RESERVATION WHERE ID = ?";
     public static final String INSERT_INTO = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
 
-
     private ReservationJdbcSql() {
     }
-
 
 }

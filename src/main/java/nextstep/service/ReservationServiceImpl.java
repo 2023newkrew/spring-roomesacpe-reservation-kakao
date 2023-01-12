@@ -1,6 +1,7 @@
 package nextstep.service;
 
 import java.sql.SQLException;
+import lombok.RequiredArgsConstructor;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ReservationResponseDTO;
 import nextstep.entity.Reservation;
@@ -8,34 +9,23 @@ import nextstep.exception.ConflictException;
 import nextstep.exception.NotFoundException;
 import nextstep.mapstruct.ReservationMapper;
 import nextstep.repository.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-
-
-    @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
+    
     @Override
     public Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
         validate(reservationRequestDTO);
         return reservationRepository.save(reservationRequestDTO).getId();
     }
 
-
-
-
-
     private void validate(ReservationRequestDTO reservationRequestDTO) throws SQLException {
-        boolean isExist = reservationRepository.existByDateAndTime(
-                reservationRequestDTO.getDate(),
+        boolean isExist = reservationRepository.existByDateAndTime(reservationRequestDTO.getDate(),
                 reservationRequestDTO.getTime());
         if (isExist) {
             throw new ConflictException("날짜와 시간이 중복되는 예약은 생성할 수 없습니다.");
