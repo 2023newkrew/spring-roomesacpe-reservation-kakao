@@ -28,7 +28,7 @@ public class ReservationService {
         if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
             throw new IllegalArgumentException("Already have reservation at that date & time");
         }
-        return reservationRepository.save(new Reservation(reservationRequest, theme));
+        return reservationRepository.save(reservationRequest.toEntity(theme));
     }
 
     public ReservationResponseDto findReservation(Long reservationId) {
