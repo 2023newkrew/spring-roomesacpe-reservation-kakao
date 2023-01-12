@@ -26,7 +26,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> reserve(@RequestBody ReservationRequestDto reservationRequestDto){
-        Reservation reservation = generateReservationFromRequestDto(reservationRequestDto);
+        Reservation reservation = convertToReservationFromDto(reservationRequestDto);
         Reservation confirmedReservation = reservationService.reserve(reservation);
         URI locationUri = UriComponentsBuilder.fromPath("/reservations/{id}")
                 .buildAndExpand(confirmedReservation.getId())
@@ -36,7 +36,7 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ReservationResponseDto findReservation(@PathVariable long id){
-        return generateReservationResponseDtoFrom(reservationService.findReservation(id));
+        return convertToDtoFromReservation(reservationService.findReservation(id));
     }
 
     @DeleteMapping("/{id}")
@@ -58,7 +58,7 @@ public class ReservationController {
         return ResponseEntity.notFound().build();
     }
 
-    private Reservation generateReservationFromRequestDto(ReservationRequestDto reservationRequestDto) {
+    private Reservation convertToReservationFromDto(ReservationRequestDto reservationRequestDto) {
         Reservation reservation = new Reservation();
         reservation.setDate(reservationRequestDto.getDate());
         reservation.setTime(reservationRequestDto.getTime());
@@ -67,7 +67,7 @@ public class ReservationController {
         return reservation;
     }
 
-    private ReservationResponseDto generateReservationResponseDtoFrom(Reservation reservation) {
+    private ReservationResponseDto convertToDtoFromReservation(Reservation reservation) {
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getDate(),
