@@ -31,6 +31,8 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 resultSet.getTime("time").toLocalTime(),
                 resultSet.getString("name"),
                 new Theme(
+                        //TODO: change to use Theme Repo
+                        null,
                         resultSet.getString("theme_name"),
                         resultSet.getString("theme_desc"),
                         resultSet.getInt("theme_price")

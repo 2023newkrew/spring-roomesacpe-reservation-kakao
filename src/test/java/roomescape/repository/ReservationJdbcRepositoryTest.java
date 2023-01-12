@@ -23,7 +23,7 @@ public class ReservationJdbcRepositoryTest {
     @Transactional
     public void saveAndFindByIdTest() {
         //given
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         Reservation reservation = new Reservation(null, LocalDate.now(), LocalTime.now(), "Test", theme);
         //when
         long reservationId = reservationRepository.save(reservation);
@@ -37,7 +37,7 @@ public class ReservationJdbcRepositoryTest {
     @Transactional
     public void deleteAndFindByIdTest() {
         //given
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         Reservation reservation = new Reservation(null, LocalDate.now(), LocalTime.now(), "Test", theme);
         //when
         long reservationId = reservationRepository.save(reservation);
@@ -52,7 +52,7 @@ public class ReservationJdbcRepositoryTest {
     @Transactional
     public void hasOneByDateAndTimeTest() {
         //given
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         LocalDate date = LocalDate.of(2023, 1,10);
         LocalTime time = LocalTime.of(11,11,11);
         Reservation reservation = new Reservation(null, date, time, "Test", theme);
