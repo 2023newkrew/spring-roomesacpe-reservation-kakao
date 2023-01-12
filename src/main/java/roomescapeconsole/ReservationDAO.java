@@ -17,14 +17,14 @@ public class ReservationDAO {
     private static final int INDEX_THEME_NAME = 5;
     private static final int INDEX_THEME_DESC = 6;
     private static final int INDEX_THEME_PRICE = 7;
-    private  static  final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
-    private  static  final String DATABASE_USERNAME = "sa";
-    private  static  final String DATABASE_PASSWORD = "";
+    private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
+    private static final String DATABASE_USERNAME = "sa";
+    private static final String DATABASE_PASSWORD = "";
     private static final String INSERT_QUERY = "INSERT INTO RESERVATION (id, date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_QUERY = "SELECT * FROM RESERVATION WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
 
-    public void makeConnection(){
+    public void makeConnection() {
         con = null;
         try {
             con = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
@@ -35,7 +35,7 @@ public class ReservationDAO {
         }
     }
 
-    public void disconnection(){
+    public void disconnection() {
         try {
             if (con != null)
                 con.close();
@@ -60,8 +60,8 @@ public class ReservationDAO {
         }
     }
 
-    public Reservation lookUpReservation(Long findId){
-        try{
+    public Reservation lookUpReservation(Long findId) {
+        try {
             PreparedStatement lookUpPS = con.prepareStatement(SELECT_QUERY);
             lookUpPS.setString(INDEX_ID, String.valueOf(findId));
             ResultSet lookUpRs = lookUpPS.executeQuery();
@@ -76,13 +76,13 @@ public class ReservationDAO {
                 Theme theme = new Theme(themeName, themeDesc, themePrice);
                 return new Reservation(id, date, time, name, theme);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return new Reservation();
     }
 
-    public void deleteReservation(Long deleteId){
+    public void deleteReservation(Long deleteId) {
         try {
             PreparedStatement deletePs = con.prepareStatement(DELETE_QUERY);
             deletePs.setString(INDEX_ID, String.valueOf(deleteId));

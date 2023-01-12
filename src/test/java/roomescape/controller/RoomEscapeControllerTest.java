@@ -24,27 +24,27 @@ public class RoomEscapeControllerTest {
     @LocalServerPort
     int port;
 
-    Reservation reservation;
+    final static Reservation DUMMY_RESERVATION = new Reservation(
+            1L,
+            LocalDate.of(2022, 8, 11),
+            LocalTime.of(13, 0, 0),
+            "name22",
+            new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        reservation = new Reservation(1L,
-                LocalDate.of(2022,8,11),
-                LocalTime.of(13,0,0),
-                "name22",
-                new Theme("Theme", "병맛 어드벤처 회사 코믹물", 30000));
     }
 
     /**
      * RoomEscapeController > createReservation 메서드
      */
-    @DisplayName("Http Method - POST")
+    @DisplayName("reservation이 잘 생성되는지 확인한다")
     @Test
     void createReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(DUMMY_RESERVATION)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -52,11 +52,26 @@ public class RoomEscapeControllerTest {
     }
 
     /**
-     * RoomEscapeController > showReservation 메서드
+     * RoomEscapeController > createReservation 메서드
      */
-    @DisplayName("Http Method - GET")
+    @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생한다")
     @Test
-    void showReservation() {
+    void duplicatedReservation() {
+        createReservation();
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(DUMMY_RESERVATION)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
+     * RoomEscapeController > lookUpReservation 메서드
+     */
+    @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")
+    @Test
+    void lookUpReservation() {
         createReservation();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +84,7 @@ public class RoomEscapeControllerTest {
     /**
      * RoomEscapeController > deleteReservation 메서드
      */
-    @DisplayName("Http Method - DELETE")
+    @DisplayName("id에 해당하는 reservation 객체를 잘 삭제하는지 확인한다")
     @Test
     void deleteReservation() {
         createReservation();
@@ -78,12 +93,5 @@ public class RoomEscapeControllerTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생한다")
-    @Test
-    void duplicatedReservation(){
-//        createReservation();
-
     }
 }
