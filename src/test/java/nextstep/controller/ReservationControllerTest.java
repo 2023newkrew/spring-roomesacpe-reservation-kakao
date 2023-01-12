@@ -20,8 +20,6 @@ public class ReservationControllerTest {
     @LocalServerPort
     int port;
 
-    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -30,7 +28,7 @@ public class ReservationControllerTest {
     @DisplayName("예약을 생성하면 201 status와 id를 포함한 Location을 응답")
     @Test
     void createReservation() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:35", "name", defaultTheme);
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
@@ -43,14 +41,14 @@ public class ReservationControllerTest {
     @DisplayName("중복된 시간에 예약시 400 status 응답")
     @Test
     void sameTimeReservationTest() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30:00", "name", 1l);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
                 .when().post("/reservations");
 
-        CreateReservationDto reservationDto2 = new CreateReservationDto("2022-08-11", "13:30", "name2", defaultTheme);
+        CreateReservationDto reservationDto2 = new CreateReservationDto("2022-08-11", "13:30:00", "name2", 1l);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +61,7 @@ public class ReservationControllerTest {
     @DisplayName("예약을 조회하면 200 status를 보내고 저장된 값과 요청한 값이 일치")
     @Test
     void getReservation() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30:00", "name", 1l);
 
         String location = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -91,16 +89,17 @@ public class ReservationControllerTest {
                 .body("themePrice", is(29_000));
     }
 
-    @DisplayName("삭제된 예약을 조회 시도하면 204 status를 응답")
+    @DisplayName("예약 삭제 성공시 204 status를 응답")
     @Test
     void deleteReservation() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30", "name", defaultTheme);
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:30:00", "name", 1l);
 
         String location = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)
                 .when().post("/reservations")
                 .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
                 .extract()
                 .header("Location");
 

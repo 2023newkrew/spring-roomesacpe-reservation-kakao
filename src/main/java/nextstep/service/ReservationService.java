@@ -29,8 +29,8 @@ public class ReservationService {
     public long addReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = Reservation.createReservation(createReservationDto);
         int duplicatedCount = reservationRepository.countByDateAndTime(
-                Date.valueOf(reservation.getDate()),
-                Time.valueOf(reservation.getTime())
+                Date.valueOf(createReservationDto.getDate()),
+                Time.valueOf(createReservationDto.getTime())
         );
         if (duplicatedCount > 0) {
             throw new DuplicateTimeReservationException();

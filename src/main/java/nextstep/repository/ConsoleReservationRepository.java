@@ -15,7 +15,10 @@ public class ConsoleReservationRepository implements ReservationRepository {
         Reservation reservation = null;
 
         try {
-            String sql = "SELECT * FROM reservation WHERE id = ?;";
+            String sql = "SELECT r.id, r.date, r.time, r.name, t.id, t.name, t.desc, t.price" +
+                    " FROM reservation r" +
+                    " INNER JOIN theme t ON r.theme_id = t.id" +
+                    " WHERE r.id = ?;";
             con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
@@ -28,9 +31,10 @@ public class ConsoleReservationRepository implements ReservationRepository {
                         rs.getTime(3).toLocalTime(),
                         rs.getString(4),
                         new Theme(
-                                rs.getString(5),
+                                rs.getLong(5),
                                 rs.getString(6),
-                                rs.getInt(7)
+                                rs.getString(7),
+                                rs.getInt(8)
                         )
                 );
             }
@@ -51,15 +55,13 @@ public class ConsoleReservationRepository implements ReservationRepository {
         Long id = null;
 
         try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
             con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             ps.executeUpdate();
 
             rs = ps.getGeneratedKeys();

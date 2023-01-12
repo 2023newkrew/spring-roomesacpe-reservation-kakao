@@ -45,10 +45,10 @@ public class Reservation {
     public static Reservation createReservation(CreateReservationDto createReservationDto) {
         return new Reservation(
                 null,
-                LocalDate.parse(createReservationDto.getLocalDate()),
-                LocalTime.parse(createReservationDto.getLocalTime()),
+                LocalDate.parse(createReservationDto.getDate().toString()),
+                LocalTime.parse(createReservationDto.getTime().toString()),
                 createReservationDto.getName(),
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+                new Theme(createReservationDto.getThemeId(), "", "", 0)
         );
     }
 

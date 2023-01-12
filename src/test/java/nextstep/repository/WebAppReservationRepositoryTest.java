@@ -29,9 +29,9 @@ public class WebAppReservationRepositoryTest {
     private static final Reservation newReservation = new Reservation(
             null,
             LocalDate.parse("2022-08-11"),
-            LocalTime.parse("13:00"),
+            LocalTime.parse("13:00:00"),
             "name",
-            new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+            new Theme(1l, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
     );
 
     @DisplayName("insert 후 예약 값이 잘 들어갔는지 insert 전과 값 비교")

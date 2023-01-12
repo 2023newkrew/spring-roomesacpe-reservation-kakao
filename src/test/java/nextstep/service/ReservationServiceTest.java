@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 public class ReservationServiceTest {
 
     private final ReservationService reservationService;
-    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    private final Theme defaultTheme = new Theme(1l,"워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
 
     @Autowired
@@ -33,8 +33,8 @@ public class ReservationServiceTest {
     @DisplayName("예약 시간이 다르면 예외를 발생하지 않고 예약에 성공")
     @Test
     void reservationSuccess() {
-        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:35", "name", defaultTheme);
-        CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "14:00", "name2", defaultTheme);
+        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
+        CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "14:00:00", "name2", 1l);
 
         reservationService.addReservation(createReservationDto1);
 
@@ -45,8 +45,8 @@ public class ReservationServiceTest {
     @DisplayName("중복된 시간에 예약을 추가시 예외 발생")
     @Test
     void duplicateReservationTest() {
-        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:35", "name", defaultTheme);
-        CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "13:35", "name2", defaultTheme);
+        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
+        CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "13:35:00", "name2", 1l);
 
         reservationService.addReservation(createReservationDto1);
 
@@ -58,7 +58,7 @@ public class ReservationServiceTest {
     @Test
     void getReservationTest() {
         // given
-        CreateReservationDto createReservationDto = new CreateReservationDto("2022-08-11", "13:35", "name", defaultTheme);
+        CreateReservationDto createReservationDto = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
 
         // when
         long id = reservationService.addReservation(createReservationDto);

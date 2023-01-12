@@ -1,32 +1,36 @@
 package nextstep.domain.dto;
 
-import nextstep.domain.theme.Theme;
+import java.sql.Time;
+import java.sql.Date;
 
 public class CreateReservationDto {
 
-    private final String localDate;
-    private final String localTime;
+    private final String date;
+    private final String time;
     private final String name;
+    private final Long themeId;
 
-    private final Theme theme;
-
-    public CreateReservationDto(String localDate, String localTime, String name, Theme theme) {
-        this.localDate = localDate;
-        this.localTime = localTime;
+    public CreateReservationDto(String date, String time, String name, Long themeId) {
+        this.date = date;
+        this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = themeId;
     }
 
-    public String getLocalDate() {
-        return localDate;
+    public String getDate() {
+        return date;
     }
 
-    public String getLocalTime() {
-        return localTime;
+    public String getTime() {
+        return time;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Long getThemeId() {
+        return themeId;
     }
 
 }

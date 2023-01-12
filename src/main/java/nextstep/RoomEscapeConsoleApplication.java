@@ -17,7 +17,6 @@ public class RoomEscapeConsoleApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     private static final ReservationService reservationService = new ReservationService(new ConsoleReservationRepository());
     private static final Scanner scanner = new Scanner(System.in);
@@ -82,7 +81,7 @@ public class RoomEscapeConsoleApplication {
     }
 
     private static void insertReservation(String date, String time, String name) {
-        CreateReservationDto createReservationDto = new CreateReservationDto(date, time, name, defaultTheme);
+        CreateReservationDto createReservationDto = new CreateReservationDto(date, time, name, 1l);
         try {
             long id = reservationService.addReservation(createReservationDto);
             System.out.println("예약이 등록되었습니다.");
