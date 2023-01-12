@@ -1,14 +1,17 @@
 package nextstep.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 @ToString
 @Getter
+@EqualsAndHashCode
 public class Reservation {
+    @Setter
     private Long id;
     private final LocalDate date;
     private final LocalTime time;
@@ -25,22 +28,5 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.themeId = themeId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
