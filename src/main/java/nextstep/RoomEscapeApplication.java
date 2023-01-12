@@ -26,7 +26,7 @@ public class RoomEscapeApplication {
                 .addScript("classpath:schema.sql")
                 .build();
         ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
-        ThemeRepository themeRepository = new ThemeRepository();
+        ThemeRepository themeRepository = new ThemeRepository(dataSource);
         Long reservationIdIndex = 0L;
 
         Theme defaultTheme = Theme.of(0L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
