@@ -2,7 +2,7 @@ package nextstep;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.domain.repository.reservation.ConsoleReservationRepository;
+import nextstep.reservations.domain.repository.reservation.JdbcReservationRepository;
 import nextstep.reservations.domain.repository.reservation.ReservationRepository;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 
@@ -21,7 +21,7 @@ public class RoomEscapeConsoleApplication {
         JdbcUtil.getConnection();
         Scanner scanner = new Scanner(System.in);
 
-        ReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
+        ReservationRepository consoleReservationRepository = new JdbcReservationRepository();
         long reservationIdIndex = 0L;
 
         Theme theme = Theme.builder()

@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class ConsoleReservationRepository implements ReservationRepository{
+public class JdbcReservationRepository implements ReservationRepository{
     @Override
     public Long add(Reservation reservation) {
         try (Connection connection = JdbcUtil.getConnection()) {

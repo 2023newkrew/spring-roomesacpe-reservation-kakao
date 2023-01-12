@@ -26,7 +26,7 @@ public class ReservationTest {
     int port;
 
     @Autowired
-    @Qualifier("webReservationRepository")
+    @Qualifier("jdbcTemplateReservationRepository")
     ReservationRepository reservationRepository;
 
     @BeforeEach

@@ -16,7 +16,8 @@ import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
-public class WebReservationRepository implements ReservationRepository{
+@Primary
+public class JdbcTemplateReservationRepository implements ReservationRepository{
     private final JdbcTemplate jdbcTemplate;
 
     @Override
