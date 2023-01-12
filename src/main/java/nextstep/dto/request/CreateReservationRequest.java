@@ -10,19 +10,30 @@ public class CreateReservationRequest {
     private final String date;
     private final String time;
     private final String name;
+    private final Long themeId;
 
-    private CreateReservationRequest(String date, String time, String name) {
+    private CreateReservationRequest(String date, String time, String name, Long themeId) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeId = themeId;
     }
 
     public static CreateReservationRequest of(String date, String time, String name) {
-        return new CreateReservationRequest(date, time, name);
+        return new CreateReservationRequest(date, time, name, Theme.DEFAULT_THEME_ID);
+    }
+
+    public static CreateReservationRequest of(String date, String time, String name, Long themeId) {
+        return new CreateReservationRequest(date, time, name, themeId);
     }
 
     public Reservation toEntity() {
-        return Reservation.of(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, Theme.DEFAULT_THEME);
+        return Reservation.of(
+                LocalDate.parse(date),
+                LocalTime.parse(time + ":00"),
+                name,
+                Theme.of(themeId, null, null, null)
+        );
     }
 
     public LocalDate getDate() {
