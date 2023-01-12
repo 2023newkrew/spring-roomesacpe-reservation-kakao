@@ -38,4 +38,10 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
         String sql = "SELECT * FROM theme";
         return jdbcTemplate.query(sql, ThemeRowMapper::mapRow);
     }
+
+    @Override
+    public void delete(Long id) {
+        String sql = "DELETE FROM theme WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
