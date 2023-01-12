@@ -10,8 +10,10 @@ import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
@@ -19,6 +21,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository repository;
 
+    @Transactional
     @Override
     public Long create(ReservationRequest request) {
         Reservation reservation = ReservationMapper.INSTANCE.fromRequest(request, THEME);
@@ -36,6 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
         return ReservationMapper.INSTANCE.toDto(reservation);
     }
 
+    @Transactional
     @Override
     public boolean deleteById(Long id) {
         return repository.deleteById(id);

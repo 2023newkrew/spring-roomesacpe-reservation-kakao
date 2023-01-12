@@ -50,10 +50,10 @@ public class SimpleReservationDAO implements ReservationDAO {
 
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Date date, Time time) {
         return connection -> {
-            var ps = StatementCreator.createSelectByDateAndTimeStatement(connection, date, time);
+            PreparedStatement ps = StatementCreator.createSelectByDateAndTimeStatement(connection, date, time);
             ps.executeQuery();
-            var rs = ps.getResultSet();
-            rs.next();
+            ResultSet rs = ps.getResultSet();
+
             return ResultSetParser.existsRow(rs);
         };
     }
@@ -65,11 +65,11 @@ public class SimpleReservationDAO implements ReservationDAO {
 
     private QueryFunction<Long> getInsertQuery(ReservationDTO dto) {
         return connection -> {
-            var ps = StatementCreator.createInsertStatement(connection, dto);
+            PreparedStatement ps = StatementCreator.createInsertStatement(connection, dto);
             ps.executeUpdate();
-            var rs = ps.getGeneratedKeys();
-            rs.next();
-            return rs.getLong(1);
+            ResultSet keyHolder = ps.getGeneratedKeys();
+
+            return ResultSetParser.parseKey(keyHolder);
         };
     }
 
@@ -80,9 +80,9 @@ public class SimpleReservationDAO implements ReservationDAO {
 
     private QueryFunction<ReservationDTO> getSelectByIdQuery(Long id) {
         return connection -> {
-            var ps = StatementCreator.createSelectByIdStatement(connection, id);
-            var rs = ps.executeQuery();
-            rs.next();
+            PreparedStatement ps = StatementCreator.createSelectByIdStatement(connection, id);
+            ResultSet rs = ps.executeQuery();
+
             return ResultSetParser.parseReservationDto(rs);
         };
     }
@@ -94,9 +94,10 @@ public class SimpleReservationDAO implements ReservationDAO {
 
     private QueryFunction<Boolean> getDeleteByIdQuery(Long id) {
         return connection -> {
-            var ps = StatementCreator.createDeleteByIdStatement(connection, id);
-            var rs = ps.executeUpdate();
-            return rs > 0;
+            PreparedStatement ps = StatementCreator.createDeleteByIdStatement(connection, id);
+            int deletedRow = ps.executeUpdate();
+            
+            return deletedRow > 0;
         };
     }
 }

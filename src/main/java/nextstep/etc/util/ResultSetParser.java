@@ -17,6 +17,7 @@ public class ResultSetParser {
     }
 
     public static ReservationDTO parseReservationDto(ResultSet resultSet) throws SQLException {
+        resultSet.last();
         if (resultSet.getRow() == 0) {
             return null;
         }
@@ -39,5 +40,11 @@ public class ResultSetParser {
                 resultSet.getString("theme_desc"),
                 resultSet.getInt("theme_price")
         );
+    }
+
+    public static Long parseKey(ResultSet resultSet) throws SQLException {
+        resultSet.last();
+
+        return resultSet.getLong(1);
     }
 }
