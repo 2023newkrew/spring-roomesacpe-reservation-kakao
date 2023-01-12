@@ -61,4 +61,17 @@ public class JdbcThemeRepositoryTest {
         assertThat(foundThemeList.get(1)).isEqualTo(savedThemeList.get(1));
         assertThat(foundThemeList.get(2)).isEqualTo(savedThemeList.get(2));
     }
+
+    @Test
+    @DisplayName("테마 수정 기능 테스트")
+    void updateTest() {
+        Theme savedTheme = jdbcThemeRepository.save(new Theme("테마이름", "테마설명", 22000));
+        Theme updatingTheme = new Theme(savedTheme.getId(), "테마이름 변경", "테마설명 변경", 0);
+
+        assertThat(jdbcThemeRepository.update(updatingTheme)).isEqualTo(1);
+        assertThat(jdbcThemeRepository.findById(updatingTheme.getId())
+                .get()).isNotEqualTo(savedTheme);
+        assertThat(jdbcThemeRepository.findById(updatingTheme.getId())
+                .get()).isEqualTo(updatingTheme);
+    }
 }

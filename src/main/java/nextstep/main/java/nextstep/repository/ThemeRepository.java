@@ -12,7 +12,7 @@ public interface ThemeRepository {
 
     List<Theme> findAll();
 
-    Theme update(Theme theme);
+    int update(Theme theme);
 
     void deleteById(Long id);
 }

@@ -44,8 +44,8 @@ public class JdbcThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public Theme update(Theme theme) {
-        return null;
+    public int update(Theme theme) {
+        return jdbcTemplate.update((con -> CustomPreparedStatementCreator.updateThemePreparedStatement(con, theme)));
     }
 
     @Override
