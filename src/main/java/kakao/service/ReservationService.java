@@ -27,7 +27,6 @@ public class ReservationService {
 
     public ReservationResponse createReservation(CreateReservationRequest request) {
         checkDuplicatedReservation(request.themeId, request.date, request.time);
-        System.out.println(request.themeId);
         Theme theme = getExistTheme(request.themeId);
         return new ReservationResponse(reservationRepository.save(Reservation.builder()
                 .date(request.date)

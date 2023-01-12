@@ -2,6 +2,7 @@ package kakao.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,5 +38,24 @@ public class Reservation implements Comparable<Reservation> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getDate(), that.getDate())
+                && Objects.equals(getTime(), that.getTime()) && Objects.equals(getName(),
+                that.getName()) && Objects.equals(getTheme(), that.getTheme());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDate(), getTime(), getName(), getTheme());
     }
 }
