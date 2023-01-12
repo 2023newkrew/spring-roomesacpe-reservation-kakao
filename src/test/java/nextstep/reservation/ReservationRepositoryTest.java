@@ -15,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static nextstep.reservation.exception.ReservationExceptionCode.NO_SUCH_RESERVATION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
@@ -83,7 +85,9 @@ class ReservationRepositoryTest {
         Boolean result = reservationRepository.delete(created.getId());
         assertThat(result).isEqualTo(true);
 
-        Reservation findResult = reservationRepository.findById(created.getId());
-        assertThat(findResult).isNull();
+        assertThatThrownBy(
+                () -> reservationRepository.findById(created.getId()))
+                .isInstanceOf(ReservationException.class)
+                .hasMessage(NO_SUCH_RESERVATION.getMessage());
     }
 }
