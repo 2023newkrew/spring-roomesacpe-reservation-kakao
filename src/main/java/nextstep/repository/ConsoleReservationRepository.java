@@ -36,9 +36,10 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(rs, ps, con);
         }
 
-        ConnectionManager.closeAll(rs, ps, con);
 
         return Optional.ofNullable(reservation);
     }
@@ -67,9 +68,9 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(rs, ps, con);
         }
-
-        ConnectionManager.closeAll(rs, ps, con);
 
         return id;
     }
@@ -87,10 +88,9 @@ public class ConsoleReservationRepository implements ReservationRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(ps, con);
         }
-
-
-        ConnectionManager.closeAll(ps, con);
 
         return result;
     }
@@ -113,9 +113,9 @@ public class ConsoleReservationRepository implements ReservationRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(rs, ps, con);
         }
-
-        ConnectionManager.closeAll(rs, ps, con);
 
         return result;
     }
