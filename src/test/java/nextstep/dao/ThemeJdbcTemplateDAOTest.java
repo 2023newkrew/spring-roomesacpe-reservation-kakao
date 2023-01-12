@@ -45,7 +45,7 @@ class ThemeJdbcTemplateDAOTest {
     @DisplayName("테마 삭제")
     @Test
     void deleteById() {
-        int rowCount = themeJdbcTemplateDAO.deleteById(1L);
+        int rowCount = themeJdbcTemplateDAO.deleteById(2L);
 
         assertThat(rowCount).isEqualTo(1);
     }

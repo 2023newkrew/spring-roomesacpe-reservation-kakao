@@ -1,5 +1,6 @@
 package nextstep;
 
+import nextstep.dao.ReservationDAO;
 import nextstep.dao.ReservationJdbcApiDAO;
 import nextstep.dao.ThemeJdbcApiDAO;
 import nextstep.service.ReservationService;
@@ -19,9 +20,10 @@ public class ConsoleRoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        ReservationDAO reservationDAO = new ReservationJdbcApiDAO();
         ConsoleRoomEscapeManager roomEscapeManager = new ConsoleRoomEscapeManager(
-                new ReservationService(new ReservationJdbcApiDAO()),
-                new ThemeService(new ThemeJdbcApiDAO())
+                new ReservationService(reservationDAO),
+                new ThemeService(new ThemeJdbcApiDAO(), reservationDAO)
         );
 
         while (true) {

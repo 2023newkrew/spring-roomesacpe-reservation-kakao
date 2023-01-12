@@ -16,4 +16,9 @@ public class CustomAdvice {
     public ResponseEntity handle(DataNotExistException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(JobNotAllowedException.class)
+    public ResponseEntity handle(JobNotAllowedException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getMessage());
+    }
 }

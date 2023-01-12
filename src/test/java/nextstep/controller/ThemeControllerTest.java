@@ -70,4 +70,14 @@ class ThemeControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body(is("테마가 존재하지 않습니다."));
     }
+
+    @DisplayName("참조되는 예약이 존재하는 테마 삭제")
+    @Test
+    void deleteThemeThatHasReservation() {
+        RestAssured.given().log().all()
+                .when().delete("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .body(is("이 테마를 참조하는 예약이 존재하여 테마를 삭제할 수 없습니다."));
+    }
 }

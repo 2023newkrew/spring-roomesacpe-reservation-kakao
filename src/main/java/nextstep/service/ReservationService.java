@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class ReservationService {
-    private ReservationDAO reservationDAO;
+    private final ReservationDAO reservationDAO;
 
     public ReservationService(ReservationDAO reservationJdbcTemplateDAO) {
         this.reservationDAO = reservationJdbcTemplateDAO;
