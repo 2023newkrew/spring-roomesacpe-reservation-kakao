@@ -1,6 +1,6 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.entity.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,5 +10,4 @@ public interface ReservationRepository {
     Reservation findById(long id);
     Boolean findByDateTime(LocalDate date, LocalTime time);
     Boolean delete(long id);
-    void clear();
 }

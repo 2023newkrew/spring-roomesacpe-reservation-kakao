@@ -1,11 +1,13 @@
-package nextstep.roomescape.reservation.domain;
+package nextstep.roomescape.reservation.domain.entity;
 
+import lombok.Builder;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+@Builder
 public class Reservation {
     @Nullable
     private final Long id;

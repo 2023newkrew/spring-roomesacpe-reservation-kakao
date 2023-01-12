@@ -1,6 +1,8 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
+import nextstep.roomescape.reservation.domain.entity.Reservation;
+import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,13 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation create(Reservation reservation) {
-        return reservationRepository.create(reservation);
+    public Reservation create(ReservationRequestDTO reservation) {
+        return reservationRepository.create(reservation.toEntity());
     }
 
     @Override
-    public Reservation findById(long id) {
-        return reservationRepository.findById(id);
+    public ReservationResponseDTO findById(long id) {
+        return ReservationResponseDTO.of(reservationRepository.findById(id));
     }
 
     @Override

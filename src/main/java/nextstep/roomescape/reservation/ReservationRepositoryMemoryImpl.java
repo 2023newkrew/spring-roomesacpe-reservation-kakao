@@ -1,6 +1,6 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.entity.Reservation;
 import nextstep.roomescape.reservation.exception.CreateReservationException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,9 +47,4 @@ public class ReservationRepositoryMemoryImpl implements ReservationRepository{
         return false;
     }
 
-    @Override
-    public void clear(){
-        reservationList.clear();
-        reservationCount.set(1L);
-    }
 }

@@ -1,9 +1,11 @@
 package nextstep.roomescape;
 
-import nextstep.roomescape.reservation.domain.Reservation;
+import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
+import nextstep.roomescape.reservation.domain.entity.Reservation;
 import nextstep.roomescape.reservation.ReservationRepositoryJdbcImpl;
 import nextstep.roomescape.reservation.ReservationServiceImpl;
-import nextstep.roomescape.reservation.domain.Theme;
+import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
+import nextstep.roomescape.reservation.domain.entity.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -41,8 +43,7 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
-                        null,
+                ReservationRequestDTO reservation = new ReservationRequestDTO(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
@@ -60,15 +61,15 @@ public class RoomEscapeApplication {
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation = reservationServiceImpl.findById(id);
+                ReservationResponseDTO reservation = reservationServiceImpl.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 이름: " + reservation.getThemeName());
+                System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+                System.out.println("예약 테마 가격: " + reservation.getThemePrice());
             }
 
             if (input.startsWith(DELETE)) {

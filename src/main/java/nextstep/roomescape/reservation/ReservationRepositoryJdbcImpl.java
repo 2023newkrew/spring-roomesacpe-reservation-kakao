@@ -1,7 +1,7 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.domain.Reservation;
-import nextstep.roomescape.reservation.domain.Theme;
+import nextstep.roomescape.reservation.domain.entity.Reservation;
+import nextstep.roomescape.reservation.domain.entity.Theme;
 import nextstep.roomescape.reservation.exception.CreateReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -78,12 +78,6 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
     public Boolean delete(long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, Long.valueOf(id)) == 1 ;
-    }
-
-    @Override
-    public void clear() {
-        String sql = "delete from reservation";
-        jdbcTemplate.update(sql);
     }
 
 }
