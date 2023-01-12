@@ -29,7 +29,7 @@ public class ThemeRepositoryTest {
 
     @BeforeAll
     static void createTable(@Autowired DatabaseExecutor databaseExecutor) {
-        databaseExecutor.createThemeTable();
+        databaseExecutor.createTables();
     }
 
     @Test

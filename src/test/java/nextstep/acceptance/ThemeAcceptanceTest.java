@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static nextstep.common.fixture.ReservationProvider.예약_생성을_요청한다;
-import static nextstep.domain.QuerySetting.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static nextstep.common.fixture.ThemeProvider.테마_생성을_요청한다;
@@ -44,8 +43,7 @@ public class ThemeAcceptanceTest {
     @BeforeEach
     void setPort() {
         RestAssured.port = port;
-        databaseExecutor.clearTable(Theme.TABLE_NAME);
-        databaseExecutor.clearTable(Reservation.TABLE_NAME);
+        databaseExecutor.clearAll();
     }
 
     @Test

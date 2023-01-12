@@ -1,5 +1,8 @@
 package nextstep.domain.theme;
 
+import nextstep.domain.JdbcEntity;
+
+@JdbcEntity
 public class Theme {
 
     private Long id;

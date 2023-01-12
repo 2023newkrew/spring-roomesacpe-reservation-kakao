@@ -33,8 +33,7 @@ public class ReservationRepositoryTest {
 
     @BeforeAll
     static void createTable(@Autowired DatabaseExecutor databaseExecutor) {
-        databaseExecutor.createReservationTable();
-        databaseExecutor.createThemeTable();
+        databaseExecutor.createTables();
     }
 
     @Test

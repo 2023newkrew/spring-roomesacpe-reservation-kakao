@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.common.DatabaseExecutor;
-import nextstep.domain.QuerySetting.Reservation;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
-import static nextstep.domain.QuerySetting.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static nextstep.common.fixture.ThemeProvider.테마_생성을_요청한다;
@@ -38,8 +36,7 @@ public class ReservationAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        databaseExecutor.clearTable(Reservation.TABLE_NAME);
-        databaseExecutor.clearTable(Theme.TABLE_NAME);
+        databaseExecutor.clearAll();
         테마_생성을_요청한다(new CreateOrUpdateThemeRequest(themeName, "테마 설명", 23_000));
     }
 

@@ -1,11 +1,13 @@
 package nextstep.domain.reservation;
 
+import nextstep.domain.JdbcEntity;
 import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+@JdbcEntity
 public class Reservation {
     private Long id;
     private LocalDate date;
