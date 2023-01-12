@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ThemeRequest;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,20 +36,24 @@ public class ReservationTest {
     @BeforeAll
     void setUp() throws Exception {
         RestAssured.port = port;
-        this.mockMvc.perform(post("/reservations")
+        this.mockMvc.perform(post("/theme")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-11", "13:00", "kayla")))
+                .content(this.objectMapper.writeValueAsString(new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)))
         );
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-12", "13:00", "jerrie")))
+                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-11", "13:00", "kayla", 1L)))
+        );
+        this.mockMvc.perform(post("/reservations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-12", "13:00", "jerrie", 1L)))
         );
     }
 
     @DisplayName("예약 생성 테스트")
     @Test
     void createReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("2022-08-13", "13:00", "kayla");
+        ReservationRequest reservationRequest = new ReservationRequest("2022-08-13", "13:00", "kayla", 1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +68,7 @@ public class ReservationTest {
     @DisplayName("예약 생성 거절 테스트")
     void rejectCreateReservation() throws Exception {
         // Given
-        ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie");
+        ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie", 1L);
 
         // When
         ResultActions overlapResultActions = mockMvc.perform(post("/reservations")
