@@ -24,6 +24,7 @@ public class ThemeJdbcRepository implements ThemeRepository {
 
     private final RowMapper<Theme> actorRowMapper = (resultSet, rowNum) -> (
             new Theme(
+                    resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("desc"),
                     resultSet.getInt("price")
