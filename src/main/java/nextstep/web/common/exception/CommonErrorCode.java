@@ -14,7 +14,9 @@ public enum CommonErrorCode implements ErrorCode {
 
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
 
-    BAD_PARAMETER_REQUEST(HttpStatus.BAD_REQUEST, "처리할 수 없는 요청입니다.");
+    BAD_PARAMETER_REQUEST(HttpStatus.BAD_REQUEST, "처리할 수 없는 요청입니다."),
+
+    RESERVED_THEME_ERROR(HttpStatus.METHOD_NOT_ALLOWED, "예약된 테마는 수정/삭제가 불가능합니다.");
 
     private final HttpStatus httpStatus;
 

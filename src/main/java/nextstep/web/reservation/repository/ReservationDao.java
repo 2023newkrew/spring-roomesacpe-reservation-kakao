@@ -9,14 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional
 public class ReservationDao implements RoomEscapeRepository<Reservation> {
 
     public static final String TABLE_NAME = "reservation";
@@ -44,6 +42,11 @@ public class ReservationDao implements RoomEscapeRepository<Reservation> {
         }
 
         return reservations.get(0);
+    }
+
+    public List<Reservation> findByThemeId(Long themeId) {
+        String sql = "SELECT * FROM RESERVATION WHERE theme_id = ?;";
+        return jdbcTemplate.query(sql, reservationRowMapper, themeId);
     }
 
     public void deleteById(Long id) {
