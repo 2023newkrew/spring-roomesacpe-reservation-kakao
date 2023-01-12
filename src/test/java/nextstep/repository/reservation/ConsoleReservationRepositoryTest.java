@@ -1,10 +1,11 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
+import nextstep.repository.reservation.ConsoleReservationRepository;
+import nextstep.repository.reservation.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -29,10 +30,9 @@ public class ConsoleReservationRepositoryTest {
 
     @DisplayName("insert 후 예약 값이 잘 들어갔는지 insert 전과 값 비교")
     @Test
-    void consoleReservationRepo() {
+    void addReservation() {
         // 추가
         long id = consoleReservationRepository.add(newReservation);
-        System.out.println("#####"+id);
         Reservation reservation = consoleReservationRepository.findById(id).orElseThrow();
         assertThat(reservation).isEqualTo(newReservation);
     }

@@ -18,4 +18,4 @@ CREATE TABLE IF NOT EXISTS THEME
     primary key (id)
 );
 
-INSERT INTO THEME VALUES (1, '워너고홈', '병맛 어드벤처 회사 코믹물', 29000);
+INSERT INTO THEME (name, desc, price) VALUES ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000);

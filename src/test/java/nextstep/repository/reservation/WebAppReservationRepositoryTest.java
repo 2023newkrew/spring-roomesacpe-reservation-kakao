@@ -1,7 +1,9 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
+import nextstep.repository.reservation.ReservationRepository;
+import nextstep.repository.reservation.WebAppReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class WebAppReservationRepositoryTest {
 
     @DisplayName("insert 후 예약 값이 잘 들어갔는지 insert 전과 값 비교")
     @Test
-    void consoleReservationRepo() {
+    void addReservation() {
         // 추가
         long id = webAppReservationRepository.add(newReservation);
         Reservation reservation = webAppReservationRepository.findById(id).orElseThrow();

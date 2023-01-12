@@ -1,13 +1,11 @@
 package nextstep;
 
 import nextstep.domain.dto.CreateReservationDto;
-import nextstep.domain.dto.GetReservationDto;
-import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import nextstep.exception.DeleteReservationFailureException;
 import nextstep.exception.DuplicateTimeReservationException;
 import nextstep.exception.NoReservationException;
-import nextstep.repository.ConsoleReservationRepository;
+import nextstep.repository.reservation.ConsoleReservationRepository;
 import nextstep.service.ReservationService;
 
 import java.util.Scanner;

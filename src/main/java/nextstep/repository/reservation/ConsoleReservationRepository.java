@@ -1,13 +1,15 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
+import nextstep.repository.ConnectionManager;
 
 import java.sql.*;
 import java.util.Optional;
 
 public class ConsoleReservationRepository implements ReservationRepository {
 
+    @Override
     public Optional<Reservation> findById(long id) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -48,6 +50,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
         return Optional.ofNullable(reservation);
     }
 
+    @Override
     public long add(Reservation reservation) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -78,6 +81,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
         return id;
     }
 
+    @Override
     public int delete(long id) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -99,6 +103,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
         return result;
     }
 
+    @Override
     public int countByDateAndTime(Date date, Time time) {
         Connection con = null;
         PreparedStatement ps = null;

@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
@@ -22,6 +22,7 @@ public class WebAppReservationRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Optional<Reservation> findById(long id) {
         Reservation reservation = null;
         String sql = "SELECT " +
@@ -55,6 +56,7 @@ public class WebAppReservationRepository implements ReservationRepository {
         return Optional.ofNullable(reservation);
     }
 
+    @Override
     public long add(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -69,11 +71,13 @@ public class WebAppReservationRepository implements ReservationRepository {
         return keyHolder.getKey().longValue();
     }
 
+    @Override
     public int delete(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public int countByDateAndTime(Date date, Time time) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
