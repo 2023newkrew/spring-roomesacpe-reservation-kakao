@@ -1,6 +1,7 @@
 package web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 import web.entity.Reservation;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Getter
 public class ReservationRequestDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -21,18 +23,6 @@ public class ReservationRequestDto {
     @NotEmpty
     @NotBlank
     private String name;
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public Reservation toEntity() {
         return Reservation.of(date, time, name);

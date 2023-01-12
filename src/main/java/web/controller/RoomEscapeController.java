@@ -1,5 +1,6 @@
 package web.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +13,13 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalTime;
 
+@RequiredArgsConstructor
 @RestController
 public class RoomEscapeController {
     private static final LocalTime BEGIN_TIME = LocalTime.of(11, 0, 0);
     private static final LocalTime LAST_TIME = LocalTime.of(20, 30, 0);
 
     private final RoomEscapeService roomEscapeService;
-
-    public RoomEscapeController(RoomEscapeService roomEscapeService) {
-        this.roomEscapeService = roomEscapeService;
-    }
 
     @PostMapping("/reservations")
     public ResponseEntity<Void> reservation(@RequestBody @Valid ReservationRequestDto requestDto) {

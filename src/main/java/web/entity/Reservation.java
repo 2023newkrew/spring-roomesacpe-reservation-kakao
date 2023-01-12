@@ -1,8 +1,11 @@
 package web.entity;
 
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Getter
 public class Reservation {
 
     private LocalDate date;
@@ -17,18 +20,6 @@ public class Reservation {
 
     public static Reservation of(LocalDate date, LocalTime time, String name) {
         return new Reservation(date, time, name);
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isDuplicate(Reservation other) {

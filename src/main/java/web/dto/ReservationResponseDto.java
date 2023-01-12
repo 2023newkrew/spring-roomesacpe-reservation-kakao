@@ -1,11 +1,13 @@
 package web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 import web.entity.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Getter
 public class ReservationResponseDto {
 
     private Long id;
@@ -29,33 +31,5 @@ public class ReservationResponseDto {
 
     public static ReservationResponseDto of(long id, Reservation reservation) {
         return new ReservationResponseDto(id, reservation.getDate(), reservation.getTime(), reservation.getName(), "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getThemeName() {
-        return themeName;
-    }
-
-    public String getThemeDesc() {
-        return themeDesc;
-    }
-
-    public Integer getThemePrice() {
-        return themePrice;
     }
 }
