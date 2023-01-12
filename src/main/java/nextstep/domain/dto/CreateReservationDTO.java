@@ -1,7 +1,6 @@
 package nextstep.domain.dto;
 
 public class CreateReservationDTO {
-
     private final String localDate;
     private final String localTime;
     private final String name;
@@ -23,5 +22,4 @@ public class CreateReservationDTO {
     public String getName() {
         return name;
     }
-
 }

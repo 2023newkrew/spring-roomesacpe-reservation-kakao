@@ -3,7 +3,6 @@ package nextstep.domain.dto;
 import nextstep.domain.reservation.Reservation;
 
 public class GetReservationDTO {
-
     private final Long id;
     private final String date;
     private final String time;

@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 
 @Repository
-public class WebAppReservationRepo implements ReservationRepo{
+public class WebAppReservationRepo implements ReservationRepo {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -43,8 +43,8 @@ public class WebAppReservationRepo implements ReservationRepo{
     public long add(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con-> {
-            PreparedStatement ps = con.prepareStatement(sql, new String[] {"id"});
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());

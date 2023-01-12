@@ -35,7 +35,7 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
         long id = webAppReservationRepo.add(reservation);
-        return ResponseEntity.created(URI.create("/reservations/"+id)).build();
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,7 +48,7 @@ public class ReservationController {
         return ResponseEntity.ok().body(getReservationDTO);
     }
 
-    @DeleteMapping( "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
         int result = webAppReservationRepo.delete(id);
         if (result == 0) {
