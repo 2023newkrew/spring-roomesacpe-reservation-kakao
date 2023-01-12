@@ -51,8 +51,8 @@ public class JdbcTemplateThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public List<Theme> findAll() {
-        return null;
+    public List<Theme> findAll(int page, int size) {
+        return jdbcTemplate.query(SELECT_ALL, themeRowMapper, size, page);
     }
 
     @Override

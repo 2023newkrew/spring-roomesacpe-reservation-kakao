@@ -13,7 +13,7 @@ public interface ThemeRepository {
 
     Theme save(Theme theme);
     Optional<Theme> findByName(String name);
-    List<Theme> findAll();
+    List<Theme> findAll(int page, int offset);
     void deleteById(Long id);
 
 }

@@ -10,7 +10,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static nextstep.domain.QuerySetting.Theme.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +69,38 @@ public class ThemeRepositoryTest {
 
         // when, then
         assertThat(themeRepository.findByName(themeName)).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    void 테마_목록이_n개_이상일_경우_n개씩_조회한다() {
+        // given
+        int page = 0, size = 5;
+        Stream.of("혜화 잡화점", "거울의 방", "베니스 상인의 저택", "워너고홈", "명당", "스위트홈", "오즈의 마법사")
+                .map(themeName -> new Theme(themeName, "테마 설명", 22_000))
+                .forEach(themeRepository::save);
+
+        // when
+        List<Theme> themes = themeRepository.findAll(page, size);
+
+        // then
+        assertThat(themes.size()).isEqualTo(size);
+        themes.forEach(theme -> assertThat(theme).isNotNull());
+    }
+
+    @Test
+    void 테마_목록이_n개_미만일_경우_모두_조회한다() {
+        // given
+        int page = 0, size = 5;
+        Stream.of("혜화 잡화점", "거울의 방", "베니스 상인의 저택")
+                .map(themeName -> new Theme(themeName, "테마 설명", 22_000))
+                .forEach(themeRepository::save);
+
+        // when
+        List<Theme> themes = themeRepository.findAll(page, size);
+
+        // then
+        assertThat(themes.size()).isLessThan(size);
+        themes.forEach(theme -> assertThat(theme).isNotNull());
     }
 
 }

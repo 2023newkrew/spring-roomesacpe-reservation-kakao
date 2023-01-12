@@ -15,6 +15,7 @@ public class QuerySetting {
         public static final String TABLE_NAME = "THEME";
         public static final String PK_NAME = "id";
         public static final String SELECT_BY_NAME = "SELECT * FROM theme WHERE name = ?";
+        public static final String SELECT_ALL = "SELECT * FROM theme LIMIT ? OFFSET ?";
     }
 
 }
