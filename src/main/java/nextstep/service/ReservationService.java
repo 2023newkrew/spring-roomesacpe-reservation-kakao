@@ -24,4 +24,12 @@ public class ReservationService {
 
         return reservationDAO.save(reservationSaveForm);
     }
+
+    public Reservation findReservation(Long id) {
+        return reservationDAO.findById(id);
+    }
+
+    public void deleteReservation(Long id) {
+        reservationDAO.deleteById(id);
+    }
 }

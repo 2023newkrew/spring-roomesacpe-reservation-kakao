@@ -1,9 +1,8 @@
 package nextstep.controller;
 
-import nextstep.dao.ReservationDAO;
 import nextstep.domain.Reservation;
-import nextstep.domain.ReservationSaveForm;
 import nextstep.domain.ReservationInfo;
+import nextstep.domain.ReservationSaveForm;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,9 @@ import java.net.URI;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final ReservationDAO reservationDAO;
 
-    public ReservationController(ReservationService reservationService, ReservationDAO reservationJdbcTemplateDAO) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.reservationDAO = reservationJdbcTemplateDAO;
     }
 
     @PostMapping("")
@@ -29,14 +26,14 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity showReservation(@PathVariable Long id) {
-        Reservation reservation = reservationDAO.findById(id);
+        Reservation reservation = reservationService.findReservation(id);
         ReservationInfo reservationInfo = new ReservationInfo(reservation);
         return ResponseEntity.ok().body(reservationInfo);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable Long id) {
-        reservationDAO.deleteById(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }
