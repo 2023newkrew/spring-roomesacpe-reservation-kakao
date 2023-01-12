@@ -1,6 +1,7 @@
 package nextstep.service;
 
 import nextstep.domain.Reservation;
+import nextstep.dto.request.CreateReservationConsoleRequest;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.dto.response.ReservationResponse;
@@ -19,19 +20,18 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservationForWeb(CreateReservationRequest request) throws DuplicateReservationException {
-        return ReservationResponse.fromEntity(createReservation(request));
+        return ReservationResponse.fromEntity(createReservation(request.toEntity()));
     }
 
-    public ReservationConsoleResponse createReservationForConsole(CreateReservationRequest request) throws DuplicateReservationException {
-        return ReservationConsoleResponse.fromEntity(createReservation(request));
+    public ReservationConsoleResponse createReservationForConsole(CreateReservationConsoleRequest request) throws DuplicateReservationException {
+        return ReservationConsoleResponse.fromEntity(createReservation(request.toEntity()));
     }
 
-    private Reservation createReservation(CreateReservationRequest request) throws DuplicateReservationException {
-        if (reservationRepository.hasReservationAt(request.getDate(), request.getTime())) {
+    private Reservation createReservation(Reservation reservation) throws DuplicateReservationException {
+        if (reservationRepository.hasReservationAt(reservation.getDate(), reservation.getTime())) {
             throw new DuplicateReservationException();
         }
 
-        Reservation reservation = request.toEntity();
         return reservationRepository.add(reservation);
     }
 

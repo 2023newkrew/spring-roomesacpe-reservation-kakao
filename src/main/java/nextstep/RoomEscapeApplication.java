@@ -1,5 +1,6 @@
 package nextstep;
 
+import nextstep.dto.request.CreateReservationConsoleRequest;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.response.ReservationConsoleResponse;
 import nextstep.exception.DatabaseException;
@@ -39,7 +40,7 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 try {
-                    ReservationConsoleResponse reservation = reservationService.createReservationForConsole(CreateReservationRequest.of(date, time, name));
+                    ReservationConsoleResponse reservation = reservationService.createReservationForConsole(CreateReservationConsoleRequest.of(date, time, name));
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());

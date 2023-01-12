@@ -53,7 +53,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
         try {
             con = getConnection();
-            String sql = "SELECT * FROM reservation WHERE id = ?";
+            String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -64,6 +64,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 throw new ReservationNotFoundException();
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e);
         } finally {
             closeResources(con, ps, rs);
