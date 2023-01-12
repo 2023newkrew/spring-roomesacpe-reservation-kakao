@@ -7,6 +7,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.entity.Reservation;
 import web.reservation.exception.ReservationException;
+import web.theme.exception.ErrorCode;
+import web.theme.exception.ThemeException;
+import web.theme.repository.ThemeRepository;
 
 import javax.sql.DataSource;
 import java.sql.Date;
@@ -22,15 +25,20 @@ import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
 public class DatabaseReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ThemeRepository themeRepository;
 
-    public DatabaseReservationRepository(DataSource dataSource) {
+    public DatabaseReservationRepository(DataSource dataSource, ThemeRepository themeRepository) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.themeRepository = themeRepository;
     }
 
     @Override
     public long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
             throw new ReservationException(RESERVATION_DUPLICATE);
+        }
+        if (isExistTheme(reservation)) {
+            throw new ThemeException(ErrorCode.THEME_NOT_FOUND);
         }
         String sql = "INSERT INTO RESERVATION (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         try {
@@ -47,6 +55,11 @@ public class DatabaseReservationRepository implements ReservationRepository {
         } catch (Exception E) {
             return -1;
         }
+    }
+
+    private boolean isExistTheme(Reservation reservation) {
+        return themeRepository.findById(reservation.getThemeId())
+                .isEmpty();
     }
 
     private boolean isDuplicateReservation(Reservation reservation) {

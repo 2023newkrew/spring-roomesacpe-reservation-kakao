@@ -18,6 +18,7 @@ import web.entity.Reservation;
 import web.reservation.dto.ReservationResponseDto;
 import web.reservation.exception.ReservationException;
 import web.reservation.service.ReservationService;
+import web.theme.exception.ThemeException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
 import static web.reservation.exception.ErrorCode.RESERVATION_NOT_FOUND;
+import static web.theme.exception.ErrorCode.THEME_NOT_FOUND;
 
 @WebMvcTest(ReservationController.class)
 @ExtendWith(MockitoExtension.class)
@@ -168,6 +170,17 @@ public class ReservationControllerTest {
                     "\t\"name\": \"name\",\n" +
                     "\t\"themeId\": 0\n" +
                     "}";
+        }
+
+        @Test
+        void should_response404NotFound_when_notExistTheme() throws Exception {
+            when(reservationService.reservation(any())).thenThrow(new ThemeException(THEME_NOT_FOUND));
+            String content = getValidContent();
+            mockMvc.perform(post("/reservations")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value(THEME_NOT_FOUND.getMessage()));
         }
     }
 

@@ -1,14 +1,16 @@
 package web.reservation.repository;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import web.entity.Reservation;
+import web.entity.Theme;
 import web.reservation.exception.ReservationException;
-import web.reservation.repository.DatabaseReservationRepository;
-import web.reservation.repository.ReservationRepository;
+import web.theme.exception.ThemeException;
+import web.theme.repository.ThemeRepository;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static web.theme.exception.ErrorCode.THEME_NOT_FOUND;
 
 public class ReservationRepositoryTest {
 
@@ -25,7 +28,25 @@ public class ReservationRepositoryTest {
             .addScript("classpath:schema.sql")
             .build();
 
-    private ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
+    private ThemeRepository themeRepository = new ThemeRepository(dataSource);
+    private ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource, themeRepository);
+
+    private long savedThemeId;
+
+    @BeforeEach
+    void saveDummyTheme() {
+        String name = "테마이름";
+        String desc = "테마설명";
+        int price = 22000;
+        Theme theme = Theme.of(null, name, desc, price);
+
+        savedThemeId = themeRepository.save(theme);
+    }
+
+    @AfterEach
+    void clearDummyTheme() {
+        themeRepository.delete(savedThemeId);
+    }
 
     @AfterEach
     void deleteAllReservation() {
@@ -40,7 +61,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, 0L);
+            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
 
             long reservationId = reservationRepository.save(reservation);
 
@@ -55,12 +76,24 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, 0L);
+            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
 
             reservationRepository.save(reservation);
 
             assertThatThrownBy(() -> reservationRepository.save(reservation))
                     .isInstanceOf(ReservationException.class);
+        }
+
+        @Test
+        void should_throwException_when_notExistTheme() {
+            LocalDate today = LocalDate.now();
+            LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+            String name = "name";
+            Reservation reservation = Reservation.of(null, today, now, name, -1L);
+
+            assertThatThrownBy(() -> reservationRepository.save(reservation))
+                    .isInstanceOf(ThemeException.class)
+                    .hasMessage(THEME_NOT_FOUND.getMessage());
         }
     }
 
@@ -72,7 +105,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, 0L);
+            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
             long reservationId = reservationRepository.save(reservation);
 
             Reservation findReservation = reservationRepository.findById(reservationId)
@@ -97,7 +130,7 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, 0L);
+            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
             long reservationId = reservationRepository.save(reservation);
 
             long deleteReservationCount = reservationRepository.delete(reservationId);

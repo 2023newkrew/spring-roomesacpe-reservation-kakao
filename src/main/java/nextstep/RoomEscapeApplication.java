@@ -25,8 +25,8 @@ public class RoomEscapeApplication {
         DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
                 .addScript("classpath:schema.sql")
                 .build();
-        ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
         ThemeRepository themeRepository = new ThemeRepository(dataSource);
+        ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource, themeRepository);
         Long reservationIdIndex = 0L;
 
         Theme defaultTheme = Theme.of(0L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
