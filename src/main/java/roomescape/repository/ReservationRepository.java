@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ReservationRepository {
     Long save(Reservation reservation);
-    Optional<Reservation> findOneById(long reservationId);
-    Integer delete(long reservationId);
-    Boolean hasOneByDateAndTime(LocalDate date, LocalTime time);
+    Optional<Reservation> find(Long id);
+    Integer delete(Long id);
+    Boolean has(LocalDate date, LocalTime time);
 }

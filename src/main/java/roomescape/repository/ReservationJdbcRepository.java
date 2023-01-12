@@ -29,7 +29,6 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
                 resultSet.getDate("date").toLocalDate(),
                 resultSet.getTime("time").toLocalTime(),
                 resultSet.getString("name"),
@@ -55,19 +54,19 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findOneById(long reservationId) {
+    public Optional<Reservation> find(Long id) {
         String sql = "select * from reservation where id = ? limit 1";
-        return jdbcTemplate.query(sql, actorRowMapper, reservationId).stream().findFirst();
+        return jdbcTemplate.query(sql, actorRowMapper, id).stream().findFirst();
     }
 
     @Override
-    public Integer delete(long reservationId) {
+    public Integer delete(Long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, reservationId);
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
+    public Boolean has(LocalDate date, LocalTime time) {
         String sql = "select * from reservation where date = ? and time = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, date, time).size() > 0;
     }

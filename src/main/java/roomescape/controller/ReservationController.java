@@ -20,8 +20,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable("id") Long reservationId) {
-        ReservationResponseDto reservationResponseDto = reservationService.findReservation(reservationId);
+    public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable("id") Long id) {
+        ReservationResponseDto reservationResponseDto = reservationService.findReservation(id);
         return ResponseEntity.ok(reservationResponseDto);
     }
 
@@ -33,8 +33,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity cancelReservation(@PathVariable("id") Long reservationId) {
-        reservationService.cancelReservation(reservationId);
+    public ResponseEntity cancelReservation(@PathVariable("id") Long id) {
+        reservationService.cancelReservation(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -29,18 +29,18 @@ public class ReservationMemoryRepository implements ReservationRepository{
     }
 
     @Override
-    public Optional<Reservation> findOneById(long reservationId) {
-        return Optional.ofNullable(reservations.get(reservationId));
+    public Optional<Reservation> find(Long id) {
+        return Optional.ofNullable(reservations.get(id));
     }
 
     @Override
-    public Integer delete(long reservationId) {
-        reservations.remove(reservationId);
+    public Integer delete(Long id) {
+        reservations.remove(id);
         return 1;
     }
 
     @Override
-    public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
+    public Boolean has(LocalDate date, LocalTime time) {
         return reservations.values()
                 .stream()
                 .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));

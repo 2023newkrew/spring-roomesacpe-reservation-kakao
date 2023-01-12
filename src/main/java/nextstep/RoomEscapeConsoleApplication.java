@@ -51,15 +51,16 @@ public class RoomEscapeConsoleApplication {
                 LocalDate date = LocalDate.parse(params.split(",")[0]);
                 LocalTime time = LocalTime.parse(params.split(",")[1] + ":00");
                 String name = params.split(",")[2];
-                Reservation reservation = new Reservation(null, date, time, name, theme);
-                Long reservationId = reservationRepository.save(reservation);
-
-                if (reservationId == null) {
+                Reservation reservation = new Reservation(date, time, name, theme);
+                Long id = reservationRepository.save(reservation);
+                if (id == null) {
                     System.out.println("예약 생성에 실패하였습니다.");
                     continue;
                 }
+                reservation.setId(id);
+
                 System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + reservationId);
+                System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
@@ -69,7 +70,7 @@ public class RoomEscapeConsoleApplication {
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
-                Optional<Reservation> optionalReservation = reservationRepository.findOneById(id);
+                Optional<Reservation> optionalReservation = reservationRepository.find(id);
 
                 if (optionalReservation.isEmpty()) {
                     System.out.println("예약 조회에 실패하였습니다.");

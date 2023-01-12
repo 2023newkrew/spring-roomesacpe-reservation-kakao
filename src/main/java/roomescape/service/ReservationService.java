@@ -21,27 +21,27 @@ public class ReservationService {
         this.themeRepository = themeRepository;
     }
 
-    public Reservation createReservation(ReservationRequestDto reservationRequest) {
+    public Reservation createReservation(ReservationRequestDto req) {
         Theme theme = themeRepository
                 .find(1L)
                 .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that Name");});
-        if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
+        if (reservationRepository.has(req.getDate(), req.getTime())) {
             throw new IllegalArgumentException("Already have reservation at that date & time");
         }
-        Reservation reservation = new Reservation(reservationRequest, theme);
+        Reservation reservation = new Reservation(req, theme);
         Long id = reservationRepository.save(reservation);
-        reservation.setId(id);  //
+        reservation.setId(id);
         return reservation;
     }
 
-    public ReservationResponseDto findReservation(Long reservationId) {
+    public ReservationResponseDto findReservation(Long id) {
         Reservation reservation = reservationRepository
-                .findOneById(reservationId)
+                .find(id)
                 .orElseThrow(() -> {throw new NoSuchElementException("No Reservation by that Id");});
         return new ReservationResponseDto(reservation);
     }
 
-    public void cancelReservation(Long reservationId) {
-        reservationRepository.delete(reservationId);
+    public void cancelReservation(Long id) {
+        reservationRepository.delete(id);
     }
 }

@@ -12,16 +12,15 @@ public class Reservation {
     private String name;
     private Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this.date = date;
         this.time = time;
         this.name = name;
         this.theme = theme;
     }
 
-    public Reservation(ReservationRequestDto reservationRequestDto, Theme theme) {
-        this(null, reservationRequestDto.getDate(), reservationRequestDto.getTime(), reservationRequestDto.getName(), theme);
+    public Reservation(ReservationRequestDto req, Theme theme) {
+        this(req.getDate(), req.getTime(), req.getName(), theme);
     }
 
     public Long getId() {
