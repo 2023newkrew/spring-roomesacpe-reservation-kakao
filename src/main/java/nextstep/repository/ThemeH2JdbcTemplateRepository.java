@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
 public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
@@ -30,5 +31,11 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
 
         theme.setId(keyHolder.getKey().longValue());
         return theme;
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        String sql = "SELECT * FROM theme";
+        return jdbcTemplate.query(sql, ThemeRowMapper::mapRow);
     }
 }
