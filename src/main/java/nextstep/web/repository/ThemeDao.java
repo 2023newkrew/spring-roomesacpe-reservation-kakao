@@ -1,0 +1,68 @@
+package nextstep.web.repository;
+
+import lombok.RequiredArgsConstructor;
+import nextstep.domain.Theme;
+import nextstep.web.exception.BusinessException;
+import nextstep.web.exception.CommonErrorCode;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@RequiredArgsConstructor
+@Transactional
+public class ThemeDao implements RoomEscapeRepository<Theme> {
+
+    public static final String TABLE_NAME = "reservation";
+    public static final String KEY_COLUMN_NAME = "id";
+    private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) -> Theme.from(resultSet);
+
+    public Long save(Theme theme) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(KEY_COLUMN_NAME);
+
+        Number key = simpleJdbcInsert.executeAndReturnKey(prepareParams(theme));
+
+        return key.longValue();
+    }
+
+
+    public Theme findById(Long id) {
+        String sql = "SELECT * FROM THEME WHERE ID = ?;";
+        List<Theme> themes = jdbcTemplate.query(sql, themeRowMapper, id);
+        if (themes.isEmpty()) {
+            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+        }
+
+        return themes.get(0);
+    }
+
+    public List<Theme> findAll() {
+        String sql = "SELECT * FROM THEME;";
+
+        return jdbcTemplate.query(sql, themeRowMapper);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM THEME WHERE ID = ?;";
+        if (jdbcTemplate.update(sql, id) == 0) {
+            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+        }
+    }
+
+    private Map<String, Object> prepareParams(Theme theme) {
+        return Map.of(
+                "name", theme.getName(),
+                "desc", theme.getDesc(),
+                "price", theme.getPrice()
+        );
+    }
+}
