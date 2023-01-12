@@ -64,5 +64,5 @@
 - [x] Reservation 생성메서드 추가
 - [x] 콘솔 앱 main 함수 메서드 분리
 - [x] ReservationService Test 추가
-- [ ] Repository Test 단위 테스트 적용
+- [x] Repository Test 단위 테스트 적용
 - [x] ConsoleReservationRepository의 커넥션 획득 예외 처리

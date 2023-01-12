@@ -26,29 +26,37 @@ public class WebAppReservationRepositoryTest {
         this.webAppReservationRepository = webAppReservationRepository;
     }
 
-    @DisplayName("예약 추가 삭제 조회 통합 테스트")
+    private static final Reservation newReservation = new Reservation(
+            null,
+            LocalDate.parse("2022-08-11"),
+            LocalTime.parse("13:00"),
+            "name",
+            new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+    );
+
+    @DisplayName("insert 후 예약 값이 잘 들어갔는지 insert 전과 값 비교")
     @Test
-    void webAppReservationRepo() {
-
-        Reservation newReservation = new Reservation(
-                null,
-                LocalDate.parse("2022-08-11"),
-                LocalTime.parse("13:00"),
-                "name",
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
-        );
-
+    void consoleReservationRepo() {
         // 추가
         long id = webAppReservationRepository.add(newReservation);
         Reservation reservation = webAppReservationRepository.findById(id).orElseThrow();
         assertThat(reservation).isEqualTo(newReservation);
+    }
 
-        // 예약 시간 중복
+    @DisplayName("예약 시간이 같은 예약의 개수 카운트")
+    @Test
+    void insertDuplicateReservation() {
+        webAppReservationRepository.add(newReservation);
         int countSameDateAndTime = webAppReservationRepository.countByDateAndTime(
-                Date.valueOf(reservation.getDate()),
-                Time.valueOf(reservation.getTime()));
-        assertThat(countSameDateAndTime > 0).isTrue();
+                Date.valueOf(newReservation.getDate()),
+                Time.valueOf(newReservation.getTime()));
+        assertThat(countSameDateAndTime).isEqualTo(1);
+    }
 
+    @DisplayName("예약 삭제 후 조회 불가 확인")
+    @Test
+    void deleteReservation() {
+        long id = webAppReservationRepository.add(newReservation);
         // 삭제
         webAppReservationRepository.delete(id);
         Reservation reservation2 = webAppReservationRepository.findById(id).orElse(null);
