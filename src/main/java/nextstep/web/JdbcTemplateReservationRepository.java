@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -46,6 +47,13 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE theme_id = ?";
+        RowMapper<Reservation> rowMapper = (rs, rowNum) -> JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, rs.getLong("id"));
+        return jdbcTemplate.query(sql, rowMapper, themeId);
     }
 
     @Override

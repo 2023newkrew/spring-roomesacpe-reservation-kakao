@@ -8,6 +8,8 @@ import nextstep.repository.ReservationRepository;
 import nextstep.dto.ReservationRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReservationService {
 
@@ -27,6 +29,10 @@ public class ReservationService {
     public Reservation getReservation(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
+    }
+
+    public List<Reservation> getReservationByThemeId(Long themeId) {
+        return reservationRepository.findByThemeId(themeId);
     }
 
     public void deleteReservation(Long id) {

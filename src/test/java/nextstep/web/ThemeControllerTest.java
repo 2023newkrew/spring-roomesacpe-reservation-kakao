@@ -3,6 +3,7 @@ package nextstep.web;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import nextstep.dto.ReservationRequest;
 import nextstep.dto.ThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.model.Theme;
@@ -17,6 +18,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,6 +42,7 @@ public class ThemeControllerTest {
 
     @AfterEach
     void tearDown() {
+        jdbcTemplate.execute("DELETE FROM reservation");
         jdbcTemplate.execute("DELETE FROM theme");
     }
     @DisplayName("테마를 생성한다")
@@ -118,7 +123,22 @@ public class ThemeControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    // TODO : 예약이 존재하는 테마는 삭제되지 않는다
+    @DisplayName("해당 테마에 예약이 존재하면 테마 삭제 요청시 예외가 발생한다")
+    @Test
+    void deleteReservationExistsTheme() {
+        Long id = 테마_생성_후_번호를_반환한다("방탈출 테마 new", "새롭게 생겨난 테마!", 20000);
+        예약_생성_후_번호를_반환한다("예약 이름", LocalDate.of(2023, 12, 12), LocalTime.of(11,21), id);
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/themes/" + id)
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(response.body()).isNotNull();
+    }
 
     private Long 샏성된_테마의_번호를_반환한다(ExtractableResponse<Response> response) {
         String id = response
@@ -139,6 +159,21 @@ public class ThemeControllerTest {
                 .extract();
 
         String id = response
+                .header(HttpHeaders.LOCATION)
+                .split("/")[2];
+        return Long.parseLong(id);
+    }
+
+    private Long 예약_생성_후_번호를_반환한다(String name, LocalDate date, LocalTime time, Long themeId) {
+        ReservationRequest request = new ReservationRequest(name, date, time, themeId);
+
+        String id =  RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .extract()
                 .header(HttpHeaders.LOCATION)
                 .split("/")[2];
         return Long.parseLong(id);

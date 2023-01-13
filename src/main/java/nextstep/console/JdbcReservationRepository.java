@@ -7,6 +7,8 @@ import nextstep.repository.ReservationRepository;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -47,6 +49,25 @@ public class JdbcReservationRepository implements ReservationRepository {
             throw new RuntimeException(e);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE theme_id = ?";
+        List<Reservation> reservations = new ArrayList<>();
+        try (Connection con = createConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Long id = rs.getLong("id");
+                reservations.add(JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return reservations;
     }
 
     @Override

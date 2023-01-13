@@ -2,20 +2,25 @@ package nextstep.web;
 
 import nextstep.dto.ThemeRequest;
 import nextstep.dto.ThemeResponse;
+import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ThemeController {
     private final ThemeService themeService;
+    private final ReservationService reservationService;
 
-    public ThemeController(ThemeService themeService) {
+    public ThemeController(ThemeService themeService, ReservationService reservationService) {
         this.themeService = themeService;
+        this.reservationService = reservationService;
     }
 
     @PostMapping("/themes")
@@ -32,7 +37,8 @@ public class ThemeController {
 
     @DeleteMapping("/themes/{id}")
     public ResponseEntity<Void>  deleteTheme(@PathVariable Long id) {
-        themeService.deleteTheme(id);
+        List<Reservation> reservationsInTheme = reservationService.getReservationByThemeId(id);
+        themeService.deleteTheme(id, reservationsInTheme);
         return ResponseEntity.noContent().build();
     }
 
