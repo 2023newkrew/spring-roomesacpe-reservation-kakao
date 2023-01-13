@@ -8,6 +8,8 @@ import web.reservation.dto.ReservationRequestDto;
 import web.reservation.dto.ReservationResponseDto;
 import web.reservation.exception.ReservationException;
 import web.reservation.repository.ReservationRepository;
+import web.theme.exception.ThemeException;
+import web.theme.repository.ThemeRepository;
 
 
 @Service
@@ -15,9 +17,18 @@ import web.reservation.repository.ReservationRepository;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
 
     public long reservation(ReservationRequestDto requestDto) {
+        if (isNotExistTheme(requestDto.getThemeId())) {
+            throw new ThemeException(ErrorCode.THEME_NOT_FOUND);
+        }
         return reservationRepository.save(requestDto.toEntity());
+    }
+
+    private boolean isNotExistTheme(long themeId) {
+        return themeRepository.findById(themeId)
+                .isEmpty();
     }
 
     public ReservationResponseDto findReservationById(long reservationId) {

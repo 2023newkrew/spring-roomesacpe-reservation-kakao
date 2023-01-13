@@ -1,7 +1,7 @@
 package web.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import web.entity.Reservation;
 
@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationRequestDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd")

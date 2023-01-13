@@ -83,18 +83,6 @@ public class ReservationRepositoryTest {
             assertThatThrownBy(() -> reservationRepository.save(reservation))
                     .isInstanceOf(ReservationException.class);
         }
-
-        @Test
-        void should_throwException_when_notExistTheme() {
-            LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
-            String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, -1L);
-
-            assertThatThrownBy(() -> reservationRepository.save(reservation))
-                    .isInstanceOf(ThemeException.class)
-                    .hasMessage(ErrorCode.THEME_NOT_FOUND.getMessage());
-        }
     }
 
     @Nested
