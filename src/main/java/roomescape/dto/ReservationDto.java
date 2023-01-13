@@ -1,14 +1,14 @@
 package roomescape.dto;
 
-public class ReservationRequest {
+public class ReservationDto {
 
     private String date;
     private String time;
     private String name;
 
-    public ReservationRequest() {}
+    public ReservationDto() {}
 
-    public ReservationRequest(String date, String time, String name) {
+    public ReservationDto(String date, String time, String name) {
         this.date = date;
         this.time = time;
         this.name = name;
