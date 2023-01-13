@@ -58,7 +58,9 @@ public class ThemeService {
 
     @Transactional
     public void deleteTheme(Long themeId) {
-        reservationRepository.deleteReservationByThemeId(themeId);
-        themeRepository.deleteTheme(themeId);
+        Theme theme = themeRepository.findThemeById(themeId)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
+        reservationRepository.deleteReservationByThemeId(theme.getId());
+        themeRepository.deleteTheme(theme.getId());
     }
 }

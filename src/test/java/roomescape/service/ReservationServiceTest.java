@@ -11,7 +11,7 @@ import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 import roomescape.exception.RoomEscapeException;
-import roomescape.repository.ReservationWebRepository;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeRepository;
 
 import java.time.LocalDate;
@@ -29,7 +29,7 @@ class ReservationServiceTest {
     ReservationService reservationService;
 
     @Autowired
-    ReservationWebRepository reservationWebRepository;
+    ReservationRepository reservationRepository;
 
     @Autowired
     ThemeRepository themeRepository;
@@ -38,12 +38,14 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        reservationWebRepository.deleteAllReservations();
+        reservationRepository.deleteAllReservations();
+        themeRepository.deleteAll();
     }
 
     @AfterEach
     void tearDown() {
-        reservationWebRepository.deleteAllReservations();
+        reservationRepository.deleteAllReservations();
+        themeRepository.deleteAll();
     }
 
     @DisplayName("ReservationRequest를 통해 새로운 Reservation을 등록할 수 있다.")
@@ -144,7 +146,7 @@ class ReservationServiceTest {
         reservationService.deleteReservation(reservationId);
 
         // then
-        Optional<Reservation> reservation = reservationWebRepository.getReservation(reservationId);
+        Optional<Reservation> reservation = reservationRepository.getReservation(reservationId);
         assertThat(reservation).isEmpty();
     }
 

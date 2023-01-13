@@ -74,4 +74,10 @@ public class ThemeWebRepository implements ThemeRepository {
         String sql = "DELETE FROM theme WHERE id = (?)";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM theme";
+        jdbcTemplate.execute(sql);
+    }
 }

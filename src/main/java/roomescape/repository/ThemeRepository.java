@@ -17,4 +17,6 @@ public interface ThemeRepository {
     void changeTheme(Long id, String name, String desc, int price);
 
     void deleteTheme(Long id);
+
+    void deleteAll();
 }
