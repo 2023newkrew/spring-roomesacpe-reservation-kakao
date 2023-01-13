@@ -18,7 +18,7 @@ public class ReservationService {
     }
 
     public Reservation create(Reservation reservation) {
-        return reservationRepository.create(reservation);
+        return reservationRepository.save(reservation);
     }
 
     @Transactional(readOnly = true)
@@ -27,7 +27,7 @@ public class ReservationService {
     }
 
     public Boolean delete(long id) {
-        return reservationRepository.delete(id);
+        return reservationRepository.deleteById(id);
     }
 
     public void clear() {

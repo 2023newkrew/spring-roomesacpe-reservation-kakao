@@ -34,7 +34,7 @@ class ReservationRepositoryTest {
     @BeforeEach
     void setUp() {
         Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        themeRepository.create(theme);
+        themeRepository.save(theme);
 
         this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", 1L);
         this.reservationDuplicated = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", 1L);
@@ -43,14 +43,14 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약 삽입")
     void createReservationTest() {
-        Reservation created = reservationRepository.create(reservation);
+        Reservation created = reservationRepository.save(reservation);
         assertThat(reservationDataEquals(created, reservation)).isTrue();
     }
 
     @Test
     @DisplayName("예약 ID로 조회")
     void findByIdTest() {
-        Reservation created = reservationRepository.create(reservation);
+        Reservation created = reservationRepository.save(reservation);
         Reservation result = reservationRepository.findById(created.getId());
         assertThat(result).isEqualTo(created);
     }
@@ -58,32 +58,32 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 있을 때)")
     void findByDateTimeTest() {
-        reservationRepository.create(reservation);
-        Boolean result = reservationRepository.findByDateTime(reservation.getDate(), reservation.getTime());
+        reservationRepository.save(reservation);
+        Boolean result = reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime());
         assertThat(result).isEqualTo(true);
     }
 
     @Test
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 없을 때")
     void findByDateTimeEmptyTest() {
-        Boolean result = reservationRepository.findByDateTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
+        Boolean result = reservationRepository.findByDateAndTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
         assertThat(result).isEqualTo(false);
     }
 
     @Test
     @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생")
     void duplicateTimeReservationThrowException() {
-        reservationRepository.create(reservation);
+        reservationRepository.save(reservation);
         Assertions.assertThatThrownBy(
-                () -> reservationRepository.create(reservationDuplicated)
+                () -> reservationRepository.save(reservationDuplicated)
         ).isInstanceOf(ReservationException.class);
     }
 
     @Test
     @DisplayName("예약 삭제")
     void deleteReservation() {
-        Reservation created = reservationRepository.create(reservation);
-        Boolean result = reservationRepository.delete(created.getId());
+        Reservation created = reservationRepository.save(reservation);
+        Boolean result = reservationRepository.deleteById(created.getId());
         assertThat(result).isEqualTo(true);
 
         assertThatThrownBy(

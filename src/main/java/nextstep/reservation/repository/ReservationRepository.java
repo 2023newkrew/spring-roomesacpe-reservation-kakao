@@ -6,13 +6,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public interface ReservationRepository {
-    Reservation create(Reservation reservation);
+    Reservation save(Reservation reservation);
 
     Reservation findById(long id);
 
-    Boolean findByDateTime(LocalDate date, LocalTime time);
+    Boolean findByDateAndTime(LocalDate date, LocalTime time);
 
-    Boolean delete(long id);
+    Boolean deleteById(long id);
 
     void clear();
 }

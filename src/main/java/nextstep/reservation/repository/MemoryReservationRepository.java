@@ -17,8 +17,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     private static final AtomicLong reservationCount = new AtomicLong(1);
 
     @Override
-    public Reservation create(Reservation reservation) {
-        if (findByDateTime(reservation.getDate(), reservation.getTime())) {
+    public Reservation save(Reservation reservation) {
+        if (findByDateAndTime(reservation.getDate(), reservation.getTime())) {
             throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
         Long id = reservationCount.getAndIncrement();
@@ -32,7 +32,7 @@ public class MemoryReservationRepository implements ReservationRepository {
         return reservationList.getOrDefault(id, null);
     }
     @Override
-    public Boolean findByDateTime(LocalDate date, LocalTime time) {
+    public Boolean findByDateAndTime(LocalDate date, LocalTime time) {
         return reservationList
                 .values()
                 .stream()
@@ -40,7 +40,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean delete(long id) {
+    public Boolean deleteById(long id) {
         if (reservationList.containsKey(id)) {
             reservationList.remove(id);
             return true;

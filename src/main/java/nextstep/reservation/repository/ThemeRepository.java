@@ -5,7 +5,7 @@ import nextstep.reservation.entity.Theme;
 import java.util.List;
 
 public interface ThemeRepository {
-    Theme create(Theme theme);
+    Theme save(Theme theme);
 
     List<Theme> findAll();
 

@@ -32,7 +32,7 @@ class JdbcThemeRepositoryTest {
         //given
 
         //when
-        Theme created = jdbcThemeRepository.create(theme);
+        Theme created = jdbcThemeRepository.save(theme);
 
         //then
         assertThat(themeTestEquals(theme, created)).isTrue();
@@ -43,8 +43,8 @@ class JdbcThemeRepositoryTest {
     @DisplayName("전체 조회")
     void findAll() {
         //given
-        Theme created = jdbcThemeRepository.create(theme);
-        Theme created2 = jdbcThemeRepository.create(theme);
+        Theme created = jdbcThemeRepository.save(theme);
+        Theme created2 = jdbcThemeRepository.save(theme);
 
         //when
         List<Theme> founded = jdbcThemeRepository.findAll();
@@ -57,7 +57,7 @@ class JdbcThemeRepositoryTest {
     @DisplayName("id를 통한 삭제")
     void deleteById() {
         //given
-        Theme created = jdbcThemeRepository.create(theme);
+        Theme created = jdbcThemeRepository.save(theme);
 
         //when
         int result = jdbcThemeRepository.deleteById(created.getId());
@@ -70,8 +70,8 @@ class JdbcThemeRepositoryTest {
     @DisplayName("테이블 전체 삭제")
     void clear() {
         //given
-        Theme created = jdbcThemeRepository.create(theme);
-        Theme created2 = jdbcThemeRepository.create(theme);
+        Theme created = jdbcThemeRepository.save(theme);
+        Theme created2 = jdbcThemeRepository.save(theme);
 
         //when
         jdbcThemeRepository.clear();

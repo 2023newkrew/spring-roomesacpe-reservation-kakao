@@ -19,7 +19,7 @@ public class JdbcThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public Theme create(Theme theme) {
+    public Theme save(Theme theme) {
         String sql = "insert into THEME (name, desc, price) values (?, ?, ?)";
         KeyHolder themeKeyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((con -> {

@@ -17,7 +17,7 @@ public class ThemeService {
     }
 
     public Theme create(Theme theme) {
-        return themeRepository.create(theme);
+        return themeRepository.save(theme);
     }
 
     @Transactional(readOnly = true)
