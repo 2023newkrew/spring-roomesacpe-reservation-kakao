@@ -2,7 +2,9 @@ package nextstep.web;
 
 import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.repository.ReservationRepository;
+import nextstep.repository.ThemeRepository;
 import nextstep.service.RoomEscapeService;
+import nextstep.service.ThemeService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -22,5 +24,15 @@ public class RoomEscapeApplication {
     @Bean
     public RoomEscapeService roomEscapeService(ReservationRepository reservationRepository) {
         return new RoomEscapeService(reservationRepository);
+    }
+
+    @Bean
+    public ThemeRepository themeRepository(JdbcTemplate jdbcTemplate) {
+        return new ThemeRepository(jdbcTemplate);
+    }
+
+    @Bean
+    public ThemeService themeService(ThemeRepository themeRepository) {
+        return new ThemeService(themeRepository);
     }
 }

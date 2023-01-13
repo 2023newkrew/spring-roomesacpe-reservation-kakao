@@ -9,7 +9,6 @@ import io.restassured.response.Response;
 import java.util.List;
 import nextstep.web.dto.ThemeRequest;
 import nextstep.web.dto.ThemeResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +50,7 @@ public class ThemeControllerTest {
     @Test
     void getTheme() {
         long id1 = createTheme("name1", "desc1", 10000);
-//        long id2 = createTheme("name2", "desc2", 20000);
+        long id2 = createTheme("name2", "desc2", 20000);
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().log().all()
@@ -65,8 +64,8 @@ public class ThemeControllerTest {
         assertThat(themes)
                 .extracting(ThemeResponse::getId, ThemeResponse::getName, ThemeResponse::getDesc, ThemeResponse::getPrice)
                 .contains(
-                        tuple(id1, "name1", "desc1", 10000)
-//                        tuple(id2, "name2", "desc2", 20000)
+                        tuple(id1, "name1", "desc1", 10000),
+                        tuple(id2, "name2", "desc2", 20000)
                 );
     }
 
