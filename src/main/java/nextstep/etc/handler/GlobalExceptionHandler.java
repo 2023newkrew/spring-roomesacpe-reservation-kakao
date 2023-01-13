@@ -10,23 +10,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<?> errorHandler(Throwable e) {
-        BaseException baseException = getBaseException(e);
-
-        return new ResponseEntity<>(baseException, baseException.getHttpStatus());
-
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<?> errorHandler(BaseException e) {
+        return new ResponseEntity<>(e, e.getHttpStatus());
     }
 
-    private BaseException getBaseException(Throwable e) {
-        if (e instanceof BaseException) {
-            return (BaseException) e;
-        }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> errorHandler(MethodArgumentNotValidException e) {
+        BaseException baseException = new BaseException(e);
 
-        if (e instanceof MethodArgumentNotValidException) {
-            return new BaseException((MethodArgumentNotValidException) e);
-        }
+        return new ResponseEntity<>(baseException, baseException.getHttpStatus());
+    }
 
-        return new BaseException(e);
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<?> errorHandler(Throwable e) {
+        BaseException baseException = new BaseException(e);
+
+        return new ResponseEntity<>(baseException, baseException.getHttpStatus());
     }
 }
