@@ -1,13 +1,13 @@
 package nextstep.reservation.service;
 
-import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 
 public interface ReservationService {
 
-    ReservationDTO create(ReservationRequest request);
+    ReservationResponse create(ReservationRequest request);
 
-    ReservationDTO getById(Long id);
+    ReservationResponse getById(Long id);
 
     boolean deleteById(Long id);
 }

@@ -1,8 +1,8 @@
 package nextstep.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +21,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody @Validated ReservationRequest request) {
-        ReservationDTO reservation = service.create(request);
+        ReservationResponse reservation = service.create(request);
         URI location = URI.create(RESERVATION_PATH + "/" + reservation.getId());
 
         return ResponseEntity.created(location)

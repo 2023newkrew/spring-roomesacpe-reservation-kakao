@@ -5,8 +5,8 @@ import nextstep.console.dto.CommandType;
 import nextstep.console.dto.Params;
 import nextstep.console.view.RoomEscapeInput;
 import nextstep.console.view.RoomEscapeOutput;
-import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.service.ReservationService;
 
 import java.util.Map;
@@ -42,13 +42,13 @@ public class RoomEscapeController {
 
     private void add(Params params) {
         ReservationRequest request = params.getReservationRequest();
-        ReservationDTO reservation = service.create(request);
+        ReservationResponse reservation = service.create(request);
         output.printAddReservation(reservation);
     }
 
     private void find(Params params) {
         Long id = params.getLong();
-        ReservationDTO reservation = service.getById(id);
+        ReservationResponse reservation = service.getById(id);
         output.printFindReservation(reservation);
     }
 

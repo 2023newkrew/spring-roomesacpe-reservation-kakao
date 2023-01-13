@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @AllArgsConstructor
 @Data
-public class ReservationDTO {
+public class ReservationResponse {
 
     private final Long id;
 

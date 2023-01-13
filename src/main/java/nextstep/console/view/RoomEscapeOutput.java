@@ -1,6 +1,6 @@
 package nextstep.console.view;
 
-import nextstep.reservation.dto.ReservationDTO;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.dto.ThemeDTO;
 
 import java.util.Objects;
@@ -16,19 +16,19 @@ public class RoomEscapeOutput {
         System.out.println("- 종료: quit");
     }
 
-    public void printAddReservation(ReservationDTO reservation) {
+    public void printAddReservation(ReservationResponse reservation) {
         System.out.println("예약이 등록되었습니다.");
         printSimpleReservationInfo(reservation);
     }
 
-    private void printSimpleReservationInfo(ReservationDTO reservation) {
+    private void printSimpleReservationInfo(ReservationResponse reservation) {
         System.out.println("예약 번호: " + reservation.getId());
         System.out.println("예약 날짜: " + reservation.getDate());
         System.out.println("예약 시간: " + reservation.getTime());
         System.out.println("예약자 이름: " + reservation.getName());
     }
 
-    public void printFindReservation(ReservationDTO reservation) {
+    public void printFindReservation(ReservationResponse reservation) {
         if (Objects.isNull(reservation)) {
             System.out.println("예약이 없습니다.");
             return;

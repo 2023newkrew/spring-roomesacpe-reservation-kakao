@@ -5,8 +5,8 @@ import nextstep.etc.exception.ErrorMessage;
 import nextstep.etc.exception.ReservationConflictException;
 import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.domain.Theme;
-import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -23,21 +23,21 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
-    public ReservationDTO create(ReservationRequest request) {
+    public ReservationResponse create(ReservationRequest request) {
         Reservation reservation = ReservationMapper.INSTANCE.fromRequest(request, THEME);
         if (repository.existsByDateAndTime(reservation)) {
             throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
         }
         reservation = repository.insert(reservation);
 
-        return ReservationMapper.INSTANCE.toDto(reservation);
+        return ReservationMapper.INSTANCE.toResponse(reservation);
     }
 
     @Override
-    public ReservationDTO getById(Long id) {
+    public ReservationResponse getById(Long id) {
         Reservation reservation = repository.getById(id);
 
-        return ReservationMapper.INSTANCE.toDto(reservation);
+        return ReservationMapper.INSTANCE.toResponse(reservation);
     }
 
     @Transactional

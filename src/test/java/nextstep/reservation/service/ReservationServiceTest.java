@@ -1,7 +1,7 @@
 package nextstep.reservation.service;
 
-import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -31,7 +31,7 @@ class ReservationServiceTest {
         @ParameterizedTest
         @MethodSource
         void should_idIs1_when_created(ReservationRequest request) {
-            ReservationDTO reservation = service.create(request);
+            ReservationResponse reservation = service.create(request);
 
             Assertions.assertThat(reservation.getId())
                     .isOne();
@@ -71,7 +71,7 @@ class ReservationServiceTest {
             ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현");
             service.create(request);
 
-            ReservationDTO reservation = service.create(anotherRequest);
+            ReservationResponse reservation = service.create(anotherRequest);
 
             Assertions.assertThat(reservation.getId())
                     .isEqualTo(2L);
@@ -96,9 +96,9 @@ class ReservationServiceTest {
             ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현");
             service.create(request);
 
-            ReservationDTO reservationDTO = service.getById(id);
+            ReservationResponse reservationResponse = service.getById(id);
 
-            Assertions.assertThat(reservationDTO)
+            Assertions.assertThat(reservationResponse)
                     .isNull();
         }
 
@@ -113,9 +113,9 @@ class ReservationServiceTest {
             );
             requests.forEach(service::create);
 
-            ReservationDTO reservationDTO = service.getById(id);
+            ReservationResponse reservationResponse = service.getById(id);
 
-            Assertions.assertThat(reservationDTO.getName())
+            Assertions.assertThat(reservationResponse.getName())
                     .isEqualTo(reserverName);
         }
 
@@ -149,10 +149,10 @@ class ReservationServiceTest {
         @Test
         void should_returnNull_when_getDeleted() {
             ReservationRequest request = getTestRequest();
-            ReservationDTO reservation = service.create(request);
+            ReservationResponse reservation = service.create(request);
             service.deleteById(reservation.getId());
 
-            ReservationDTO actual = service.getById(reservation.getId());
+            ReservationResponse actual = service.getById(reservation.getId());
 
             Assertions.assertThat(actual)
                     .isNull();
@@ -162,7 +162,7 @@ class ReservationServiceTest {
         @Test
         void should_returnResult_when_givenId() {
             ReservationRequest request = getTestRequest();
-            ReservationDTO reservation = service.create(request);
+            ReservationResponse reservation = service.create(request);
             service.deleteById(reservation.getId());
 
             boolean actual = service.deleteById(reservation.getId());

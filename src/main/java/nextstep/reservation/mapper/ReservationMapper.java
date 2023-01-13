@@ -2,8 +2,8 @@ package nextstep.reservation.mapper;
 
 import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.domain.Theme;
-import nextstep.reservation.dto.ReservationDTO;
 import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -17,7 +17,5 @@ public interface ReservationMapper {
     @Mapping(target = "name", source = "request.name")
     Reservation fromRequest(ReservationRequest request, Theme theme);
 
-    ReservationDTO toDto(Reservation reservation);
-
-    Reservation fromDto(ReservationDTO dto);
+    ReservationResponse toResponse(Reservation reservation);
 }
