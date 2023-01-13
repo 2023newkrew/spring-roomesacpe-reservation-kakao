@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import web.entity.Theme;
 import web.exception.ErrorCode;
 import web.reservation.dto.ReservationRequestDto;
 import web.reservation.repository.ReservationRepository;
@@ -18,6 +19,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +37,29 @@ class ReservationServiceTest {
 
     @Nested
     class ReservationTest {
+
+        @Test
+        void should_successfully_when_existTheme() {
+            final var today = LocalDate.now();
+            final var now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+            final var name = "name";
+            final var existThemeId = 1L;
+            final var reservationId = 1L;
+            final var requestDto = ReservationRequestDto.builder()
+                    .date(today)
+                    .time(now)
+                    .name(name)
+                    .themeId(existThemeId)
+                    .build();
+            final var theme = Theme.of(existThemeId, "name", "desc", 22000);
+
+            when(themeRepository.findById(existThemeId)).thenReturn(Optional.of(theme));
+            when(reservationRepository.save(any())).thenReturn(reservationId);
+
+            final var result = reservationService.reservation(requestDto);
+
+            assertThat(result).isEqualTo(reservationId);
+        }
 
         @Test
         void should_throwException_when_notExistTheme() {
