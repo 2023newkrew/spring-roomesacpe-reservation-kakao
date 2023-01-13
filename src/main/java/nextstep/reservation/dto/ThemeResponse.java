@@ -5,21 +5,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @RequiredArgsConstructor
 @Data
 @Setter(AccessLevel.NONE)
-public class ReservationResponse {
-
-    private final Long id;
-
-    private final LocalDate date;
-
-    private final LocalTime time;
+public class ThemeResponse {
 
     private final String name;
 
-    private final ThemeResponse theme;
+    private final String desc;
+
+    private final Integer price;
 }

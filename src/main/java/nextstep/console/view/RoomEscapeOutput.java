@@ -1,7 +1,7 @@
 package nextstep.console.view;
 
 import nextstep.reservation.dto.ReservationResponse;
-import nextstep.reservation.dto.ThemeDTO;
+import nextstep.reservation.dto.ThemeResponse;
 
 import java.util.Objects;
 
@@ -37,7 +37,7 @@ public class RoomEscapeOutput {
         printTheme(reservation.getTheme());
     }
 
-    private void printTheme(ThemeDTO theme) {
+    private void printTheme(ThemeResponse theme) {
         System.out.println("예약 테마 이름: " + theme.getName());
         System.out.println("예약 테마 설명: " + theme.getDesc());
         System.out.println("예약 테마 가격: " + theme.getPrice());
