@@ -19,7 +19,7 @@ public enum TimeTable {
         this.time = time;
     }
 
-    static boolean contains(LocalTime time){
+    public static boolean contains(LocalTime time){
         return Arrays.stream(TimeTable.values()).anyMatch(tt -> tt.time.equals(time));
     }
 

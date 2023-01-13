@@ -25,7 +25,7 @@ public class ThemeController {
     private final ThemeService themeService;
 
     @PostMapping("")
-    ResponseEntity createTheme(@RequestBody ThemeCreateDto themeCreateDto) throws SQLException {
+    ResponseEntity createTheme(@RequestBody ThemeCreateDto themeCreateDto) {
         return ResponseEntity.created(
                 URI.create(String.format("/themes/%d", themeService.createTheme(themeCreateDto)))).build();
     }

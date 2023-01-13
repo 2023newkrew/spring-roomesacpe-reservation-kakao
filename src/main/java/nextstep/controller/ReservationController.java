@@ -27,21 +27,19 @@ public class ReservationController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO)
-            throws SQLException {
+    public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
         return ResponseEntity.created(URI.create(String.format("/reservations/%d",
                 reservationService.createReservation(reservationRequestDTO)))).build();
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<ReservationResponseDTO> findReservation(@PathVariable(value = "id") Long id)
-            throws SQLException {
+    public ResponseEntity<ReservationResponseDTO> findReservation(@PathVariable(value = "id") Long id) {
         ReservationResponseDTO response = reservationService.findReservation(id);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity deleteReservation(@PathVariable(value = "id") Long id) throws SQLException {
+    public ResponseEntity deleteReservation(@PathVariable(value = "id") Long id) {
         reservationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -70,10 +70,10 @@ public class ThemeJdbcRepositoryImpl implements ThemeRepository {
         int row = 0;
         try {
             ps = connectionHandler.createPreparedStatement(ThemeJdbcSql.UPDATE, new String[]{"id"});
-            ps.setLong(1, themeEditDto.getId());
-            ps.setString(2, themeEditDto.getName());
-            ps.setString(3, themeEditDto.getDescription());
-            ps.setInt(4, themeEditDto.getPrice());
+            ps.setString(1, themeEditDto.getName());
+            ps.setString(2, themeEditDto.getDescription());
+            ps.setInt(3, themeEditDto.getPrice());
+            ps.setLong(4, themeEditDto.getId());
             row = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
