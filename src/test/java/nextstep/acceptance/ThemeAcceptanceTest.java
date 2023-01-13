@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.equalTo;
 
 
@@ -213,6 +214,19 @@ public class ThemeAcceptanceTest {
                 // then
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 테마_생성시_동일한_이름의_테마가_존재하면_예외가_발생한다() {
+        // given
+        CreateThemeRequest themeRequest = new CreateThemeRequest("테마1", "테마내용입니다", 19000);
+        createTheme(themeRequest);
+
+        // when
+        ExtractableResponse<Response> response = createTheme(themeRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     private ExtractableResponse<Response> createTheme(CreateThemeRequest themeRequest) {
