@@ -1,17 +1,13 @@
-package nextstep.entity;
+package nextstep.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 @AllArgsConstructor
-public class Theme {
+public class ThemeResponseDto {
 
-    private Long id;
+    private final Long id;
 
     private final String name;
 
