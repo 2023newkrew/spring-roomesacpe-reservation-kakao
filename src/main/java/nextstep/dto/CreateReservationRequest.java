@@ -7,11 +7,13 @@ public class CreateReservationRequest {
     private LocalDate date;
     private LocalTime time;
     private String name;
+    public Long themeId;
 
-    public CreateReservationRequest(LocalDate date, LocalTime time, String name) {
+    public CreateReservationRequest(LocalDate date, LocalTime time, String name, Long getThemeId) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeId = getThemeId;
     }
 
     public LocalDate getDate() {
@@ -24,5 +26,9 @@ public class CreateReservationRequest {
 
     public String getName() {
         return name;
+    }
+
+    public Long getThemeId() {
+        return themeId;
     }
 }
