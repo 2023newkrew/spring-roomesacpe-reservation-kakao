@@ -4,10 +4,9 @@ import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.domain.Theme;
 import nextstep.reservation.repository.ReservationRepository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FakeReservationRepository implements ReservationRepository {
 
@@ -19,12 +18,11 @@ public class FakeReservationRepository implements ReservationRepository {
 
 
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+    public boolean existsByDateAndTime(Reservation reservation) {
         return reservations.values()
                 .stream()
-                .anyMatch(r -> r.getDate()
-                        .equals(date) && r.getTime()
-                        .equals(time));
+                .anyMatch(r -> Objects.equals(reservation.getDate(), r.getDate()) &&
+                        Objects.equals(reservation.getTime(), r.getTime()));
     }
 
     @Override

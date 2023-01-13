@@ -25,7 +25,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Long create(ReservationRequest request) {
         Reservation reservation = ReservationMapper.INSTANCE.fromRequest(request, THEME);
-        if (repository.existsByDateAndTime(reservation.getDate(), reservation.getTime())) {
+        if (repository.existsByDateAndTime(reservation)) {
             throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
         }
 

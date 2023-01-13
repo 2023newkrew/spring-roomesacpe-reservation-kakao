@@ -3,10 +3,8 @@ package nextstep;
 import nextstep.console.controller.RoomEscapeController;
 import nextstep.console.view.RoomEscapeInput;
 import nextstep.console.view.RoomEscapeOutput;
-import nextstep.reservation.dao.ReservationDAO;
-import nextstep.reservation.dao.SimpleReservationDAO;
 import nextstep.reservation.repository.ReservationRepository;
-import nextstep.reservation.repository.ReservationRepositoryImpl;
+import nextstep.reservation.repository.SimpleReservationRepository;
 import nextstep.reservation.service.ReservationService;
 import nextstep.reservation.service.ReservationServiceImpl;
 
@@ -26,8 +24,7 @@ public class RoomEscapeApplication {
     }
 
     private static ReservationService createService() {
-        ReservationDAO dao = new SimpleReservationDAO();
-        ReservationRepository repository = new ReservationRepositoryImpl(dao);
+        ReservationRepository repository = new SimpleReservationRepository();
 
         return new ReservationServiceImpl(repository);
     }

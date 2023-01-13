@@ -1,7 +1,7 @@
 package nextstep.etc.util;
 
-import nextstep.reservation.dto.ReservationDTO;
-import nextstep.reservation.dto.ThemeDTO;
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.domain.Theme;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -18,32 +18,34 @@ public class StatementCreator {
     private static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
     public static PreparedStatement createSelectByDateAndTimeStatement(
-            Connection connection, Date date, Time time) throws SQLException {
+            Connection connection, Reservation reservation) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(SELECT_BY_DATE_AND_TIME_SQL);
-        ps.setDate(1, date);
-        ps.setTime(2, time);
+        LocalDate date = reservation.getDate();
+        LocalTime time = reservation.getTime();
+        ps.setDate(1, Date.valueOf(date));
+        ps.setTime(2, Time.valueOf(time));
 
         return ps;
     }
 
     public static PreparedStatement createInsertStatement(
-            Connection connection, ReservationDTO dto) throws SQLException {
+            Connection connection, Reservation reservation) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
-        setReservation(ps, dto);
+        setReservation(ps, reservation);
 
         return ps;
     }
 
-    private static void setReservation(PreparedStatement ps, ReservationDTO dto) throws SQLException {
-        LocalDate date = dto.getDate();
-        LocalTime time = dto.getTime();
+    private static void setReservation(PreparedStatement ps, Reservation reservation) throws SQLException {
+        LocalDate date = reservation.getDate();
+        LocalTime time = reservation.getTime();
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));
-        ps.setString(3, dto.getName());
-        setThemeDTO(ps, dto.getTheme());
+        ps.setString(3, reservation.getName());
+        setTheme(ps, reservation.getTheme());
     }
 
-    private static void setThemeDTO(PreparedStatement ps, ThemeDTO theme) throws SQLException {
+    private static void setTheme(PreparedStatement ps, Theme theme) throws SQLException {
         ps.setString(4, theme.getName());
         ps.setString(5, theme.getDesc());
         ps.setInt(6, theme.getPrice());

@@ -1,7 +1,7 @@
 package nextstep.etc.util;
 
-import nextstep.reservation.dto.ReservationDTO;
-import nextstep.reservation.dto.ThemeDTO;
+import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.domain.Theme;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -11,31 +11,34 @@ import java.sql.Time;
 public class ResultSetParser {
 
     public static Boolean existsRow(ResultSet resultSet) throws SQLException {
-        resultSet.last();
-
-        return resultSet.getRow() > 0;
+        return getRows(resultSet) > 0;
     }
 
-    public static ReservationDTO parseReservationDto(ResultSet resultSet) throws SQLException {
+    private static int getRows(ResultSet resultSet) throws SQLException {
         resultSet.last();
-        if (resultSet.getRow() == 0) {
+
+        return resultSet.getRow();
+    }
+
+    public static Reservation parseReservation(ResultSet resultSet) throws SQLException {
+        if (getRows(resultSet) == 0) {
             return null;
         }
 
         Date date = resultSet.getDate("date");
         Time time = resultSet.getTime("time");
 
-        return new ReservationDTO(
+        return new Reservation(
                 resultSet.getLong("id"),
                 date.toLocalDate(),
                 time.toLocalTime(),
                 resultSet.getString("name"),
-                parseThemeDto(resultSet)
+                parseTheme(resultSet)
         );
     }
 
-    private static ThemeDTO parseThemeDto(ResultSet resultSet) throws SQLException {
-        return new ThemeDTO(
+    private static Theme parseTheme(ResultSet resultSet) throws SQLException {
+        return new Theme(
                 resultSet.getString("theme_name"),
                 resultSet.getString("theme_desc"),
                 resultSet.getInt("theme_price")
@@ -43,7 +46,7 @@ public class ResultSetParser {
     }
 
     public static Long parseKey(ResultSet resultSet) throws SQLException {
-        resultSet.last();
+        resultSet.next();
 
         return resultSet.getLong(1);
     }

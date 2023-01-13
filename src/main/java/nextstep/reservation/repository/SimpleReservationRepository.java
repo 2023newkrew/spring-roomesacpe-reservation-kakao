@@ -1,14 +1,12 @@
-package nextstep.reservation.dao;
+package nextstep.reservation.repository;
 
-import lombok.AllArgsConstructor;
 import nextstep.etc.util.ResultSetParser;
 import nextstep.etc.util.StatementCreator;
-import nextstep.reservation.dto.ReservationDTO;
+import nextstep.reservation.domain.Reservation;
 
 import java.sql.*;
 
-@AllArgsConstructor
-public class SimpleReservationDAO implements ReservationDAO {
+public class SimpleReservationRepository implements ReservationRepository {
 
     private static final String URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
 
@@ -22,8 +20,8 @@ public class SimpleReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public Boolean existsByDateAndTime(Date date, Time time) {
-        return tryQuery(getExistsByDateAndTimeQuery(date, time));
+    public boolean existsByDateAndTime(Reservation reservation) {
+        return tryQuery(getExistsByDateAndTimeQuery(reservation));
     }
 
     private <R> R tryQuery(QueryFunction<R> func) {
@@ -41,9 +39,9 @@ public class SimpleReservationDAO implements ReservationDAO {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Date date, Time time) {
+    private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = StatementCreator.createSelectByDateAndTimeStatement(connection, date, time);
+            PreparedStatement ps = StatementCreator.createSelectByDateAndTimeStatement(connection, reservation);
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
 
@@ -52,13 +50,13 @@ public class SimpleReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public Long insert(ReservationDTO dto) {
-        return tryQuery(getInsertQuery(dto));
+    public Long insert(Reservation reservation) {
+        return tryQuery(getInsertQuery(reservation));
     }
 
-    private QueryFunction<Long> getInsertQuery(ReservationDTO dto) {
+    private QueryFunction<Long> getInsertQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = StatementCreator.createInsertStatement(connection, dto);
+            PreparedStatement ps = StatementCreator.createInsertStatement(connection, reservation);
             ps.executeUpdate();
             ResultSet keyHolder = ps.getGeneratedKeys();
 
@@ -67,21 +65,21 @@ public class SimpleReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public ReservationDTO getById(Long id) {
+    public Reservation getById(Long id) {
         return tryQuery(getSelectByIdQuery(id));
     }
 
-    private QueryFunction<ReservationDTO> getSelectByIdQuery(Long id) {
+    private QueryFunction<Reservation> getSelectByIdQuery(Long id) {
         return connection -> {
             PreparedStatement ps = StatementCreator.createSelectByIdStatement(connection, id);
             ResultSet rs = ps.executeQuery();
 
-            return ResultSetParser.parseReservationDto(rs);
+            return ResultSetParser.parseReservation(rs);
         };
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    public boolean deleteById(Long id) {
         return tryQuery(getDeleteByIdQuery(id));
     }
 

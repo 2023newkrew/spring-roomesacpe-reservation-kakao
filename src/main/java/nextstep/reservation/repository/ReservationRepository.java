@@ -2,12 +2,9 @@ package nextstep.reservation.repository;
 
 import nextstep.reservation.domain.Reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public interface ReservationRepository {
 
-    boolean existsByDateAndTime(LocalDate date, LocalTime time);
+    boolean existsByDateAndTime(Reservation reservation);
 
     Long insert(Reservation reservation);
 
