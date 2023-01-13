@@ -12,7 +12,7 @@ public interface ReservationRepository {
 
     String findByIdSql = "select * from reservation where id = ?";
     String deleteByIdSql = "delete from reservation where id = ?";
-
+    String deleteByThemeIdSql = "delete from reservation where theme_id = ?";
     String saveSql = "INSERT INTO reservation (date, time, name, theme_id, theme_name, theme_desc, theme_price)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from reservation where date = ? and time = ?";
@@ -58,10 +58,12 @@ public interface ReservationRepository {
     Reservation findById(Long id);
 
     void deleteById(Long id);
+    void deleteByThemeId(Long themeId);
 
     Long save(LocalDate date, LocalTime time, String name, Theme theme);
 
     void createTable() throws SQLException;
 
     void dropTable() throws SQLException;
+
 }

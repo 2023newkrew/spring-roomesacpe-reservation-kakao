@@ -31,6 +31,10 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
+    public void deleteReservationByTheme(Long themeId){
+        reservationRepository.deleteByThemeId(themeId);
+    }
+
     public Long createReservation(LocalDate date, LocalTime time, String name, Theme theme) {
         theme = themeRepository.findByTheme(theme);
         return reservationRepository.save(date, time, name, theme);
