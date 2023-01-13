@@ -47,6 +47,12 @@ public class ReservationMemoryRepository implements ReservationRepository {
         return reservation;
     }
 
+    @Deprecated(since = "step3")
+    @Override
+    public void deleteAll() {
+
+    }
+
     @Override
     public void delete(Long id) {
         reservations.remove(id);

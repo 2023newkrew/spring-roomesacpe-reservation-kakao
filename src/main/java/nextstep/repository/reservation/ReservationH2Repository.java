@@ -71,6 +71,12 @@ public class ReservationH2Repository implements ReservationRepository {
         }
     }
 
+    @Deprecated(since = "step3")
+    @Override
+    public void deleteAll() {
+
+    }
+
     @Override
     public void delete(Long id) {
         Connection con = null;
