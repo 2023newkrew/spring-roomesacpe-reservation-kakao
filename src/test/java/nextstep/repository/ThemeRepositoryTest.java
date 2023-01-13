@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -49,5 +50,24 @@ public class ThemeRepositoryTest {
         // then
         assertThat(savedTheme).isNotEqualTo(Optional.empty());
         assertThat(savedTheme.get()).isEqualTo(theme);
+    }
+
+    @Test
+    void 모든_테마_조회() {
+        // given
+        jdbcTemplate.execute("DELETE FROM reservation");
+        jdbcTemplate.execute("DELETE FROM theme");
+        Theme theme = new Theme("테마2", "지금까지 이런 테마는 없었다.", 20200);
+        themeRepository.save(theme);
+        themeRepository.save(theme);
+        themeRepository.save(theme);
+        themeRepository.save(theme);
+        themeRepository.save(theme);
+
+        // when
+        List<Theme> themes = themeRepository.getAllThemes();
+
+        // then
+        assertThat(themes.size()).isEqualTo(5);
     }
 }

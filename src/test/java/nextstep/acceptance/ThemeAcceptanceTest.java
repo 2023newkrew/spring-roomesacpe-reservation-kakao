@@ -65,6 +65,23 @@ public class ThemeAcceptanceTest {
                 .body("price", equalTo(themeRequest.getPrice()));
     }
 
+    @Test
+    void 모든_테마_조회() {
+        // given
+        CreateThemeRequest themeRequest = new CreateThemeRequest("테마1", "테마내용입니다", 19000);
+        createTheme(themeRequest);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+
+        // when
+                .when().get("/themes")
+
+        // then
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
     private ExtractableResponse<Response> createTheme(CreateThemeRequest themeRequest) {
         return RestAssured
                 .given()
