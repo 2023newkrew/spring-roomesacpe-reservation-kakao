@@ -7,8 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
-
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
@@ -27,16 +25,13 @@ public class JdbcReservationRepository implements ReservationRepository{
 
     @Override
     public Long createReservation(Reservation reservation) {
-        String sql = "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO RESERVATION (date, time, name) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
             ps.setObject(1, reservation.getDate());
             ps.setObject(2, reservation.getTime());
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
             return ps;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
@@ -52,11 +47,10 @@ public class JdbcReservationRepository implements ReservationRepository{
                     LocalDate date = LocalDate.parse(rs.getString("date"));
                     LocalTime time = LocalTime.parse(rs.getString("time"));
                     String name = rs.getString("name");
-                    String themeName = rs.getString("Theme_name");
-                    String themeDesc = rs.getString("Theme_desc");
-                    Integer themePrice = rs.getInt("Theme_price");
-                    Theme theme = new Theme(themeName, themeDesc, themePrice);
-                    return new Reservation((long) reservationId, date, time, name, theme);
+                    String themeName = rs.getString("theme_name");
+                    String themeDesc = rs.getString("theme_desc");
+                    Integer themePrice = rs.getInt("theme_price");
+                    return new Reservation((long) reservationId, date, time, name, themeName, themeDesc, themePrice);
                 });
         return Optional.ofNullable(reservation);
     }

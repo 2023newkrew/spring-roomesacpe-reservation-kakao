@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 
 import org.springframework.test.context.TestExecutionListeners;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,7 +34,7 @@ public class RoomEscapeControllerTest {
                 LocalDate.of(2013,1,12),
                 LocalTime.of(14,0,0),
                 "name23",
-                new Theme("Theme2", "desc", 30000));
+                "Theme2", "desc", 30000);
     }
 
     @DisplayName("방탈출 예약이 가능함")
@@ -53,7 +52,8 @@ public class RoomEscapeControllerTest {
     @DisplayName("방탈출 예약이 되었다면 조회할 수 있음")
     @Test
     void showReservationTest() {
-        Long reserveId= roomEscapeController.createReservation(reservation).getBody();
+        String createBody = roomEscapeController.createReservation(reservation).getBody();
+        String reserveId = createBody.split("/")[2];
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/" + reserveId)
@@ -64,7 +64,8 @@ public class RoomEscapeControllerTest {
     @DisplayName("방탈출 예약이 되었다면 취소할 수 있음")
     @Test
     void deleteReservationTest() {
-        Long deleteId = roomEscapeController.createReservation(reservation).getBody();
+        String createBody = roomEscapeController.createReservation(reservation).getBody();
+        String deleteId = createBody.split("/")[2];
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/" + deleteId)
