@@ -23,14 +23,14 @@ public class ReservationSpringDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private ReservationDao reservationDao;
     private Reservation testReservation;
 
     @BeforeEach
     void setUp() {
-        reservationDao = new ReservationSpringDao(jdbcTemplate);
         testReservation = new Reservation(null, testDate, testTime, "daniel",
-                new Theme(1L, "위너고홈", "병맛 어드벤처 회사 코믹물", 29000));
+                new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
     }
 
     @Test

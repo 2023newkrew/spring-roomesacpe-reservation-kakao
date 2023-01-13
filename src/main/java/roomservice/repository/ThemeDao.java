@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomservice.domain.entity.Theme;
+import roomservice.exceptions.exception.DuplicatedThemeNameException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -35,6 +36,7 @@ public class ThemeDao {
      * @return id automatically given by DB.
      */
     public Long createTheme(Theme theme){
+        checkNameDuplication(theme);
         String sql = "INSERT INTO theme(name, desc, price) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -46,6 +48,14 @@ public class ThemeDao {
         }, keyHolder);
         theme.setId(keyHolder.getKey().longValue());
         return theme.getId();
+    }
+
+    private void checkNameDuplication(Theme theme){
+        String sql = "SELECT COUNT(*) FROM THEME WHERE name = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, theme.getName());
+        if (count >= 1){
+            throw new DuplicatedThemeNameException();
+        }
     }
 
     /**
@@ -66,6 +76,12 @@ public class ThemeDao {
     public Theme selectThemeById(long id) {
         String sql = "SELECT * FROM theme WHERE id = ?";
         List<Theme> result = jdbcTemplate.query(sql, themeRowMapper, id);
+        return result.size()==0 ? null : result.get(0);
+    }
+
+    public Theme selectThemeByName(String name){
+        String sql = "SELECT * FROM theme WHERE name = ?";
+        List<Theme> result = jdbcTemplate.query(sql, themeRowMapper, name);
         return result.size()==0 ? null : result.get(0);
     }
 

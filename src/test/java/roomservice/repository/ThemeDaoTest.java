@@ -8,8 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import roomservice.domain.entity.Theme;
+import roomservice.exceptions.exception.DuplicatedThemeNameException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -26,6 +28,13 @@ public class ThemeDaoTest {
         assertThat(themeDao.selectThemeById(givenId).getName()).isEqualTo("test");
         assertThat(themeDao.selectThemeById(givenId).getDesc()).isEqualTo("test");
         assertThat(themeDao.selectThemeById(givenId).getPrice()).isEqualTo(20000);
+    }
+
+    @Test
+    void throwIfDuplicatedThemeName(){
+        themeDao.createTheme(theme);
+        assertThatThrownBy(()->themeDao.createTheme(theme))
+                .isInstanceOf(DuplicatedThemeNameException.class);
     }
 
     @Test
