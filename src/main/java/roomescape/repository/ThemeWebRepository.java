@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Theme;
+import roomescape.repository.mapper.ThemeMapper;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -20,12 +21,7 @@ public class ThemeWebRepository implements ThemeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) -> new Theme(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getString("desc"),
-            resultSet.getInt("price")
-    );
+    private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) -> ThemeMapper.mapToTheme(resultSet);
 
     @Override
     public List<Theme> findAllThemes() {

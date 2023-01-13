@@ -5,14 +5,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationConsoleRepository;
+import roomescape.repository.ThemeConsoleRepository;
 import roomescape.service.ReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+
+import static roomescape.DataLoader.WANNA_GO_HOME;
 
 @SpringBootApplication
 public class RoomEscapeApplication {
@@ -32,7 +34,10 @@ public class RoomEscapeApplication {
 
     private static void startConsoleApplication() {
         Scanner scanner = new Scanner(System.in);
-        ReservationService reservationService = new ReservationService(new ReservationConsoleRepository(), null);
+        ReservationService reservationService = new ReservationService(
+                new ReservationConsoleRepository(),
+                new ThemeConsoleRepository()
+        );
 
         while (true) {
             System.out.println();
@@ -55,7 +60,7 @@ public class RoomEscapeApplication {
                         date.toString(),
                         time.toString(),
                         name,
-                        1L
+                        WANNA_GO_HOME.getId()
                 );
 
                 Long reservationId;
@@ -67,7 +72,7 @@ public class RoomEscapeApplication {
                     continue;
                 }
 
-                Reservation reservation = new Reservation(reservationId, date, time, name, new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
+                Reservation reservation = new Reservation(reservationId, date, time, name, WANNA_GO_HOME);
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
