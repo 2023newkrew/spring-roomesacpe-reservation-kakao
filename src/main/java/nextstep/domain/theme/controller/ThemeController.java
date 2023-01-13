@@ -1,12 +1,11 @@
 package nextstep.domain.theme.controller;
 
+import nextstep.domain.theme.domain.Theme;
 import nextstep.domain.theme.dto.ThemeRequestDto;
 import nextstep.domain.theme.service.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -24,5 +23,11 @@ public class ThemeController {
     public ResponseEntity<Void> add(@RequestBody ThemeRequestDto themeRequestDto) {
         Long id = themeService.add(themeRequestDto);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Theme> retrieve(@PathVariable Long id) {
+        Theme theme = themeService.retrieve(id);
+        return ResponseEntity.ok().body(theme);
     }
 }

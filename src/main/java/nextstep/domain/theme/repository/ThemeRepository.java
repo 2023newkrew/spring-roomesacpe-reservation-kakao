@@ -11,5 +11,7 @@ public interface ThemeRepository {
 
     Long save(Theme theme);
 
+    Optional<Theme> findById(Long id);
+
     void clear();
 }

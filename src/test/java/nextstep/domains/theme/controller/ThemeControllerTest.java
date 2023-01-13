@@ -80,4 +80,29 @@ public class ThemeControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("이미 존재하는 이름의 테마입니다."));
     }
+
+    @DisplayName("Theme - 테마 조회")
+    @Test
+    void retrieve() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(1))
+                .body("name", is("워너고홈"))
+                .body("desc", is("병맛 어드벤처 회사 코믹물"))
+                .body("price", is(29000));
+    }
+
+    @DisplayName("Theme - 테마 조회 - 존재하지 않는 테마 조회")
+    @Test
+    void retrieveExceptionTest() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes/2")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 테마입니다."));
+    }
 }

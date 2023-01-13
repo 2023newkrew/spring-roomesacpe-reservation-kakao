@@ -4,6 +4,7 @@ import nextstep.domain.theme.domain.Theme;
 import nextstep.domain.theme.dto.ThemeRequestDto;
 import nextstep.domain.theme.repository.ThemeRepository;
 import nextstep.global.exceptions.exception.DuplicatedNameThemeException;
+import nextstep.global.exceptions.exception.ThemeNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,5 +27,10 @@ public class ThemeService {
                 themeRequestDto.getPrice()
         );
         return themeRepository.save(theme);
+    }
+
+    public Theme retrieve(Long id) {
+        return themeRepository.findById(id)
+                .orElseThrow(ThemeNotFoundException::new);
     }
 }

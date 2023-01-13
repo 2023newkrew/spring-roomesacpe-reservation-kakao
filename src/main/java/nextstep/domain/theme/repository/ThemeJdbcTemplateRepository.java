@@ -3,6 +3,7 @@ package nextstep.domain.theme.repository;
 import nextstep.domain.theme.domain.Theme;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,15 +20,16 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Theme> themeRowMapper = (rs, rowNum) ->
+            new Theme(rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("desc"),
+                    rs.getInt("price"));
+
     public Optional<Theme> findByName(String name) {
         try {
             String sql = "SELECT * FROM theme WHERE name = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                            new Theme(rs.getLong("id"),
-                                    rs.getString("name"),
-                                    rs.getString("desc"),
-                                    rs.getInt("price")),
-                    name));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, themeRowMapper, name));
         } catch (
                 EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -46,6 +48,15 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public Optional<Theme> findById(Long id) {
+        try {
+            String sql = "SELECT * FROM theme WHERE id = ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, themeRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void clear() {
