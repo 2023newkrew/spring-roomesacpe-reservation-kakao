@@ -1,9 +1,18 @@
 spring:
+  h2:
+    console:
+      enabled: true
   sql:
     init:
       mode: always
   datasource:
-    url: jdbc:h2:~/test
+    url: jdbc:h2:~/test # 메모리 저장시 jdbc:h2:mem:test
     username: sa
     password:
     driver-class-name: org.h2.Driver
+server:
+  error:
+    include-exception: false
+    include-message: never
+    include-stacktrace: never
+    whitelabel.enabled: true
