@@ -20,6 +20,8 @@ import java.util.List;
 @Repository
 public class ReservationSpringDao implements ReservationDao {
     private JdbcTemplate jdbcTemplate;
+    private ThemeDao themeDao;
+
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
@@ -36,8 +38,9 @@ public class ReservationSpringDao implements ReservationDao {
     };
 
     @Autowired
-    public ReservationSpringDao(JdbcTemplate jdbcTemplate) {
+    public ReservationSpringDao(JdbcTemplate jdbcTemplate, ThemeDao themeDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.themeDao = themeDao;
     }
 
     /**
@@ -80,7 +83,14 @@ public class ReservationSpringDao implements ReservationDao {
     public Reservation selectReservation(long id) {
         String sql = "select * from RESERVATION WHERE id = ?";
         List<Reservation> result = jdbcTemplate.query(sql, reservationRowMapper, id);
-        return result.size()==0 ? null : result.get(0);
+        if(result.size()==0){
+            return null;
+        }
+
+        result.get(0).getTheme().setId(
+                themeDao.selectThemeByName(result.get(0).getTheme().getName())
+                        .getId());
+        return result.get(0);
     }
 
     /**
