@@ -54,7 +54,7 @@ public class ThemeControllerTest {
     }
 
     @Test
-    @DisplayName("테마 목록 조회 GET moethod 테스트")
+    @DisplayName("테마 목록 조회 GET method 테스트")
     void findAllThemeTest() {
         List<Theme> themes = List.of(new Theme(1L, "theme1", "desc1", 1000),
                 new Theme(2L, "theme2", "desc2", 2000),
@@ -71,5 +71,19 @@ public class ThemeControllerTest {
                 .all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(themes.size()));
+    }
+
+    @Test
+    @DisplayName("테마 삭제 DELETE method 테스트")
+    void deleteThemeByIdTest(){
+        RestAssured.given()
+                .log()
+                .all()
+                .when()
+                .delete("themes/1")
+                .then()
+                .log()
+                .all()
+                .statusCode(HttpStatus.OK.value());
     }
 }

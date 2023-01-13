@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.controller;
 
 import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.ThemeCreateRequestDto;
+import nextstep.main.java.nextstep.message.ControllerMessage;
 import nextstep.main.java.nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,13 @@ public class ThemeController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Theme>> findAllTheme(){
+    public ResponseEntity<List<Theme>> findAllTheme() {
         return ResponseEntity.ok(themeService.findAllTheme());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteTheme(@PathVariable Long id) {
+        themeService.deleteTheme(id);
+        return ResponseEntity.ok(ControllerMessage.DELETE_THEME_SUCCESS_MESSAGE);
     }
 }
