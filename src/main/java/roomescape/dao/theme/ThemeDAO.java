@@ -13,8 +13,10 @@ public abstract class ThemeDAO {
     private static final String PRICE_TABLE = "price";
 
     private static final RowMapper<Theme> rowMapper = (resultSet, rowNum) -> new Theme(
-            resultSet.getLong(ID_TABLE), resultSet.getString(NAME_TABLE),
-            resultSet.getString(DESC_TABLE), resultSet.getInt(PRICE_TABLE));
+            resultSet.getLong(ID_TABLE),
+            resultSet.getString(NAME_TABLE),
+            resultSet.getString(DESC_TABLE),
+            resultSet.getInt(PRICE_TABLE));
     private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
             "result");
 

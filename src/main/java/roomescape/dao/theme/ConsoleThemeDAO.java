@@ -1,25 +1,27 @@
-package roomescape.dao.reservation;
+package roomescape.dao.theme;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
-import roomescape.dto.Reservation;
+import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
+import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
+import roomescape.dao.theme.preparedstatementcreator.ListThemePreparedStatementCreator;
+import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatementCreator;
+import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
 
-public class ConsoleReservationDAO extends ReservationDAO {
+public class ConsoleThemeDAO extends ThemeDAO {
 
     private final String url;
     private final String user;
     private final String password;
 
-    public ConsoleReservationDAO(String url, String user, String password) {
+    public ConsoleThemeDAO(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -28,7 +30,6 @@ public class ConsoleReservationDAO extends ReservationDAO {
     private Connection openConnection() {
         Connection con = null;
 
-        // 드라이버 연결
         try {
             con = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -54,31 +55,31 @@ public class ConsoleReservationDAO extends ReservationDAO {
         }
     }
 
-    private PreparedStatement createAddReservationPreparedStatement(
-            Connection con, Reservation reservation) throws SQLException {
+    private PreparedStatement createAddThemePreparedStatement(
+            Connection con, Theme theme) throws SQLException {
         PreparedStatementCreator preparedStatementCreator =
-                new InsertReservationPreparedStatementCreator(reservation);
+                new InsertThemePreparedStatementCreator(theme);
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
-    private PreparedStatement createFindReservationPreparedStatement(
+    private PreparedStatement createListThemePreparedStatement(
+            Connection con) throws SQLException {
+        PreparedStatementCreator preparedStatementCreator =
+                new ListThemePreparedStatementCreator();
+        return preparedStatementCreator.createPreparedStatement(con);
+    }
+
+    private PreparedStatement createDeleteThemePreparedStatement(
             Connection con, Long id) throws SQLException {
         PreparedStatementCreator preparedStatementCreator =
-                new FindReservationPreparedStatementCreator(id);
+                new RemoveThemePreparedStatementCreator(id);
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
-    private PreparedStatement createDeleteReservationPreparedStatement(
-            Connection con, Long id) throws SQLException {
+    private PreparedStatement createExistThemePreparedStatement(
+            Connection con, Theme theme) throws SQLException {
         PreparedStatementCreator preparedStatementCreator =
-                new RemoveReservationPreparedStatementCreator(id);
-        return preparedStatementCreator.createPreparedStatement(con);
-    }
-
-    private PreparedStatement createExistReservationPreparedStatement(
-            Connection con, Reservation reservation) throws SQLException {
-        PreparedStatementCreator preparedStatementCreator =
-                new ExistReservationPreparedStatementCreator(reservation);
+                new ExistThemePreparedStatementCreator(theme);
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
@@ -88,9 +89,12 @@ public class ConsoleReservationDAO extends ReservationDAO {
         return resultSet.getLong(1);
     }
 
-    private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
-        validateResultSet(resultSet);
-        return getRowMapper().mapRow(resultSet, 1);
+    private List<Theme> parseListResultSet(ResultSet resultSet) throws SQLException {
+        List<Theme> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getRowMapper().mapRow(resultSet, 1));
+        }
+        return result;
     }
 
     private boolean parseExistResultSet(ResultSet resultSet) throws SQLException {
@@ -98,9 +102,9 @@ public class ConsoleReservationDAO extends ReservationDAO {
         return resultSet.getBoolean("result");
     }
 
-    private Long executeAddConnection(Connection con, Reservation reservation) {
+    private Long executeAddConnection(Connection con, Theme theme) {
         try {
-            PreparedStatement ps = createAddReservationPreparedStatement(con, reservation);
+            PreparedStatement ps = createAddThemePreparedStatement(con, theme);
             ps.executeUpdate();
             return getGeneratedKey(ps);
         } catch (SQLException e) {
@@ -108,11 +112,11 @@ public class ConsoleReservationDAO extends ReservationDAO {
         }
     }
 
-    private Reservation executeFindConnection(Connection con, Long id) {
+    private List<Theme> executeListConnection(Connection con) {
         try {
-            PreparedStatement ps = createFindReservationPreparedStatement(con, id);
+            PreparedStatement ps = createListThemePreparedStatement(con);
             ResultSet resultSet = ps.executeQuery();
-            return parseFindResultSet(resultSet);
+            return parseListResultSet(resultSet);
         } catch (SQLException e) {
             throw new BadRequestException();
         }
@@ -120,16 +124,16 @@ public class ConsoleReservationDAO extends ReservationDAO {
 
     private void executeDeleteConnection(Connection con, Long id) {
         try {
-            PreparedStatement ps = createDeleteReservationPreparedStatement(con, id);
+            PreparedStatement ps = createDeleteThemePreparedStatement(con, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new BadRequestException();
         }
     }
 
-    private boolean executeExistConnection(Connection con, Reservation reservation) {
+    private boolean executeExistConnection(Connection con, Theme theme) {
         try {
-            PreparedStatement ps = createExistReservationPreparedStatement(con, reservation);
+            PreparedStatement ps = createExistThemePreparedStatement(con, theme);
             ResultSet resultSet = ps.executeQuery();
             return parseExistResultSet(resultSet);
         } catch (SQLException e) {
@@ -138,28 +142,28 @@ public class ConsoleReservationDAO extends ReservationDAO {
     }
 
     @Override
-    public boolean exist(Reservation reservation) {
+    public boolean exist(Theme theme) {
         Connection con = openConnection();
-        boolean result = executeExistConnection(con, reservation);
+        boolean result = executeExistConnection(con, theme);
         closeConnection(con);
         return result;
     }
 
     @Override
-    public Long create(Reservation reservation) {
-        validate(reservation);
+    public Long create(Theme theme) {
+        validate(theme);
         Connection con = openConnection();
-        Long id = executeAddConnection(con, reservation);
+        Long id = executeAddConnection(con, theme);
         closeConnection(con);
         return id;
     }
 
     @Override
-    public Reservation find(Long id) {
+    public List<Theme> list() {
         Connection con = openConnection();
-        Reservation reservation = executeFindConnection(con, id);
+        List<Theme> result = executeListConnection(con);
         closeConnection(con);
-        return reservation;
+        return result;
     }
 
     @Override
