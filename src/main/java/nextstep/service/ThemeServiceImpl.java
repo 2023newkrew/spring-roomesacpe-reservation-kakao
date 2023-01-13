@@ -7,6 +7,7 @@ import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;
 import nextstep.dto.ThemeResponseDto;
 import nextstep.mapstruct.ThemeMapper;
+import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
 
 @RequiredArgsConstructor

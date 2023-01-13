@@ -38,6 +38,12 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+    public boolean existByThemeId(Long id) {
+        return reservationRepository.existByThemeId(id) !=0;
+    }
+
+
     private void validateCreateReservation(ReservationRequestDTO reservationRequestDTO) {
         validateTime(reservationRequestDTO.getTime());
         validateDuplicate(reservationRequestDTO);

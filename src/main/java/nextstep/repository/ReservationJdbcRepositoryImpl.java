@@ -1,6 +1,10 @@
 package nextstep.repository;
 
-import static nextstep.repository.ReservationJdbcSql.*;
+import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_THEME_ID;
+import static nextstep.repository.ReservationJdbcSql.INSERT_INTO;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -43,7 +47,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        releaseResultset(rs);
+        releaseResultSet(rs);
         releasePreparedStatement(ps);
         return id;
     }
@@ -90,10 +94,19 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     @Override
     public int deleteById(Long id) {
+        return executeSqlReturnRow(id, DELETE_BY_ID);
+    }
+
+    @Override
+    public int existByThemeId(Long id) {
+        return executeSqlReturnRow(id, FIND_BY_THEME_ID);
+    }
+
+    private int executeSqlReturnRow(Long id, String findByThemeId) {
         PreparedStatement ps;
         int row;
         try {
-            ps = connectionHandler.createPreparedStatement(DELETE_BY_ID, new String[]{"id"});
+            ps = connectionHandler.createPreparedStatement(findByThemeId, new String[]{"id"});
             ps.setLong(1, id);
             row = ps.executeUpdate();
         } catch (SQLException e) {
@@ -110,7 +123,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     }
 
     private static void releasePreparedStatementAndResultSet(PreparedStatement ps, ResultSet rs) {
-        releaseResultset(rs);
+        releaseResultSet(rs);
 
         releasePreparedStatement(ps);
     }
@@ -123,7 +136,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
         }
     }
 
-    private static void releaseResultset(ResultSet rs) {
+    private static void releaseResultSet(ResultSet rs) {
         try {
             rs.close();
         } catch (SQLException e) {

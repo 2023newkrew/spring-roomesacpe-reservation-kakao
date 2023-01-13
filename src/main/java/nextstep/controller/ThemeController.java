@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
 import nextstep.dto.ThemeResponseDto;
+import nextstep.exception.ConflictException;
+import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ThemeController {
 
     private final ThemeService themeService;
+    private final ReservationService reservationService;
 
     @PostMapping("")
     ResponseEntity createTheme(@RequestBody ThemeCreateDto themeCreateDto) {
@@ -37,6 +40,10 @@ public class ThemeController {
 
     @PutMapping("")
     ResponseEntity editTheme(@RequestBody ThemeEditDto themeEditDto) {
+        boolean exist = reservationService.existByThemeId(themeEditDto.getId());
+        if(exist){
+            throw new ConflictException("해당하는 테마를 예약한 사람이 존재합니다.");
+        }
         boolean success = themeService.editTheme(themeEditDto);
         if(success){
             return ResponseEntity.accepted().build();
@@ -46,6 +53,10 @@ public class ThemeController {
 
     @DeleteMapping("{id}")
     ResponseEntity deleteTheme(@PathVariable Long id){
+        boolean exist = reservationService.existByThemeId(id);
+        if(exist){
+            throw new ConflictException("해당하는 테마를 예약한 사람이 존재합니다.");
+        }
         themeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -3,6 +3,7 @@ package nextstep.repository;
 import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID;
 import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME;
 import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_THEME_ID;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -60,4 +61,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public int deleteById(Long id) throws DataAccessException {
         return jdbcTemplate.update(DELETE_BY_ID, id);
     }
+
+    @Override
+    public int existByThemeId(Long id) {
+        return jdbcTemplate.query(FIND_BY_THEME_ID, (rs, rowNum) -> rs.getLong(1), id).size();
+    }
+
 }

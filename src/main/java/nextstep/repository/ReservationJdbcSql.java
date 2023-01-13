@@ -17,6 +17,8 @@ public final class ReservationJdbcSql {
     public static final String DELETE_BY_ID = "DELETE FROM RESERVATION WHERE ID = ?";
     public static final String INSERT_INTO = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
 
+    public static final String FIND_BY_THEME_ID = "SELECT DISTINCT theme_id  FROM RESERVATION WHERE theme_id = ? LIMIT 1";
+
     private ReservationJdbcSql() {
     }
 
