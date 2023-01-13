@@ -17,6 +17,7 @@ import kakao.error.ErrorCode;
 import kakao.error.exception.RoomReservationException;
 import kakao.repository.reservation.ReservationRepository;
 import kakao.repository.theme.ThemeRepository;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -78,11 +79,14 @@ class ReservationServiceTest {
                     .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
             verify(themeRepository).findById(request.getThemeId());
             verify(reservationRepository).save(Mockito.any(Reservation.class));
-            assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(response)
+                    .hasFieldOrPropertyWithValue("id", reservation.getId())
                     .hasFieldOrPropertyWithValue("date", reservation.getDate())
                     .hasFieldOrPropertyWithValue("time", reservation.getTime())
                     .hasFieldOrPropertyWithValue("name", reservation.getName());
-            assertThat(response.theme).hasFieldOrPropertyWithValue("id", theme.getId())
+            softly.assertThat(response.theme)
+                    .hasFieldOrPropertyWithValue("id", theme.getId())
                     .hasFieldOrPropertyWithValue("name", theme.getName())
                     .hasFieldOrPropertyWithValue("desc", theme.getDesc())
                     .hasFieldOrPropertyWithValue("price", theme.getPrice());
@@ -147,11 +151,14 @@ class ReservationServiceTest {
 
             //then
             verify(reservationRepository).findById(reservation.getId());
-            assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(response)
+                    .hasFieldOrPropertyWithValue("id", reservation.getId())
                     .hasFieldOrPropertyWithValue("date", reservation.getDate())
                     .hasFieldOrPropertyWithValue("time", reservation.getTime())
                     .hasFieldOrPropertyWithValue("name", reservation.getName());
-            assertThat(response.theme).hasFieldOrPropertyWithValue("id", theme.getId())
+            softly.assertThat(response.theme)
+                    .hasFieldOrPropertyWithValue("id", theme.getId())
                     .hasFieldOrPropertyWithValue("name", theme.getName())
                     .hasFieldOrPropertyWithValue("desc", theme.getDesc())
                     .hasFieldOrPropertyWithValue("price", theme.getPrice());
