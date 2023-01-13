@@ -62,9 +62,9 @@ public class WebAppReservationRepoTest {
         assertNull(nonexistent);
     }
 
-    @DisplayName("can count when date and time match")
+    @DisplayName("can find by date and time")
     @Test
-    void can_count_when_date_and_time_match() {
+    void can_find_by_date_and_time() {
         int CYCLE = 17;
         for (int i = 0; i < CYCLE; i++) {
             this.webAppReservationRepo.save(this.testReservation);
