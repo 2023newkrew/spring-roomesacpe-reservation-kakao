@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.JdbcTemplateReservationRepository;
+import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +30,7 @@ public class RoomEscapeControllerTest {
     private int port;
 
     @Autowired
-    private JdbcTemplateReservationRepository repository;
+    private ReservationRepository repository;
 
     Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 

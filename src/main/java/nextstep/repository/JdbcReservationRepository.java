@@ -88,6 +88,18 @@ public class JdbcReservationRepository implements ReservationRepository {
         }
     }
 
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM reservation";
+
+        try (Connection con = createConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Connection createConnection() {
         try {
             Connection con = dataSource.getConnection();
