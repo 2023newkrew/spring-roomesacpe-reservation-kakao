@@ -1,6 +1,5 @@
 package nextstep.dto.web.request;
 
-import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
 import java.time.LocalDate;
@@ -25,15 +24,6 @@ public class CreateReservationRequest {
 
     public static CreateReservationRequest of(String date, String time, String name, Long themeId) {
         return new CreateReservationRequest(date, time, name, themeId);
-    }
-
-    public Reservation toEntity() {
-        return Reservation.of(
-                LocalDate.parse(date),
-                LocalTime.parse(time + ":00"),
-                name,
-                Theme.of(themeId, null, null, null)
-        );
     }
 
     public String getDate() {
