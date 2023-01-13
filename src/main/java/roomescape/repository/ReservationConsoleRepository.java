@@ -2,12 +2,13 @@ package roomescape.repository;
 
 
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
+import roomescape.repository.mapper.ReservationMapper;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
+
 
 public class ReservationConsoleRepository implements ReservationRepository {
 
@@ -41,14 +42,12 @@ public class ReservationConsoleRepository implements ReservationRepository {
             Connection con,
             Reservation reservation
     ) throws SQLException {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
         ps.setDate(1, Date.valueOf(reservation.getDate()));
         ps.setTime(2, Time.valueOf(reservation.getTime()));
         ps.setString(3, reservation.getName());
-        ps.setString(4, reservation.getTheme().getName());
-        ps.setString(5, reservation.getTheme().getDesc());
-        ps.setInt(6, reservation.getTheme().getPrice());
+        ps.setLong(4, reservation.getTheme().getId());
 
         return ps;
     }
@@ -76,7 +75,9 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     private PreparedStatement createGetReservationPreparedStatement(Connection con, Long id) throws SQLException {
-        String sql = "SELECT * FROM reservation WHERE id = (?);";
+        String sql = "SELECT * FROM reservation " +
+                "JOIN theme ON reservation.theme_id = theme.id " +
+                "WHERE reservation.id = (?)";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setLong(1, id);
 
@@ -85,17 +86,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
 
     private Optional<Reservation> resultSetToReservation(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
-            return Optional.of(new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getDate("date").toLocalDate(),
-                    resultSet.getTime("time").toLocalTime(),
-                    resultSet.getString("name"),
-                    new Theme(
-                            resultSet.getString("theme_name"),
-                            resultSet.getString("theme_desc"),
-                            resultSet.getInt("theme_price")
-                    )
-            ));
+            return Optional.of(ReservationMapper.mapToReservation(resultSet));
         }
         return Optional.empty();
     }
@@ -140,7 +131,9 @@ public class ReservationConsoleRepository implements ReservationRepository {
             LocalDate date,
             LocalTime time
     ) throws SQLException {
-        String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
+        String sql = "SELECT * FROM reservation " +
+                "JOIN theme ON reservation.theme_id = theme.id " +
+                "WHERE date = (?) and time = (?)";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));

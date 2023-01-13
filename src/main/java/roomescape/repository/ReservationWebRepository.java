@@ -6,7 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
+import roomescape.repository.mapper.ReservationMapper;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -18,18 +18,8 @@ import java.util.Optional;
 @Repository
 public class ReservationWebRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
-            resultSet.getDate("date").toLocalDate(),
-            resultSet.getTime("time").toLocalTime(),
-            resultSet.getString("name"),
-            new Theme(
-                    resultSet.getLong("theme.id"),
-                    resultSet.getString("theme.name"),
-                    resultSet.getString("theme.desc"),
-                    resultSet.getInt("theme.price")
-            )
-    );
+    private final RowMapper<Reservation> reservationRowMapper =
+            (resultSet, rowNum) -> ReservationMapper.mapToReservation(resultSet);
 
     public ReservationWebRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
