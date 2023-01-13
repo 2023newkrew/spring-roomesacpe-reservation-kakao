@@ -5,11 +5,12 @@ import nextstep.reservation.entity.Reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
 
-    Reservation findById(long id);
+    Optional<Reservation> findById(long id);
 
     List<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 

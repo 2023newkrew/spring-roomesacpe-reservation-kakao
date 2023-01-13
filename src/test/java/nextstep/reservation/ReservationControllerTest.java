@@ -49,9 +49,9 @@ public class ReservationControllerTest {
         reservationService.clear();
     }
 
-    @DisplayName("예약 생성")
+    @DisplayName("예약 등록")
     @Test
-    void createReservation() {
+    void registerReservation() {
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -61,11 +61,11 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생")
+    @DisplayName("이미 예약이 존재하는 시간에 예약 등록 시도할 때 예외 발생")
     @Test
-    void createReservationDuplicate() {
+    void registerReservationDuplicate() {
         Reservation reservationDuplicated = new Reservation(null, reservation.getDate(), reservation.getTime(), "name2", reservation.getThemeId());
-        createReservation(reservation);
+        registerReservation(reservation);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDuplicated)
@@ -78,7 +78,7 @@ public class ReservationControllerTest {
     @DisplayName("예약 조회")
     @Test
     void showReservation() {
-        Response createResponse = createReservation(reservation);
+        Response createResponse = registerReservation(reservation);
         String id = createResponse.getHeader("Location").split("/")[2]; // Redirect 주소: /reservations/id
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -92,7 +92,7 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("id를 통한 예약 삭제")
     void deleteReservation() {
-        Response response = createReservation(reservation);
+        Response response = registerReservation(reservation);
         String id = response.getHeader("Location").split("/")[2]; // Redirect 주소: /reservations/id
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +111,7 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private Response createReservation(Reservation reservation) {
+    private Response registerReservation(Reservation reservation) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

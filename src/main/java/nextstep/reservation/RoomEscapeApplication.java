@@ -48,7 +48,7 @@ public class RoomEscapeApplication {
                         name,
                         theme.getId()
                 );
-                Reservation createReservation = reservationService.create(reservation);
+                Reservation createReservation = reservationService.registerReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + createReservation.getId());

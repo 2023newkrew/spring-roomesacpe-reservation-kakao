@@ -1,8 +1,6 @@
 package nextstep.reservation.repository;
 
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.exception.ReservationException;
-import nextstep.reservation.exception.ReservationExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,8 +15,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
-import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
+import java.util.Optional;
 
 @Repository
 @Primary
@@ -32,10 +29,6 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        if (findByDateAndTime(reservation.getDate(), reservation.getTime()).size() > 0) {
-            throw new ReservationException(DUPLICATE_TIME_RESERVATION);
-        }
-
         String sql = "insert into reservation (date, time, name, theme_id) values(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -57,15 +50,10 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(long id) {
+    public Optional<Reservation> findById(long id) {
         String sql = "select * from reservation where id= ?";
         List<Reservation> reservationList = jdbcTemplate.query(sql, reservationRowMapper(), id);
-
-        Reservation reservation = reservationList.stream().findAny().orElse(null);
-        if (reservation == null) {
-            throw new ReservationException(ReservationExceptionCode.NO_SUCH_RESERVATION);
-        }
-        return reservationList.stream().findAny().orElse(null);
+        return reservationList.stream().findAny();
     }
 
     @Override

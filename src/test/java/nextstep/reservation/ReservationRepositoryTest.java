@@ -5,7 +5,6 @@ import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.repository.ReservationRepository;
 import nextstep.reservation.repository.ThemeRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static nextstep.reservation.exception.ReservationExceptionCode.NO_SUCH_RESERVATION;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,6 @@ class ReservationRepositoryTest {
     @Autowired
     private ThemeRepository themeRepository;
     private Reservation reservation;
-    private Reservation reservationDuplicated;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +37,6 @@ class ReservationRepositoryTest {
         themeRepository.save(theme);
 
         this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", 1L);
-        this.reservationDuplicated = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", 1L);
     }
 
     @Test
@@ -52,8 +50,9 @@ class ReservationRepositoryTest {
     @DisplayName("예약 ID로 조회")
     void findByIdTest() {
         Reservation created = reservationRepository.save(reservation);
-        Reservation result = reservationRepository.findById(created.getId());
-        assertThat(result).isEqualTo(created);
+        Optional<Reservation> result = reservationRepository.findById(created.getId());
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get()).isEqualTo(created);
     }
 
     @Test
@@ -69,15 +68,6 @@ class ReservationRepositoryTest {
     void findByDateTimeEmptyTest() {
         List<Reservation> result = reservationRepository.findByDateAndTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
         assertThat(result).isEqualTo(List.of());
-    }
-
-    @Test
-    @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생")
-    void duplicateTimeReservationThrowException() {
-        reservationRepository.save(reservation);
-        Assertions.assertThatThrownBy(
-                () -> reservationRepository.save(reservationDuplicated)
-        ).isInstanceOf(ReservationException.class);
     }
 
     @Test

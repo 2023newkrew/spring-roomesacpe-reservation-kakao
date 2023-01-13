@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(long id) {
-        return reservationList.getOrDefault(id, null);
+    public Optional<Reservation> findById(long id) {
+        return Optional.ofNullable(reservationList.getOrDefault(id, null));
     }
 
     @Override

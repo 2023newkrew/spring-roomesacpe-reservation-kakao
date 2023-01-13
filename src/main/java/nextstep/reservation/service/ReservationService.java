@@ -1,10 +1,16 @@
 package nextstep.reservation.service;
 
 import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.exception.ReservationException;
+import nextstep.reservation.exception.ReservationExceptionCode;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
 
 @Service
 @Transactional
@@ -17,13 +23,20 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation create(Reservation reservation) {
+    public Reservation registerReservation(Reservation reservation) {
+        if (reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime()).size() > 0) {
+            throw new ReservationException(DUPLICATE_TIME_RESERVATION);
+        }
         return reservationRepository.save(reservation);
     }
 
     @Transactional(readOnly = true)
     public Reservation findById(long id) {
-        return reservationRepository.findById(id);
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        if (optionalReservation.isEmpty()) {
+            throw new ReservationException(ReservationExceptionCode.NO_SUCH_RESERVATION);
+        }
+        return optionalReservation.get();
     }
 
     public Boolean delete(long id) {
