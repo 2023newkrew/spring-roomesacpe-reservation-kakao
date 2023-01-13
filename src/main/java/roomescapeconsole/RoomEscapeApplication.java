@@ -1,10 +1,11 @@
-package nextstep;
+package roomescapeconsole;
 
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
+
+import java.rmi.NoSuchObjectException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -12,14 +13,12 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
+    private static final Theme DUMMY_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
-
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
+        ReservationDAO reservationDAO = new ReservationDAO();
+        Long reservationIdIndex = (long) reservationDAO.getNumberOfExistReservation();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -41,11 +40,10 @@ public class RoomEscapeApplication {
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        DUMMY_THEME
                 );
 
-                reservations.add(reservation);
-
+                reservationDAO.addReservation(reservation);
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -58,10 +56,12 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                Reservation reservation;
+                try {
+                    reservation = reservationDAO.lookUpReservation(id);
+                } catch (NoSuchObjectException e) {
+                    continue;
+                }
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -76,10 +76,8 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                reservationDAO.deleteReservation(id);
+                System.out.println("예약이 취소되었습니다.");
             }
 
             if (input.equals(QUIT)) {
