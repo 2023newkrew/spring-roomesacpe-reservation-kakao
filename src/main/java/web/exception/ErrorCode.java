@@ -1,0 +1,28 @@
+package web.exception;
+
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+import static web.reservation.controller.ReservationController.BEGIN_TIME;
+import static web.reservation.controller.ReservationController.LAST_TIME;
+
+@Getter
+public enum ErrorCode {
+
+    OUT_OF_BUSINESS_HOURS("영업 시간이 아닙니다. 영업 시간: " + BEGIN_TIME + " ~ " + LAST_TIME, HttpStatus.BAD_REQUEST),
+    NOT_UNIT_OF_30_MINUTES("예약은 30분 단위로 가능합니다.", HttpStatus.BAD_REQUEST),
+    RESERVATION_DUPLICATE("요청하신 시간대에 이미 예약이 있습니다.", HttpStatus.CONFLICT),
+    RESERVATION_NOT_FOUND("예약 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    THEME_NOT_FOUND("테마가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    THEME_DUPLICATE("이미 존재하는 테마입니다.", HttpStatus.CONFLICT),
+    RESERVATION_EXIST("예약 정보가 존재합니다.", HttpStatus.CONFLICT),
+    ;
+
+    private final String message;
+    private final HttpStatus httpStatus;
+
+    ErrorCode(String message, HttpStatus httpStatus) {
+        this.message = message;
+        this.httpStatus = httpStatus;
+    }
+}
