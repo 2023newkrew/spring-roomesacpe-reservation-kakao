@@ -1,14 +1,12 @@
 package roomescape.domain;
 
-import roomescape.domain.Theme;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Reservation {
-
     private Long id;
     private LocalDate date;
     private LocalTime time;
@@ -23,15 +21,10 @@ public class Reservation {
         this.theme = theme;
     }
 
-    public Reservation(ReservationRequest reservationRequest) {
-        this.date = LocalDate.parse(reservationRequest.getDate(), DateTimeFormatter.ISO_DATE);
-        this.time = LocalTime.parse(reservationRequest.getTime());
-        this.name = reservationRequest.getName();
-    }
-
-    public Reservation(ReservationRequest reservationRequest, Long id) {
-        this(reservationRequest);
-        this.id = id;
+    public Reservation(ReservationDto reservationDto) {
+        this.date = LocalDate.parse(reservationDto.getDate(), DateTimeFormatter.ISO_DATE);
+        this.time = LocalTime.parse(reservationDto.getTime());
+        this.name = reservationDto.getName();
     }
 
     public Long getId() {

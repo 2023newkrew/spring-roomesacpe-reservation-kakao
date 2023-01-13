@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationDto;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,22 +37,22 @@ public class ReservationTest {
         RestAssured.port = port;
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-11", "13:00", "kayla")))
+                .content(this.objectMapper.writeValueAsString(new ReservationDto("2022-08-11", "13:00", "kayla")))
         );
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-12", "13:00", "jerrie")))
+                .content(this.objectMapper.writeValueAsString(new ReservationDto("2022-08-12", "13:00", "jerrie")))
         );
     }
 
     @DisplayName("예약 생성 테스트")
     @Test
     void createReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("2022-08-13", "13:00", "kayla");
+        ReservationDto reservationDto = new ReservationDto("2022-08-13", "13:00", "kayla");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequest)
+                .body(reservationDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -63,12 +63,12 @@ public class ReservationTest {
     @DisplayName("예약 생성 거절 테스트")
     void rejectCreateReservation() throws Exception {
         // Given
-        ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie");
+        ReservationDto overlapReservationDto = new ReservationDto("2022-08-11", "13:00", "jerrie");
 
         // When
         ResultActions overlapResultActions = mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(overlapReservationRequest))
+                .content(objectMapper.writeValueAsString(overlapReservationDto))
         );
 
         // Then
@@ -77,7 +77,7 @@ public class ReservationTest {
 
     @DisplayName("예약 조회 테스트")
     @Test
-    void showReservation() throws Exception {
+    void showReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
@@ -89,7 +89,7 @@ public class ReservationTest {
 
     @DisplayName("예약 조회 거절 테스트")
     @Test
-    void rejectShowReservation() throws Exception {
+    void rejectShowReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/10")
@@ -99,7 +99,7 @@ public class ReservationTest {
 
     @DisplayName("예약 삭제 테스트")
     @Test
-    void deleteReservation() throws Exception {
+    void deleteReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/2")
@@ -110,7 +110,7 @@ public class ReservationTest {
     @Disabled
     @DisplayName("예약 삭제 거절 테스트")
     @Test
-    void rejectDeleteReservation() throws Exception {
+    void rejectDeleteReservation() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/20")

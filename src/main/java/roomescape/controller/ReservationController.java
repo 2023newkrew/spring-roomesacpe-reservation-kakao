@@ -22,7 +22,7 @@ public class ReservationController {
         if (reservationDAO.findReservationByDateAndTime(reservationDto.getDate(), reservationDto.getTime()).size() > 0) {
             return ResponseEntity.unprocessableEntity().body("이미 예약된 시간입니다.");
         }
-        Long id = reservationDAO.addReservation(new Reservation(reservationDto));
+        Long id = reservationDAO.addReservation(new Reservation(reservationDto)).getId();
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
