@@ -5,6 +5,7 @@ import nextstep.domain.Theme;
 import nextstep.domain.repository.ReservationRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,13 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("id"),
+            LocalDate.parse(rs.getString("date")),
+            LocalTime.parse(rs.getString("time")),
+            rs.getString("name"),
+            rs.getLong("theme_id")
+    );
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -43,13 +51,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             Reservation reservation = jdbcTemplate.queryForObject(
                     Queries.Reservation.SELECT_BY_ID_SQL,
                     new Object[] {reservationId},
-                    (rs, rowNum) -> new Reservation(
-                            rs.getLong("id"),
-                            LocalDate.parse(rs.getString("date")),
-                            LocalTime.parse(rs.getString("time")),
-                            rs.getString("name"),
-                            rs.getLong("theme_id")
-                    )
+                    reservationRowMapper
             );
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e){
@@ -62,13 +64,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         List<Reservation> reservations = jdbcTemplate.query(
                 Queries.Reservation.SELECT_BY_THEME_ID_SQL,
                 new Object[]{themeId},
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        LocalDate.parse(rs.getString("date")),
-                        LocalTime.parse(rs.getString("time")),
-                        rs.getString("name"),
-                        rs.getLong("theme_id")
-                )
+                reservationRowMapper
         );
         return reservations;
     }

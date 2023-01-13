@@ -4,6 +4,7 @@ import nextstep.domain.Theme;
 import nextstep.domain.repository.ThemeRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,12 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<Theme> themeRowMapper = (rs, rowNum) -> new Theme(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("desc"),
+            rs.getInt("price")
+    );
 
     public JdbcThemeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -39,12 +46,7 @@ public class JdbcThemeRepository implements ThemeRepository {
             Theme theme = jdbcTemplate.queryForObject(
                     Queries.Theme.SELECT_BY_ID_SQL,
                     new Object[]{id},
-                    (rs, rowNum) -> new Theme(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            rs.getString("desc"),
-                            rs.getInt("price")
-                    )
+                    themeRowMapper
             );
             return Optional.ofNullable(theme);
         }
@@ -66,12 +68,7 @@ public class JdbcThemeRepository implements ThemeRepository {
     public List<Theme> getAllThemes() {
         List<Theme> themes = jdbcTemplate.query(
                 Queries.Theme.SELECT_ALL_SQL,
-                (rs, rowNum) -> new Theme(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("desc"),
-                        rs.getInt("price")
-                )
+                themeRowMapper
         );
         return themes;
     }
