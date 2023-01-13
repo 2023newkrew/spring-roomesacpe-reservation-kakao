@@ -82,6 +82,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
                     resultSet.getTime("time").toLocalTime(),
                     resultSet.getString("name"),
                     new Theme(
+                            null,
                             resultSet.getString("theme_name"),
                             resultSet.getString("theme_desc"),
                             resultSet.getInt("theme_price")

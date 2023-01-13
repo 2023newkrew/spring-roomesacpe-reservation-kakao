@@ -29,6 +29,7 @@ public class ReservationWebRepository implements CrudRepository<Reservation, Lon
             resultSet.getTime("time").toLocalTime(),
             resultSet.getString("name"),
             new Theme(
+                    resultSet.getLong("id"),
                     resultSet.getString("theme_name"),
                     resultSet.getString("theme_desc"),
                     resultSet.getInt("theme_price")
