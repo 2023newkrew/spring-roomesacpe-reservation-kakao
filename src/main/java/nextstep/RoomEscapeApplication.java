@@ -5,6 +5,7 @@ import roomescape.domain.Theme;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ThemeCreateRequest;
 import roomescape.dto.ThemeShowResponse;
+import roomescape.dto.ThemeUpdateRequest;
 import roomescape.repository.ReservationConsoleRepository;
 import roomescape.repository.ThemeConsoleRepository;
 import roomescape.service.ReservationService;
@@ -134,14 +135,14 @@ public class RoomEscapeApplication {
                 String desc = info[2];
                 Integer price = Integer.parseInt(info[3]);
 
-                Theme theme = new Theme(id, name, desc, price);
-                themeService.updateTheme(theme);
+                ThemeUpdateRequest themeUpdateRequest = new ThemeUpdateRequest(name, desc, price);
+                themeService.updateTheme(themeUpdateRequest, id);
 
                 System.out.println("테마가 수정되었습니다.");
-                System.out.println("테마 번호: " + theme.getId());
-                System.out.println("테마 이름: " + theme.getName());
-                System.out.println("테마 설명: " + theme.getDesc());
-                System.out.println("테마 가격: " + theme.getPrice());
+                System.out.println("테마 번호: " + id);
+                System.out.println("테마 이름: " + themeUpdateRequest.getName());
+                System.out.println("테마 설명: " + themeUpdateRequest.getDesc());
+                System.out.println("테마 가격: " + themeUpdateRequest.getPrice());
             }
 
             if (input.startsWith(DELETE_THEME)) {

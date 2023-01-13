@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import roomescape.domain.Theme;
+import roomescape.dto.ThemeUpdateRequest;
 
 import java.sql.*;
 import java.util.Optional;
@@ -51,16 +52,16 @@ public class ThemeConsoleRepository extends BaseConsoleRepository implements The
     }
 
     @Override
-    public int updateTheme(Theme theme) {
+    public int updateTheme(ThemeUpdateRequest themeUpdateRequest, Long id) {
         int count = 0;
         Connection con = getConnection();
         try {
             String sql = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, theme.getName());
-            ps.setString(2, theme.getDesc());
-            ps.setInt(3, theme.getPrice());
-            ps.setLong(4, theme.getId());
+            ps.setString(1, themeUpdateRequest.getName());
+            ps.setString(2, themeUpdateRequest.getDesc());
+            ps.setInt(3, themeUpdateRequest.getPrice());
+            ps.setLong(4, id);
             count = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

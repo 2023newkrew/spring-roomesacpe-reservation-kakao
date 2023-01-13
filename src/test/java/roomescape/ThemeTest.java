@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeCreateRequest;
+import roomescape.dto.ThemeUpdateRequest;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -83,12 +84,12 @@ public class ThemeTest {
     @DisplayName("테마 수정 테스트")
     @Test
     void updateTheme() {
-        Theme modifiedTheme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 39000);
+        ThemeUpdateRequest modifiedTheme = new ThemeUpdateRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 39000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(modifiedTheme)
-                .when().put("/theme")
+                .when().put("/theme/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(1))
@@ -98,12 +99,12 @@ public class ThemeTest {
     @DisplayName("테마 수정 거절 테스트")
     @Test
     void rejectUpdateTheme() {
-        Theme modifiedTheme = new Theme(10L, "워너고홈", "병맛 어드벤처 회사 코믹물", 39000);
+        ThemeUpdateRequest modifiedTheme = new ThemeUpdateRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 39000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(modifiedTheme)
-                .when().put("/theme")
+                .when().put("/theme/10")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }

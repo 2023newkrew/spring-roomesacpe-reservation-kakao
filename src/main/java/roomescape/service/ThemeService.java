@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeCreateRequest;
 import roomescape.dto.ThemeShowResponse;
+import roomescape.dto.ThemeUpdateRequest;
 import roomescape.exception.ThemeNotFoundException;
 import roomescape.repository.ThemeRepository;
 
@@ -36,12 +37,14 @@ public class ThemeService {
     }
 
     @Transactional
-    public Theme updateTheme(Theme theme) {
-        int count = themeRepository.updateTheme(theme);
+    public ThemeShowResponse updateTheme(ThemeUpdateRequest themeUpdateRequest, Long id) {
+        Theme theme = themeRepository.findThemeById(id).orElseThrow(ThemeNotFoundException::new);
+        themeUpdateRequest.fill(theme);
+        int count = themeRepository.updateTheme(themeUpdateRequest, id);
         if (count == 0) {
             throw new ThemeNotFoundException("없는 테마 수정 요청");
         }
-        return themeRepository.findThemeById(theme.getId()).orElseThrow(ThemeNotFoundException::new);
+        return ThemeShowResponse.of(themeRepository.findThemeById(id).orElseThrow(ThemeNotFoundException::new));
     }
 
     public int deleteTheme(Long id) {
