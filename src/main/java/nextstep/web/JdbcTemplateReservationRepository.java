@@ -1,7 +1,7 @@
 package nextstep.web;
 
 import nextstep.model.Reservation;
-import nextstep.repository.ReservationConverter;
+import nextstep.util.JdbcRemoveDuplicateUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,7 +29,7 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ReservationConverter.set(ps, reservation);
+            JdbcRemoveDuplicateUtils.setReservationToStatement(ps, reservation);
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();
@@ -41,7 +41,7 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
     public Optional<Reservation> findById(Long id) {
         try {
             String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
-            RowMapper<Reservation> rowMapper = (rs, rowNum) -> ReservationConverter.get(rs, rs.getLong("id"));
+            RowMapper<Reservation> rowMapper = (rs, rowNum) -> JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, rs.getLong("id"));
             return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

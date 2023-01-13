@@ -1,7 +1,7 @@
 package nextstep.console;
 
 import nextstep.model.Reservation;
-import nextstep.repository.ReservationConverter;
+import nextstep.util.JdbcRemoveDuplicateUtils;
 import nextstep.repository.ReservationRepository;
 
 import java.sql.*;
@@ -18,7 +18,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
-            ReservationConverter.set(ps, reservation);
+            JdbcRemoveDuplicateUtils.setReservationToStatement(ps, reservation);
             ps.executeUpdate();
 
             ResultSet resultSet = ps.getGeneratedKeys();
@@ -40,7 +40,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Reservation reservation = ReservationConverter.get(rs, id);
+                Reservation reservation = JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id);
                 return Optional.of(reservation);
             }
         } catch (SQLException e) {

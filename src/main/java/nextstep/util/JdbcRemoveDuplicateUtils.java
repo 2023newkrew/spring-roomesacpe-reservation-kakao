@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.util;
 
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
@@ -7,8 +7,8 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationConverter {
-    public static void set(PreparedStatement ps, Reservation reservation) throws SQLException {
+public class JdbcRemoveDuplicateUtils {
+    public static void setReservationToStatement(PreparedStatement ps, Reservation reservation) throws SQLException {
         ps.setDate(1, Date.valueOf(reservation.getDate()));
         ps.setTime(2, Time.valueOf(reservation.getTime()));
         ps.setString(3, reservation.getName());
@@ -17,7 +17,7 @@ public class ReservationConverter {
         ps.setInt(6, reservation.getTheme().getPrice());
     }
 
-    public static Reservation get(ResultSet rs, Long id) throws SQLException {
+    public static Reservation getReservationFromResultSet(ResultSet rs, Long id) throws SQLException {
         LocalDate date = rs.getDate("date").toLocalDate();
         LocalTime time = rs.getTime("time").toLocalTime();
         String name = rs.getString("name");
