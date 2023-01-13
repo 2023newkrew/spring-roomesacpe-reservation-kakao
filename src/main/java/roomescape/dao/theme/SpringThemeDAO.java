@@ -12,7 +12,7 @@ import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatemen
 import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
 
-public class SpringThemeDAO extends ThemeDAO {
+public class SpringThemeDAO implements ThemeDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,7 +29,7 @@ public class SpringThemeDAO extends ThemeDAO {
     @Override
     public boolean exist(Theme theme) {
         List<Boolean> result = jdbcTemplate.query(
-                new ExistThemePreparedStatementCreator(theme), getExistRowMapper());
+                new ExistThemePreparedStatementCreator(theme), existRowMapper);
         validateResult(result);
         return result.get(0);
     }
@@ -37,7 +37,7 @@ public class SpringThemeDAO extends ThemeDAO {
     @Override
     public boolean existId(Long id) {
         List<Boolean> result = jdbcTemplate.query(
-                new ExistThemeIdPreparedStatementCreator(id), getExistRowMapper());
+                new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
         validateResult(result);
         return result.get(0);
     }
@@ -52,7 +52,7 @@ public class SpringThemeDAO extends ThemeDAO {
     @Override
     public List<Theme> list() {
         return jdbcTemplate.query(
-                new ListThemePreparedStatementCreator(), getRowMapper());
+                new ListThemePreparedStatementCreator(), rowMapper);
     }
 
     @Override

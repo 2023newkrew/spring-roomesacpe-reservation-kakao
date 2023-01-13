@@ -14,7 +14,7 @@ import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
 @Repository
-public class SpringReservationDAO extends ReservationDAO {
+public class SpringReservationDAO implements ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -31,7 +31,7 @@ public class SpringReservationDAO extends ReservationDAO {
     @Override
     public boolean exist(Reservation reservation) {
         List<Boolean> result = jdbcTemplate.query(
-                new ExistReservationPreparedStatementCreator(reservation), getExistRowMapper());
+                new ExistReservationPreparedStatementCreator(reservation), existRowMapper);
         validateResult(result);
         return result.get(0);
     }
@@ -39,7 +39,7 @@ public class SpringReservationDAO extends ReservationDAO {
     @Override
     public boolean existId(Long id) {
         List<Boolean> result = jdbcTemplate.query(
-                new ExistReservationIdPreparedStatementCreator(id), getExistRowMapper());
+                new ExistReservationIdPreparedStatementCreator(id), existRowMapper);
         validateResult(result);
         return result.get(0);
     }
@@ -55,7 +55,7 @@ public class SpringReservationDAO extends ReservationDAO {
     @Override
     public Reservation find(Long id) {
         List<Reservation> result = jdbcTemplate.query(
-                new FindReservationPreparedStatementCreator(id), getRowMapper());
+                new FindReservationPreparedStatementCreator(id), rowMapper);
         validateResult(result);
         return result.get(0);
     }

@@ -3,32 +3,24 @@ package roomescape.dao.reservation;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.dto.Reservation;
 
-public abstract class ReservationDAO {
+public interface ReservationDAO {
 
-    private static final String ID_TABLE = "id";
-    private static final String DATE_TABLE = "date";
-    private static final String TIME_TABLE = "time";
-    private static final String NAME_TABLE = "name";
-    private static final String THEME_ID_TABLE = "theme_id";
+    String ID_TABLE = "id";
+    String DATE_TABLE = "date";
+    String TIME_TABLE = "time";
+    String NAME_TABLE = "name";
+    String THEME_ID_TABLE = "theme_id";
 
-    private static final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
+    RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong(ID_TABLE), resultSet.getDate(DATE_TABLE).toLocalDate(),
             resultSet.getTime(TIME_TABLE).toLocalTime(), resultSet.getString(NAME_TABLE),
             resultSet.getLong(THEME_ID_TABLE));
-    private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
+    RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
             "result");
 
-    protected static RowMapper<Reservation> getRowMapper() {
-        return rowMapper;
-    }
-
-    protected static RowMapper<Boolean> getExistRowMapper() {
-        return existRowMapper;
-    }
-
-    public abstract boolean exist(Reservation reservation);
-    public abstract boolean existId(Long id);
-    public abstract Long create(Reservation reservation);
-    public abstract Reservation find(Long id);
-    public abstract void remove(Long id);
+    boolean exist(Reservation reservation);
+    boolean existId(Long id);
+    Long create(Reservation reservation);
+    Reservation find(Long id);
+    void remove(Long id);
 }
