@@ -4,7 +4,6 @@ import kakao.model.request.ReservationRequest;
 import kakao.model.response.ReservationResponse;
 import kakao.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<String> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Long reservationId = reservationService.createReservation(reservationRequest);
+        Long reservationId = reservationService.book(reservationRequest);
         String location = "/reservations/" + reservationId.toString();
 
         return ResponseEntity.created(URI.create(location)).build();
@@ -26,12 +25,12 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id) {
-        return ResponseEntity.ok(reservationService.getReservation(id));
+        return ResponseEntity.ok(reservationService.lookUp(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservation(id);
+        reservationService.cancel(id);
 
         return ResponseEntity.noContent().build();
     }
