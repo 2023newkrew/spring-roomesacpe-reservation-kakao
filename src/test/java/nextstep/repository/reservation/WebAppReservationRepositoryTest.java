@@ -50,6 +50,7 @@ public class WebAppReservationRepositoryTest {
     void insertDuplicateReservation() {
         webAppReservationRepository.add(newReservation);
         int countSameDateAndTime = webAppReservationRepository.countByDateAndTime(
+                1l,
                 Date.valueOf(newReservation.getDate()),
                 Time.valueOf(newReservation.getTime()));
         assertThat(countSameDateAndTime).isEqualTo(1);

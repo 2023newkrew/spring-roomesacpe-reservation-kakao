@@ -104,18 +104,19 @@ public class ConsoleReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int countByDateAndTime(Date date, Time time) {
+    public int countByDateAndTime(Long themeId, Date date, Time time) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         int result = 0;
 
         try {
-            String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+            String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ? AND theme_id = ?";
             con = ConnectionManager.getConnection();
             ps = con.prepareStatement(sql);
             ps.setDate(1, date);
             ps.setTime(2, time);
+            ps.setLong(3, themeId);
             rs = ps.executeQuery();
 
             if (rs.next()) {

@@ -78,9 +78,9 @@ public class WebAppReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int countByDateAndTime(Date date, Time time) {
-        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
+    public int countByDateAndTime(Long themeId, Date date, Time time) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ? AND theme_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, date, time, themeId);
     }
 
 }

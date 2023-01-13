@@ -13,6 +13,6 @@ public interface ReservationRepository {
 
     int delete(long id);
 
-    int countByDateAndTime(Date date, Time time);
+    int countByDateAndTime(Long themeId, Date date, Time time);
 
 }

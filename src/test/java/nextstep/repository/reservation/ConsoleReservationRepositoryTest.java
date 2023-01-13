@@ -42,6 +42,7 @@ public class ConsoleReservationRepositoryTest {
     void insertDuplicateReservation() {
         consoleReservationRepository.add(newReservation);
         int countSameDateAndTime = consoleReservationRepository.countByDateAndTime(
+                1l,
                 Date.valueOf(newReservation.getDate()),
                 Time.valueOf(newReservation.getTime()));
         assertThat(countSameDateAndTime).isEqualTo(1);

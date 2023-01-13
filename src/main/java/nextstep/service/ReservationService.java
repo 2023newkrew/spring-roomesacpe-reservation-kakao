@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class ReservationService {
@@ -24,14 +26,19 @@ public class ReservationService {
 
     public long addReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = Reservation.createReservation(createReservationDto);
-        int duplicatedCount = reservationRepository.countByDateAndTime(
+        checkDuplicateReservation(
+                createReservationDto.getThemeId(),
                 Date.valueOf(createReservationDto.getDate()),
                 Time.valueOf(createReservationDto.getTime())
         );
+        return reservationRepository.add(reservation);
+    }
+
+    private void checkDuplicateReservation(Long themId, Date date, Time time) {
+        int duplicatedCount = reservationRepository.countByDateAndTime(themId, date, time);
         if (duplicatedCount > 0) {
             throw new DuplicateTimeReservationException();
         }
-        return reservationRepository.add(reservation);
     }
 
     public Reservation getReservation(Long id) {
