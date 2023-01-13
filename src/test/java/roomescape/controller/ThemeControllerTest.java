@@ -7,8 +7,12 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeUpdateRequestDto;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
@@ -21,7 +25,22 @@ public class ThemeControllerTest {
 
     @BeforeEach
     void setUp() {
+        ThemeRequestDto themeRequestDto1 = new ThemeRequestDto("Test Theme", "Lorem Ipsum", 10000);
+        ThemeRequestDto themeRequestDto2 = new ThemeRequestDto("Test Theme2", "Lorem Ipsum", 10000);
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(LocalDate.parse("2023-01-01"), LocalTime.parse("11:00:00"), "Tester", 1L);
         RestAssured.port = port;
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeRequestDto1)
+                .post("/themes");
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeRequestDto2)
+                .post("/themes");
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestDto)
+                .post("/reservations");
     }
 
     @DisplayName("테마 생성 성공 테스트")
