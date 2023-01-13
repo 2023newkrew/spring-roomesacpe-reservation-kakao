@@ -21,7 +21,7 @@ public class ReservationCreateDto {
     @Positive
     private Long themeId;
     @NotNull
-    private LocalDate date; // 예약에서 date, time, theme이 모두 중복되는 경우 exception(중복 예약)
+    private LocalDate date; // 예약에서 date, time, theme가 모두 중복되는 경우 exception(중복 예약)
     @NotNull
     private LocalTime time;
     @NotBlank

@@ -1,6 +1,7 @@
 package roomservice.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -8,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.DuplicatedThemeNameException;
+import roomservice.exceptions.exception.ReferencedThemeDeletionException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -96,7 +98,11 @@ public class ThemeDao {
      * @param id which you want to delete.
      */
     public void deleteThemeById(Long id) {
-        String sql = "DELETE FROM theme WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        try {
+            String sql = "DELETE FROM theme WHERE id = ?";
+            jdbcTemplate.update(sql, id);
+        } catch(DataIntegrityViolationException e){
+            throw new ReferencedThemeDeletionException();
+        }
     }
 }

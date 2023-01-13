@@ -16,7 +16,7 @@ public class Reservation {
     private LocalDate date; // 예약에서 date, time, theme이 모두 중복되는 경우 exception(중복 예약)
     private LocalTime time;
     private String name;
-    private Theme theme; // 어떤 방 탈출인가를 정의하는 객체
+    private Long themeId; // 어떤 방 탈출인가를 정의하는 객체
 
     public void setId(long id) {
         this.id = id;

@@ -1,13 +1,11 @@
 package roomservice.exceptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import roomservice.exceptions.exception.DuplicatedReservationException;
-import roomservice.exceptions.exception.DuplicatedThemeNameException;
-import roomservice.exceptions.exception.InvalidReservationTimeException;
-import roomservice.exceptions.exception.InvalidThemeIdException;
+import roomservice.exceptions.exception.*;
 
 /**
  * ReservationAdvice handles exceptions created by reservation operations.
@@ -62,5 +60,10 @@ public class WholeProgramAdvice {
     @ExceptionHandler(DuplicatedThemeNameException.class)
     public ResponseEntity handleDuplicatedThemeNameException() {
         return ResponseEntity.badRequest().body("이미 존재하는 테마 이름입니다.");
+    }
+
+    @ExceptionHandler(ReferencedThemeDeletionException.class)
+    public ResponseEntity handleReferencedThemeDeletionException(){
+        return ResponseEntity.badRequest().body("삭제 불가 - 테마를 참조 중인 예약이 있습니다.");
     }
 }

@@ -69,13 +69,13 @@ public class ThemeControllerTest {
 
     @Test
     void deleteTheme() throws Exception{
-        mock.perform(delete("/themes/1")
+        mock.perform(delete("/themes/2")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         mock.perform(get("/themes")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty())
+                .andExpect(jsonPath("$[1]").doesNotExist())
                 .andDo(print())
                 .andReturn();
     }

@@ -41,7 +41,7 @@ public class ReservationService {
         validateTheme(theme);
         Reservation reservation = new Reservation(
                 null, reservationDto.getDate(), reservationDto.getTime(),
-                reservationDto.getName(), theme);
+                reservationDto.getName(), theme.getId());
         return reservationDao.insertReservation(reservation);
     }
 
@@ -79,7 +79,7 @@ public class ReservationService {
                 reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                reservation.getTheme().getName()
+                themeDao.selectThemeById(reservation.getThemeId()).getName()
         );
         return result;
     }

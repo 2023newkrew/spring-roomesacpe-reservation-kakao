@@ -53,6 +53,6 @@ public class ThemeDaoTest {
         themeDao.createTheme(theme);
         assertThatCode(()->{themeDao.deleteThemeById(theme.getId());})
                 .doesNotThrowAnyException();
-        assertThat(themeDao.selectThemeById(2L)).isNull();
+        assertThat(themeDao.selectThemeById(3L)).isNull();
     }
 }

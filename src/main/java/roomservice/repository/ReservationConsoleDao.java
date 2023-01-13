@@ -67,10 +67,7 @@ public class ReservationConsoleDao implements ReservationDao {
                         rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(),
                         rs.getString("name"),
-                        new Theme(0L,
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price"))
+                        1L
                 );
                 return reservation;
             }

@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import roomservice.domain.dto.ThemeCreateDto;
 import roomservice.domain.entity.Theme;
+import roomservice.exceptions.exception.ReferencedThemeDeletionException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -31,8 +32,14 @@ public class ThemeServiceTest {
     }
 
     @Test
+    void cannotDeleteWhenReferencedByReservation(){
+        assertThatThrownBy(()->themeService.deleteThemeById(1L))
+                .isInstanceOf(ReferencedThemeDeletionException.class);
+    }
+
+    @Test
     void delete(){
-        themeService.deleteThemeById(1L);
-        assertThat(themeService.findThemeById(1L)).isNull();
+        themeService.deleteThemeById(2L);
+        assertThat(themeService.findThemeById(2L)).isNull();
     }
 }
