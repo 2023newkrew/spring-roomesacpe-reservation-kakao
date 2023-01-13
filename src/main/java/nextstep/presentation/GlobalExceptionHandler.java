@@ -34,6 +34,14 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(InvalidCreateThemeRequestException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCreateThemeRequestException(InvalidCreateThemeRequestException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
     @ExceptionHandler(ThemeNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleThemeNotFoundException(ThemeNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());

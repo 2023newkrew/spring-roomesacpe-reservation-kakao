@@ -3,9 +3,11 @@ package nextstep.presentation;
 import nextstep.dto.CreateThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.dto.ThemesResponse;
+import nextstep.exception.InvalidCreateThemeRequestException;
 import nextstep.service.ThemeService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,7 +24,12 @@ public class ThemeController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTheme(@RequestBody CreateThemeRequest request) {
+    public ResponseEntity<Void> createTheme(
+            @Validated @RequestBody CreateThemeRequest request,
+            BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            throw new InvalidCreateThemeRequestException();
+
         Long id = themeService.createTheme(request);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
