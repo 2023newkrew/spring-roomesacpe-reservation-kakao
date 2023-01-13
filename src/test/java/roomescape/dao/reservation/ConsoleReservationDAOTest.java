@@ -89,4 +89,11 @@ public class ConsoleReservationDAOTest {
         assertThat(reservationDAO.exist(reservation1)).isTrue();
         assertThat(reservationDAO.exist(reservation2)).isFalse();
     }
+
+    @DisplayName("예약 아이디 존재 확인")
+    @Test
+    void existReservationId() {
+        assertThat(reservationDAO.existId(1L)).isTrue();
+        assertThat(reservationDAO.existId(2L)).isFalse();
+    }
 }

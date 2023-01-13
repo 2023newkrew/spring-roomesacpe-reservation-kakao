@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,5 +59,16 @@ public class ThemeServiceTest {
 
         assertThat(themeService.list()).isEqualTo(List.of(theme));
         verify(themeDAO, times(1)).list();
+    }
+
+    @DisplayName("테마 삭제")
+    @Test
+    void removeReservation() {
+        when(themeDAO.existId(ID_DATA)).thenReturn(true);
+        doNothing().when(themeDAO).remove(ID_DATA);
+
+        themeService.remove(ID_DATA);
+        verify(themeDAO, times(1)).existId(ID_DATA);
+        verify(themeDAO, times(1)).remove(ID_DATA);
     }
 }

@@ -3,7 +3,6 @@ package roomescape.dao.theme;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.dto.Theme;
-import roomescape.exception.BadRequestException;
 
 public abstract class ThemeDAO {
 
@@ -20,15 +19,6 @@ public abstract class ThemeDAO {
     private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
             "result");
 
-    protected void validate(Theme theme) {
-        if (theme.getName() == null || theme.getDesc() == null || theme.getPrice() == null) {
-            throw new BadRequestException();
-        }
-        if (exist(theme)) {
-            throw new BadRequestException();
-        }
-    }
-
     protected static RowMapper<Theme> getRowMapper() {
         return rowMapper;
     }
@@ -38,10 +28,8 @@ public abstract class ThemeDAO {
     }
 
     public abstract boolean exist(Theme theme);
-
+    public abstract boolean existId(Long id);
     public abstract Long create(Theme theme);
-
     public abstract List<Theme> list();
-
     public abstract void remove(Long l);
 }

@@ -2,7 +2,6 @@ package roomescape.dao.reservation;
 
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.dto.Reservation;
-import roomescape.exception.BadRequestException;
 
 public abstract class ReservationDAO {
 
@@ -19,16 +18,6 @@ public abstract class ReservationDAO {
     private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
             "result");
 
-    protected void validate(Reservation reservation) {
-        if (reservation.getDate() == null || reservation.getTime() == null
-                || reservation.getName() == null) {
-            throw new BadRequestException();
-        }
-        if (exist(reservation)) {
-            throw new BadRequestException();
-        }
-    }
-
     protected static RowMapper<Reservation> getRowMapper() {
         return rowMapper;
     }
@@ -38,10 +27,8 @@ public abstract class ReservationDAO {
     }
 
     public abstract boolean exist(Reservation reservation);
-
+    public abstract boolean existId(Long id);
     public abstract Long create(Reservation reservation);
-
     public abstract Reservation find(Long id);
-
     public abstract void remove(Long id);
 }

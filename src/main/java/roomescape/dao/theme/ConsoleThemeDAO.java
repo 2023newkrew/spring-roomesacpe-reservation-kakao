@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import roomescape.dao.theme.preparedstatementcreator.ExistThemeIdPreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ListThemePreparedStatementCreator;
@@ -83,6 +84,13 @@ public class ConsoleThemeDAO extends ThemeDAO {
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
+    private PreparedStatement createExistThemeIdPreparedStatement(
+            Connection con, Long id) throws SQLException {
+        PreparedStatementCreator preparedStatementCreator =
+                new ExistThemeIdPreparedStatementCreator(id);
+        return preparedStatementCreator.createPreparedStatement(con);
+    }
+
     private Long getGeneratedKey(PreparedStatement ps) throws SQLException {
         ResultSet resultSet = ps.getGeneratedKeys();
         validateResultSet(resultSet);
@@ -102,74 +110,100 @@ public class ConsoleThemeDAO extends ThemeDAO {
         return resultSet.getBoolean("result");
     }
 
-    private Long executeAddConnection(Connection con, Theme theme) {
-        try {
-            PreparedStatement ps = createAddThemePreparedStatement(con, theme);
-            ps.executeUpdate();
-            return getGeneratedKey(ps);
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private Long executeAddConnection(Connection con, Theme theme) throws SQLException {
+        PreparedStatement ps = createAddThemePreparedStatement(con, theme);
+        ps.executeUpdate();
+        return getGeneratedKey(ps);
     }
 
-    private List<Theme> executeListConnection(Connection con) {
-        try {
-            PreparedStatement ps = createListThemePreparedStatement(con);
-            ResultSet resultSet = ps.executeQuery();
-            return parseListResultSet(resultSet);
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private List<Theme> executeListConnection(Connection con) throws SQLException {
+        PreparedStatement ps = createListThemePreparedStatement(con);
+        ResultSet resultSet = ps.executeQuery();
+        return parseListResultSet(resultSet);
     }
 
-    private void executeDeleteConnection(Connection con, Long id) {
-        try {
-            PreparedStatement ps = createDeleteThemePreparedStatement(con, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private void executeDeleteConnection(Connection con, Long id) throws SQLException {
+        PreparedStatement ps = createDeleteThemePreparedStatement(con, id);
+        ps.executeUpdate();
     }
 
-    private boolean executeExistConnection(Connection con, Theme theme) {
-        try {
-            PreparedStatement ps = createExistThemePreparedStatement(con, theme);
-            ResultSet resultSet = ps.executeQuery();
-            return parseExistResultSet(resultSet);
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private boolean executeExistConnection(Connection con, Theme theme) throws SQLException {
+        PreparedStatement ps = createExistThemePreparedStatement(con, theme);
+        ResultSet resultSet = ps.executeQuery();
+        return parseExistResultSet(resultSet);
+    }
+
+    private boolean executeExistIdConnection(Connection con, Long id) throws SQLException {
+        PreparedStatement ps = createExistThemeIdPreparedStatement(con, id);
+        ResultSet resultSet = ps.executeQuery();
+        return parseExistResultSet(resultSet);
     }
 
     @Override
     public boolean exist(Theme theme) {
         Connection con = openConnection();
-        boolean result = executeExistConnection(con, theme);
-        closeConnection(con);
+        boolean result;
+        try {
+            result = executeExistConnection(con, theme);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean existId(Long id) {
+        Connection con = openConnection();
+        boolean result;
+        try {
+            result = executeExistIdConnection(con, id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
+        }
         return result;
     }
 
     @Override
     public Long create(Theme theme) {
-        validate(theme);
         Connection con = openConnection();
-        Long id = executeAddConnection(con, theme);
-        closeConnection(con);
+        Long id;
+        try {
+            id = executeAddConnection(con, theme);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
         return id;
     }
 
     @Override
     public List<Theme> list() {
         Connection con = openConnection();
-        List<Theme> result = executeListConnection(con);
-        closeConnection(con);
+        List<Theme> result;
+        try {
+            result = executeListConnection(con);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
         return result;
     }
 
     @Override
     public void remove(Long id) {
         Connection con = openConnection();
-        executeDeleteConnection(con, id);
-        closeConnection(con);
+        try {
+            executeDeleteConnection(con, id);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
     }
 }

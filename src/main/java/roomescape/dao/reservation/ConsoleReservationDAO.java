@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
@@ -82,6 +83,13 @@ public class ConsoleReservationDAO extends ReservationDAO {
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
+    private PreparedStatement createExistReservationIdPreparedStatement(
+            Connection con, Long id) throws SQLException {
+        PreparedStatementCreator preparedStatementCreator =
+                new ExistReservationIdPreparedStatementCreator(id);
+        return preparedStatementCreator.createPreparedStatement(con);
+    }
+
     private Long getGeneratedKey(PreparedStatement ps) throws SQLException {
         ResultSet resultSet = ps.getGeneratedKeys();
         validateResultSet(resultSet);
@@ -121,6 +129,12 @@ public class ConsoleReservationDAO extends ReservationDAO {
         return parseExistResultSet(resultSet);
     }
 
+    private boolean executeExistIdConnection(Connection con, Long id) throws SQLException {
+        PreparedStatement ps = createExistReservationIdPreparedStatement(con, id);
+        ResultSet resultSet = ps.executeQuery();
+        return parseExistResultSet(resultSet);
+    }
+
     @Override
     public boolean exist(Reservation reservation) {
         Connection con = openConnection();
@@ -136,8 +150,21 @@ public class ConsoleReservationDAO extends ReservationDAO {
     }
 
     @Override
+    public boolean existId(Long id) {
+        Connection con = openConnection();
+        boolean result;
+        try {
+            result = executeExistIdConnection(con, id);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
+        return result;
+    }
+
+    @Override
     public Long create(Reservation reservation) {
-        validate(reservation);
         Connection con = openConnection();
         Long id;
         try {

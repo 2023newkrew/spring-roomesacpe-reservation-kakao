@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
@@ -36,8 +37,15 @@ public class SpringReservationDAO extends ReservationDAO {
     }
 
     @Override
+    public boolean existId(Long id) {
+        List<Boolean> result = jdbcTemplate.query(
+                new ExistReservationIdPreparedStatementCreator(id), getExistRowMapper());
+        validateResult(result);
+        return result.get(0);
+    }
+
+    @Override
     public Long create(Reservation reservation) {
-        validate(reservation);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 new InsertReservationPreparedStatementCreator(reservation), keyHolder);

@@ -89,4 +89,11 @@ public class ConsoleThemeDAOTest {
         assertThat(themeDAO.exist(theme1)).isTrue();
         assertThat(themeDAO.exist(theme2)).isFalse();
     }
+
+    @DisplayName("테마 아이디 존재 확인")
+    @Test
+    void existReservationId() {
+        assertThat(themeDAO.existId(1L)).isTrue();
+        assertThat(themeDAO.existId(2L)).isFalse();
+    }
 }

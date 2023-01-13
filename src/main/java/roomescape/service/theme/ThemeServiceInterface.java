@@ -6,6 +6,6 @@ import roomescape.dto.Theme;
 public interface ThemeServiceInterface {
 
     Long create(Theme theme);
-
     List<Theme> list();
+    void remove(Long idData);
 }

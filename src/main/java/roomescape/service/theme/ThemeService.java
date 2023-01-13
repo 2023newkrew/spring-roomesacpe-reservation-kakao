@@ -15,8 +15,19 @@ public class ThemeService implements ThemeServiceInterface {
 
     @Override
     public Long create(Theme theme) {
-        throwIfExistTheme(theme);
+        validateCreateTheme(theme);
         return themeDAO.create(theme);
+    }
+
+    private void validateCreateTheme(Theme theme) {
+        throwIfInvalidTheme(theme);
+        throwIfExistTheme(theme);
+    }
+
+    private void throwIfInvalidTheme(Theme theme) {
+        if (theme.getName() == null || theme.getDesc() == null) {
+            throw new BadRequestException();
+        }
     }
 
     private void throwIfExistTheme(Theme theme) {
@@ -28,5 +39,17 @@ public class ThemeService implements ThemeServiceInterface {
     @Override
     public List<Theme> list() {
         return themeDAO.list();
+    }
+
+    @Override
+    public void remove(Long id) {
+        throwIfNotExistId(id);
+        themeDAO.remove(id);
+    }
+
+    private void throwIfNotExistId(Long id) {
+        if(!themeDAO.existId(id)) {
+            throw new BadRequestException();
+        }
     }
 }

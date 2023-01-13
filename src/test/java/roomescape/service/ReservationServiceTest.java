@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,12 +70,11 @@ public class ReservationServiceTest {
     @DisplayName("예약 삭제")
     @Test
     void removeReservation() {
-        Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
-
-        when(reservationDAO.find(ID_DATA)).thenReturn(reservation);
+        when(reservationDAO.existId(ID_DATA)).thenReturn(true);
+        doNothing().when(reservationDAO).remove(ID_DATA);
 
         reservationService.remove(ID_DATA);
-        verify(reservationDAO, times(1)).find(ID_DATA);
+        verify(reservationDAO, times(1)).existId(ID_DATA);
         verify(reservationDAO, times(1)).remove(ID_DATA);
     }
 }
