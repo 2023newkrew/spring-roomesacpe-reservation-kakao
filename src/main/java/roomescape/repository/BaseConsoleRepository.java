@@ -11,6 +11,7 @@ public class BaseConsoleRepository {
     private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER = "sa";
     private static final String PASSWORD = "";
+    private static final String GLOBAL_ID_COLUMN = "id";
 
     private Connection getConnection() {
         Connection con = null;
@@ -33,16 +34,16 @@ public class BaseConsoleRepository {
         }
     }
 
-    protected Long insert(final String SQL, final Object... args) {
+    protected <T> T insert(final String SQL, final Object... args) {
         Connection con = getConnection();
-        Long id = null;
+        T id = null;
         try {
-            PreparedStatement ps = con.prepareStatement(SQL, new String[]{"id"});
+            PreparedStatement ps = con.prepareStatement(SQL, new String[]{GLOBAL_ID_COLUMN});
             for (int i = 0; i < args.length; i++) {
                 ps.setObject(i + 1, args[i]);
             }
             ResultSet rs = ps.getGeneratedKeys();
-            id = rs.getLong("id");
+            id = (T) rs.getObject(GLOBAL_ID_COLUMN);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
