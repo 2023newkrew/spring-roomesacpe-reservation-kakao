@@ -18,26 +18,24 @@ import roomescape.exception.NoSuchReservationException;
 @JdbcTest
 public class ReservationJdbcTemplateRepositoryTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final ReservationRepository reservationRepository;
+    private final Theme defaultTheme;
 
     @Autowired
-    private DataSource dataSource;
+    public ReservationJdbcTemplateRepositoryTest(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+        this.reservationRepository = new ReservationJdbcTemplateRepository(jdbcTemplate,
+                dataSource);
+        this.defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    }
 
-    private ReservationRepository reservationRepository;
-
-    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
-    private final String expectedName = "name";
-    private final LocalDate expectedDate = LocalDate.parse("2022-08-11");
-    private final LocalTime expectedTime = LocalTime.parse("13:00:00");
-    private final Long invalidId = -1L;
+    private static final String expectedName = "name";
+    private static final LocalDate expectedDate = LocalDate.parse("2022-08-11");
+    private static final LocalTime expectedTime = LocalTime.parse("13:00:00");
+    private static final Long invalidId = -1L;
     private Long reservationId;
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationJdbcTemplateRepository(jdbcTemplate,
-                dataSource);
         final Reservation reservation = Reservation.builder().name(expectedName).date(expectedDate)
                 .time(expectedTime).theme(defaultTheme).build();
 
