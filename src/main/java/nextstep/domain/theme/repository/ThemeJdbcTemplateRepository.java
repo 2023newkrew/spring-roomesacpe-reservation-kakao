@@ -22,7 +22,8 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
     public Optional<Theme> findByName(String name) {
         try {
             String sql = "SELECT * FROM theme WHERE name = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Theme.class, name));
+            Optional<Theme> theme = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Theme.class, name));
+            return theme;
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -40,5 +41,16 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public void clear() {
+        String sql = "DELETE FROM theme";
+        jdbcTemplate.update(sql);
+        resetId();
+    }
+
+    private void resetId() {
+        String sql = "ALTER TABLE theme ALTER COLUMN id RESTART WITH 1";
+        jdbcTemplate.execute(sql);
     }
 }

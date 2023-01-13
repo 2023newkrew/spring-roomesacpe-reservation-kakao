@@ -10,4 +10,6 @@ public interface ThemeRepository {
     Optional<Theme> findByName(String name);
 
     Long save(Theme theme);
+
+    void clear();
 }
