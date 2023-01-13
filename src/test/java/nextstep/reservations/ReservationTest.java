@@ -134,4 +134,24 @@ public class ReservationTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("존재하지 않는 예약입니다."));
     }
+
+    @Test
+    void 존재하지_않는_테마_예약_오류() {
+        Map<String, Object> reservationRequest = new HashMap<>();
+        reservationRequest.put("date", "2022-08-01");
+        reservationRequest.put("time", "13:00");
+        reservationRequest.put("name", "name");
+        reservationRequest.put("themeName", "카카오");
+        reservationRequest.put("themeDesc", "카카오 어드벤처");
+        reservationRequest.put("themePrice", 29_000);
+
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequest)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("존재하지 않는 테마입니다."));
+    }
 }

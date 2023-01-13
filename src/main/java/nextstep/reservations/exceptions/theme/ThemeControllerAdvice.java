@@ -1,5 +1,6 @@
 package nextstep.reservations.exceptions.theme;
 
+import nextstep.reservations.domain.controller.reservation.ReservationController;
 import nextstep.reservations.domain.controller.theme.ThemeController;
 import nextstep.reservations.exceptions.theme.exception.DuplicateThemeException;
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
@@ -7,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice(assignableTypes = ThemeController.class)
+@ControllerAdvice(assignableTypes = {ThemeController.class, ReservationController.class})
 public class ThemeControllerAdvice {
     @ExceptionHandler(DuplicateThemeException.class)
     public ResponseEntity<String> duplicateTheme() {

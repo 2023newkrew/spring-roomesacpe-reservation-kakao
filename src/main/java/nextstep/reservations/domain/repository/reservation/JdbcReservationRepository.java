@@ -4,6 +4,7 @@ import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
+import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,12 @@ public class JdbcReservationRepository implements ReservationRepository{
             }
         }
         catch (SQLException e) {
-            throw new DuplicateReservationException();
+            if (e.getErrorCode() == 23505) {
+                throw new DuplicateReservationException();
+            }
+            else if (e.getErrorCode() == 23506) {
+                throw new NoSuchThemeException();
+            }
         }
 
         return null;
