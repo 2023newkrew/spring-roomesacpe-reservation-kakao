@@ -7,11 +7,11 @@ import roomescape.domain.Reservation;
 
 public interface ReservationRepository {
 
-    public Long save(Reservation reservation);
+    Long save(Reservation reservation);
 
-    public Optional<Reservation> findById(Long reservationId);
+    Optional<Reservation> findById(Long reservationId);
 
-    public boolean deleteById(Long reservationId);
+    boolean deleteById(Long reservationId);
 
-    public Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
+    Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 }
