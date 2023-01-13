@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import roomescape.dao.preparedstatement.AddReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatement.DeleteReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatement.ExistReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatement.FindReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.AddReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.DeleteReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.ExistReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 

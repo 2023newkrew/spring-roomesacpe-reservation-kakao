@@ -1,18 +1,18 @@
-package roomescape.dao.preparedstatement;
+package roomescape.dao.preparedstatementcreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
-public class FindReservationPreparedStatementCreator implements PreparedStatementCreator {
+public class DeleteReservationPreparedStatementCreator implements PreparedStatementCreator {
 
     private static final String SQL =
-            "SELECT * FROM reservation WHERE id=?;";
+            "DELETE FROM reservation WHERE id=?;";
 
     private final Long id;
 
-    public FindReservationPreparedStatementCreator(Long id) {
+    public DeleteReservationPreparedStatementCreator(Long id) {
         this.id = id;
     }
 

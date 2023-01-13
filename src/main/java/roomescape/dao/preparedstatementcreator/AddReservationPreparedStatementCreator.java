@@ -1,4 +1,4 @@
-package roomescape.dao.preparedstatement;
+package roomescape.dao.preparedstatementcreator;
 
 import java.sql.Connection;
 import java.sql.Date;

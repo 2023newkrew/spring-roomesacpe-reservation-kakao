@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.preparedstatement.AddReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatement.DeleteReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatement.ExistReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatement.FindReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.AddReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.DeleteReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.ExistReservationPreparedStatementCreator;
+import roomescape.dao.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
