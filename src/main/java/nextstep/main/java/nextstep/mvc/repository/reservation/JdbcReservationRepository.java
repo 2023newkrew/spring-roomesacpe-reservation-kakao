@@ -1,5 +1,6 @@
 package nextstep.main.java.nextstep.mvc.repository.reservation;
 
+import nextstep.main.java.nextstep.global.exception.exception.NotSupportedOperationException;
 import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -75,6 +77,17 @@ public class JdbcReservationRepository implements ReservationRepository {
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        String sql = "SELECT * FROM reservation";
+        return jdbcTemplate.query(sql, reservationRowMapper);
+    }
+
+    @Override
+    public void update(Long id, ReservationCreateRequest request) {
+        throw new NotSupportedOperationException();
     }
 
     @Override

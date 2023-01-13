@@ -7,6 +7,7 @@ import nextstep.main.java.nextstep.mvc.domain.reservation.ReservationMapper;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.reservation.response.ReservationFindResponse;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.repository.CrudRepository;
 import nextstep.main.java.nextstep.mvc.repository.reservation.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

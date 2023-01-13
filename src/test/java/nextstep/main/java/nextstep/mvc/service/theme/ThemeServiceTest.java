@@ -4,7 +4,7 @@ import nextstep.main.java.nextstep.global.exception.exception.AlreadyReservedThe
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateOrUpdateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
 import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ public class ThemeServiceTest {
     @DisplayName("[테마 생성] 테마 생성 성공")
     void saveSuccess() {
         Long id = 1L;
-        ThemeCreateRequest request = ThemeCreateRequest.of("theme", "description of new theme", 10000);
+        ThemeCreateOrUpdateRequest request = ThemeCreateOrUpdateRequest.of("theme", "description of new theme", 10000);
         Theme theme = createThemeFromIdAndRequest(id, request);
 
         given(themeRepository.save(any()))
@@ -93,7 +93,7 @@ public class ThemeServiceTest {
                 .isInstanceOf(AlreadyReservedThemeException.class);
     }
 
-    private Theme createThemeFromIdAndRequest(Long id, ThemeCreateRequest request) {
+    private Theme createThemeFromIdAndRequest(Long id, ThemeCreateOrUpdateRequest request) {
         return Theme.builder()
                 .id(id)
                 .name(request.getName())

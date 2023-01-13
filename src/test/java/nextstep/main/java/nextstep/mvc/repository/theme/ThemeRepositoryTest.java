@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.mvc.repository.theme;
 
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateOrUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ThemeRepositoryTest {
     @DisplayName("[테마 생성] 테마 생성 성공")
     void save() {
         Long id = 1L;
-        ThemeCreateRequest request = ThemeCreateRequest.of("theme", "description of new theme", 10000);
+        ThemeCreateOrUpdateRequest request = ThemeCreateOrUpdateRequest.of("theme", "description of new theme", 10000);
         Theme theme = createThemeFromIdAndRequest(id, request);
         Long newId = themeRepository.save(request);
 
@@ -57,7 +57,7 @@ public class ThemeRepositoryTest {
         assertThat(themeRepository.findById(id)).isEmpty();
     }
 
-    private Theme createThemeFromIdAndRequest(Long id, ThemeCreateRequest request) {
+    private Theme createThemeFromIdAndRequest(Long id, ThemeCreateOrUpdateRequest request) {
         return Theme.builder()
                 .id(id)
                 .name(request.getName())

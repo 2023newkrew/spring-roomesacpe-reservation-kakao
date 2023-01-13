@@ -1,8 +1,7 @@
 package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateOrUpdateRequest;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ public class ThemeController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody ThemeCreateRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody ThemeCreateOrUpdateRequest request) {
         Long id = themeService.save(request);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
@@ -43,8 +42,8 @@ public class ThemeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,
-                                    @Valid @RequestBody ThemeUpdateRequest themeUpdateRequest) {
-        themeService.update(id, themeUpdateRequest);
+                                    @Valid @RequestBody ThemeCreateOrUpdateRequest request) {
+        themeService.update(id, request);
 
         return ResponseEntity.noContent().build();
     }

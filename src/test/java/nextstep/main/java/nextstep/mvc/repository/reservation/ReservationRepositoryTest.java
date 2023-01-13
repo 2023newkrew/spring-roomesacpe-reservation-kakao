@@ -3,13 +3,13 @@ package nextstep.main.java.nextstep.mvc.repository.reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.repository.CrudRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.springframework.context.annotation.ComponentScan.Filter;
 import static org.springframework.context.annotation.FilterType.ANNOTATION;
 
-@JdbcTest(includeFilters = @Filter(type = ANNOTATION, classes = Repository.class))
+@JdbcTest(includeFilters = @Filter(type = ANNOTATION, classes = org.springframework.stereotype.Repository.class))
 @Sql(scripts = "/sql/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class ReservationRepositoryTest {
     @Autowired

@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.mvc.controller.theme;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateOrUpdateRequest;
 import nextstep.main.java.nextstep.mvc.service.reservation.ReservationService;
 import nextstep.main.java.nextstep.mvc.service.theme.ThemeService;
 import org.junit.jupiter.api.DisplayName;
@@ -42,10 +42,10 @@ public class ThemeControllerUnitTest {
     void createSuccess() throws Exception {
         // given
         Long id = 1L;
-        ThemeCreateRequest request = ThemeCreateRequest.of("theme", "description of new theme", 10000);
+        ThemeCreateOrUpdateRequest request = ThemeCreateOrUpdateRequest.of("theme", "description of new theme", 10000);
         String content = objectMapper.writeValueAsString(request);
 
-        given(themeService.save(any(ThemeCreateRequest.class)))
+        given(themeService.save(any(ThemeCreateOrUpdateRequest.class)))
                 .willReturn(id);
 
         // when
@@ -63,12 +63,12 @@ public class ThemeControllerUnitTest {
     @ParameterizedTest
     @MethodSource({"provideRequest"})
     @DisplayName("올바른 값이 들어오지 않을 경우 테마 생성에 실패한다.")
-    void create(ThemeCreateRequest request) throws Exception {
+    void create(ThemeCreateOrUpdateRequest request) throws Exception {
         // given
         Long id = 1L;
         String content = objectMapper.writeValueAsString(request);
 
-        given(themeService.save(any(ThemeCreateRequest.class)))
+        given(themeService.save(any(ThemeCreateOrUpdateRequest.class)))
                 .willReturn(id);
 
         // when
@@ -92,9 +92,9 @@ public class ThemeControllerUnitTest {
         int invalidPrice = 999;
 
         return Stream.of(
-                Arguments.arguments(ThemeCreateRequest.of(validName, validDesc, invalidPrice)),
-                Arguments.arguments(ThemeCreateRequest.of(validName, invalidDesc, validPrice)),
-                Arguments.arguments(ThemeCreateRequest.of("", validDesc, validPrice))
+                Arguments.arguments(ThemeCreateOrUpdateRequest.of(validName, validDesc, invalidPrice)),
+                Arguments.arguments(ThemeCreateOrUpdateRequest.of(validName, invalidDesc, validPrice)),
+                Arguments.arguments(ThemeCreateOrUpdateRequest.of("", validDesc, validPrice))
         );
     }
 }

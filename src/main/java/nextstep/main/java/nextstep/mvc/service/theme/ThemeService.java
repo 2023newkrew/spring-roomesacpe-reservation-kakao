@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.main.java.nextstep.global.exception.exception.AlreadyReservedThemeException;
 import nextstep.main.java.nextstep.global.exception.exception.NoSuchThemeException;
 import nextstep.main.java.nextstep.mvc.domain.theme.ThemeMapper;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateOrUpdateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
 import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class ThemeService {
     private final ThemeMapper themeMapper;
 
     @Transactional
-    public Long save(ThemeCreateRequest request) {
+    public Long save(ThemeCreateOrUpdateRequest request) {
         return themeRepository.save(request);
     }
 
@@ -49,7 +48,7 @@ public class ThemeService {
     }
 
     @Transactional
-    public void update(Long id, ThemeUpdateRequest request) {
+    public void update(Long id, ThemeCreateOrUpdateRequest request) {
         themeRepository.update(id, request);
     }
 

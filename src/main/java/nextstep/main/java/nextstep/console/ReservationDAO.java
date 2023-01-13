@@ -1,45 +1,40 @@
 package nextstep.main.java.nextstep.console;
 
+import nextstep.main.java.nextstep.global.exception.exception.NotSupportedOperationException;
 import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
+import nextstep.main.java.nextstep.mvc.repository.CrudRepository;
 import nextstep.main.java.nextstep.mvc.repository.reservation.ReservationRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
-@Deprecated
 public class ReservationDAO implements ReservationRepository {
     private static final String SERVER_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER_NAME = "sa";
     private static final String PASSWORD = "";
 
-//    @Override
-//    public Reservation save(Reservation reservation) {
-//        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-//
-//        try (Connection connection = connect();
-//             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"})) {
-//
-//            preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
-//            preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
-//            preparedStatement.setString(3, reservation.getName());
-//            preparedStatement.setString(4, reservation.getTheme().getName());
-//            preparedStatement.setString(5, reservation.getTheme().getDesc());
-//            preparedStatement.setInt(6, reservation.getTheme().getPrice());
-//
-//            preparedStatement.executeUpdate();
-//            return new Reservation(getGeneratedKey(preparedStatement), reservation);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     @Override
-    public Long save(ReservationCreateRequest request) {
-        return null;
+    public Long save(ReservationCreateRequest reservation) {
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?, ?, ?);";
+
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"})) {
+
+            preparedStatement.setDate(1, Date.valueOf(reservation.getDate()));
+            preparedStatement.setTime(2, Time.valueOf(reservation.getTime()));
+            preparedStatement.setString(3, reservation.getName());
+            preparedStatement.setString(4, reservation.getThemeName());
+
+            preparedStatement.executeUpdate();
+            return getGeneratedKey(preparedStatement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -82,6 +77,16 @@ public class ReservationDAO implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        throw new NotSupportedOperationException();
+    }
+
+    @Override
+    public void update(Long id, ReservationCreateRequest request) {
+        throw new NotSupportedOperationException();
     }
 
     @Override

@@ -1,8 +1,7 @@
 package nextstep.main.java.nextstep.mvc.repository.theme;
 
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateRequest;
-import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
+import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeCreateOrUpdateRequest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,7 +35,7 @@ public class JdbcThemeRepository implements ThemeRepository{
     );
 
     @Override
-    public Long save(ThemeCreateRequest request) {
+    public Long save(ThemeCreateOrUpdateRequest request) {
         return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(request)).longValue();
     }
 
@@ -63,7 +62,7 @@ public class JdbcThemeRepository implements ThemeRepository{
     }
 
     @Override
-    public void update(Long id, ThemeUpdateRequest request) {
+    public void update(Long id, ThemeCreateOrUpdateRequest request) {
         String sql = "UPDATE theme " +
                 "SET name = ?, desc = ?, price = ? " +
                 "WHERE id = ?";
