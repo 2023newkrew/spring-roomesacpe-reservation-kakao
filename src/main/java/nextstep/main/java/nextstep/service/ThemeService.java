@@ -15,7 +15,7 @@ import static nextstep.main.java.nextstep.message.ExceptionMessage.*;
 @Service
 public class ThemeService {
 
-    private ThemeRepository themeRepository;
+    private final ThemeRepository themeRepository;
 
     public ThemeService(ThemeRepository themeRepository) {
         this.themeRepository = themeRepository;
