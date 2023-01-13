@@ -21,24 +21,29 @@ public class ThemeService {
     }
 
     public List<ThemeResponse> getAllThemes() {
-        List<Theme> themes = themeRepository.getAllThemes();
+        List<Theme> themes = themeRepository.findAllThemes();
         return ThemeResponse.toList(themes);
     }
 
     public ThemeResponse getTheme(Long themeId) {
-        Theme theme = themeRepository.getTheme(themeId)
+        Theme theme = themeRepository.findThemeById(themeId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
         return ThemeResponse.of(theme);
     }
 
+    @Transactional
     public Long createTheme(ThemeRequest themeRequest) {
+        themeRepository.findThemeByName(themeRequest.getName())
+                .ifPresent(theme -> {
+                    throw new RoomEscapeException(ErrorCode.DUPLICATED_THEME_NAME);
+                });
         Theme theme = themeRequest.toEntity();
         return themeRepository.insertTheme(theme);
     }
 
     @Transactional
     public void changeTheme(Long themeId, ThemeRequest themeRequest) {
-        Theme theme = themeRepository.getTheme(themeId)
+        Theme theme = themeRepository.findThemeById(themeId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
         themeRepository.changeTheme(theme.getId(), themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
     }

@@ -28,15 +28,23 @@ public class ThemeWebRepository implements ThemeRepository {
     );
 
     @Override
-    public List<Theme> getAllThemes() {
+    public List<Theme> findAllThemes() {
         String sql = "SELECT * FROM theme";
         return jdbcTemplate.query(sql, themeRowMapper);
     }
 
     @Override
-    public Optional<Theme> getTheme(Long id) {
+    public Optional<Theme> findThemeById(Long id) {
         String sql = "SELECT * FROM theme WHERE id = (?)";
         return jdbcTemplate.query(sql, themeRowMapper, id)
+                .stream()
+                .findAny();
+    }
+
+    @Override
+    public Optional<Theme> findThemeByName(String name) {
+        String sql = "SELECT * FROM theme WHERE name = (?)";
+        return jdbcTemplate.query(sql, themeRowMapper, name)
                 .stream()
                 .findAny();
     }

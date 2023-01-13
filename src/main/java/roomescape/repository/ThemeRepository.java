@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ThemeRepository {
-    List<Theme> getAllThemes();
+    List<Theme> findAllThemes();
 
-    Optional<Theme> getTheme(Long id);
+    Optional<Theme> findThemeById(Long id);
+
+    Optional<Theme> findThemeByName(String name);
 
     Long insertTheme(Theme theme);
 
