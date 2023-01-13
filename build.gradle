@@ -15,21 +15,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.projectlombok:lombok:1.18.24'
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     runtimeOnly 'com.h2database:h2'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
-    testImplementation 'org.projectlombok:lombok:1.18.24'
-
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 test {

@@ -3,13 +3,24 @@ package nextstep.reservations.util.mapper;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.dto.theme.ThemeRequestDto;
 import nextstep.reservations.dto.theme.ThemeResponseDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface ThemeMapper {
-    @Mapping(target = "id", ignore = true)
-    Theme requestDtoToTheme(ThemeRequestDto requestDto);
+@Component
+public class ThemeMapper {
+    public Theme requestDtoToTheme(ThemeRequestDto requestDto) {
+        return Theme.builder()
+                .name(requestDto.getName())
+                .desc(requestDto.getDesc())
+                .price(requestDto.getPrice())
+                .build();
+    }
 
-    ThemeResponseDto themeToThemeResponseDto(Theme theme);
+    public ThemeResponseDto themeToThemeResponseDto(Theme theme) {
+        return ThemeResponseDto.builder()
+                .id(theme.getId())
+                .name(theme.getName())
+                .desc(theme.getDesc())
+                .price(theme.getPrice())
+                .build();
+    }
 }

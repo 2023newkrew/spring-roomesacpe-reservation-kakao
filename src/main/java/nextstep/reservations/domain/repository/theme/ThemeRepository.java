@@ -1,6 +1,5 @@
 package nextstep.reservations.domain.repository.theme;
 
-import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.theme.exception.DuplicateThemeException;
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
@@ -16,9 +15,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@RequiredArgsConstructor
 public class ThemeRepository {
     private final JdbcTemplate jdbcTemplate;
+
+    public ThemeRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long add(Theme theme) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -1,6 +1,5 @@
 package nextstep.reservations.domain.service.theme;
 
-import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.repository.theme.ThemeRepository;
 import nextstep.reservations.dto.theme.ThemeRequestDto;
 import nextstep.reservations.dto.theme.ThemeResponseDto;
@@ -11,11 +10,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ThemeService {
     private final ThemeRepository themeRepository;
 
     private final ThemeMapper themeMapper;
+
+    public ThemeService(final ThemeRepository themeRepository, final ThemeMapper themeMapper) {
+        this.themeRepository = themeRepository;
+        this.themeMapper = themeMapper;
+    }
 
     public Long addTheme(final ThemeRequestDto themeRequestDto) {
         return themeRepository.add(themeMapper.requestDtoToTheme(themeRequestDto));

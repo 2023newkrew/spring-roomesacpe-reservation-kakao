@@ -1,6 +1,5 @@
 package nextstep.reservations.domain.controller.reservation;
 
-import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.service.reservation.ReservationService;
 import nextstep.reservations.dto.reservation.ReservationRequestDto;
 import nextstep.reservations.dto.reservation.ReservationResponseDto;
@@ -13,9 +12,12 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/reservations")
-@RequiredArgsConstructor
 public class ReservationController {
     private final ReservationService reservationService;
+
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @PostMapping
     public ResponseEntity<Object> addReservation(@RequestBody ReservationRequestDto requestDto) {

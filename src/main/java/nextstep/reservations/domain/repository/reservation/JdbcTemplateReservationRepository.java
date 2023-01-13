@@ -1,6 +1,5 @@
 package nextstep.reservations.domain.repository.reservation;
 
-import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
@@ -19,10 +18,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 @Repository
-@RequiredArgsConstructor
 @Primary
 public class JdbcTemplateReservationRepository implements ReservationRepository{
     private final JdbcTemplate jdbcTemplate;
+
+    public JdbcTemplateReservationRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Long add(Reservation reservation) {

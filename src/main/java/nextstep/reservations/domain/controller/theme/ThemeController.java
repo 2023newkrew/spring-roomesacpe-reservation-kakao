@@ -1,6 +1,5 @@
 package nextstep.reservations.domain.controller.theme;
 
-import lombok.RequiredArgsConstructor;
 import nextstep.reservations.domain.service.theme.ThemeService;
 import nextstep.reservations.dto.theme.ThemeRequestDto;
 import nextstep.reservations.dto.theme.ThemeResponseDto;
@@ -12,10 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/themes")
-@RequiredArgsConstructor
 public class ThemeController {
 
     private final ThemeService themeService;
+
+    public ThemeController(final ThemeService themeService) {
+        this.themeService = themeService;
+    }
 
     @PostMapping
     public ResponseEntity<Object> addTheme(@RequestBody ThemeRequestDto themeRequestDto) {
