@@ -27,13 +27,12 @@ public class ReservationService {
         return reservationRepository.findById(id);
     }
 
-    public void deleteReservation(Long id) throws SQLException {
+    public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
     }
 
     public Long createReservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        themeRepository.findByTheme(theme);
-
+        theme = themeRepository.findByTheme(theme);
         return reservationRepository.save(date, time, name, theme);
     }
 }

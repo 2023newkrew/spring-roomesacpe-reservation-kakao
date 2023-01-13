@@ -40,11 +40,16 @@ public class ConsoleReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long id) throws SQLException {
-        PreparedStatement ps = con.prepareStatement(deleteByIdSql, new String[]{"id"});
-        ps.setLong(1, id);
-        int cnt = ps.executeUpdate();
-        if (cnt == 0) throw new RuntimeException("해당 id의 예약은 존재하지 않습니다.");
+    public void deleteById(Long id) {
+        try {
+            PreparedStatement ps = con.prepareStatement(deleteByIdSql, new String[]{"id"});
+            ps.setLong(1, id);
+            int cnt = ps.executeUpdate();
+
+            if (cnt == 0) throw new RuntimeException("해당 id의 예약은 존재하지 않습니다.");
+        } catch (Exception e){
+            throw new RuntimeException("해당 id의 예약은 존재하지 않습니다.");
+        }
     }
 
     @Override

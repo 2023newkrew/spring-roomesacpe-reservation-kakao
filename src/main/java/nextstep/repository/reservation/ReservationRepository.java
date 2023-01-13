@@ -13,9 +13,8 @@ public interface ReservationRepository {
     String findByIdSql = "select * from reservation where id = ?";
     String deleteByIdSql = "delete from reservation where id = ?";
 
-
-    String saveSql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price)" +
-            "VALUES (?, ?, ?, ?, ?, ?);";
+    String saveSql = "INSERT INTO reservation (date, time, name, theme_id, theme_name, theme_desc, theme_price)" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from reservation where date = ? and time = ?";
 
     String createTableSql = "create table reservation (\n" +
@@ -36,9 +35,10 @@ public interface ReservationRepository {
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));
         ps.setString(3, name);
-        ps.setString(4, theme.getName());
-        ps.setString(5, theme.getDesc());
-        ps.setInt(6, theme.getPrice());
+        ps.setLong(4, theme.getId());
+        ps.setString(5, theme.getName());
+        ps.setString(6, theme.getDesc());
+        ps.setInt(7, theme.getPrice());
         return ps;
     }
 
@@ -57,7 +57,7 @@ public interface ReservationRepository {
 
     Reservation findById(Long id);
 
-    void deleteById(Long id) throws SQLException;
+    void deleteById(Long id);
 
     Long save(LocalDate date, LocalTime time, String name, Theme theme);
 
