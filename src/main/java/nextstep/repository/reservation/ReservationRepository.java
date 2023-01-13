@@ -1,7 +1,8 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.repository.theme.ThemeRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,9 +12,12 @@ public interface ReservationRepository {
 
     String findByIdSql = "select * from reservation where id = ?";
     String deleteByIdSql = "delete from reservation where id = ?";
+
+
     String saveSql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price)" +
             "VALUES (?, ?, ?, ?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from reservation where date = ? and time = ?";
+
     String createTableSql = "create table reservation (\n" +
             "  id bigint not null auto_increment,\n" +
             "  date date,\n" +
@@ -27,7 +31,7 @@ public interface ReservationRepository {
     String dropTableSql = "drop table reservation if exists";
 
     default PreparedStatement getReservationPreparedStatement(Connection con, LocalDate date, LocalTime time,
-                                                              String name, Theme theme) throws SQLException{
+                                                              String name, Theme theme) throws SQLException {
         PreparedStatement ps = con.prepareStatement(saveSql, new String[]{"id"});
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));

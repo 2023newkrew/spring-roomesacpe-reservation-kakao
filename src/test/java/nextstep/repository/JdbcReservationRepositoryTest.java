@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.repository.reservation.JdbcReservationRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Transactional
 class JdbcReservationRepositoryTest {
 
-    @Autowired JdbcReservationRepository jdbcReservationRepository;
+    @Autowired
+    JdbcReservationRepository jdbcReservationRepository;
 
     static Theme theme;
 

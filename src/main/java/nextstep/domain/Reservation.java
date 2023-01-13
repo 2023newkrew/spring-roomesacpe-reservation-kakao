@@ -10,6 +10,7 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
+    private Long themeId;
     private Theme theme;
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
@@ -18,6 +19,14 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.theme = theme;
+    }
+
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.themeId = themeId;
     }
 
     public Long getId() {
@@ -34,6 +43,10 @@ public class Reservation {
 
     public String getName() {
         return name;
+    }
+
+    public Long getThemeId() {
+        return themeId;
     }
 
     public Theme getTheme() {
