@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ThemeControllerTest {
+class ThemeControllerTest {
 
     @LocalServerPort
     int port;

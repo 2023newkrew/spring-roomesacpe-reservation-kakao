@@ -20,12 +20,12 @@ import java.time.LocalTime;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationControllerTest {
+class ReservationControllerTest {
 
     @LocalServerPort
     int port;
 
-    private Initiator initiator = null;
+    private final Initiator initiator;
 
     private final String path = "reservations";
     private final CreateReservationRequest request = new CreateReservationRequest(

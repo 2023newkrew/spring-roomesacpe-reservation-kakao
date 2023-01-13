@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @SpringBootTest
-public class ThemeJDBCRepositoryTest {
+class ThemeJDBCRepositoryTest {
 
     Initiator initiator;
 

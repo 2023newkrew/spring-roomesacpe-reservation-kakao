@@ -17,11 +17,11 @@ import java.time.LocalTime;
 import java.util.List;
 
 @SpringBootTest
-public class ReservationJDBCRepositoryTest {
+class ReservationJDBCRepositoryTest {
     @Autowired
     private ReservationJDBCRepository reservationJDBCRepository;
 
-    private Initiator initiator;
+    private final Initiator initiator;
 
     private final Reservation reservation = Reservation.builder()
             .name("baker")

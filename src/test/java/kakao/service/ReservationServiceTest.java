@@ -20,7 +20,7 @@ import java.time.LocalTime;
 
 @Transactional
 @SpringBootTest
-public class ReservationServiceTest {
+class ReservationServiceTest {
 
     @Autowired
     ReservationService reservationService;

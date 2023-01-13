@@ -22,15 +22,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @SpringBootTest
-public class ThemeValidatorTest {
-    private final ThemeJDBCRepository themeJDBCRepository;
+class ThemeValidatorTest {
     private final ReservationJDBCRepository reservationJDBCRepository;
     private final ThemeValidator themeValidator;
     private final Initiator initiator;
 
     @Autowired
     ThemeValidatorTest(JdbcTemplate jdbcTemplate, ThemeJDBCRepository themeJDBCRepository, ReservationJDBCRepository reservationJDBCRepository) {
-        this.themeJDBCRepository = themeJDBCRepository;
         this.reservationJDBCRepository = reservationJDBCRepository;
         initiator = new Initiator(jdbcTemplate);
         themeValidator = new ThemeValidator(themeJDBCRepository, reservationJDBCRepository);
@@ -64,11 +62,13 @@ public class ThemeValidatorTest {
     @DisplayName("이미 존재하는 name의 CreateThemeRequest의 경우 DuplicateTheme 예외를 발생한다")
     @Test
     void createDuplicateNamedTheme() {
+        CreateThemeRequest request = new CreateThemeRequest(
+                "워너고홈",
+                "desc",
+                1000
+        );
+
         Assertions.assertThatExceptionOfType(DuplicatedThemeException.class)
-                .isThrownBy(() -> themeValidator.validateForCreate(new CreateThemeRequest(
-                        "워너고홈",
-                        "desc",
-                        1000
-                )));
+                .isThrownBy(() -> themeValidator.validateForCreate(request));
     }
 }

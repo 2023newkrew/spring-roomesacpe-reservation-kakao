@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class ThemeFactoryTest {
+class ThemeFactoryTest {
 
     private final ThemeFactory themeFactory = new ThemeFactory();
 

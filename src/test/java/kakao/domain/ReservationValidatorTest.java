@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @SpringBootTest
-public class ReservationValidatorTest {
+class ReservationValidatorTest {
 
     @Autowired
     ReservationJDBCRepository reservationJDBCRepository;
@@ -30,15 +30,15 @@ public class ReservationValidatorTest {
     @DisplayName("날짜보다 이전으로 request 요청을 보내면 InvalidRequest 예외를 보낸다")
     @Test
     void createInvalidDate() {
+        CreateReservationRequest request = new CreateReservationRequest(
+                LocalDate.of(2022, 10, 23),
+                LocalTime.of(13, 00),
+                "baker",
+                1L
+        );
+
         Assertions.assertThatExceptionOfType(IllegalCreateReservationRequestException.class)
-                .isThrownBy(() -> reservationValidator.validateForCreate(
-                        new CreateReservationRequest(
-                                LocalDate.of(2022, 10, 23),
-                                LocalTime.of(13, 00),
-                                "baker",
-                                1L
-                        )
-                ));
+                .isThrownBy(() -> reservationValidator.validateForCreate(request));
     }
 
 }

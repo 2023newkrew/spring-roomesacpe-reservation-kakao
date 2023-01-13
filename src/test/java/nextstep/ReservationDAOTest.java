@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDAOTest {
+class ReservationDAOTest {
     private final ReservationDAO reservationDAO = new ReservationDAO();
 
     private final CreateReservationRequest request = new CreateReservationRequest(
