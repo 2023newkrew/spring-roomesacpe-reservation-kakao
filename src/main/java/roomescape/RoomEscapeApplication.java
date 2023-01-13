@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.domain.Themes;
+import roomescape.domain.Theme;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationConsoleRepository;
 import roomescape.service.ReservationService;
@@ -67,7 +67,7 @@ public class RoomEscapeApplication {
                     continue;
                 }
 
-                Reservation reservation = new Reservation(reservationId, date, time, name, Themes.WANNA_GO_HOME);
+                Reservation reservation = new Reservation(reservationId, date, time, name, new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
