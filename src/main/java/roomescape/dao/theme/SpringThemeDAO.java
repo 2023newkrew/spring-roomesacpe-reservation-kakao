@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ListThemePreparedStatementCreator;
+import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatementCreator;
 import roomescape.dto.Theme;
 
 public class SpringThemeDAO extends ThemeDAO {
@@ -34,5 +35,11 @@ public class SpringThemeDAO extends ThemeDAO {
     public List<Theme> list() {
         return jdbcTemplate.query(
                 new ListThemePreparedStatementCreator(), getRowMapper());
+    }
+
+    @Override
+    public void remove(Long id) {
+        jdbcTemplate.update(
+                new RemoveThemePreparedStatementCreator(id));
     }
 }

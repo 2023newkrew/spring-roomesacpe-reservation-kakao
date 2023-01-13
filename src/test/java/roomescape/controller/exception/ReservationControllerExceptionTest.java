@@ -1,4 +1,4 @@
-package roomescape.exception;
+package roomescape.controller.exception;
 
 import io.restassured.RestAssured;
 import java.time.LocalDate;

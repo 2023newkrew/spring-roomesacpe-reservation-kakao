@@ -59,6 +59,9 @@ public class SpringThemeDAOTest {
     @DisplayName("테마 삭제")
     @Test
     void deleteReservation() {
+        themeDAO.remove(1L);
 
+        Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
+        assertThat(count).isEqualTo(0L);
     }
 }

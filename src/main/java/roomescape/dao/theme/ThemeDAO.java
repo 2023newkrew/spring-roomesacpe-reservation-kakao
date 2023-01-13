@@ -40,4 +40,6 @@ public abstract class ThemeDAO {
     public abstract Long insert(Theme theme);
 
     public abstract List<Theme> list();
+
+    public abstract void remove(Long l);
 }
