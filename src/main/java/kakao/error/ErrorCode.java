@@ -17,7 +17,8 @@ public enum ErrorCode {
     RESERVATION_NOT_FOUND(400, "해당 ID의 예약이 존재하지 않습니다."),
 
     // 테마 에러
-    THEME_NOT_FOUND(400, "해당 ID의 테마가 존재하지 않습니다.");
+    THEME_NOT_FOUND(400, "해당 ID의 테마가 존재하지 않습니다."),
+    THEME_RESERVATIONS_YET_EXIST(400, "해당 테마의 예약건이 아직 존재합니다.");
 
     private final int status;
     private final String message;
