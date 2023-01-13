@@ -18,8 +18,8 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ThemeRepositoryImpl(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ThemeRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

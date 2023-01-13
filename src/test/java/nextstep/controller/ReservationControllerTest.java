@@ -47,7 +47,7 @@ class ReservationControllerTest {
 
 
     ReservationRequestDTO requestDTO = new ReservationRequestDTO(LocalDate.parse("2022-08-11"),
-            LocalTime.parse("13:00:00"), "류성현");
+            LocalTime.parse("13:00:00"), "류성현",1L);
 
     Long id = null;
 
@@ -76,7 +76,7 @@ class ReservationControllerTest {
     void reservations_POST_성공_테스트() throws Exception {
         //given
         ReservationRequestDTO requestDTO2 = new ReservationRequestDTO(LocalDate.parse("2022-08-12"),
-                LocalTime.parse("13:00:00"), "류성현");
+                LocalTime.parse("13:00:00"), "류성현",1L);
         String json2 = objectMapper.writeValueAsString(requestDTO2);
 
         //expected

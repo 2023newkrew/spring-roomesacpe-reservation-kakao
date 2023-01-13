@@ -47,7 +47,7 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
                 Reservation reservation = reservationService.createReservation(
-                        new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name));
+                        new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name,1L));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());

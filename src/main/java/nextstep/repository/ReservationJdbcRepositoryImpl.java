@@ -34,13 +34,11 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
             ps.setDate(1, Date.valueOf(reservationRequestDTO.getDate()));
             ps.setTime(2, Time.valueOf(reservationRequestDTO.getTime()));
             ps.setString(3, reservationRequestDTO.getName());
-            ps.setString(4, THEME_NAME);
-            ps.setString(5, THEME_DESC);
-            ps.setInt(6, THEME_PRICE);
+            ps.setLong(4, 1L);
             ps.executeUpdate();
             ResultSet resultSet = ps.getGeneratedKeys();
             if (resultSet.next()) {
-                reservation = getReservation(resultSet, reservationRequestDTO);
+                reservation = makeReservation(resultSet, reservationRequestDTO);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -67,7 +65,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                reservation = getReservation(rs);
+                reservation = makeReservation(rs);
 
             }
         } catch (SQLException e) {
@@ -91,13 +89,13 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
         }
     }
 
-    private Reservation getReservation(ResultSet rs) throws SQLException {
+    private Reservation makeReservation(ResultSet rs) throws SQLException {
         return new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(), rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
                 new Theme(rs.getString("theme_name"), rs.getString("theme_desc"), rs.getInt("theme_price")));
     }
 
-    private Reservation getReservation(ResultSet rs, ReservationRequestDTO dto) throws SQLException {
+    private Reservation makeReservation(ResultSet rs, ReservationRequestDTO dto) throws SQLException {
         return new Reservation(rs.getLong(1), dto.getDate(), dto.getTime(), dto.getName(),
                 new Theme(THEME_NAME, THEME_DESC, THEME_PRICE));
     }
