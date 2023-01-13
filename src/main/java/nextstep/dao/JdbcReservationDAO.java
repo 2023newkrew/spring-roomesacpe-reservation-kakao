@@ -82,6 +82,6 @@ public class JdbcReservationDAO implements ReservationDAO {
 
     @Override
     public Boolean deleteById(Long id) {
-        return jdbcTemplate.queryForObject(DELETE_BY_ID_SQL, (r, rowNum) -> rowNum == 1, id);
+        return jdbcTemplate.update(DELETE_BY_ID_SQL, id) == 1;
     }
 }
