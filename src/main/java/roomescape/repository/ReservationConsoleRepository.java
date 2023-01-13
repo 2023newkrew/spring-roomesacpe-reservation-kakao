@@ -40,6 +40,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
             Reservation reservation
     ) throws SQLException {
         String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
+        
         PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
         ps.setDate(1, Date.valueOf(reservation.getDate()));
         ps.setTime(2, Time.valueOf(reservation.getTime()));

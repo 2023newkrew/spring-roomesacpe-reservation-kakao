@@ -83,6 +83,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
                 Reservation reservation;
+
                 try {
                     reservation = reservationConsoleRepository.findOne(id)
                             .orElseThrow(() -> {
@@ -100,6 +101,7 @@ public class RoomEscapeApplication {
 //                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
 //                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
 //                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+
             }
 
             if (input.startsWith(DELETE)) {
