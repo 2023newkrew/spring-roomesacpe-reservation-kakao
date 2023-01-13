@@ -95,13 +95,13 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("[미지원 기능] 모두 조회는 지원하지 않음")
+    @DisplayName("[미지원 기능] 예약 모두 조회는 지원하지 않음")
     void isNotSupportedFindAll() {
         assertThatThrownBy(() -> reservationRepository.findAll()).isInstanceOf(NotSupportedOperationException.class);
     }
 
     @Test
-    @DisplayName("[미지원 기능] 예약 수정은 지원하지 않암")
+    @DisplayName("[미지원 기능] 예약 수정은 지원하지 않음")
     void isNotSupportedUpdate() {
         assertThatThrownBy(() -> reservationRepository.update(1L, getCreateRequest()))
                 .isInstanceOf(NotSupportedOperationException.class);
