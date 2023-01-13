@@ -87,7 +87,6 @@ public class ReservationControllerTest {
                 .then()
                 .log()
                 .all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.OK.value());
     }
-
 }
