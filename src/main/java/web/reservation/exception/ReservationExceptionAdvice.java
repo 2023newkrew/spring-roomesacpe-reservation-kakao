@@ -12,7 +12,7 @@ import web.exception.ErrorResponse;
 public class ReservationExceptionAdvice {
 
     @ExceptionHandler(ReservationException.class)
-    public ResponseEntity<ErrorResponse> handleReservationDuplicateException(ReservationException e) {
+    public ResponseEntity<ErrorResponse> handleReservationException(ReservationException e) {
         return ResponseEntity.status(e.getHttpStatus())
                 .body(ErrorResponse.from(e.getMessage()));
     }
