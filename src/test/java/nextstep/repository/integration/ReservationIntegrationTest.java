@@ -101,6 +101,15 @@ class ReservationIntegrationTest {
     }
 
     @Test
+    void should_response400BadRequestStatus_when_findRequestWithInvalidIdSent() {
+        RestAssured
+            .when()
+                .get("/reservations/1")
+            .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void should_deleteReservation_when_deleteRequestSent() {
         //given
         createReservation(createReservationRequest);
