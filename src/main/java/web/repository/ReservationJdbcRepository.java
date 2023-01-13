@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import web.domain.Reservation;
 import web.domain.Theme;
 import web.dto.response.ReservationIdDto;
+import web.exception.NoSuchReservationException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -47,5 +48,29 @@ public class ReservationJdbcRepository {
         }, keyHolder);
 
         return new ReservationIdDto((Long) keyHolder.getKey());
+    }
+
+    public Reservation findReservationById(final Long id) throws NoSuchReservationException {
+        String sql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
+
+        List<Reservation> reservations = jdbcTemplate.query(sql, ((rs, rowNum) -> new Reservation(
+                rs.getLong("id"),
+                rs.getDate("date").toLocalDate(),
+                rs.getTime("time").toLocalTime(),
+                rs.getString("name"),
+                new Theme(rs.getString("theme_name"),
+                        rs.getString("theme_desc"),
+                        rs.getInt("theme_price")
+                ))), id);
+
+        if (reservations.size() == 0) {
+            throw new NoSuchReservationException();
+        }
+        return reservations.get(0);
+    }
+
+    public void deleteReservationById(Long id) {
+        String deleteSql = "DELETE FROM reservation WHERE id = (?)";
+        this.jdbcTemplate.update(deleteSql, id);
     }
 }

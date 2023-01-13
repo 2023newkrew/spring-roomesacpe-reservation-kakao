@@ -5,6 +5,7 @@ import web.domain.Reservation;
 import web.domain.Theme;
 import web.dto.request.ReservationRequestDTO;
 import web.dto.response.ReservationIdDto;
+import web.dto.response.ReservationResponseDTO;
 import web.exception.DuplicatedReservationException;
 import web.repository.ReservationJdbcRepository;
 
@@ -35,5 +36,15 @@ public class ReservationService {
         if (ids.size() > 0) {
             throw new DuplicatedReservationException();
         }
+    }
+
+    public ReservationResponseDTO getReservationById(Long id) {
+
+        return ReservationResponseDTO.from(reservationJdbcRepository.findReservationById(id));
+    }
+
+    public void deleteReservationById(Long id) {
+        reservationJdbcRepository.findReservationById(id);
+        reservationJdbcRepository.deleteReservationById(id);
     }
 }
