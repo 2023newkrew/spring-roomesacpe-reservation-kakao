@@ -2,6 +2,7 @@ package roomescape.dao.theme;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,31 +24,36 @@ public class SpringThemeDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM THEME";
 
-    private ThemeDAO dao;
+    private ThemeDAO themeDAO;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        dao = new SpringThemeDAO(jdbcTemplate);
+        themeDAO = new SpringThemeDAO(jdbcTemplate);
     }
 
     @DisplayName("테마 생성")
     @Test
-    void addReservation() {
+    void insert() {
         Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
 
-        dao.insert(theme);
+        themeDAO.insert(theme);
 
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
         assertThat(count).isEqualTo(2L);
     }
 
-    @DisplayName("테마 조회")
+    @DisplayName("테마 목록 조회")
     @Test
-    void findReservation() {
+    void list() {
+        List<Theme> theme = themeDAO.list();
 
+        assertThat(theme.size()).isEqualTo(1);
+        assertThat(theme.get(0).getName()).isEqualTo(NAME_DATA1);
+        assertThat(theme.get(0).getDesc()).isEqualTo(DESC_DATA);
+        assertThat(theme.get(0).getPrice()).isEqualTo(PRICE_DATA);
     }
 
     @DisplayName("테마 삭제")

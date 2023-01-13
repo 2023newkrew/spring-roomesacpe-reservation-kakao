@@ -1,5 +1,6 @@
 package roomescape.dao.theme;
 
+import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
@@ -37,4 +38,6 @@ public abstract class ThemeDAO {
     public abstract boolean exist(Theme theme);
 
     public abstract Long insert(Theme theme);
+
+    public abstract List<Theme> list();
 }
