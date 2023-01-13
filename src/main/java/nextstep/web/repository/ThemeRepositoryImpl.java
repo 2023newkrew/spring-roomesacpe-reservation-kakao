@@ -23,7 +23,7 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public List<Theme> findByName(String name) {
+    public Theme findByName(String name) {
         return themeDAOImpl.findByName(name);
     }
 

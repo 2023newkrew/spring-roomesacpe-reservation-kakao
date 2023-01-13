@@ -2,6 +2,7 @@ package nextstep.web.controller;
 
 import java.net.URI;
 import nextstep.domain.Reservation;
+import nextstep.web.VO.ReservationRequestVO;
 import nextstep.web.service.ReservationService;
 import nextstep.util.ReservationInfoConverter;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationService.createReservation(reservation);
+    public ResponseEntity createReservation(@RequestBody ReservationRequestVO reservationRequestVO) {
+        Long id = reservationService.createReservation(reservationRequestVO);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 

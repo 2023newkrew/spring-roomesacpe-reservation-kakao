@@ -2,6 +2,8 @@ package nextstep.web.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
+import nextstep.web.VO.ReservationRequestVO;
 import nextstep.web.exceptions.ErrorCode;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +32,20 @@ class ReservationControllerTest {
     @DisplayName("예약 생성")
     @Test
     void createReservationTest() {
-        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+        ReservationRequestVO reservationRequestVO = new ReservationRequestVO(
+                LocalDate.of(2022, 8, 11),
+                LocalTime.of(13, 0),
+                "name",
+                "테마이름");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(new Theme("테마이름", "테마설명", 22000))
+                .when().post("/themes");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestVO)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -54,9 +65,9 @@ class ReservationControllerTest {
                 .body("date", is("2022-08-11"))
                 .body("time", is("13:00"))
                 .body("name", is("name"))
-                .body("themeName", is("워너고홈"))
-                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
-                .body("themePrice", is(29000));
+                .body("themeName", is("테마이름"))
+                .body("themeDesc", is("테마설명"))
+                .body("themePrice", is(22000));
 
     }
 
@@ -88,8 +99,8 @@ class ReservationControllerTest {
                 .body("date", is("2022-08-11"))
                 .body("time", is("13:00"))
                 .body("name", is("name"))
-                .body("themeName", is("워너고홈"))
-                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
-                .body("themePrice", is(29000));
+                .body("themeName", is("테마이름"))
+                .body("themeDesc", is("테마설명"))
+                .body("themePrice", is(22000));
     }
 }

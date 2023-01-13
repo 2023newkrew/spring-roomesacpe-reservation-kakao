@@ -6,7 +6,7 @@ import nextstep.domain.Theme;
 public interface ThemeDAO {
     Long insertWithKeyHolder(Theme theme);
     Theme findById(Long id);
-    List<Theme> findByName(String name);
+    Theme findByName(String name);
     List<Theme> getAllThemes();
     Integer delete(Long id);
 }

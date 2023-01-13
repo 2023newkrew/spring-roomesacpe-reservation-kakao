@@ -49,9 +49,9 @@ public class ThemeDAOImpl implements ThemeDAO{
     }
 
     @Override
-    public List<Theme> findByName(String name) {
+    public Theme findByName(String name) {
         String sql = "select * from theme where name = ?";
-        return jdbcTemplate.query(sql, themeRowMapper, name);
+        return jdbcTemplate.queryForObject(sql, themeRowMapper, name);
     }
 
     @Override

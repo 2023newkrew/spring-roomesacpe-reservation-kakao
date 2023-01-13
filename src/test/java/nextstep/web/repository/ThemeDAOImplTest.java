@@ -51,10 +51,10 @@ public class ThemeDAOImplTest {
     @Test
     @DisplayName("이름을 통해 테마 정보를 잘 받아오는지 테스트")
     void findByNameTest() {
-        List<Theme> theme = themeDAOImpl.findByName("테마이름2");
+        Theme theme = themeDAOImpl.findByName("테마이름2");
 
         assertThat(theme).isNotNull();
-        assertThat(theme.get(0).getPrice()).isEqualTo(21000);
+        assertThat(theme.getPrice()).isEqualTo(21000);
     }
 
     @Test

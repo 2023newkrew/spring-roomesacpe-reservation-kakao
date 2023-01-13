@@ -4,8 +4,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.web.VO.ReservationRequestVO;
 import nextstep.web.exceptions.ErrorCode;
 import nextstep.web.exceptions.ThemeException;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,13 +50,14 @@ public class ThemeServiceTest {
     @Test
     @DisplayName("테마 삭제 시 해당 테마를 가진 예약이 있을 경우 예외 처리 테스트")
     public void ThemeWithExistReservationTest() {
-        Reservation reservation = new Reservation(
+        themeService.createTheme(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
+        ReservationRequestVO reservationRequestVO = new ReservationRequestVO(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0),
-                "name"
+                "name",
+                "테마이름"
         );
-        reservationService.createReservation(reservation);
-        themeService.createTheme(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
+        reservationService.createReservation(reservationRequestVO);
         assertThatThrownBy(() -> themeService.deleteTheme(1L))
                 .isInstanceOf(ThemeException.class)
                 .hasMessage(ErrorCode.RESERVATION_WITH_THIS_THEME_EXISTS.getMessage());
