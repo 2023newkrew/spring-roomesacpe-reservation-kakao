@@ -4,11 +4,13 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
@@ -28,6 +30,9 @@ public class RoomEscapeControllerTest {
 
     @LocalServerPort
     int port;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     final static Reservation DUMMY_RESERVATION = new Reservation(
             1L,

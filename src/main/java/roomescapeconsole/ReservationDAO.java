@@ -21,7 +21,7 @@ public class ReservationDAO {
     private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private static final String DATABASE_USERNAME = "sa";
     private static final String DATABASE_PASSWORD = "";
-    private static final String CHECK_NUMBER_QUERY = "SELECT COUNT(*) FROM RESERVATION";
+    private static final String CHECK_NUMBER_QUERY = "SELECT MAX(id) FROM RESERVATION";
     private static final String INSERT_QUERY = "INSERT INTO RESERVATION (id, date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_QUERY = "SELECT * FROM RESERVATION WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";

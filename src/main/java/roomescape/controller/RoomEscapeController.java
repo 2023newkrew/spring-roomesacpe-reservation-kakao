@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
@@ -26,7 +25,7 @@ public class RoomEscapeController {
     private static final int INDEX_THEME_NAME = 5;
     private static final int INDEX_THEME_DESC = 6;
     private static final int INDEX_THEME_PRICE = 7;
-    private static final String CHECK_DUP_QUERY = "SELECT COUNT(*) FROM RESERVATION WHERE date = ? AND time = ?;";
+    private static final String CHECK_DUP_QUERY = "SELECT EXISTS(SELECT * FROM RESERVATION WHERE date = ? AND time = ?);";
     private static final String INSERT_QUERY = "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String LOOKUP_QUERY = "SELECT * FROM RESERVATION WHERE id = ?;";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
@@ -35,14 +34,13 @@ public class RoomEscapeController {
     private JdbcTemplate jdbcTemplate;
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation) {
-        Integer duplicatedRow = jdbcTemplate.queryForObject(
-                CHECK_DUP_QUERY, Integer.class,
+    public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation) {
+        boolean exists = Boolean.TRUE.equals(jdbcTemplate.queryForObject(CHECK_DUP_QUERY, Boolean.class,
                 reservation.getDate(),
                 reservation.getTime()
-        );
-        if (Objects.isNull(duplicatedRow) || duplicatedRow == 1) {
-            return ResponseEntity.badRequest().body(null);
+        ));
+        if (exists) {
+            return ResponseEntity.badRequest().body("같은 시간에 이미 예약이 있습니다!");
         }
         jdbcTemplate.update(
                 INSERT_QUERY,
