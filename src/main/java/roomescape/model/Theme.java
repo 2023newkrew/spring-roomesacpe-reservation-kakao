@@ -1,7 +1,5 @@
 package roomescape.model;
 
-import roomescape.dto.ThemeRequestDto;
-
 public class Theme {
     private Long id;
     private String name;
@@ -13,10 +11,6 @@ public class Theme {
         this.name = name;
         this.desc = desc;
         this.price = price;
-    }
-
-    public Theme(ThemeRequestDto req) {
-        this(null, req.getName(), req.getDesc(), req.getPrice());
     }
 
     public Long getId() {

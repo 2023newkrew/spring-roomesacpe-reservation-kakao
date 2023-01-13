@@ -24,7 +24,7 @@ public class ReservationService {
         if (reservationRepository.has(req.getDate(), req.getTime())) {
             throw new RoomEscapeException(ErrorCode.RESERVATION_DATETIME_ALREADY_EXISTS);
         }
-        Reservation reservation = new Reservation(req);
+        Reservation reservation = new Reservation(null, req.getDate(), req.getTime(), req.getName(), req.getThemeId());
         Long id = reservationRepository.save(reservation);
         reservation.setId(id);
         Theme theme = themeService.getTheme(reservation.getThemeId());

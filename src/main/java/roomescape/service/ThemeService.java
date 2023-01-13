@@ -24,7 +24,7 @@ public class ThemeService {
         if (themeRepository.has(req.getName())) {
             throw new RoomEscapeException(ErrorCode.THEME_NAME_ALREADY_EXISTS);
         }
-        Theme theme = new Theme(req);
+        Theme theme = new Theme(null, req.getName(), req.getDesc(), req.getPrice());
         Long id = themeRepository.save(theme);
         theme.setId(id);
         return new ThemeResponseDto(theme);
