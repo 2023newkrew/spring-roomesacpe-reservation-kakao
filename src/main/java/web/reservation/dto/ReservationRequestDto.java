@@ -31,6 +31,11 @@ public class ReservationRequestDto {
     private Long themeId;
 
     public Reservation toEntity() {
-        return Reservation.of(null, date, time, name, themeId);
+        return Reservation.builder()
+                .date(date)
+                .time(time)
+                .name(name)
+                .themeId(themeId)
+                .build();
     }
 }

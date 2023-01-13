@@ -189,12 +189,13 @@ public class ReservationControllerTest {
         @Test
         void should_successfully_when_validRequest() throws Exception {
             ReservationResponseDto responseDto = ReservationResponseDto.of(1,
-                    Reservation.of(
-                            1L,
-                            LocalDate.of(2022, 8, 11),
-                            LocalTime.of(13, 0),
-                            "name",
-                            0L));
+                    Reservation.builder()
+                            .id(1L)
+                            .date(LocalDate.of(2022, 8, 11))
+                            .time(LocalTime.of(13, 0))
+                            .name("name")
+                            .themeId(0L)
+                            .build());
             when(reservationService.findReservationById(anyLong())).thenReturn(responseDto);
             mockMvc.perform(get("/reservations/1"))
                     .andExpect(status().isOk())

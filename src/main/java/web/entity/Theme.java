@@ -2,18 +2,16 @@ package web.entity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Theme {
 
     private Long id;
     private String name;
     private String desc;
     private int price;
-
-    public static Theme of(Long id, String name, String desc, int price) {
-        return new Theme(id, name, desc, price);
-    }
 }

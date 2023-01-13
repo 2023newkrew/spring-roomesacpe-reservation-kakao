@@ -37,7 +37,11 @@ class ThemeRepositoryTest {
             String name = "테마이름";
             String desc = "테마설명";
             int price = 22000;
-            Theme theme = Theme.of(null, name, desc, price);
+            Theme theme = Theme.builder()
+                    .name(name)
+                    .desc(desc)
+                    .price(price)
+                    .build();
 
             long themeId = themeRepository.save(theme);
 
@@ -52,7 +56,11 @@ class ThemeRepositoryTest {
             String name = "테마이름";
             String desc = "테마설명";
             int price = 22000;
-            Theme theme = Theme.of(null, name, desc, price);
+            Theme theme = Theme.builder()
+                    .name(name)
+                    .desc(desc)
+                    .price(price)
+                    .build();
 
             themeRepository.save(theme);
 
@@ -70,13 +78,21 @@ class ThemeRepositoryTest {
             String name = "테마이름";
             String desc = "테마설명";
             int price = 22000;
-            Theme theme = Theme.of(null, name, desc, price);
+            Theme theme = Theme.builder()
+                    .name(name)
+                    .desc(desc)
+                    .price(price)
+                    .build();
             long themeId = themeRepository.save(theme);
 
             String name2 = "테마이름2";
             String desc2 = "테마설명2";
             int price2 = 45000;
-            Theme theme2 = Theme.of(null, name2, desc2, price2);
+            Theme theme2 = Theme.builder()
+                    .name(name2)
+                    .desc(desc2)
+                    .price(price2)
+                    .build();
             long themeId2 = themeRepository.save(theme2);
 
             List<Theme> findThemes = themeRepository.findAll();
@@ -106,7 +122,11 @@ class ThemeRepositoryTest {
             String name = "테마이름";
             String desc = "테마설명";
             int price = 22000;
-            Theme theme = Theme.of(null, name, desc, price);
+            Theme theme = Theme.builder()
+                    .name(name)
+                    .desc(desc)
+                    .price(price)
+                    .build();
             long themeId = themeRepository.save(theme);
 
             long deleteThemeCount = themeRepository.delete(themeId);

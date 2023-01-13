@@ -164,9 +164,19 @@ class ThemeControllerTest {
         void should_successfully_when_validRequest() throws Exception {
             List<ThemeResponseDto> responseDto = List.of(
                     ThemeResponseDto.of(
-                            Theme.of(1L, "테마이름", "테마설명", 22000)),
+                            Theme.builder()
+                                    .id(1L)
+                                    .name("테마이름")
+                                    .desc("테마설명")
+                                    .price(22000)
+                                    .build()),
                     ThemeResponseDto.of(
-                            Theme.of(2L, "테마이름2", "테마설명2", 45000))
+                            Theme.builder()
+                                    .id(2L)
+                                    .name("테마이름2")
+                                    .desc("테마설명2")
+                                    .price(45000)
+                                    .build())
             );
 
             when(themeService.findThemes()).thenReturn(responseDto);

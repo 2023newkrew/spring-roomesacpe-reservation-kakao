@@ -88,12 +88,12 @@ public class ThemeRepository {
 
     private RowMapper<Theme> themeRowMapper() {
         return (rs, rowNum) -> {
-            Theme theme = Theme.of(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("desc"),
-                    rs.getInt("price")
-            );
+            Theme theme = Theme.builder()
+                    .id(rs.getLong("id"))
+                    .name(rs.getString("name"))
+                    .desc(rs.getString("desc"))
+                    .price(rs.getInt("price"))
+                    .build();
             return theme;
         };
     }

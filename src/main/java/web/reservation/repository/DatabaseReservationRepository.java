@@ -56,12 +56,13 @@ public class DatabaseReservationRepository implements ReservationRepository {
         String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
         Reservation findReservation;
         try {
-            findReservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
-                    resultSet.getLong("ID"),
-                    resultSet.getDate("DATE").toLocalDate(),
-                    resultSet.getTime("TIME").toLocalTime(),
-                    resultSet.getString("NAME"),
-                    resultSet.getLong("THEME_ID")), reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+            findReservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.builder()
+                            .id(resultSet.getLong("ID"))
+                            .date(resultSet.getDate("DATE").toLocalDate())
+                            .time(resultSet.getTime("TIME").toLocalTime())
+                            .name(resultSet.getString("NAME"))
+                            .themeId(resultSet.getLong("THEME_ID")), reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")))
+                    .build();
         } catch (DataAccessException e) {
             return false;
         }
@@ -73,12 +74,13 @@ public class DatabaseReservationRepository implements ReservationRepository {
         String sql = "SELECT * FROM RESERVATION WHERE ID = ?";
         Reservation reservation;
         try {
-            reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
-                    resultSet.getLong("ID"),
-                    resultSet.getDate("DATE").toLocalDate(),
-                    resultSet.getTime("TIME").toLocalTime(),
-                    resultSet.getString("NAME"),
-                    resultSet.getLong("THEME_ID")), reservationId);
+            reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.builder()
+                    .id(resultSet.getLong("ID"))
+                    .date(resultSet.getDate("DATE").toLocalDate())
+                    .time(resultSet.getTime("TIME").toLocalTime())
+                    .name(resultSet.getString("NAME"))
+                    .themeId(resultSet.getLong("THEME_ID"))
+                    .build(), reservationId);
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -90,12 +92,13 @@ public class DatabaseReservationRepository implements ReservationRepository {
         String sql = "SELECT * FROM RESERVATION WHERE THEME_ID = ?";
         List<Reservation> reservations;
         try {
-            reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> Reservation.of(
-                    resultSet.getLong("ID"),
-                    resultSet.getDate("DATE").toLocalDate(),
-                    resultSet.getTime("TIME").toLocalTime(),
-                    resultSet.getString("NAME"),
-                    resultSet.getLong("THEME_ID")), themeId);
+            reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> Reservation.builder()
+                    .id(resultSet.getLong("ID"))
+                    .date(resultSet.getDate("DATE").toLocalDate())
+                    .time(resultSet.getTime("TIME").toLocalTime())
+                    .name(resultSet.getString("NAME"))
+                    .themeId(resultSet.getLong("THEME_ID"))
+                    .build(), themeId);
         } catch (DataAccessException e) {
             return List.of();
         }

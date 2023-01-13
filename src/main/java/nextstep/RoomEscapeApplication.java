@@ -29,7 +29,12 @@ public class RoomEscapeApplication {
         ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource, themeRepository);
         Long reservationIdIndex = 0L;
 
-        Theme defaultTheme = Theme.of(0L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme defaultTheme = Theme.builder()
+                .id(0L)
+                .name("워너고홈")
+                .desc("병맛 어드벤처 회사 코믹물")
+                .price(29_000)
+                .build();
         themeRepository.save(defaultTheme);
 
         while (true) {
@@ -48,13 +53,13 @@ public class RoomEscapeApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = Reservation.of(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        defaultTheme.getId()
-                );
+                Reservation reservation = Reservation.builder()
+                        .id(++reservationIdIndex)
+                        .date(LocalDate.parse(date))
+                        .time(LocalTime.parse(time + ":00"))
+                        .name(name)
+                        .themeId(defaultTheme.getId())
+                        .build();
 
                 reservationRepository.save(reservation);
 

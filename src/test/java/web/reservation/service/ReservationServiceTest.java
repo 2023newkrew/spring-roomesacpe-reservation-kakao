@@ -51,7 +51,12 @@ class ReservationServiceTest {
                     .name(name)
                     .themeId(existThemeId)
                     .build();
-            final var theme = Theme.of(existThemeId, "name", "desc", 22000);
+            final var theme = Theme.builder()
+                    .id(existThemeId)
+                    .name("name")
+                    .desc("desc")
+                    .price(22000)
+                    .build();
 
             when(themeRepository.findById(existThemeId)).thenReturn(Optional.of(theme));
             when(reservationRepository.save(any())).thenReturn(reservationId);

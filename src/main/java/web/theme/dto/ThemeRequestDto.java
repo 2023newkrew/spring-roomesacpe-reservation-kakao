@@ -21,6 +21,10 @@ public class ThemeRequestDto {
     private int price;
 
     public Theme toEntity() {
-        return Theme.of(null, name, desc, price);
+        return Theme.builder()
+                .name(name)
+                .desc(desc)
+                .price(price)
+                .build();
     }
 }

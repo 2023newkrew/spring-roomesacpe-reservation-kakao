@@ -37,7 +37,11 @@ public class ReservationRepositoryTest {
         String name = "테마이름";
         String desc = "테마설명";
         int price = 22000;
-        Theme theme = Theme.of(null, name, desc, price);
+        Theme theme = Theme.builder()
+                .name(name)
+                .desc(desc)
+                .price(price)
+                .build();
 
         savedThemeId = themeRepository.save(theme);
     }
@@ -60,7 +64,12 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
+            Reservation reservation = Reservation.builder()
+                    .date(today)
+                    .time(now)
+                    .name(name)
+                    .themeId(savedThemeId)
+                    .build();
 
             long reservationId = reservationRepository.save(reservation);
 
@@ -75,7 +84,12 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
+            Reservation reservation = Reservation.builder()
+                    .date(today)
+                    .time(now)
+                    .name(name)
+                    .themeId(savedThemeId)
+                    .build();
 
             reservationRepository.save(reservation);
 
@@ -92,7 +106,12 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
+            Reservation reservation = Reservation.builder()
+                    .date(today)
+                    .time(now)
+                    .name(name)
+                    .themeId(savedThemeId)
+                    .build();
             long reservationId = reservationRepository.save(reservation);
 
             Reservation findReservation = reservationRepository.findById(reservationId)
@@ -116,13 +135,23 @@ public class ReservationRepositoryTest {
                 LocalDate today = LocalDate.now();
                 LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
                 String name = "name";
-                Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
+                Reservation reservation = Reservation.builder()
+                        .date(today)
+                        .time(now)
+                        .name(name)
+                        .themeId(savedThemeId)
+                        .build();
                 long reservationId = reservationRepository.save(reservation);
 
                 LocalDate tomorrow = LocalDate.now().plusDays(1);
                 LocalTime now2 = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
                 String name2 = "name";
-                Reservation reservation2 = Reservation.of(null, tomorrow, now2, name2, savedThemeId);
+                Reservation reservation2 = Reservation.builder()
+                        .date(tomorrow)
+                        .time(now2)
+                        .name(name2)
+                        .themeId(savedThemeId)
+                        .build();
                 long reservationId2 = reservationRepository.save(reservation2);
 
                 List<Reservation> findReservations = reservationRepository.findAllByThemeId(savedThemeId);
@@ -157,7 +186,12 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(null, today, now, name, savedThemeId);
+            Reservation reservation = Reservation.builder()
+                    .date(today)
+                    .time(now)
+                    .name(name)
+                    .themeId(savedThemeId)
+                    .build();
             long reservationId = reservationRepository.save(reservation);
 
             long deleteReservationCount = reservationRepository.delete(reservationId);

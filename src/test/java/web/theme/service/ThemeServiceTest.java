@@ -52,7 +52,13 @@ class ThemeServiceTest {
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
             long themeId = 1L;
-            final var reservation = Reservation.of(1L, today, now, name, themeId);
+            final var reservation = Reservation.builder()
+                    .id(1L)
+                    .date(today)
+                    .time(now)
+                    .name(name)
+                    .themeId(themeId)
+                    .build();
 
             when(reservationRepository.findAllByThemeId(themeId)).thenReturn(List.of(reservation));
 
