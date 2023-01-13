@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.sql.Date;
@@ -21,6 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WebAppReservationRepoTest {
     @Autowired
     private WebAppReservationRepo webAppReservationRepo;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private Reservation testReservation = new Reservation(
             LocalDate.parse("2000-01-01"),
             LocalTime.parse("00:00"),
@@ -30,20 +35,21 @@ public class WebAppReservationRepoTest {
 
     @BeforeEach
     void setUp() {
-        this.webAppReservationRepo.reset();
+        String sql = "TRUNCATE TABLE reservation";
+        jdbcTemplate.update(sql);
     }
 
     @DisplayName("can store reservation")
     @Test
     void can_store_reservation() {
-        long id = this.webAppReservationRepo.add(this.testReservation);
+        long id = this.webAppReservationRepo.save(this.testReservation);
         assertNotNull(id);
     }
 
     @DisplayName("can find by id")
     @Test
     void can_find_by_id() {
-        long id = this.webAppReservationRepo.add(this.testReservation);
+        long id = this.webAppReservationRepo.save(this.testReservation);
         Reservation reservation = this.webAppReservationRepo.findById(id);
         assertTrue(reservation.equals(this.testReservation));
     }
@@ -51,7 +57,7 @@ public class WebAppReservationRepoTest {
     @DisplayName("can return null for nonexistent id")
     @Test
     void can_return_null_for_nonexistent_id() {
-        long nonexistentId = this.webAppReservationRepo.add(this.testReservation) + 1;
+        long nonexistentId = this.webAppReservationRepo.save(this.testReservation) + 1;
         Reservation nonexistent = this.webAppReservationRepo.findById(nonexistentId);
         assertNull(nonexistent);
     }
@@ -61,9 +67,9 @@ public class WebAppReservationRepoTest {
     void can_count_when_date_and_time_match() {
         int CYCLE = 17;
         for (int i = 0; i < CYCLE; i++) {
-            this.webAppReservationRepo.add(this.testReservation);
+            this.webAppReservationRepo.save(this.testReservation);
         }
-        int count = this.webAppReservationRepo.countWhenDateAndTimeMatch(
+        int count = this.webAppReservationRepo.findByDateAndTime(
                 Date.valueOf(this.testReservation.getDate()),
                 Time.valueOf(this.testReservation.getTime()));
         assertEquals(CYCLE, count);
@@ -72,7 +78,7 @@ public class WebAppReservationRepoTest {
     @DisplayName("can delete by id")
     @Test
     void can_delete_by_id() {
-        long id = this.webAppReservationRepo.add(this.testReservation);
+        long id = this.webAppReservationRepo.save(this.testReservation);
         int code = this.webAppReservationRepo.delete(id);
         assertEquals(1, code);
 

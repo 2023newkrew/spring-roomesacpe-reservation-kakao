@@ -10,46 +10,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
     private static final String USER = "sa";
     private static final String PW = "";
 
-    public Reservation findById(long id) {
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        String sql = "SELECT * FROM reservation WHERE id = ?;";
-        Reservation reservation = null;
-
-        try {
-            con = DriverManager.getConnection(URL, USER, PW);
-            ps = con.prepareStatement(sql);
-            ps.setLong(1, id);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                reservation = new Reservation(
-                        rs.getLong(1),
-                        rs.getDate(2).toLocalDate(),
-                        rs.getTime(3).toLocalTime(),
-                        rs.getString(4),
-                        new Theme(
-                                rs.getString(5),
-                                rs.getString(6),
-                                rs.getInt(7)));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                rs.close();
-                ps.close();
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return reservation;
-    }
-
-    public long add(Reservation reservation) {
+    public long save(Reservation reservation) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -111,7 +72,46 @@ public class ConsoleReservationRepo implements ReservationRepo {
         return result;
     }
 
-    public int countWhenDateAndTimeMatch(Date date, Time time) {
+    public Reservation findById(long id) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM reservation WHERE id = ?;";
+        Reservation reservation = null;
+
+        try {
+            con = DriverManager.getConnection(URL, USER, PW);
+            ps = con.prepareStatement(sql);
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                reservation = new Reservation(
+                        rs.getLong(1),
+                        rs.getDate(2).toLocalDate(),
+                        rs.getTime(3).toLocalTime(),
+                        rs.getString(4),
+                        new Theme(
+                                rs.getString(5),
+                                rs.getString(6),
+                                rs.getInt(7)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return reservation;
+    }
+
+    public int findByDateAndTime(Date date, Time time) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -140,30 +140,5 @@ public class ConsoleReservationRepo implements ReservationRepo {
             }
         }
         return count;
-    }
-
-    public int reset() {
-        Connection con = null;
-        PreparedStatement ps = null;
-
-        String sql = "TRUNCATE TABLE reservation;";
-        int result = 0;
-
-        try {
-            con = DriverManager.getConnection(URL, USER, PW);
-            ps = con.prepareStatement(sql);
-            result = ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                ps.close();
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return result;
     }
 }

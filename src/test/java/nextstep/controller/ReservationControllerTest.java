@@ -84,7 +84,7 @@ public class ReservationControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/1")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("can DELETE reservation of given id")
@@ -104,6 +104,6 @@ public class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

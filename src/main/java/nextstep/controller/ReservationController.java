@@ -31,10 +31,10 @@ public class ReservationController {
                 reservationDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
-        if (webAppReservationRepo.countWhenDateAndTimeMatch(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
+        if (webAppReservationRepo.findByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0) {
             return ResponseEntity.badRequest().build();
         }
-        long id = webAppReservationRepo.add(reservation);
+        long id = webAppReservationRepo.save(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
@@ -42,7 +42,7 @@ public class ReservationController {
     public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
         Reservation reservation = webAppReservationRepo.findById(id);
         if (reservation == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         GetReservationDTO getReservationDTO = new GetReservationDTO(reservation);
         return ResponseEntity.ok().body(getReservationDTO);
@@ -52,7 +52,7 @@ public class ReservationController {
     public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
         int result = webAppReservationRepo.delete(id);
         if (result == 0) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }

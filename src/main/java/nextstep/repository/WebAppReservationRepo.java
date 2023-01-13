@@ -40,7 +40,7 @@ public class WebAppReservationRepo implements ReservationRepo {
         }
     }
 
-    public long add(Reservation reservation) {
+    public long save(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -61,13 +61,8 @@ public class WebAppReservationRepo implements ReservationRepo {
         return jdbcTemplate.update(sql, id);
     }
 
-    public int countWhenDateAndTimeMatch(Date date, Time time) {
+    public int findByDateAndTime(Date date, Time time) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
-    }
-
-    public int reset() {
-        String sql = "TRUNCATE TABLE reservation";
-        return jdbcTemplate.update(sql);
     }
 }

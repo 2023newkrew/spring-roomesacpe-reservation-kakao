@@ -38,7 +38,7 @@ public class ConsoleMain {
                 String name = params.split(",")[2];
 
                 Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
-                long id = consoleReservationRepo.add(newReservation);
+                long id = consoleReservationRepo.save(newReservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + id);

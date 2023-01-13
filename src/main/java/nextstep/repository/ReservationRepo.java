@@ -8,12 +8,10 @@ import java.sql.Time;
 public interface ReservationRepo {
     public Reservation findById(long id);
 
-    public long add(Reservation reservation);
+    public long save(Reservation reservation);
 
     public int delete(long id);
 
-    public int countWhenDateAndTimeMatch(Date date, Time time);
-
-    public int reset();
+    public int findByDateAndTime(Date date, Time time);
 
 }

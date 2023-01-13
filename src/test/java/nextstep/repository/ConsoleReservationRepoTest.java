@@ -6,8 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,20 +23,40 @@ public class ConsoleReservationRepoTest {
 
     @BeforeEach
     void setUp() {
-        this.consoleReservationRepo.reset();
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        String sql = "TRUNCATE TABLE reservation;";
+        int result = 0;
+
+        try {
+            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            ps = con.prepareStatement(sql);
+            result = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                ps.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @DisplayName("can store reservation")
     @Test
     void can_store_reservation() {
-        long id = this.consoleReservationRepo.add(this.testReservation);
+        long id = this.consoleReservationRepo.save(this.testReservation);
         assertNotNull(id);
     }
 
     @DisplayName("can find by id")
     @Test
     void can_find_by_id() {
-        long id = this.consoleReservationRepo.add(this.testReservation);
+        long id = this.consoleReservationRepo.save(this.testReservation);
         Reservation reservation = this.consoleReservationRepo.findById(id);
         assertTrue(reservation.equals(this.testReservation));
     }
@@ -45,7 +64,7 @@ public class ConsoleReservationRepoTest {
     @DisplayName("can return null for nonexistent id")
     @Test
     void can_return_null_for_nonexistent_id() {
-        long nonexistentId = this.consoleReservationRepo.add(this.testReservation) + 1;
+        long nonexistentId = this.consoleReservationRepo.save(this.testReservation) + 1;
         Reservation nonexistent = this.consoleReservationRepo.findById(nonexistentId);
         assertNull(nonexistent);
     }
@@ -55,9 +74,9 @@ public class ConsoleReservationRepoTest {
     void can_count_when_date_and_time_match() {
         int CYCLE = 17;
         for (int i = 0; i < CYCLE; i++) {
-            this.consoleReservationRepo.add(this.testReservation);
+            this.consoleReservationRepo.save(this.testReservation);
         }
-        int count = this.consoleReservationRepo.countWhenDateAndTimeMatch(
+        int count = this.consoleReservationRepo.findByDateAndTime(
                 Date.valueOf(this.testReservation.getDate()),
                 Time.valueOf(this.testReservation.getTime()));
         assertEquals(CYCLE, count);
@@ -66,7 +85,7 @@ public class ConsoleReservationRepoTest {
     @DisplayName("can delete by id")
     @Test
     void can_delete_by_id() {
-        long id = this.consoleReservationRepo.add(this.testReservation);
+        long id = this.consoleReservationRepo.save(this.testReservation);
         int code = this.consoleReservationRepo.delete(id);
         assertEquals(1, code);
 
