@@ -3,23 +3,22 @@ package roomescape.exception;
 import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.Reservation;
 import roomescape.dto.Theme;
 
 @DisplayName("예외 처리")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("classpath:/test.sql")
 public class ReservationExceptionTest {
 
     private static final LocalDate DATE_DATA = LocalDate.parse("2022-08-01");
@@ -34,39 +33,12 @@ public class ReservationExceptionTest {
 
     private static final String RESERVATIONS_PATH = "/reservations";
 
-    private static final String DROP_TABLE = "DROP TABLE IF EXISTS reservation";
-    private static final String CREATE_TABLE =
-            "CREATE TABLE reservation "
-                    + "(id bigint not null auto_increment,"
-                    + " date date,"
-                    + " time time,"
-                    + " name varchar(20),"
-                    + " theme_name varchar(20),"
-                    + " theme_desc varchar(20),"
-                    + " theme_price int,"
-                    + " primary key (id));";
-    private static final String ADD_SQL =
-            "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) "
-                    + "VALUES (?, ?, ?, ?, ?, ?);";
-
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-
-        jdbcTemplate.execute(DROP_TABLE);
-        jdbcTemplate.execute(CREATE_TABLE);
-
-        List<Object[]> split = List.<Object[]>of(
-                new Object[]{DATE_DATA, TIME_DATA, NAME_DATA,
-                        THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA});
-
-        jdbcTemplate.batchUpdate(ADD_SQL, split);
     }
 
     @DisplayName("content-type이 application/json이 아닌 경우 값을 받지 않는다.")

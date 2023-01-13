@@ -1,5 +1,4 @@
-CREATE TABLE RESERVATION
-(
+CREATE TABLE RESERVATION (
     id          bigint not null auto_increment,
     date        date,
     time        time,
