@@ -1,5 +1,7 @@
 package nextstep.domain;
 
+import java.util.Objects;
+
 public class Theme {
     private Long id;
     private String name;
@@ -33,5 +35,18 @@ public class Theme {
 
     public Integer getPrice() {
         return price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Theme theme = (Theme) o;
+        return id.equals(theme.id) && name.equals(theme.name) && desc.equals(theme.desc) && price.equals(theme.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, desc, price);
     }
 }
