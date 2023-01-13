@@ -3,6 +3,8 @@ package nextstep.repository;
 import nextstep.domain.Reservation;
 import nextstep.dto.ReservationDTO;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationRepository {
@@ -14,5 +16,5 @@ public interface ReservationRepository {
 
     boolean delete(long id);
 
-    boolean duplicate(ReservationDTO reservationDTO);
+    boolean duplicate(LocalDate date, LocalTime time);
 }

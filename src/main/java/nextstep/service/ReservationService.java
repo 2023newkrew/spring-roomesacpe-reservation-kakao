@@ -19,7 +19,7 @@ public class ReservationService {
 
     public Reservation newReservation(ReservationDTO reservationDTO){
 
-        if (reservationRepository.duplicate(reservationDTO)) {
+        if (reservationRepository.duplicate(reservationDTO.getDate(), reservationDTO.getTime())) {
             throw new IllegalArgumentException();
         }
 

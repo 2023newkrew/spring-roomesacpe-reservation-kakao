@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -60,9 +62,9 @@ public class ReservationJdbcRepository implements ReservationRepository{
     }
 
     @Override
-    public boolean duplicate(ReservationDTO reservationDTO) {
+    public boolean duplicate(LocalDate date, LocalTime time) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, reservationDTO.getDate(), reservationDTO.getTime()) > 0;
+        return jdbcTemplate.queryForObject(sql, Integer.class, date, time) > 0;
     }
 
     private RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {

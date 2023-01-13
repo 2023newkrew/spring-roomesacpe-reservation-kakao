@@ -5,6 +5,8 @@ import nextstep.dto.ReservationDTO;
 import nextstep.domain.Theme;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,7 +158,7 @@ public class ReservationConnRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean duplicate(ReservationDTO reservationDTO) {
+    public boolean duplicate(LocalDate date, LocalTime time) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet resultSet = null;
@@ -165,8 +167,8 @@ public class ReservationConnRepository implements ReservationRepository {
 
             String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, Date.valueOf(reservationDTO.getDate()));
-            pstmt.setTime(2, Time.valueOf(reservationDTO.getTime()));
+            pstmt.setDate(1, Date.valueOf(date));
+            pstmt.setTime(2, Time.valueOf(time));
 
             resultSet = pstmt.executeQuery();
             if(resultSet.next()){
