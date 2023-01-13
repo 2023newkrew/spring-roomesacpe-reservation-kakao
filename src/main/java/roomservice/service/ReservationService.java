@@ -11,6 +11,7 @@ import roomservice.exceptions.exception.InvalidReservationTimeException;
 import roomservice.exceptions.exception.InvalidThemeIdException;
 import roomservice.repository.ReservationDao;
 import roomservice.repository.ThemeDao;
+
 import java.util.*;
 
 import java.time.LocalTime;
@@ -28,12 +29,13 @@ public class ReservationService {
 
     /**
      * Request DAO to insert reservation, with some validations.
-     * @throws InvalidReservationTimeException when given time doesn't exist in {@link roomservice.domain.TimeTable}
-     * @throws InvalidThemeIdException when given theme id is not exist.
+     *
      * @param reservationDto information of reservation to be added.
      * @return id if successfully created.
+     * @throws InvalidReservationTimeException when given time doesn't exist in {@link roomservice.domain.TimeTable}
+     * @throws InvalidThemeIdException         when given theme id is not exist.
      */
-    public Long createReservation(ReservationCreateDto reservationDto){
+    public Long createReservation(ReservationCreateDto reservationDto) {
         validateTime(reservationDto.getTime());
         Theme theme = themeDao.selectThemeById(reservationDto.getThemeId());
         validateTheme(theme);
@@ -42,31 +44,34 @@ public class ReservationService {
                 reservationDto.getName(), theme);
         return reservationDao.insertReservation(reservation);
     }
-    private void validateTheme(Theme theme){
-        if (theme == null){
+
+    private void validateTheme(Theme theme) {
+        if (theme == null) {
             throw new InvalidThemeIdException();
         }
-        if (theme.getName().isBlank()){
+        if (theme.getName().isBlank()) {
             throw new InvalidThemeIdException();
         }
     }
-    private void validateTime(LocalTime reservationTime){
+
+    private void validateTime(LocalTime reservationTime) {
         long count = Arrays.stream(TimeTable.values())
                 .filter(t -> t.getTime().equals(reservationTime))
                 .count();
-        if (count == 0){
+        if (count == 0) {
             throw new InvalidReservationTimeException();
         }
     }
 
     /**
      * find a reservation which have specific id through DAO.
+     *
      * @param id which you want to find.
      * @return reservation if successfully found.
      */
-    public ReservationFoundDto findReservation(Long id){
+    public ReservationFoundDto findReservation(Long id) {
         Reservation reservation = reservationDao.selectReservation(id);
-        if (reservation == null){
+        if (reservation == null) {
             return null;
         }
         ReservationFoundDto result = new ReservationFoundDto(
@@ -81,9 +86,10 @@ public class ReservationService {
 
     /**
      * delete a reservation which have specific id through DAO.
+     *
      * @param id which you want to delete.
      */
-    public void deleteReservation(Long id){
+    public void deleteReservation(Long id) {
         reservationDao.deleteReservation(id);
     }
 }

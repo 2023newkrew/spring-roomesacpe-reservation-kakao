@@ -19,17 +19,19 @@ import java.util.stream.Collectors;
 @Service
 public class ThemeService {
     private ThemeDao themeDao;
+
     @Autowired
-    public ThemeService(ThemeDao themeDao){
+    public ThemeService(ThemeDao themeDao) {
         this.themeDao = themeDao;
     }
 
     /**
      * Request DAO to insert theme, with some validations.
+     *
      * @param themeDto information of theme to be added.
      * @return id if successfully created.
      */
-    public Long createTheme(@Valid ThemeCreateDto themeDto){
+    public Long createTheme(@Valid ThemeCreateDto themeDto) {
         Theme theme = new Theme(
                 null,
                 themeDto.getName(),
@@ -40,12 +42,13 @@ public class ThemeService {
 
     /**
      * Request repository to insert theme, with some validations.
+     *
      * @param id which you want to find.
      * @return information of found theme. if not found, return null.
      */
-    public ThemeFindResultDto findThemeById(long id){
+    public ThemeFindResultDto findThemeById(long id) {
         Theme theme = themeDao.selectThemeById(id);
-        if (theme == null){
+        if (theme == null) {
             return null;
         }
         ThemeFindResultDto resultDto = new ThemeFindResultDto(
@@ -59,6 +62,7 @@ public class ThemeService {
 
     /**
      * Request repository to find all themes in DB.
+     *
      * @return all lists of information of theme.
      */
     public List<ThemeFindResultDto> findAllTheme() {
@@ -74,7 +78,7 @@ public class ThemeService {
     /**
      * Request repository to delete specific theme.
      */
-    public void deleteThemeById(long id){
+    public void deleteThemeById(long id) {
         themeDao.deleteThemeById(id);
     }
 }

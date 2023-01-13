@@ -45,6 +45,7 @@ public class ReservationSpringDao implements ReservationDao {
 
     /**
      * conduct insertion query to DB
+     *
      * @param reservation reservation to be added to DB.
      * @return id automatically given by DB.
      */
@@ -77,13 +78,14 @@ public class ReservationSpringDao implements ReservationDao {
 
     /**
      * conduct selection query to DB.
+     *
      * @param id which you want to find.
      * @return reservation if found, null if not found.
      */
     public Reservation selectReservation(long id) {
         String sql = "select * from RESERVATION WHERE id = ?";
         List<Reservation> result = jdbcTemplate.query(sql, reservationRowMapper, id);
-        if(result.size()==0){
+        if (result.size() == 0) {
             return null;
         }
 
@@ -95,6 +97,7 @@ public class ReservationSpringDao implements ReservationDao {
 
     /**
      * conduct deletion query to DB.
+     *
      * @param id which you want to delete.
      */
     public void deleteReservation(long id) {

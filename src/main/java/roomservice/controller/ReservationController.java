@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomservice.domain.dto.ReservationCreateDto;
 import roomservice.domain.dto.ReservationFoundDto;
-import roomservice.domain.entity.Reservation;
 import roomservice.service.ReservationService;
 
 import javax.validation.Valid;
@@ -27,6 +26,7 @@ public class ReservationController {
 
     /**
      * Add a reservation to this program.
+     *
      * @param reservationDto information of reservation to be added.
      * @return "created" response with id resulted by the program.
      */
@@ -38,6 +38,7 @@ public class ReservationController {
 
     /**
      * show a reservation which have specific id.
+     *
      * @param id which you want to find.
      * @return "ok" response with information of reservation if successfully found.
      */
@@ -48,6 +49,7 @@ public class ReservationController {
 
     /**
      * Delete a reservation from this program.
+     *
      * @param id which you want to delete.
      * @return 204(No Content) (whether deleted or not)
      */

@@ -18,7 +18,7 @@ public class Reservation {
     private String name;
     private Theme theme; // 어떤 방 탈출인가를 정의하는 객체
 
-    public void setId(long id){
+    public void setId(long id) {
         this.id = id;
     }
 }
