@@ -25,7 +25,7 @@ public class ReservationService {
     public Long createReservation(ReservationRequestDto reservationRequest) {
         Theme theme = themeRepository
                 .findOneById(reservationRequest.getThemeId())
-                .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that Id");});
+                .orElseThrow(() -> new NoSuchElementException("No Theme by that Id"));
         checkForOverlappingReservation(reservationRequest);
         return reservationRepository.save(reservationRequest.toEntity(theme));
     }
@@ -33,7 +33,7 @@ public class ReservationService {
     public ReservationResponseDto findReservation(Long reservationId) {
         Reservation reservation = reservationRepository
                 .findOneById(reservationId)
-                .orElseThrow(() -> {throw new NoSuchElementException("No Reservation by that Id");});
+                .orElseThrow(() -> new NoSuchElementException("No Reservation by that Id"));
         return new ReservationResponseDto(reservation);
     }
 
