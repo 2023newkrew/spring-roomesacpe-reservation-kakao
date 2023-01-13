@@ -59,7 +59,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                ReservationResponse response = reservationService.getReservation(id);
+                ReservationResponse response = reservationService.getReservationById(id);
                 if (Objects.isNull(response)) {
                     throw new RuntimeException("해당 ID의 예약이 존재하지 않습니다.");
                 }
@@ -78,7 +78,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationService.deleteReservation(id) > 0) {
+                if (reservationService.deleteReservationById(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

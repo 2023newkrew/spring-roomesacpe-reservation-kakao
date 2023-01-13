@@ -40,12 +40,12 @@ public class ThemeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ThemeResponse> getTheme(@PathVariable("id") @Min(1L) Long id) {
-        return ResponseEntity.ok(themeService.getTheme(id));
+        return ResponseEntity.ok(themeService.getThemeById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteTheme(@PathVariable("id") @Min(1L) Long id) {
-        int deletedCount = themeService.deleteTheme(id);
+        int deletedCount = themeService.deleteThemeById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deletedCount);
     }
 }

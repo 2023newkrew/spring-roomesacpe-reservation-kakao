@@ -5,6 +5,7 @@ import kakao.repository.reservation.ReservationRepository;
 import kakao.repository.theme.ThemeJdbcTemplateRepository;
 import kakao.repository.theme.ThemeRepository;
 import kakao.service.ReservationService;
+import kakao.service.ThemeUtilService;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,13 @@ public class ConsoleConfig {
     }
 
     @Bean
-    public ReservationService reservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
-        return new ReservationService(reservationRepository, themeRepository);
+    public ThemeUtilService themeUtilService(ThemeRepository themeRepository) {
+        return new ThemeUtilService(themeRepository);
+    }
+
+    @Bean
+    public ReservationService reservationService(ReservationRepository reservationRepository,
+                                                 ThemeUtilService themeUtilService) {
+        return new ReservationService(reservationRepository, themeUtilService);
     }
 }

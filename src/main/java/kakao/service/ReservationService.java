@@ -23,11 +23,11 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    private final ThemeRepository themeRepository;
+    private final ThemeUtilService themeUtilService;
 
     public ReservationResponse createReservation(CreateReservationRequest request) {
         checkDuplicatedReservation(request.getThemeId(), request.getDate(), request.getTime());
-        Theme theme = getExistTheme(request.getThemeId());
+        Theme theme = themeUtilService.getThemeById(request.getThemeId());
         return new ReservationResponse(reservationRepository.save(Reservation.builder()
                 .date(request.getDate())
                 .time(request.getTime())
@@ -38,7 +38,7 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public ReservationResponse getReservation(Long id) {
+    public ReservationResponse getReservationById(Long id) {
         Reservation reservation = reservationRepository.findById(id);
         if (Objects.isNull(reservation)) {
             throw new RoomReservationException(ErrorCode.RESERVATION_NOT_FOUND);
@@ -46,7 +46,7 @@ public class ReservationService {
         return new ReservationResponse(reservation);
     }
 
-    public int deleteReservation(Long id) {
+    public int deleteReservationById(Long id) {
         return reservationRepository.delete(id);
     }
 
@@ -55,13 +55,5 @@ public class ReservationService {
         if (isDuplicate) {
             throw new RoomReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
-    }
-
-    private Theme getExistTheme(Long themeId) {
-        Theme theme = themeRepository.findById(themeId);
-        if (Objects.isNull(theme)) {
-            throw new RoomReservationException(ErrorCode.THEME_NOT_FOUND);
-        }
-        return theme;
     }
 }

@@ -147,7 +147,7 @@ class ReservationServiceTest {
             doReturn(reservation).when(reservationRepository).findById(reservation.getId());
 
             //when
-            ReservationResponse response = reservationService.getReservation(reservation.getId());
+            ReservationResponse response = reservationService.getReservationById(reservation.getId());
 
             //then
             verify(reservationRepository).findById(reservation.getId());
@@ -171,7 +171,7 @@ class ReservationServiceTest {
             doReturn(null).when(reservationRepository).findById(0L);
 
             //when //then
-            assertThatThrownBy(() -> reservationService.getReservation(0L))
+            assertThatThrownBy(() -> reservationService.getReservationById(0L))
                     .isInstanceOf(RoomReservationException.class)
                     .hasMessage(ErrorCode.RESERVATION_NOT_FOUND.getMessage());
         }
@@ -187,7 +187,7 @@ class ReservationServiceTest {
             doReturn(1).when(reservationRepository).delete(reservation.getId());
 
             //when
-            int deletedCount = reservationService.deleteReservation(reservation.getId());
+            int deletedCount = reservationService.deleteReservationById(reservation.getId());
 
             //then
             verify(reservationRepository).delete(reservation.getId());
@@ -201,7 +201,7 @@ class ReservationServiceTest {
             doReturn(0).when(reservationRepository).delete(0L);
 
             //when
-            int deletedCount = reservationService.deleteReservation(0L);
+            int deletedCount = reservationService.deleteReservationById(0L);
 
             //then
             assertThat(deletedCount).isEqualTo(0);

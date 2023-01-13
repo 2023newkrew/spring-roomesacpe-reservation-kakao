@@ -24,6 +24,8 @@ public class ThemeService {
 
     private final ReservationRepository reservationRepository;
 
+    private final ThemeUtilService themeUtilService;
+
     public ThemeResponse createTheme(CreateThemeRequest request) {
         Theme theme = Theme.builder()
                 .name(request.getName())
@@ -39,15 +41,11 @@ public class ThemeService {
     }
 
     @Transactional(readOnly = true)
-    public ThemeResponse getTheme(Long id) {
-        Theme theme = themeRepository.findById(id);
-        if (Objects.isNull(theme)) {
-            throw new RoomReservationException(ErrorCode.THEME_NOT_FOUND);
-        }
-        return new ThemeResponse(theme);
+    public ThemeResponse getThemeById(Long id) {
+        return new ThemeResponse(themeUtilService.getThemeById(id));
     }
 
-    public int deleteTheme(Long id) {
+    public int deleteThemeById(Long id) {
         Theme theme = themeRepository.findById(id);
         if (Objects.isNull(theme)) {
             return 0;

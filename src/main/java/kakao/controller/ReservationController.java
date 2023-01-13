@@ -30,12 +30,12 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable("id") @Min(1L) Long id) {
-        return ResponseEntity.ok(reservationService.getReservation(id));
+        return ResponseEntity.ok(reservationService.getReservationById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteReservation(@PathVariable("id") @Min(1L) Long id) {
-        int deletedCount = reservationService.deleteReservation(id);
+        int deletedCount = reservationService.deleteReservationById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deletedCount);
     }
 }
