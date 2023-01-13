@@ -46,15 +46,4 @@ public class ThemeJdbcTemplateDao implements ThemeDao{
         String sql = "DELETE FROM theme WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
-
-    public void clear() {
-        String sql = "DELETE FROM theme";
-        jdbcTemplate.update(sql);
-        resetId();
-    }
-
-    private void resetId() {
-        String sql = "ALTER TABLE theme ALTER COLUMN id RESTART WITH 1";
-        jdbcTemplate.execute(sql);
-    }
 }

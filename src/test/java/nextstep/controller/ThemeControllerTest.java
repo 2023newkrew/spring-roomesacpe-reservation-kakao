@@ -1,13 +1,11 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
+import nextstep.IntegrationTest;
 import nextstep.dto.ReservationRequest;
 import nextstep.dto.ThemeRequest;
-import nextstep.repository.ReservationJdbcTemplateDao;
-import nextstep.repository.ThemeJdbcTemplateDao;
 import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +25,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 
 @DisplayName("Theme Test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@IntegrationTest
 class ThemeControllerTest {
     @LocalServerPort
     int port;
@@ -36,11 +33,7 @@ class ThemeControllerTest {
     @Autowired
     ThemeService themeService;
     @Autowired
-    ThemeJdbcTemplateDao themeJdbcTemplateDao;
-    @Autowired
     ReservationService reservationService;
-    @Autowired
-    ReservationJdbcTemplateDao reservationJdbcTemplateDao;
 
 
     @BeforeEach
@@ -52,12 +45,6 @@ class ThemeControllerTest {
     private void saveSampleTheme(String name, String desc, int price) {
         ThemeRequest requestDto = new ThemeRequest(name, desc, price);
         themeService.create(requestDto);
-    }
-
-    @AfterEach
-    void afterEach() {
-        reservationJdbcTemplateDao.clear();
-        themeJdbcTemplateDao.clear();
     }
 
     @DisplayName("생성 - 정상적인 양식으로 요청시 성공해야 한다.")

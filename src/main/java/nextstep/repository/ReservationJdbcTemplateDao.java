@@ -44,17 +44,6 @@ public class ReservationJdbcTemplateDao implements ReservationDao {
         return jdbcTemplate.query(sql, getRowMapper(), id).stream().findAny();
     }
 
-    public void clear() {
-        String sql = "DELETE FROM reservation";
-        jdbcTemplate.update(sql);
-        resetId();
-    }
-
-    private void resetId() {
-        String sql = "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1";
-        jdbcTemplate.execute(sql);
-    }
-
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);

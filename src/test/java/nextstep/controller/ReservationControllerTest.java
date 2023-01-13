@@ -1,12 +1,11 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
+import nextstep.IntegrationTest;
 import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequest;
-import nextstep.repository.ReservationJdbcTemplateDao;
 import nextstep.repository.ThemeJdbcTemplateDao;
 import nextstep.service.ReservationService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +26,7 @@ import static org.hamcrest.core.Is.is;
 
 
 @DisplayName("Reservation Test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@IntegrationTest
 public class ReservationControllerTest {
 
     @LocalServerPort
@@ -36,8 +34,6 @@ public class ReservationControllerTest {
 
     @Autowired
     ReservationService reservationService;
-    @Autowired
-    ReservationJdbcTemplateDao reservationJdbcTemplateDao;
     @Autowired
     ThemeJdbcTemplateDao themeJdbcTemplateDao;
 
@@ -59,15 +55,12 @@ public class ReservationControllerTest {
         reservationService.reserve(requestDto);
     }
 
-    @AfterEach
-    void afterEach() {
-        reservationJdbcTemplateDao.clear();
-        themeJdbcTemplateDao.clear();
-    }
-
     @DisplayName("예약 - 예약되어있지 않은 날짜와 시간으로 요청시 예약이 성공해야 한다")
     @Test
     void reserveNormally() {
+        String currentThread = Thread.currentThread().getThreadGroup().getName() + " " + Thread.currentThread().getName() + " ";
+        System.out.println("currentThread = " + currentThread);
+        System.out.println("port = " + port);
         Map<String, String> request = new HashMap<>() {{
             put("date", "2023-03-11");
             put("time", "13:00");
@@ -75,6 +68,8 @@ public class ReservationControllerTest {
             put("theme_id", "1");
         }};
 
+        int port1 = RestAssured.port;
+        System.out.println("port1 = " + port1);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
