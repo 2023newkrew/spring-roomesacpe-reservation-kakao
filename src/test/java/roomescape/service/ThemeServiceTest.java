@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,9 +36,9 @@ public class ThemeServiceTest {
         themeService = new ThemeService(themeDAO);
     }
 
-    @DisplayName("예약 생성")
+    @DisplayName("테마 생성")
     @Test
-    void createReservation() {
+    void createTheme() {
         Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
 
         when(themeDAO.exist(theme)).thenReturn(false);
@@ -46,5 +47,16 @@ public class ThemeServiceTest {
         assertThat(themeService.create(theme)).isEqualTo(ID_DATA);
         verify(themeDAO, times(1)).exist(theme);
         verify(themeDAO, times(1)).create(theme);
+    }
+
+    @DisplayName("테마 목록 조회")
+    @Test
+    void listTheme() {
+        Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
+
+        when(themeDAO.list()).thenReturn(List.of(theme));
+
+        assertThat(themeService.list()).isEqualTo(List.of(theme));
+        verify(themeDAO, times(1)).list();
     }
 }

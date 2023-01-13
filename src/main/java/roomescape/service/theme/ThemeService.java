@@ -1,5 +1,6 @@
 package roomescape.service.theme;
 
+import java.util.List;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
@@ -22,5 +23,10 @@ public class ThemeService implements ThemeServiceInterface {
         if (themeDAO.exist(theme)) {
             throw new BadRequestException();
         }
+    }
+
+    @Override
+    public List<Theme> list() {
+        return themeDAO.list();
     }
 }
