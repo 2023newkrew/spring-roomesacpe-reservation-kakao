@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Service
 public class ThemeService {
     private final ThemeRepository themeRepository;
-
     private final ThemeMapper themeMapper;
 
     public ThemeService(final ThemeRepository themeRepository, final ThemeMapper themeMapper) {

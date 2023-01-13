@@ -21,7 +21,6 @@ import static org.hamcrest.Matchers.is;
 public class ThemeTest {
     @LocalServerPort
     int port;
-
     @Autowired
     ThemeRepository themeRepository;
 

@@ -2,11 +2,8 @@ package nextstep.reservations.dto.theme;
 
 public class ThemeResponseDto {
     private Long id;
-
     private String name;
-
     private String desc;
-
     private Integer price;
 
     public ThemeResponseDto() {}
@@ -38,12 +35,10 @@ public class ThemeResponseDto {
 
     public static class ThemeResponseDtoBuilder {
         private Long id;
-
         private String name;
-
         private String desc;
-
         private Integer price;
+
         public ThemeResponseDtoBuilder() {
         }
 

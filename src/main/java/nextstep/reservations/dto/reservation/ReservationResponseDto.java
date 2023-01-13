@@ -7,19 +7,13 @@ import java.time.LocalTime;
 
 public class ReservationResponseDto {
     private Long id;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-
     @JsonFormat(pattern = "HH:mm")
     private LocalTime time;
-
     private String name;
-
     private String themeName;
-
     private String themeDesc;
-
     private Integer themePrice;
 
     public ReservationResponseDto() {}
@@ -66,17 +60,11 @@ public class ReservationResponseDto {
 
     public static class ReservationResponseDtoBuilder {
         private Long id;
-
         private LocalDate date;
-
         private LocalTime time;
-
         private String name;
-
         private String themeName;
-
         private String themeDesc;
-
         private Integer themePrice;
 
         ReservationResponseDtoBuilder() {

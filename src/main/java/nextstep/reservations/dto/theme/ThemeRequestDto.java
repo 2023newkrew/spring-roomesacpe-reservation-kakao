@@ -2,9 +2,7 @@ package nextstep.reservations.dto.theme;
 
 public class ThemeRequestDto {
     private String name;
-
     private String desc;
-
     private Integer price;
 
     public ThemeRequestDto() {}
@@ -31,9 +29,7 @@ public class ThemeRequestDto {
 
     public static class ThemeRequestDtoBuilder {
         private String name;
-
         private String desc;
-
         private Integer price;
 
         public ThemeRequestDtoBuilder() {
