@@ -22,12 +22,10 @@ public class RoomEscapeApplication {
         List<Reservation> reservations = new ArrayList<>();
         Long reservationIdIndex = 0L;
 
-        Theme theme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
+            System.out.println("- 예약하기: add {date},{time},{name},{themeId} ex) add 2022-08-11,13:00,류성현,1");
             System.out.println("- 예약조회: find {id} ex) find 1");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
@@ -39,13 +37,14 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                Long themeId = Long.parseLong(params.split(",")[3]);
 
                 Reservation reservation = new Reservation(
                         ++reservationIdIndex,
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme.getId()
+                        themeId
                 );
 
                 RESERVATION_JDBC_REPOSITORY.save(reservation);
@@ -67,7 +66,7 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 번호: " + reservation.getThemeId());
+                System.out.println("예약 테마 id: " + reservation.getThemeId();
             }
 
             if (input.startsWith(DELETE)) {
