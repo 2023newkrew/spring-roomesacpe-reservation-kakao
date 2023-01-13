@@ -10,11 +10,11 @@ public interface ReservationDao {
     String deleteById = "DELETE From reservation WHERE id = ?";
     String selectByDateAndTime = "SELECT * FROM reservation WHERE date = ? and time = ?";
 
-    Long addReservation(Reservation reservation); // 예약을 db에 추가한다
+    Reservation addReservation(Reservation reservation); // 예약을 db에 추가한다
 
     List<Reservation> findReservationById(Long id); // id로 예약을 조회한다
 
     List<Reservation> findReservationByDateAndTime(String date, String time); // date와 time으로 예약을 조회한다
 
-    int removeReservation(Long id); // id로 예약을 삭제한다
+    void removeReservation(Long id); // id로 예약을 삭제
 }

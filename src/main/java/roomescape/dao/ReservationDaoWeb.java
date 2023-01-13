@@ -22,10 +22,10 @@ public class ReservationDaoWeb implements ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addReservation(Reservation reservation) {
+    public Reservation addReservation(Reservation reservation) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
         reservation.setId(insertActor.executeAndReturnKey(parameters).longValue());
-        return reservation.getId();
+        return reservation;
     }
 
     public List<Reservation> findReservationById(Long id) {
@@ -36,8 +36,8 @@ public class ReservationDaoWeb implements ReservationDao {
         return jdbcTemplate.query(selectByDateAndTime, new ReservationMapper(), date, time);
     }
 
-    public int removeReservation(Long id) {
-        return jdbcTemplate.update(deleteById, id);
+    public void removeReservation(Long id) {
+        jdbcTemplate.update(deleteById, id);
     }
 
 }
