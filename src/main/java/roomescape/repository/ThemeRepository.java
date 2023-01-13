@@ -9,4 +9,7 @@ public interface ThemeRepository {
     Optional<Theme> findOneByName(String themeName);
     void delete(Long themeId);
     Boolean hasThemeWithName(String themeName);
+    void updateNameOfId(Long themeId, String newName);
+    void updateDescOfId(Long themeId, String newDesc);
+    void updatePriceOfId(Long themeId, Integer newPrice);
 }

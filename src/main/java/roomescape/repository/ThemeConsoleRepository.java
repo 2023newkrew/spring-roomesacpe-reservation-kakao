@@ -86,4 +86,43 @@ public class ThemeConsoleRepository implements ThemeRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void updateNameOfId(Long themeId, String newName) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
+            String sql = "update theme set name = ? where id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, newName);
+            ps.setLong(2, themeId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateDescOfId(Long themeId, String newDesc) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
+            String sql = "update theme set desc = ? where id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, newDesc);
+            ps.setLong(2, themeId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updatePriceOfId(Long themeId, Integer newPrice) {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
+            String sql = "update theme set price = ? where id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, newPrice);
+            ps.setLong(2, themeId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

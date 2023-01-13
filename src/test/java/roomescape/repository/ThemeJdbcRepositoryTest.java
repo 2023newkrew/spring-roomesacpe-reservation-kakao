@@ -53,4 +53,46 @@ public class ThemeJdbcRepositoryTest {
         //then
         Assertions.assertThat(themeRepository.hasThemeWithName("Test Theme")).isTrue();
     }
+
+    @DisplayName("Theme 이름 변경 확인")
+    @Test
+    @Transactional
+    public void updateNameTest() {
+        //given
+        Theme theme = new Theme(null, "Test Theme", "lorem ipsum", 1000);
+        //when
+        long themeId = themeRepository.save(theme);
+        themeRepository.updateNameOfId(themeId, "Test Theme Edit");
+        Theme returnedTheme = themeRepository.findOneById(themeId).get();
+        //then
+        Assertions.assertThat(returnedTheme.getName()).isEqualTo("Test Theme Edit");
+    }
+
+    @DisplayName("Theme 정보 변경 확인")
+    @Test
+    @Transactional
+    public void updateDescTest() {
+        //given
+        Theme theme = new Theme(null, "Test Theme", "lorem ipsum", 1000);
+        //when
+        long themeId = themeRepository.save(theme);
+        themeRepository.updateDescOfId(themeId, "Desc Edit");
+        Theme returnedTheme = themeRepository.findOneById(themeId).get();
+        //then
+        Assertions.assertThat(returnedTheme.getDesc()).isEqualTo("Desc Edit");
+    }
+
+    @DisplayName("Theme 가격 변경 확인")
+    @Test
+    @Transactional
+    public void updatePriceTest() {
+        //given
+        Theme theme = new Theme(null, "Test Theme", "lorem ipsum", 1000);
+        //when
+        long themeId = themeRepository.save(theme);
+        themeRepository.updatePriceOfId(themeId, 2000);
+        Theme returnedTheme = themeRepository.findOneById(themeId).get();
+        //then
+        Assertions.assertThat(returnedTheme.getPrice()).isEqualTo(2000);
+    }
 }

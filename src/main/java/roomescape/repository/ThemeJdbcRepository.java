@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.dto.ThemeUpdateDto;
 import roomescape.model.Theme;
 
 import javax.sql.DataSource;
@@ -62,5 +63,23 @@ public class ThemeJdbcRepository implements ThemeRepository {
     public Boolean hasThemeWithName(String themeName) {
         String sql = "select * from theme where name = ?";
         return jdbcTemplate.query(sql, actorRowMapper, themeName).size() > 0;
+    }
+
+    @Override
+    public void updateNameOfId(Long themeId, String newName) {
+        String sql = "update theme set name = ? where id = ?";
+        jdbcTemplate.update(sql, newName, themeId);
+    }
+
+    @Override
+    public void updateDescOfId(Long themeId, String newDesc) {
+        String sql = "update theme set desc = ? where id = ?";
+        jdbcTemplate.update(sql, newDesc, themeId);
+    }
+
+    @Override
+    public void updatePriceOfId(Long themeId, Integer newPrice) {
+        String sql = "update theme set price = ? where id = ?";
+        jdbcTemplate.update(sql, newPrice, themeId);
     }
 }
