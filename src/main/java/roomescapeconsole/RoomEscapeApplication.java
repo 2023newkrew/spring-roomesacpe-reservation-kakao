@@ -18,7 +18,6 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationDAO reservationDAO = new ReservationDAO();
-        reservationDAO.makeConnection();
         Long reservationIdIndex = (long) reservationDAO.getNumberOfExistReservation();
         while (true) {
             System.out.println();
@@ -60,7 +59,7 @@ public class RoomEscapeApplication {
                 Reservation reservation;
                 try {
                     reservation = reservationDAO.lookUpReservation(id);
-                }catch(NoSuchObjectException e){
+                } catch (NoSuchObjectException e) {
                     continue;
                 }
 
@@ -82,7 +81,6 @@ public class RoomEscapeApplication {
             }
 
             if (input.equals(QUIT)) {
-                reservationDAO.disconnection();
                 break;
             }
         }

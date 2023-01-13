@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationDAO {
-    Connection con;
 
     private static final int INDEX_COUNT = 1;
     private static final int INDEX_ID = 1;
@@ -27,28 +26,21 @@ public class ReservationDAO {
     private static final String SELECT_QUERY = "SELECT * FROM RESERVATION WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
 
-    public void makeConnection() {
-        con = null;
+    public Connection makeConnection() {
+        Connection con;
         try {
             con = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
             System.out.println("정상적으로 연결되었습니다.");
+            return con;
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
-        }
-    }
-
-    public void disconnection() {
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
     public int getNumberOfExistReservation() {
-        try {
+        try (Connection con = makeConnection()) {
             PreparedStatement getNumberPS = con.prepareStatement(CHECK_NUMBER_QUERY);
             ResultSet getNumberRs = getNumberPS.executeQuery();
             if (getNumberRs.next()) {
@@ -61,7 +53,7 @@ public class ReservationDAO {
     }
 
     public void addReservation(Reservation reservation) {
-        try {
+        try (Connection con = makeConnection()) {
             PreparedStatement addPs = con.prepareStatement(INSERT_QUERY);
             addPs.setLong(INDEX_ID, reservation.getId());
             addPs.setDate(INDEX_DATE, Date.valueOf(reservation.getDate()));
@@ -77,7 +69,7 @@ public class ReservationDAO {
     }
 
     public Reservation lookUpReservation(Long findId) throws NoSuchObjectException {
-        try {
+        try (Connection con = makeConnection()) {
             PreparedStatement lookUpPS = con.prepareStatement(SELECT_QUERY);
             lookUpPS.setString(INDEX_ID, String.valueOf(findId));
             ResultSet lookUpRs = lookUpPS.executeQuery();
@@ -99,7 +91,7 @@ public class ReservationDAO {
     }
 
     public void deleteReservation(Long deleteId) {
-        try {
+        try (Connection con = makeConnection()) {
             PreparedStatement deletePs = con.prepareStatement(DELETE_QUERY);
             deletePs.setString(INDEX_ID, String.valueOf(deleteId));
             deletePs.executeUpdate();
