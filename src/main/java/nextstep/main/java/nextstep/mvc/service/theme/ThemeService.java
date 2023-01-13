@@ -9,6 +9,7 @@ import nextstep.main.java.nextstep.mvc.domain.theme.request.ThemeUpdateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.response.ThemeFindResponse;
 import nextstep.main.java.nextstep.mvc.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +20,12 @@ public class ThemeService {
     private final ThemeRepository themeRepository;
     private final ThemeMapper themeMapper;
 
+    @Transactional
     public Long save(ThemeCreateRequest request) {
         return themeRepository.save(request);
     }
 
+    @Transactional(readOnly = true)
     public ThemeFindResponse findById(Long id) {
         return themeMapper.themeToFindResponse(
             themeRepository.findById(id)
@@ -30,6 +33,7 @@ public class ThemeService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<ThemeFindResponse> findAll() {
         return themeRepository.findAll()
                 .stream()
@@ -37,20 +41,22 @@ public class ThemeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteById(Long id, Boolean reserved) {
         checkIsReserved(reserved);
         checkIsExists(id);
         themeRepository.deleteById(id);
     }
 
+    @Transactional
+    public void update(Long id, ThemeUpdateRequest request) {
+        themeRepository.update(id, request);
+    }
+
     private void checkIsReserved(Boolean reserved) {
         if (reserved) {
             throw new AlreadyReservedThemeException();
         }
-    }
-
-    public void update(Long id, ThemeUpdateRequest request) {
-        themeRepository.update(id, request);
     }
 
     private void checkIsExists(Long id) {
