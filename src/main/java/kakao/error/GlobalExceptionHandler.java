@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ErrorResponse> handlerException(Exception e, ErrorCode errorCode) {
-        e.printStackTrace();
+        log.warn(e.getMessage(), e);
         ErrorResponse errorResponse = ErrorResponse.of(errorCode);
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
