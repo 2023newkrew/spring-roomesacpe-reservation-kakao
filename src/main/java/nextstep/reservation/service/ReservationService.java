@@ -1,10 +1,10 @@
 package nextstep.reservation.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.ReservationRequestDto;
 import nextstep.reservation.dto.ReservationResponseDto;
-import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.exceptions.exception.DuplicateReservationException;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -32,8 +32,11 @@ public class ReservationService {
         repository.delete(id);
     }
 
-    public List<Reservation> getAllReservation() {
-        return repository.findAll();
+    public List<ReservationResponseDto> getAllReservation() {
+        return repository.findAll()
+                .stream()
+                .map(ReservationResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     public boolean isDuplicatedReservation(ReservationRequestDto requestDto) {
