@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class ReservationMemoryRepository implements ReservationRepository {
     private Map<Long, Reservation> reservations = new HashMap<>();
-    private final AtomicLong atomicLong = new AtomicLong(0L);
+    private final AtomicLong reservationId = new AtomicLong(0L);
 
     public Long save(Reservation reservation) {
-        reservation.setId(atomicLong.incrementAndGet());
-        reservations.put(atomicLong.get(), reservation);
+        reservation.setId(reservationId.incrementAndGet());
+        reservations.put(reservationId.get(), reservation);
 
-        return atomicLong.get();
+        return reservationId.get();
     }
 
     public int countByDateAndTime(LocalDate date, LocalTime time) {
