@@ -5,10 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
@@ -36,7 +36,7 @@ public class SpringReservationDAO extends ReservationDAO {
     }
 
     @Override
-    public Long insert(Reservation reservation) {
+    public Long create(Reservation reservation) {
         validate(reservation);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(

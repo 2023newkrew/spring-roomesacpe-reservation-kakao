@@ -23,7 +23,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
-        long id = reservationDAO.insert(reservation);
+        long id = reservationDAO.create(reservation);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", String.format("/reservations/%d", id))

@@ -51,10 +51,10 @@ public class ConsoleReservationDAOTest {
 
     @DisplayName("예약 생성")
     @Test
-    void addReservation() throws SQLException {
+    void insertReservation() throws SQLException {
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
-        dao.insert(reservation);
+        dao.create(reservation);
         ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
         assertThat(resultSet.next()).isTrue();
         assertThat(resultSet.getInt(1)).isEqualTo(2);
@@ -72,7 +72,7 @@ public class ConsoleReservationDAOTest {
 
     @DisplayName("예약 삭제")
     @Test
-    void deleteReservation() throws SQLException {
+    void removeReservation() throws SQLException {
         dao.remove(1L);
 
         ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);

@@ -37,7 +37,7 @@ public abstract class ThemeDAO {
 
     public abstract boolean exist(Theme theme);
 
-    public abstract Long insert(Theme theme);
+    public abstract Long create(Theme theme);
 
     public abstract List<Theme> list();
 

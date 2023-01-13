@@ -39,7 +39,7 @@ public abstract class ReservationDAO {
 
     public abstract boolean exist(Reservation reservation);
 
-    public abstract Long insert(Reservation reservation);
+    public abstract Long create(Reservation reservation);
 
     public abstract Reservation find(Long id);
 

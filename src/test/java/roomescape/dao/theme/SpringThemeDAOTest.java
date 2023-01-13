@@ -36,10 +36,10 @@ public class SpringThemeDAOTest {
 
     @DisplayName("테마 생성")
     @Test
-    void insert() {
+    void createTheme() {
         Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
 
-        themeDAO.insert(theme);
+        themeDAO.create(theme);
 
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
         assertThat(count).isEqualTo(2L);
@@ -47,7 +47,7 @@ public class SpringThemeDAOTest {
 
     @DisplayName("테마 목록 조회")
     @Test
-    void list() {
+    void listTheme() {
         List<Theme> theme = themeDAO.list();
 
         assertThat(theme.size()).isEqualTo(1);
@@ -58,7 +58,7 @@ public class SpringThemeDAOTest {
 
     @DisplayName("테마 삭제")
     @Test
-    void deleteReservation() {
+    void removeTheme() {
         themeDAO.remove(1L);
 
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);

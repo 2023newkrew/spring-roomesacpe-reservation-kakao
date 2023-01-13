@@ -24,7 +24,7 @@ public class SpringThemeDAO extends ThemeDAO {
     }
 
     @Override
-    public Long insert(Theme theme) {
+    public Long create(Theme theme) {
         validate(theme);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new InsertThemePreparedStatementCreator(theme), keyHolder);

@@ -38,9 +38,9 @@ public class SpringReservationDAOTest {
 
     @DisplayName("예약 생성")
     @Test
-    void addReservation() {
+    void createReservation() {
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
-        reservationDAO.insert(reservation);
+        reservationDAO.create(reservation);
 
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
         assertThat(count).isEqualTo(2L);
@@ -59,7 +59,7 @@ public class SpringReservationDAOTest {
 
     @DisplayName("예약 삭제")
     @Test
-    void deleteReservation() {
+    void removeReservation() {
         reservationDAO.remove(1L);
 
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);

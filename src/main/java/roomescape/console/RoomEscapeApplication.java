@@ -42,7 +42,7 @@ public class RoomEscapeApplication {
 
                 Reservation reservation = new Reservation(
                         LocalDate.parse(date), LocalTime.parse(time + ":00"), name, 1L);
-                dao.insert(reservation);
+                dao.create(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());

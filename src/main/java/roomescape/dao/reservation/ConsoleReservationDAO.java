@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
-import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
@@ -148,7 +148,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
     }
 
     @Override
-    public Long insert(Reservation reservation) {
+    public Long create(Reservation reservation) {
         validate(reservation);
         Connection con = openConnection();
         Long id = executeAddConnection(con, reservation);
