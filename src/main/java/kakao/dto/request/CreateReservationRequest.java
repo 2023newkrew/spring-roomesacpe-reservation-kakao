@@ -1,28 +1,28 @@
 package kakao.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import org.springframework.lang.NonNull;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class CreateReservationRequest {
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    public final LocalDate date;
+    private final LocalDate date;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    public final LocalTime time;
+    private final LocalTime time;
 
     @NotBlank
-    public final String name;
+    private final String name;
 
     @NotNull
-    public final Long themeId;
+    private final Long themeId;
 }

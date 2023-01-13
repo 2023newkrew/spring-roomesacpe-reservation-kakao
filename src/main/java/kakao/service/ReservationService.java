@@ -26,12 +26,12 @@ public class ReservationService {
     private final ThemeRepository themeRepository;
 
     public ReservationResponse createReservation(CreateReservationRequest request) {
-        checkDuplicatedReservation(request.themeId, request.date, request.time);
-        Theme theme = getExistTheme(request.themeId);
+        checkDuplicatedReservation(request.getThemeId(), request.getDate(), request.getTime());
+        Theme theme = getExistTheme(request.getThemeId());
         return new ReservationResponse(reservationRepository.save(Reservation.builder()
-                .date(request.date)
-                .time(request.time)
-                .name(request.name)
+                .date(request.getDate())
+                .time(request.getTime())
+                .name(request.getName())
                 .theme(theme)
                 .build())
         );

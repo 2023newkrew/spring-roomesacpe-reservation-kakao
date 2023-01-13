@@ -2,17 +2,19 @@ package kakao.dto.request;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class CreateThemeRequest {
     @NotNull
-    public final String name;
+    private final String name;
 
     @NotNull
-    public final String desc;
+    private final String desc;
 
     @NotNull
     @Min(0)
-    public final Integer price;
+    private final Integer price;
 }

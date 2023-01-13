@@ -66,8 +66,8 @@ class ReservationServiceTest {
                     theme.getId()
             );
             doReturn(List.of()).when(reservationRepository)
-                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
-            doReturn(theme).when(themeRepository).findById(request.themeId);
+                    .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
+            doReturn(theme).when(themeRepository).findById(request.getThemeId());
             doReturn(reservation).when(reservationRepository).save(Mockito.any(Reservation.class));
 
             //when
@@ -75,8 +75,8 @@ class ReservationServiceTest {
 
             //then
             verify(reservationRepository)
-                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
-            verify(themeRepository).findById(request.themeId);
+                    .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
+            verify(themeRepository).findById(request.getThemeId());
             verify(reservationRepository).save(Mockito.any(Reservation.class));
             assertThat(response).hasFieldOrPropertyWithValue("id", reservation.getId())
                     .hasFieldOrPropertyWithValue("date", reservation.getDate())
@@ -99,7 +99,7 @@ class ReservationServiceTest {
                     0L
             );
             doReturn(List.of()).when(reservationRepository)
-                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+                    .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
             doReturn(null).when(themeRepository).findById(0L);
 
             //when //then
@@ -107,7 +107,7 @@ class ReservationServiceTest {
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.THEME_NOT_FOUND.getMessage());
             verify(reservationRepository)
-                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+                    .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
             verify(themeRepository).findById(0L);
         }
 
@@ -122,14 +122,14 @@ class ReservationServiceTest {
                     0L
             );
             doReturn(List.of(reservation)).when(reservationRepository)
-                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+                    .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
 
             //when //then
             assertThatThrownBy(() -> reservationService.createReservation(request))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.DUPLICATE_RESERVATION.getMessage());
             verify(reservationRepository)
-                    .findByThemeIdAndDateAndTime(request.themeId, request.date, request.time);
+                    .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
         }
     }
 
