@@ -11,7 +11,7 @@ public class ThemeResponse {
     private final String desc;
     private final int price;
 
-    public ThemeResponse(Long id, String name, String desc, int price) {
+    private ThemeResponse(Long id, String name, String desc, int price) {
         this.id = id;
         this.name = name;
         this.desc = desc;

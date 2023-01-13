@@ -47,7 +47,7 @@ public class ReservationService {
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationRepository.getReservation(reservationId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
-        return ReservationResponse.fromEntity(reservation);
+        return ReservationResponse.of(reservation);
     }
 
     @Transactional

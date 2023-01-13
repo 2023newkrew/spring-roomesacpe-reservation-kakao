@@ -9,7 +9,7 @@ public class ReservationResponse {
     private final String name;
     private final ThemeResponse theme;
 
-    public ReservationResponse(Long id, String date, String time, String name, ThemeResponse theme) {
+    private ReservationResponse(Long id, String date, String time, String name, ThemeResponse theme) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -37,7 +37,7 @@ public class ReservationResponse {
         return theme;
     }
 
-    public static ReservationResponse fromEntity(Reservation reservation) {
+    public static ReservationResponse of(Reservation reservation) {
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getDate().toString(),

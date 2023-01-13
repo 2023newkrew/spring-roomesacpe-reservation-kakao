@@ -20,7 +20,7 @@ public class ThemeConsoleRepository implements ThemeRepository {
         try (
                 Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
                 PreparedStatement ps = createFindAllThemesPreparedStatement(con);
-                ResultSet resultSet = ps.executeQuery();
+                ResultSet resultSet = ps.executeQuery()
         ) {
             while (resultSet.next()) {
                 Theme theme = ThemeMapper.mapToTheme(resultSet);
