@@ -15,29 +15,31 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Repository
-public class JDBCTemplateThemeDao implements ThemeDao{
+public class JDBCTemplateThemeDao implements ThemeDao {
 
     private static final String SELECT_BY_THEME_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
 
     public final JdbcTemplate jdbcTemplate;
+
     @Autowired  // 생성자 하나면 @Autowired 생략 가능능
     public JDBCTemplateThemeDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
+
     private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) ->
-            new Theme(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("desc"),
-                    resultSet.getInt("price")
-            );
+        new Theme(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("desc"),
+            resultSet.getInt("price")
+        );
 
     @Override
     public Theme findById(Long id) throws SQLException {
-        try{
+        try {
             return jdbcTemplate.queryForObject(SELECT_BY_THEME_ID_SQL, themeRowMapper, id);
-        }catch(EmptyResultDataAccessException err){
+        } catch (EmptyResultDataAccessException err) {
             return null;
         }
     }
@@ -47,7 +49,7 @@ public class JDBCTemplateThemeDao implements ThemeDao{
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         int insertCount = jdbcTemplate.update((Connection con) -> {
-            PreparedStatement psmt = con.prepareStatement(INSERT_SQL, new String[] {"id"});
+            PreparedStatement psmt = con.prepareStatement(INSERT_SQL, new String[]{"id"});
             int parameterIndex = 1;
             psmt.setString(parameterIndex++, theme.getName());
             psmt.setString(parameterIndex++, theme.getDesc());

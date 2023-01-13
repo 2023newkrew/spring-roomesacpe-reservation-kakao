@@ -9,6 +9,7 @@ import java.util.Objects;
 @ToString
 @Getter
 public class Reservation {
+
     private Long id;
     private final LocalDate date;
     private final LocalTime time;
@@ -29,8 +30,12 @@ public class Reservation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Reservation that = (Reservation) o;
         return Objects.equals(id, that.id);
     }

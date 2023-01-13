@@ -13,25 +13,25 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Repository
-public class JDBCTemplateThemeReservationDao implements ThemeReservationDao{
+public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
 
     private static final String INSERT_SQL = "INSERT INTO RESERVATION(`date`, `time`, `name`, `theme_id`) VALUES (?, ?, ?, ?)";
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT `id`, `date`, `time`, `name`, `theme_id`  FROM RESERVATION WHERE ID = ?";
 
     public final JdbcTemplate jdbcTemplate;
-    
+
     public JDBCTemplateThemeReservationDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->{
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         return new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                resultSet.getLong("theme_id"));
+            resultSet.getLong("id"),
+            resultSet.getDate("date").toLocalDate(),
+            resultSet.getTime("time").toLocalTime(),
+            resultSet.getString("name"),
+            resultSet.getLong("theme_id"));
     };
 
     @Override
@@ -40,14 +40,14 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao{
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         int insertCount = jdbcTemplate.update((Connection con) -> {
-                    PreparedStatement psmt = con.prepareStatement(INSERT_SQL, new String[] {"id"});
-                    int parameterIndex = 1;
-                    psmt.setDate(parameterIndex++, java.sql.Date.valueOf(reservation.getDate()));
-                    psmt.setTime(parameterIndex++, java.sql.Time.valueOf(reservation.getTime()));
-                    psmt.setString(parameterIndex++, reservation.getName());
-                    psmt.setLong(parameterIndex++, reservation.getThemeId());
-                    return psmt;
-                }, keyHolder);
+            PreparedStatement psmt = con.prepareStatement(INSERT_SQL, new String[]{"id"});
+            int parameterIndex = 1;
+            psmt.setDate(parameterIndex++, java.sql.Date.valueOf(reservation.getDate()));
+            psmt.setTime(parameterIndex++, java.sql.Time.valueOf(reservation.getTime()));
+            psmt.setString(parameterIndex++, reservation.getName());
+            psmt.setLong(parameterIndex++, reservation.getThemeId());
+            return psmt;
+        }, keyHolder);
         reservation.setId(keyHolder.getKey().longValue());
         System.out.println("JDBCTemplateThemeReservationDao.insert.insertCount = " + insertCount);
         return insertCount;
@@ -60,9 +60,10 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao{
 
     @Override
     public Reservation findById(Long id) throws SQLException {
-        try{
-            return jdbcTemplate.queryForObject(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper, id);
-        }catch(EmptyResultDataAccessException err){
+        try {
+            return jdbcTemplate.queryForObject(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper,
+                id);
+        } catch (EmptyResultDataAccessException err) {
             return null;
         }
     }

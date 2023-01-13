@@ -29,21 +29,21 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     }
 
     @Override
-    public void cancelById(Long id) throws SQLException{
+    public void cancelById(Long id) throws SQLException {
         int deleteCount = themeReservationDao.deleteReservation(id);
-        if(deleteCount == 0){
+        if (deleteCount == 0) {
             throw new SQLException();
         }
     }
 
     @Override
-    public ReservationDetail findById(Long id) throws SQLException{
+    public ReservationDetail findById(Long id) throws SQLException {
         Reservation reservation = themeReservationDao.findById(id);
         if (reservation == null) {
             return null;
         }
         Theme theme = themeDao.findById(reservation.getThemeId());
-        if(theme == null){
+        if (theme == null) {
             return null;
         }
         return new ReservationDetail(reservation, theme);

@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ReservationDto {
+
     @NonNull
     @Pattern(regexp = "\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")
     private String date;
@@ -39,6 +40,6 @@ public class ReservationDto {
 
     public static Reservation from(ReservationDto reservationDto) {
         return new Reservation(reservationDto.parseToLocalDate(), reservationDto.parseToLocalTime()
-                , reservationDto.getName(), reservationDto.getThemeId());
+            , reservationDto.getName(), reservationDto.getThemeId());
     }
 }

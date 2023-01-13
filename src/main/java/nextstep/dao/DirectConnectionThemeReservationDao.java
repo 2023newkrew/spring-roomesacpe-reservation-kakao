@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
+public class DirectConnectionThemeReservationDao implements ThemeReservationDao {
 
     private static final String INSERT_SQL = "INSERT INTO RESERVATION(date, time, name, theme_id) VALUES (?, ?, ?, ?)";
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT * FROM RESERVATION WHERE ID = ?";
 
     @Override
-    public int insert(Reservation reservation) throws SQLException{
+    public int insert(Reservation reservation) throws SQLException {
         System.out.println("DirectConnectionThemeReservationDao.insert");
         Connection con = DatabaseUtil.getConnection();
         System.out.println(con);
@@ -27,7 +27,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
         ResultSet resultSet = null;
         Long reservationId = 0L;
         int insertCount = 0;
-        try{
+        try {
             int parameterIndex = 1;
             psmt = con.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             psmt.setDate(parameterIndex++, java.sql.Date.valueOf(reservation.getDate()));
@@ -40,9 +40,9 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
                 reservationId = resultSet.getLong(1);
             }
             reservation.setId(reservationId);
-        }catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             throw sqlException;
-        }finally {
+        } finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }
         return insertCount;
@@ -53,13 +53,13 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
         Connection con = DatabaseUtil.getConnection();
         PreparedStatement psmt = null;
         int deleteCount = 0;
-        try{
+        try {
             psmt = con.prepareStatement(DELETE_BY_RESERVATION_ID_SQL);
             psmt.setLong(1, id);
             deleteCount = psmt.executeUpdate();
-        }catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             throw sqlException;
-        }finally {
+        } finally {
             DatabaseUtil.close(con, psmt);
         }
         return deleteCount;
@@ -70,22 +70,22 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao{
         Connection con = DatabaseUtil.getConnection();
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
-        try{
+        try {
             psmt = con.prepareStatement(SELECT_BY_RESERVATION_ID_SQL);
             psmt.setLong(1, id);
             resultSet = psmt.executeQuery();
             List<Reservation> reservations = getReservation(id, resultSet);
             return (reservations.size() > 0) ? reservations.get(0) : null;
-        }catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             return null;
-        }finally {
+        } finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }
     }
 
     private static List<Reservation> getReservation(Long id, ResultSet resultSet) throws SQLException {
         List<Reservation> reservations = new ArrayList<>();
-        while(resultSet.next()){
+        while (resultSet.next()) {
             LocalDate date = resultSet.getDate("DATE").toLocalDate();
             LocalTime time = resultSet.getTime("TIME").toLocalTime();
             String name = resultSet.getString("NAME");

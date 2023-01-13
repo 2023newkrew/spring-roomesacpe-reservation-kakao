@@ -14,6 +14,7 @@ import java.time.LocalTime;
 @Getter
 @AllArgsConstructor
 public class ReservationDetail {
+
     private Long id;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate date;

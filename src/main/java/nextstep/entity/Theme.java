@@ -8,6 +8,7 @@ import nextstep.dto.ThemeDto;
 @ToString
 @Getter
 public class Theme {
+
     @Setter
     private Long id;
     private String name;
@@ -25,7 +26,7 @@ public class Theme {
         this.price = price;
     }
 
-    public Theme(ThemeDto themeDto){
+    public Theme(ThemeDto themeDto) {
         this.id = themeDto.getId();
         this.name = themeDto.getName();
         this.desc = themeDto.getDesc();
