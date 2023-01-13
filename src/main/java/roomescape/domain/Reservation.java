@@ -8,23 +8,18 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private String themeName;
-    private String themeDesc;
-    private Integer themePrice;
+    private Long themeId;
 
     public Reservation(){
 
     }
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name,
-                       String themeName, String themeDesc, Integer themePrice ) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.themeName = themeName;
-        this.themeDesc = themeDesc;
-        this.themePrice = themePrice;
+        this.themeId = themeId;
     }
 
     public Long getId() {
@@ -42,15 +37,11 @@ public class Reservation {
         return time;
     }
 
-    public String getThemeName() {
-        return themeName;
+    public Long getThemeId() {
+        return themeId;
     }
 
-    public String getThemeDesc() {
-        return themeDesc;
-    }
-
-    public Integer getThemePrice() {
-        return themePrice;
+    public String toMessage(){
+        return "date: " + date + ",time: " + time + " ,name: " + name + " ,themeId: " + themeId;
     }
 }

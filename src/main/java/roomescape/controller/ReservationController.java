@@ -5,21 +5,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.service.ReservationService;
+import roomescape.service.Reservation.ReservationService;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-public class RoomEscapeController {
+public class ReservationController {
     final ReservationService reservationService;
     @Autowired
-    public RoomEscapeController(@Qualifier("WebService") ReservationService reservationService) {
+    public ReservationController(@Qualifier("WebReservation") ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
     @PostMapping("/reservations")
-        public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation){
+    public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation){
         String userMessage = reservationService.createReservation(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(userMessage);
     }

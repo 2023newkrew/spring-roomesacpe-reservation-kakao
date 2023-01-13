@@ -1,15 +1,15 @@
-package roomescape.service;
+package roomescape.service.Reservation;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.repository.JdbcReservationRepository;
+import roomescape.repository.Reservation.JdbcReservationRepository;
 
 import java.util.Optional;
 
 @Service
-@Qualifier("WebService")
+@Qualifier("WebReservation")
 public class WebReservationService implements ReservationService{
     JdbcReservationRepository jdbcReservationRepository;
 
@@ -19,7 +19,7 @@ public class WebReservationService implements ReservationService{
 
     @Override
     public String createReservation(Reservation reservation) {
-        if (jdbcReservationRepository.findByDateAndTime(reservation) == 1) {
+        if (jdbcReservationRepository.findIdByDateAndTime(reservation) == 1) {
             throw new DuplicateRequestException("요청 날짜/시간에 이미 예약이 있습니다.");
         }
         Long reserveId = jdbcReservationRepository.createReservation(reservation);
@@ -33,9 +33,9 @@ public class WebReservationService implements ReservationService{
     public String lookUpReservation(Long reserveId) {
         Optional<Reservation> reservation = jdbcReservationRepository.findById(reserveId);
         if (reservation.isPresent()) {
-            return reservation.toString();
+            return reservation.get().toMessage();
         }
-        return "ERROR";
+        return "NOT FOUND RESERVATION ID: " + reserveId;
     }
 
     @Override
