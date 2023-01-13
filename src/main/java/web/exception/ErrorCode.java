@@ -15,6 +15,7 @@ public enum ErrorCode {
     RESERVATION_NOT_FOUND("예약 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     THEME_NOT_FOUND("테마가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     THEME_DUPLICATE("이미 존재하는 테마입니다.", HttpStatus.CONFLICT),
+    RESERVATION_EXIST("예약 정보가 존재합니다.", HttpStatus.CONFLICT),
     ;
 
     private final String message;

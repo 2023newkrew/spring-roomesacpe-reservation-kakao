@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import web.entity.Reservation;
 import web.exception.ErrorCode;
 import web.reservation.exception.ReservationException;
-import web.theme.exception.ThemeException;
 import web.theme.repository.ThemeRepository;
 
 import javax.sql.DataSource;
@@ -16,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -83,6 +83,11 @@ public class DatabaseReservationRepository implements ReservationRepository {
             return Optional.empty();
         }
         return Optional.ofNullable(reservation);
+    }
+
+    @Override
+    public List<Reservation> findAllByThemeId(long themeId) {
+        return null;
     }
 
     @Override
