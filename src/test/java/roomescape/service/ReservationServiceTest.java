@@ -1,4 +1,4 @@
-package roomescape.service.reservation;
+package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dto.Reservation;
+import roomescape.service.reservation.ReservationService;
+import roomescape.service.reservation.ReservationServiceInterface;
 
 @DisplayName("예약 서비스 테스트")
 @ExtendWith(MockitoExtension.class)

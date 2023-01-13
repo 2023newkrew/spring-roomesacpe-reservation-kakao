@@ -1,0 +1,50 @@
+package roomescape.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import roomescape.dao.theme.ThemeDAO;
+import roomescape.dto.Theme;
+import roomescape.service.theme.ThemeService;
+import roomescape.service.theme.ThemeServiceInterface;
+
+@DisplayName("테마 서비스 테스트")
+@ExtendWith(MockitoExtension.class)
+public class ThemeServiceTest {
+
+    private static final Long ID_DATA = 1L;
+    private static final String NAME_DATA = "워너고홈";
+    private static final String DESC_DATA = "병맛 어드벤처 회사 코믹물";
+    private static final int PRICE_DATA = 29000;
+
+    private ThemeServiceInterface themeService;
+
+    @Mock
+    private ThemeDAO themeDAO;
+
+    @BeforeEach
+    void setUp() {
+        themeService = new ThemeService(themeDAO);
+    }
+
+    @DisplayName("예약 생성")
+    @Test
+    void createReservation() {
+        Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
+
+        when(themeDAO.exist(theme)).thenReturn(false);
+        when(themeDAO.create(theme)).thenReturn(ID_DATA);
+
+        assertThat(themeService.create(theme)).isEqualTo(ID_DATA);
+        verify(themeDAO, times(1)).exist(theme);
+        verify(themeDAO, times(1)).create(theme);
+    }
+}
