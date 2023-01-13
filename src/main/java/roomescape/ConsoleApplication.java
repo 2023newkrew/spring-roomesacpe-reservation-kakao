@@ -2,6 +2,7 @@ package roomescape;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.PropertySources;
 import org.springframework.stereotype.Component;
 import roomescape.controller.ConsoleController;
 
@@ -21,7 +22,11 @@ public class ConsoleApplication {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void run() {
+    public void run(ApplicationReadyEvent event) {
+        PropertySources propertySources = event.getApplicationContext().getEnvironment().getPropertySources();
+        if (propertySources.contains("test")) {
+            return;
+        }
         while (true) {
             String input = consoleController.getCommand();
             // 예약하기
