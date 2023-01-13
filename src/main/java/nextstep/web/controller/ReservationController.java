@@ -1,8 +1,8 @@
-package nextstep.controller;
+package nextstep.web.controller;
 
 import java.net.URI;
 import nextstep.domain.Reservation;
-import nextstep.service.ReservationService;
+import nextstep.web.service.ReservationService;
 import nextstep.util.ReservationInfoConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

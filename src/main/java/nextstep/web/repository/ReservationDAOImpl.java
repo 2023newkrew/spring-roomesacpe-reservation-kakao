@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-public class WebReservationDAO implements ReservationDAO {
+public class ReservationDAOImpl implements ReservationDAO {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
@@ -34,7 +34,7 @@ public class WebReservationDAO implements ReservationDAO {
 
     private JdbcTemplate jdbcTemplate;
 
-    public WebReservationDAO(JdbcTemplate jdbcTemplate) {
+    public ReservationDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

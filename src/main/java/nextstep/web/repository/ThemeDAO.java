@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import java.util.List;
 import nextstep.domain.Theme;

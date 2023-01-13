@@ -1,12 +1,13 @@
-package nextstep.service;
+package nextstep.web.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.domain.Reservation;
-import nextstep.exceptions.ErrorCode;
-import nextstep.exceptions.ReservationException;
+import nextstep.web.exceptions.ErrorCode;
+import nextstep.web.exceptions.ReservationException;
+import nextstep.web.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

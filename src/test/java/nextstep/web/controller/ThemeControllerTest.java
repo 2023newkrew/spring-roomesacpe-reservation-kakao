@@ -1,10 +1,10 @@
-package nextstep.controller;
+package nextstep.web.controller;
 
 import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import nextstep.domain.Theme;
-import nextstep.exceptions.ErrorCode;
+import nextstep.web.exceptions.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;

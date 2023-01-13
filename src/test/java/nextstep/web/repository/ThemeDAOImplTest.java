@@ -1,9 +1,10 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import nextstep.domain.Theme;
+import nextstep.web.repository.ThemeDAOImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,15 +13,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-public class WebThemeDAOTest {
-    private WebThemeDAO webThemeDAO;
+public class ThemeDAOImplTest {
+    private ThemeDAOImpl themeDAOImpl;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        webThemeDAO = new WebThemeDAO(jdbcTemplate);
+        themeDAOImpl = new ThemeDAOImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE theme IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE theme("
                 + "    id    bigint not null auto_increment,"
@@ -41,7 +42,7 @@ public class WebThemeDAOTest {
     @Test
     @DisplayName("ID를 통해 테마 정보를 잘 받아오는지 테스트")
     void findByIdTest() {
-        Theme theme = webThemeDAO.findById(2L);
+        Theme theme = themeDAOImpl.findById(2L);
 
         assertThat(theme).isNotNull();
         assertThat(theme.getName()).isEqualTo("테마이름2");
@@ -50,20 +51,20 @@ public class WebThemeDAOTest {
     @Test
     @DisplayName("이름을 통해 테마 정보를 잘 받아오는지 테스트")
     void findByNameTest() {
-        List<Theme> theme = webThemeDAO.findByName("테마이름2");
+        List<Theme> theme = themeDAOImpl.findByName("테마이름2");
 
         assertThat(theme).isNotNull();
         assertThat(theme.get(0).getPrice()).isEqualTo(21000);
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("테마를 생성하고 ID를 잘 반환하는지 테스트")
     void insertWithKeyHolderTest() {
         Theme theme = new Theme("테마이름3", "테마설명", 20000);
-        Long id = webThemeDAO.insertWithKeyHolder(theme);
+        Long id = themeDAOImpl.insertWithKeyHolder(theme);
         assertThat(id).isNotNull();
 
-        Theme themeById = webThemeDAO.findById(id);
+        Theme themeById = themeDAOImpl.findById(id);
         assertThat(themeById).isNotNull();
         assertThat(themeById.getName()).isEqualTo("테마이름3");
     }
@@ -71,7 +72,7 @@ public class WebThemeDAOTest {
     @Test
     @DisplayName("테마 목록을 잘 받아오는지 테스트")
     void getAllThemesTest() {
-        List<Theme> themes = webThemeDAO.getAllThemes();
+        List<Theme> themes = themeDAOImpl.getAllThemes();
         assertThat(themes).hasSize(2);
         assertThat(themes.get(0).getName()).isEqualTo("테마이름");
         assertThat(themes.get(1).getPrice()).isEqualTo(21000);
@@ -80,7 +81,7 @@ public class WebThemeDAOTest {
     @Test
     @DisplayName("ID를 통해 테마를 잘 삭제하는지 테스트")
     void deleteTest() {
-        int rowNum = webThemeDAO.delete(1L);
+        int rowNum = themeDAOImpl.delete(1L);
         assertThat(rowNum).isEqualTo(1);
     }
 }

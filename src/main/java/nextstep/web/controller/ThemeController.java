@@ -1,9 +1,9 @@
-package nextstep.controller;
+package nextstep.web.controller;
 
 import java.net.URI;
 import java.util.List;
 import nextstep.domain.Theme;
-import nextstep.service.ThemeService;
+import nextstep.web.service.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

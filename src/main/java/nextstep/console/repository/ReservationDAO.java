@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.console.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsoleReservationDAO {
+public class ReservationDAO {
     public void addReservation(Reservation reservation) {
         Connection con = getConnection();
 
@@ -30,7 +30,7 @@ public class ConsoleReservationDAO {
         closeConnection(con);
     }
 
-    public Reservation findReservation(Long id) {
+    public Reservation findById(Long id) {
         Connection con = getConnection();
         Reservation reservation = null;
 
@@ -63,7 +63,7 @@ public class ConsoleReservationDAO {
         return reservation;
     }
 
-    public List<Reservation> findReservationByDateAndTime(LocalDate localDate, LocalTime localTime) {
+    public List<Reservation> findByDateAndTime(LocalDate localDate, LocalTime localTime) {
         Connection con = getConnection();
         List<Reservation> reservations = new ArrayList<>();
 
@@ -99,24 +99,21 @@ public class ConsoleReservationDAO {
         return reservations;
     }
 
-    public boolean deleteReservation(Long id) {
+    public Integer delete(Long id) {
         Connection con = getConnection();
-        boolean deleted = false;
+        int rowCount = 0;
 
         try {
             String sql = "DELETE FROM reservation WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            int rowCount = ps.executeUpdate();
-            if (rowCount > 0) {
-                deleted = true;
-            }
+            rowCount = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         closeConnection(con);
-        return deleted;
+        return rowCount;
     }
 
 

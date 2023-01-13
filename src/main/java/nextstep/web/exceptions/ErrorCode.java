@@ -1,4 +1,4 @@
-package nextstep.exceptions;
+package nextstep.web.exceptions;
 
 public enum ErrorCode {
     ALREADY_RESERVATION_EXISTS("이미 해당 시간에 예약이 존재합니다."),

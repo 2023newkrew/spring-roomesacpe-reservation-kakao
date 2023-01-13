@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WebThemeDAO implements ThemeDAO{
+public class ThemeDAOImpl implements ThemeDAO{
     private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) -> {
         Theme theme = new Theme(
                 resultSet.getLong("id"),
@@ -22,7 +22,7 @@ public class WebThemeDAO implements ThemeDAO{
     };
     private JdbcTemplate jdbcTemplate;
 
-    public WebThemeDAO(JdbcTemplate jdbcTemplate) {
+    public ThemeDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -1,10 +1,11 @@
-package nextstep.service;
+package nextstep.web.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import nextstep.domain.Theme;
-import nextstep.exceptions.ErrorCode;
-import nextstep.exceptions.ThemeException;
+import nextstep.web.exceptions.ErrorCode;
+import nextstep.web.exceptions.ThemeException;
+import nextstep.web.service.ThemeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

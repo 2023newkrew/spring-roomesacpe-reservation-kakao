@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
