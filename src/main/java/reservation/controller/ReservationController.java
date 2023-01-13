@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reservation.domain.Reservation;
 import reservation.domain.Theme;
-import reservation.domain.dto.request.ReservationRequest;
-import reservation.domain.dto.response.ReservationResponse;
+import reservation.dto.request.ReservationRequest;
+import reservation.dto.response.ReservationResponse;
 import reservation.service.ReservationService;
 import reservation.service.ThemeService;
 

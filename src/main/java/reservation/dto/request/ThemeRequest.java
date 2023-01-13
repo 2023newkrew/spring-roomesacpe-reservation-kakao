@@ -1,4 +1,4 @@
-package reservation.domain.dto.request;
+package reservation.dto.request;
 
 import org.springframework.lang.NonNull;
 
@@ -10,9 +10,9 @@ public class ThemeRequest {
     private final String desc;
 
     @NonNull
-    private final Integer price;
+    private final int price;
 
-    public ThemeRequest(@NonNull String name, @NonNull String desc, @NonNull Integer price) {
+    public ThemeRequest(@NonNull String name, @NonNull String desc, @NonNull int price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
@@ -29,7 +29,7 @@ public class ThemeRequest {
     }
 
     @NonNull
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }

@@ -39,7 +39,7 @@ public class ReservationRepository {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Reservation getReservation(Long reservationId) {
+    public Reservation getReservation(long reservationId) {
         String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
@@ -54,7 +54,7 @@ public class ReservationRepository {
         }
     }
 
-    public int deleteReservation(Long reservationId) {
+    public int deleteReservation(long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, reservationId);
     }

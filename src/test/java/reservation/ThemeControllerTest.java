@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import reservation.domain.dto.request.ThemeRequest;
+import reservation.dto.request.ThemeRequest;
 
 import static org.hamcrest.core.Is.is;
 

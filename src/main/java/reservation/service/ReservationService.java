@@ -20,11 +20,11 @@ public class ReservationService {
         return reservationRepository.createReservation(reservation);
     }
 
-    public Reservation getReservation(Long reservationId) {
+    public Reservation getReservation(long reservationId) {
         return reservationRepository.getReservation(reservationId);
     }
 
-    public void deleteReservation(Long reservationId) {
+    public void deleteReservation(long reservationId) {
         reservationRepository.deleteReservation(reservationId);
     }
 }

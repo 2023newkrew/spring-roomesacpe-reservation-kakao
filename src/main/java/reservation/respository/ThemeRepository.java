@@ -33,7 +33,7 @@ public class ThemeRepository {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Theme getTheme(Long themeId) {
+    public Theme getTheme(long themeId) {
         String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Theme(
@@ -47,7 +47,7 @@ public class ThemeRepository {
         }
     }
 
-    public int deleteTheme(Long themeId) {
+    public int deleteTheme(long themeId) {
         String sql = "DELETE FROM theme WHERE id = ?";
         return jdbcTemplate.update(sql, themeId);
     }

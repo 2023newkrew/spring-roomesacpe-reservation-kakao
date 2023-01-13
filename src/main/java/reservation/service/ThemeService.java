@@ -20,11 +20,11 @@ public class ThemeService {
         return themeRepository.createTheme(theme);
     }
 
-    public Theme getTheme(Long themeId) {
+    public Theme getTheme(long themeId) {
         return themeRepository.getTheme(themeId);
     }
 
-    public void deleteTheme(Long themeId) {
+    public void deleteTheme(long themeId) {
         themeRepository.deleteTheme(themeId);
     }
 }

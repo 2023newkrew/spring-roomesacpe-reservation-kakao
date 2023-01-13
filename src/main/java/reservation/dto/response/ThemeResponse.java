@@ -1,14 +1,14 @@
-package reservation.domain.dto.response;
+package reservation.dto.response;
 
 import reservation.domain.Theme;
 
 public class ThemeResponse {
-    private final Long id;
+    private final long id;
     private final String name;
     private final String desc;
-    private final Integer price;
+    private final int price;
 
-    public ThemeResponse(Long id, String name, String desc, Integer price) {
+    public ThemeResponse(long id, String name, String desc, int price) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -22,7 +22,7 @@ public class ThemeResponse {
         this.price = theme.getPrice();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -34,7 +34,7 @@ public class ThemeResponse {
         return desc;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }

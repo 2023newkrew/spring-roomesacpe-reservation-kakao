@@ -3,8 +3,8 @@ package reservation.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reservation.domain.Theme;
-import reservation.domain.dto.request.ThemeRequest;
-import reservation.domain.dto.response.ThemeResponse;
+import reservation.dto.request.ThemeRequest;
+import reservation.dto.response.ThemeResponse;
 import reservation.service.ThemeService;
 
 import java.net.URI;
