@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ReservationService {
 
-    Reservation createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException;
+    Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException;
 
     ReservationResponseDTO findReservation(Long id) throws SQLException;
 

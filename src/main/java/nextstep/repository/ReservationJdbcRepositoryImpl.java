@@ -1,8 +1,6 @@
 package nextstep.repository;
 
-import static nextstep.entity.ThemeConstants.THEME_DESC;
-import static nextstep.entity.ThemeConstants.THEME_NAME;
-import static nextstep.entity.ThemeConstants.THEME_PRICE;
+import static nextstep.repository.ReservationJdbcSql.*;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -26,67 +24,83 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
-        Reservation reservation = null;
+    public Long save(ReservationRequestDTO reservationRequestDTO) {
+        Long id = null;
+        PreparedStatement ps;
+        ResultSet rs;
         try {
-            String sql = ReservationJdbcSql.INSERT_INTO;
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            String sql = INSERT_INTO;
+            ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservationRequestDTO.getDate()));
             ps.setTime(2, Time.valueOf(reservationRequestDTO.getTime()));
             ps.setString(3, reservationRequestDTO.getName());
-            ps.setLong(4, 1L);
+            ps.setLong(4, reservationRequestDTO.getThemeId());
             ps.executeUpdate();
-            ResultSet resultSet = ps.getGeneratedKeys();
-            if (resultSet.next()) {
-                reservation = makeReservation(resultSet, reservationRequestDTO);
+            rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                id = rs.getLong("id");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return reservation;
+        releaseResultset(rs);
+        releasePreparedStatement(ps);
+        return id;
     }
 
     @Override
-    public boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException {
-        String sql = ReservationJdbcSql.FIND_BY_DATE_AND_TIME;
-        PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-        ps.setDate(1, Date.valueOf(date));
-        ps.setTime(2, Time.valueOf(time));
-        ResultSet rs = ps.executeQuery();
-        return rs.next();
+    public boolean existByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
+        String sql = FIND_BY_DATE_AND_TIME;
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean exist;
+        try {
+            ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(date));
+            ps.setTime(2, Time.valueOf(time));
+            ps.setLong(3, themeId);
+            rs = ps.executeQuery();
+            exist = rs.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        releasePreparedStatementAndResultSet(ps, rs);
+
+        return exist;
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        Reservation reservation = null;
+        Optional<Reservation> reservation = Optional.empty();
+        PreparedStatement ps;
         try {
-            String sql = ReservationJdbcSql.FIND_BY_ID;
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps = connectionHandler.createPreparedStatement(FIND_BY_ID, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                reservation = makeReservation(rs);
-
+                reservation = Optional.of(makeReservation(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if(reservation == null){
-            return Optional.empty();
-        }
-        return Optional.of(reservation);
+        releasePreparedStatement(ps);
+        return reservation;
     }
 
     @Override
     public int deleteById(Long id) {
+        PreparedStatement ps;
+        int row;
         try {
-            String sql = ReservationJdbcSql.DELETE_BY_ID;
-            PreparedStatement ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps = connectionHandler.createPreparedStatement(DELETE_BY_ID, new String[]{"id"});
             ps.setLong(1, id);
-            return ps.executeUpdate();
+            row = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        releasePreparedStatement(ps);
+        return row;
     }
 
     private Reservation makeReservation(ResultSet rs) throws SQLException {
@@ -95,10 +109,25 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
                 new Theme(rs.getString("theme_name"), rs.getString("theme_desc"), rs.getInt("theme_price")));
     }
 
-    private Reservation makeReservation(ResultSet rs, ReservationRequestDTO dto) throws SQLException {
-        return new Reservation(rs.getLong(1), dto.getDate(), dto.getTime(), dto.getName(),
-                new Theme(THEME_NAME, THEME_DESC, THEME_PRICE));
+    private static void releasePreparedStatementAndResultSet(PreparedStatement ps, ResultSet rs) {
+        releaseResultset(rs);
+
+        releasePreparedStatement(ps);
     }
 
+    private static void releasePreparedStatement(PreparedStatement ps) {
+        try {
+            ps.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private static void releaseResultset(ResultSet rs) {
+        try {
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

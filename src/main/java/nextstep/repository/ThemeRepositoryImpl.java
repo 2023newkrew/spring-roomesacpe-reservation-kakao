@@ -1,9 +1,12 @@
 package nextstep.repository;
 
+import static nextstep.repository.ThemeJdbcSql.DELETE_BY_ID;
+import static nextstep.repository.ThemeJdbcSql.FIND_BY_ID;
+import static nextstep.repository.ThemeJdbcSql.UPDATE;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;
@@ -23,19 +26,18 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public Theme save(ThemeCreateDto themeCreateDto) {
+    public Long save(ThemeCreateDto themeCreateDto) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("desc", themeCreateDto.getDescription());
         parameters.put("name", themeCreateDto.getName());
         parameters.put("price", themeCreateDto.getPrice());
-        long id = new SimpleJdbcInsert(jdbcTemplate).withTableName("THEME").usingGeneratedKeyColumns("id")
+        return new SimpleJdbcInsert(jdbcTemplate).withTableName("THEME").usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(parameters).longValue();
-        return new Theme(id, themeCreateDto.getName(), themeCreateDto.getDescription(), themeCreateDto.getPrice());
     }
 
     @Override
     public Optional<Theme> findById(Long id) {
-        return jdbcTemplate.query("SELECT * FROM THEME WHERE id = ?",
+        return jdbcTemplate.query(FIND_BY_ID,
                 (rs, rowNum) ->
                         new Theme(rs.getLong("id"), rs.getString("name"), rs.getString("desc"), rs.getInt("price")),
                 id).stream().findAny();
@@ -44,12 +46,13 @@ public class ThemeRepositoryImpl implements ThemeRepository {
 
     @Override
     public int update(ThemeEditDto themeEditDto) {
-        return jdbcTemplate.update("UPDATE THEME SET name = ?, desc = ?, price = ? WHERE id = ?", themeEditDto.getName(),
+        return jdbcTemplate.update(UPDATE,
+                themeEditDto.getName(),
                 themeEditDto.getDescription(), themeEditDto.getPrice(), themeEditDto.getId());
     }
 
     @Override
-    public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM THEME WHERE ID = ?", id);
+    public int deleteById(Long id) {
+        return jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }

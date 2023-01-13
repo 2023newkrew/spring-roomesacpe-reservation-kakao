@@ -1,10 +1,8 @@
 package nextstep.repository;
 
-import static nextstep.entity.ThemeConstants.THEME_DESC;
-import static nextstep.entity.ThemeConstants.THEME_NAME;
-import static nextstep.entity.ThemeConstants.THEME_PRICE;
 import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID;
 import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -31,22 +29,20 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
+    public Long save(ReservationRequestDTO reservationRequestDTO) {
+
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("date", Date.valueOf(reservationRequestDTO.getDate()));
         parameters.put("time", Time.valueOf(reservationRequestDTO.getTime()));
         parameters.put("name", reservationRequestDTO.getName());
-        parameters.put("theme_id", 1L);
-        long id = new SimpleJdbcInsert(jdbcTemplate).withTableName("RESERVATION").usingGeneratedKeyColumns("id")
+        parameters.put("theme_id", reservationRequestDTO.getThemeId());
+        return new SimpleJdbcInsert(jdbcTemplate).withTableName("RESERVATION").usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(parameters).longValue();
-        return new Reservation(id, reservationRequestDTO.getDate(), reservationRequestDTO.getTime(),
-                reservationRequestDTO.getName(), new Theme(THEME_NAME, THEME_DESC, THEME_PRICE));
-
     }
 
     @Override
     public Optional<Reservation> findById(Long id) throws DataAccessException {
-        return jdbcTemplate.query(ReservationJdbcSql.FIND_BY_ID,
+        return jdbcTemplate.query(FIND_BY_ID,
                 (rs, rowNum) -> new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime(), rs.getString("name"),
                         new Theme(rs.getString("theme_name"), rs.getString("theme_desc"), rs.getInt("theme_price"))),
@@ -54,8 +50,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public boolean existByDateAndTime(LocalDate date, LocalTime time) throws DataAccessException {
-        return !jdbcTemplate.query(FIND_BY_DATE_AND_TIME, (rs, rowNum) -> rs.getString(1), date, time).isEmpty();
+    public boolean existByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId)
+            throws DataAccessException {
+        return !jdbcTemplate.query(FIND_BY_DATE_AND_TIME, (rs, rowNum) -> rs.getString(1), date, time, themeId)
+                .isEmpty();
     }
 
     @Override

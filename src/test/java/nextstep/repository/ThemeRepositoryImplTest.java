@@ -41,10 +41,8 @@ class ThemeRepositoryImplTest {
 
     @Test
     void save_요청시_저장한다() {
-        Theme theme = themeRepository.save(new ThemeCreateDto("NAME", "DESC", 1234));
-        assertThat(theme.getId()).isEqualTo(id + 1);
-        assertThat(theme.getName()).isEqualTo("NAME");
-        assertThat(theme.getDescription()).isEqualTo("DESC");
+        Long savedId = themeRepository.save(new ThemeCreateDto("NAME", "DESC", 1234));
+        assertThat(savedId).isEqualTo(id + 1);
     }
 
     @Test

@@ -28,7 +28,7 @@ class ThemeServiceImplTest {
     @BeforeEach
     void init() {
         jdbcTemplate.update("DELETE FROM THEME");
-        id = themeRepository.save(new ThemeCreateDto(NAME, DESC, PRICE)).getId();
+        id = themeRepository.save(new ThemeCreateDto(NAME, DESC, PRICE));
 
     }
 

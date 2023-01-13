@@ -1,6 +1,7 @@
 package nextstep.controller;
 
 import java.net.URI;
+import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
@@ -24,9 +25,9 @@ public class ThemeController {
     private final ThemeService themeService;
 
     @PostMapping("")
-    ResponseEntity createTheme(@RequestBody ThemeCreateDto themeCreateDto) {
+    ResponseEntity createTheme(@RequestBody ThemeCreateDto themeCreateDto) throws SQLException {
         return ResponseEntity.created(
-                URI.create(String.format("/themes/%d", themeService.createTheme(themeCreateDto).getId()))).build();
+                URI.create(String.format("/themes/%d", themeService.createTheme(themeCreateDto)))).build();
     }
 
     @GetMapping("{id}")

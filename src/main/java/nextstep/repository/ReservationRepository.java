@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReservationRepository {
 
-    Reservation save(ReservationRequestDTO reservationRequestDTO) throws SQLException;
+    Long save(ReservationRequestDTO reservationRequestDTO) throws SQLException;
 
     Optional<Reservation> findById(Long id) throws SQLException;
 
-    boolean existByDateAndTime(LocalDate date, LocalTime time) throws SQLException;
+    boolean existByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) throws SQLException;
 
     int deleteById(Long id) throws SQLException;
 }

@@ -8,13 +8,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ThemeRepository {
-    Theme save(ThemeCreateDto themeCreateDto);
+    Long save(ThemeCreateDto themeCreateDto);
 
     Optional<Theme> findById(Long id);
 
     int update(ThemeEditDto themeEditDto);
 
-    void deleteById(Long id);
+    int deleteById(Long id);
 
 
 }

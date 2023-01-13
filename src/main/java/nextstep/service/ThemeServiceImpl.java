@@ -1,5 +1,6 @@
 package nextstep.service;
 
+import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
@@ -13,7 +14,7 @@ public class ThemeServiceImpl implements ThemeService {
 
     private final ThemeRepository themeRepository;
     @Override
-    public Theme createTheme(ThemeCreateDto themeCreateDto) {
+    public Long createTheme(ThemeCreateDto themeCreateDto){
         return themeRepository.save(themeCreateDto);
     }
 
@@ -32,7 +33,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        themeRepository.deleteById(id);
+    public boolean deleteById(Long id) {
+        return themeRepository.deleteById(id) != 0;
     }
 }

@@ -16,14 +16,14 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public Reservation createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
+    public Long createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException {
         validate(reservationRequestDTO);
         return reservationRepository.save(reservationRequestDTO);
     }
 
     private void validate(ReservationRequestDTO reservationRequestDTO) throws SQLException {
-        boolean isExist = reservationRepository.existByDateAndTime(reservationRequestDTO.getDate(),
-                reservationRequestDTO.getTime());
+        boolean isExist = reservationRepository.existByDateAndTimeAndThemeId(reservationRequestDTO.getDate(),
+                reservationRequestDTO.getTime(), reservationRequestDTO.getThemeId());
         if (isExist) {
             throw new ConflictException("날짜와 시간이 중복되는 예약은 생성할 수 없습니다.");
         }

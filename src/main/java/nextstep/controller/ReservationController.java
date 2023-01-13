@@ -30,7 +30,7 @@ public class ReservationController {
     public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO)
             throws SQLException {
         return ResponseEntity.created(URI.create(String.format("/reservations/%d",
-                reservationService.createReservation(reservationRequestDTO).getId()))).build();
+                reservationService.createReservation(reservationRequestDTO)))).build();
     }
 
     @GetMapping(value = "{id}")
