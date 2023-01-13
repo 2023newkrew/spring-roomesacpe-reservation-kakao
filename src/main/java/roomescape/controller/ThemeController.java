@@ -3,7 +3,8 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Theme;
-import roomescape.dto.ThemeRequest;
+import roomescape.dto.ThemeCreateRequest;
+import roomescape.dto.ThemeShowResponse;
 import roomescape.service.ThemeService;
 
 import java.net.URI;
@@ -18,15 +19,15 @@ public class ThemeController {
     }
 
     @PostMapping("/theme")
-    public ResponseEntity createTheme(@RequestBody ThemeRequest themeRequest) {
-        Theme theme = themeService.createTheme(themeRequest);
+    public ResponseEntity createTheme(@RequestBody ThemeCreateRequest themeCreateRequest) {
+        Theme theme = themeService.createTheme(themeCreateRequest);
         return ResponseEntity.created(URI.create("/theme/" + theme.getId())).build();
     }
 
     @GetMapping("/theme/{id}")
     public ResponseEntity showTheme(@PathVariable Long id) {
-        Theme theme = themeService.showTheme(id);
-        return ResponseEntity.ok(theme);
+        ThemeShowResponse themeShowResponse = themeService.showTheme(id);
+        return ResponseEntity.ok(themeShowResponse);
     }
 
     @PutMapping("/theme")

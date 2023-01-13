@@ -1,12 +1,12 @@
 package roomescape.dto;
 
-public class ThemeRequest {
+public class ThemeCreateRequest {
 
     private String name;
     private String desc;
     private Integer price;
 
-    public ThemeRequest(String name, String desc, Integer price) {
+    public ThemeCreateRequest(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;

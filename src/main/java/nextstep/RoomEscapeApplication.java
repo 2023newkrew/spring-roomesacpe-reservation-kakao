@@ -2,8 +2,9 @@ package nextstep;
 
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ThemeRequest;
+import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ThemeCreateRequest;
+import roomescape.dto.ThemeShowResponse;
 import roomescape.repository.ReservationConsoleRepository;
 import roomescape.repository.ThemeConsoleRepository;
 import roomescape.service.ReservationService;
@@ -49,8 +50,8 @@ public class RoomEscapeApplication {
                 String name = info[2];
                 Long theme_id = Long.parseLong(info[3]);
 
-                ReservationRequest reservationRequest = new ReservationRequest(date, time, name, theme_id);
-                Reservation reservation = reservationService.createReservation(reservationRequest);
+                ReservationCreateRequest reservationCreateRequest = new ReservationCreateRequest(date, time, name, theme_id);
+                Reservation reservation = reservationService.createReservation(reservationCreateRequest);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -97,8 +98,8 @@ public class RoomEscapeApplication {
                 String desc = info[1];
                 Integer price = Integer.parseInt(info[2]);
 
-                ThemeRequest themeRequest = new ThemeRequest(name, desc, price);
-                Theme theme = themeService.createTheme(themeRequest);
+                ThemeCreateRequest themeCreateRequest = new ThemeCreateRequest(name, desc, price);
+                Theme theme = themeService.createTheme(themeCreateRequest);
 
                 System.out.println("테마가 새로 등록되었습니다.");
                 System.out.println("테마 이름: " + theme.getName());
@@ -110,7 +111,7 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[2];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Theme theme = null;
+                ThemeShowResponse theme = null;
                 try {
                     theme = themeService.showTheme(id);
                 } catch (NoSuchElementException e) {

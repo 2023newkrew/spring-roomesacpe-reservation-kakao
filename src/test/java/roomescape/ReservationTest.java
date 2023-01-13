@@ -11,9 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ThemeRequest;
+import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ThemeCreateRequest;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,26 +38,26 @@ public class ReservationTest {
         RestAssured.port = port;
         this.mockMvc.perform(post("/theme")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)))
+                .content(this.objectMapper.writeValueAsString(new ThemeCreateRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)))
         );
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-11", "13:00", "kayla", 1L)))
+                .content(this.objectMapper.writeValueAsString(new ReservationCreateRequest("2022-08-11", "13:00", "kayla", 1L)))
         );
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationRequest("2022-08-12", "13:00", "jerrie", 1L)))
+                .content(this.objectMapper.writeValueAsString(new ReservationCreateRequest("2022-08-12", "13:00", "jerrie", 1L)))
         );
     }
 
     @DisplayName("예약 생성 테스트")
     @Test
     void createReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("2022-08-13", "13:00", "kayla", 1L);
+        ReservationCreateRequest reservationCreateRequest = new ReservationCreateRequest("2022-08-13", "13:00", "kayla", 1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequest)
+                .body(reservationCreateRequest)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -69,12 +68,12 @@ public class ReservationTest {
     @Test
     void rejectCreateReservation() throws Exception {
         // Given
-        ReservationRequest overlapReservationRequest = new ReservationRequest("2022-08-11", "13:00", "jerrie", 1L);
+        ReservationCreateRequest overlapReservationCreateRequest = new ReservationCreateRequest("2022-08-11", "13:00", "jerrie", 1L);
 
         // When
         ResultActions overlapResultActions = mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(overlapReservationRequest))
+                .content(objectMapper.writeValueAsString(overlapReservationCreateRequest))
         );
 
         // Then

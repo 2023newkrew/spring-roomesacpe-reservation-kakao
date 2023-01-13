@@ -10,15 +10,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ThemeRequest;
+import roomescape.dto.ThemeCreateRequest;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Theme Test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,22 +36,22 @@ public class ThemeTest {
         RestAssured.port = port;
         this.mockMvc.perform(post("/theme")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)))
+                .content(this.objectMapper.writeValueAsString(new ThemeCreateRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)))
         );
         this.mockMvc.perform(post("/theme")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ThemeRequest("해리포터", "코 없는 남성이 어린 소년에게 집착하는 호러물", 49000)))
+                .content(this.objectMapper.writeValueAsString(new ThemeCreateRequest("해리포터", "코 없는 남성이 어린 소년에게 집착하는 호러물", 49000)))
         );
     }
 
     @DisplayName("테마 생성 테스트")
     @Test
     void createTheme() {
-        ThemeRequest themeRequest = new ThemeRequest("춘식이", "갈기 없는 사자와 고구마를 좋아하는 고양이의 깜찍한 동거 힐링물", 19000);
+        ThemeCreateRequest themeCreateRequest = new ThemeCreateRequest("춘식이", "갈기 없는 사자와 고구마를 좋아하는 고양이의 깜찍한 동거 힐링물", 19000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(themeRequest)
+                .body(themeCreateRequest)
                 .when().post("/theme")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())

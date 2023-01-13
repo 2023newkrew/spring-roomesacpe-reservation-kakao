@@ -1,12 +1,11 @@
 package roomescape.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeRepository;
 import roomescape.domain.Reservation;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Theme;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationCreateRequest;
 
 import java.util.NoSuchElementException;
 
@@ -21,12 +20,12 @@ public class ReservationService {
         this.themeRepository = themeRepository;
     }
 
-    public Reservation createReservation(ReservationRequest reservationRequest) {
-        if (reservationRepository.checkSchedule(reservationRequest.getDate(), reservationRequest.getTime()) != 0) {
+    public Reservation createReservation(ReservationCreateRequest reservationCreateRequest) {
+        if (reservationRepository.checkSchedule(reservationCreateRequest.getDate(), reservationCreateRequest.getTime()) != 0) {
             throw new IllegalArgumentException("중복된 예약 발생");
         }
-        Theme theme = themeRepository.findThemeById(reservationRequest.getTheme_id());
-        Long id = reservationRepository.addReservation(reservationRequest.toReservation(theme));
+        Theme theme = themeRepository.findThemeById(reservationCreateRequest.getTheme_id());
+        Long id = reservationRepository.addReservation(reservationCreateRequest.toReservation(theme));
         return reservationRepository.findReservation(id);
     }
 

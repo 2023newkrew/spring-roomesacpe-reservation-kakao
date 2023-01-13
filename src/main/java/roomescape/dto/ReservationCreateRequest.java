@@ -7,16 +7,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class ReservationRequest {
+public class ReservationCreateRequest {
 
     private String date;
     private String time;
     private String name;
     private Long theme_id;
 
-    public ReservationRequest() {}
+    public ReservationCreateRequest() {}
 
-    public ReservationRequest(String date, String time, String name, Long theme_id) {
+    public ReservationCreateRequest(String date, String time, String name, Long theme_id) {
         this.date = date;
         this.time = time;
         this.name = name;
