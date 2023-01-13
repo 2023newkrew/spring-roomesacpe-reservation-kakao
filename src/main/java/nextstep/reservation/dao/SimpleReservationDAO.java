@@ -38,14 +38,7 @@ public class SimpleReservationDAO implements ReservationDAO {
     }
 
     private Connection getConnection() throws SQLException {
-        try {
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Date date, Time time) {
@@ -96,7 +89,7 @@ public class SimpleReservationDAO implements ReservationDAO {
         return connection -> {
             PreparedStatement ps = StatementCreator.createDeleteByIdStatement(connection, id);
             int deletedRow = ps.executeUpdate();
-            
+
             return deletedRow > 0;
         };
     }
