@@ -47,7 +47,13 @@ public class JdbcReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return new Reservation(keyHolder.getKey().longValue(), reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
+        return Reservation.builder()
+                .id(keyHolder.getKey().longValue())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
+                .name(reservation.getName())
+                .themeId(reservation.getThemeId())
+                .build();
     }
 
     @Override
@@ -81,12 +87,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     public RowMapper<Reservation> reservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                resultSet.getLong("theme_id"));
+        return (resultSet, rowNum) -> Reservation.builder()
+                .id(resultSet.getLong("id"))
+                .date(resultSet.getDate("date").toLocalDate())
+                .time(resultSet.getTime("time").toLocalTime())
+                .name(resultSet.getString("name"))
+                .themeId(resultSet.getLong("theme_id"))
+                .build();
     }
 
 }

@@ -31,10 +31,11 @@ public class JdbcThemeRepository implements ThemeRepository {
             return psmt;
         }), themeKeyHolder);
 
-        return new Theme(themeKeyHolder.getKey().longValue(),
-                theme.getName(),
-                theme.getDesc(),
-                theme.getPrice());
+        return Theme.builder()
+                .name(theme.getName())
+                .desc(theme.getDesc())
+                .price(theme.getPrice())
+                .build();
     }
 
     @Override
@@ -57,10 +58,11 @@ public class JdbcThemeRepository implements ThemeRepository {
     }
 
     private RowMapper<Theme> themeRowMapper() {
-        return (rs, rowNum) -> new Theme(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("desc"),
-                rs.getInt("price"));
+        return (rs, rowNum) -> Theme.builder()
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .desc(rs.getString("desc"))
+                .price(rs.getInt("price"))
+                .build();
     }
 }
