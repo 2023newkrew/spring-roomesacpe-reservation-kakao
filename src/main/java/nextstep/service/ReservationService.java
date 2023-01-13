@@ -20,7 +20,7 @@ public class ReservationService {
 
     public Reservation add(ReservationCreateRequest request) {
         Reservation reservation = request.toReservation(DEFAULT_THEME);
-        if (reservationRepository.hasReservationAt(reservation.getDate(), reservation.getTime())) {
+        if (reservationRepository.hasReservationAt(reservation.getDate(), reservation.getTime().getHour())) {
             throw new DuplicateReservationException();
         }
         return reservationRepository.add(reservation);

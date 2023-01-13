@@ -4,7 +4,6 @@ import nextstep.domain.Reservation;
 import nextstep.exception.ReservationNotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +21,9 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean hasReservationAt(LocalDate date, LocalTime time) {
+    public boolean hasReservationAt(LocalDate date, int hour) {
         return reservations.values().stream()
-                .anyMatch(reservation -> reservation.startsAt(date, time));
+                .anyMatch(reservation -> reservation.startsAt(date, hour));
     }
 
     @Override

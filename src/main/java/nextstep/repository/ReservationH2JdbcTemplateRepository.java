@@ -14,7 +14,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Repository
 public class ReservationH2JdbcTemplateRepository implements ReservationRepository {
@@ -75,9 +74,9 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public boolean hasReservationAt(LocalDate date, LocalTime time) {
-        String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND time = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, Date.valueOf(date), Time.valueOf(time));
+    public boolean hasReservationAt(LocalDate date, int hour) {
+        String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND HOUR(time) = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, Date.valueOf(date), hour);
         return count >= 1;
     }
 }

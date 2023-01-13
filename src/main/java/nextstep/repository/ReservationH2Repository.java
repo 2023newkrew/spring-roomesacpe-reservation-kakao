@@ -90,14 +90,14 @@ public class ReservationH2Repository implements ReservationRepository{
     }
 
     @Override
-    public boolean hasReservationAt(LocalDate date, LocalTime time) {
+    public boolean hasReservationAt(LocalDate date, int hour) {
         Connection con = getConnection();
 
         try {
-            String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND time = ?";
+            String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND HOUR(time) = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
-            ps.setTime(2, Time.valueOf(time));
+            ps.setInt(2, hour);
             ResultSet rs = ps.executeQuery();
 
             rs.next();

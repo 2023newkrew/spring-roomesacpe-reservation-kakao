@@ -23,8 +23,8 @@ public class Reservation {
         this(null, date, time, name, theme);
     }
 
-    public boolean startsAt(LocalDate date, LocalTime time) {
-        return Objects.equals(this.date, date) && Objects.equals(this.time, time);
+    public boolean startsAt(LocalDate date, int hour) {
+        return Objects.equals(this.date, date) && Objects.equals(this.time.getHour(), hour);
     }
 
     public Long getId() {
