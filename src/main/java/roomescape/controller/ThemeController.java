@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
+import roomescape.dto.ThemeUpdateRequestDto;
 import roomescape.service.ThemeService;
 
 import java.net.URI;
@@ -26,6 +27,12 @@ public class ThemeController {
     public ResponseEntity createTheme(@RequestBody ThemeRequestDto themeRequestDto) {
         Long themeId = themeService.createTheme(themeRequestDto);
         return ResponseEntity.created(URI.create("/themes/" + themeId)).build();
+    }
+
+    @PatchMapping("/themes/{id}")
+    public ResponseEntity updateTheme(@PathVariable("id") Long themeId, @RequestBody ThemeUpdateRequestDto themeUpdateRequest) {
+        themeService.updateTheme(themeId, themeUpdateRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/themes/{id}")
