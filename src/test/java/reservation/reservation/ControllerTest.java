@@ -1,4 +1,4 @@
-package reservation;
+package reservation.reservation;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

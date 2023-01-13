@@ -1,4 +1,4 @@
-package reservation;
+package reservation.reservation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
