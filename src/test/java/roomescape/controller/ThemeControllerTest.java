@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import roomescape.dto.ThemeRequestDto;
 
+import java.time.LocalTime;
+
 import static org.hamcrest.Matchers.startsWith;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,8 +27,8 @@ public class ThemeControllerTest {
     @DisplayName("테마 생성 성공 테스트")
     @Test
     void createThemeSuccessTest() {
-        String name = "테스트테마";
-        String desc = "테스트설명";
+        String name = LocalTime.now().toString();  // 중복 방지
+        String desc = LocalTime.now().toString();  // 중복 방지
         Integer price = 20_000;
         ThemeRequestDto req = new ThemeRequestDto(name, desc, price);
         RestAssured.given().log().all()
