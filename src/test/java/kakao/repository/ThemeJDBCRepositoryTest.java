@@ -2,10 +2,12 @@ package kakao.repository;
 
 import domain.Reservation;
 import domain.Theme;
+import kakao.Initiator;
 import kakao.dto.request.UpdateThemeRequest;
 import kakao.error.exception.RecordNotFoundException;
 import kakao.error.exception.UsingThemeException;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,23 +21,27 @@ import java.time.LocalTime;
 @SpringBootTest
 public class ThemeJDBCRepositoryTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    Initiator initiator;
 
     @Autowired
     private ThemeJDBCRepository themeJDBCRepository;
-
     @Autowired
     private ReservationJDBCRepository reservationJDBCRepository;
 
     private final Theme themeModel = new Theme("name", "desc", 1000);
 
+    @Autowired
+    ThemeJDBCRepositoryTest(JdbcTemplate jdbcTemplate) {
+        initiator = new Initiator(jdbcTemplate);
+    }
+
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE theme");
-        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+    }
+
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
     private void compareThemeWithoutId(Theme a, Theme b) {

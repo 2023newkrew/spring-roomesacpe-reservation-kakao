@@ -1,10 +1,12 @@
 package kakao.service;
 
+import kakao.Initiator;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.RecordNotFoundException;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,19 +25,21 @@ public class ReservationServiceTest {
     @Autowired
     ReservationService reservationService;
 
+    Initiator initiator;
+
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    ReservationServiceTest(JdbcTemplate jdbcTemplate) {
+        this.initiator = new Initiator(jdbcTemplate);
+    }
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE theme");
-        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("insert into theme(name, desc, price)\nvalues ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        initiator.createThemeForTest();
+    }
 
-        jdbcTemplate.execute("TRUNCATE TABLE reservation");
-        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
     private final CreateReservationRequest request = new CreateReservationRequest(

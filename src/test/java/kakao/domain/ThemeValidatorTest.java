@@ -3,12 +3,14 @@ package kakao.domain;
 import domain.Reservation;
 import domain.Theme;
 import domain.ThemeValidator;
+import kakao.Initiator;
 import kakao.dto.request.CreateThemeRequest;
 import kakao.error.exception.DuplicatedThemeException;
 import kakao.error.exception.UsingThemeException;
 import kakao.repository.ReservationJDBCRepository;
 import kakao.repository.ThemeJDBCRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,25 +23,27 @@ import java.time.LocalTime;
 
 @SpringBootTest
 public class ThemeValidatorTest {
-    @Autowired
-    private ThemeJDBCRepository themeJDBCRepository;
-    @Autowired
-    private ReservationJDBCRepository reservationJDBCRepository;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final ThemeJDBCRepository themeJDBCRepository;
+    private final ReservationJDBCRepository reservationJDBCRepository;
+    private final ThemeValidator themeValidator;
+    private final Initiator initiator;
 
-    private ThemeValidator themeValidator;
-
+    @Autowired
+    ThemeValidatorTest(JdbcTemplate jdbcTemplate, ThemeJDBCRepository themeJDBCRepository, ReservationJDBCRepository reservationJDBCRepository) {
+        this.themeJDBCRepository = themeJDBCRepository;
+        this.reservationJDBCRepository = reservationJDBCRepository;
+        initiator = new Initiator(jdbcTemplate);
+        themeValidator = new ThemeValidator(themeJDBCRepository, reservationJDBCRepository);
+    }
 
     @BeforeEach
     void setUp() {
-        themeValidator = new ThemeValidator(themeJDBCRepository, reservationJDBCRepository);
+        initiator.createThemeForTest();
+    }
 
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE theme");
-        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("insert into theme(name, desc, price)\nvalues ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
 

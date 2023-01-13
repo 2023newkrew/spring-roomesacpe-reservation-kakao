@@ -1,9 +1,11 @@
 package kakao.service;
 
+import kakao.Initiator;
 import kakao.dto.request.CreateThemeRequest;
 import kakao.dto.request.UpdateThemeRequest;
 import kakao.dto.response.ThemeResponse;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,22 +17,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class ThemeServiceTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
     private ThemeService themeService;
 
     private final CreateThemeRequest request = new CreateThemeRequest("name", "desc", 1000);
+    private final Initiator initiator;
+
+    @Autowired
+    public ThemeServiceTest(JdbcTemplate jdbcTemplate) {
+        initiator = new Initiator(jdbcTemplate);
+    }
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE theme");
-        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+    }
 
-        jdbcTemplate.execute("TRUNCATE TABLE reservation");
-        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
     @DisplayName("CreateThemeRequest를 받아 새 Theme을 저장하고 해당 id를 반환한다")

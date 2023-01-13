@@ -2,7 +2,9 @@ package kakao.repository;
 
 import domain.Reservation;
 import domain.Theme;
+import kakao.Initiator;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,28 +21,28 @@ public class ReservationJDBCRepositoryTest {
     @Autowired
     private ReservationJDBCRepository reservationJDBCRepository;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private Initiator initiator;
 
-    private Reservation reservation;
+    private final Reservation reservation = Reservation.builder()
+            .name("baker")
+            .date(LocalDate.of(2022, 10, 13))
+            .time(LocalTime.of(13, 00))
+            .theme(new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000))
+            .build();
+
+    @Autowired
+    public ReservationJDBCRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.initiator = new Initiator(jdbcTemplate);
+    }
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE theme");
-        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("insert into theme(name, desc, price)\nvalues ('워너고홈', '병맛 어드벤처 회사 코믹물', 29000)");
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        initiator.createThemeForTest();
+    }
 
-        reservation = Reservation.builder()
-                .name("baker")
-                .date(LocalDate.of(2022, 10, 13))
-                .time(LocalTime.of(13, 00))
-                .theme(new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000))
-                .build();
-
-        jdbcTemplate.execute("TRUNCATE TABLE reservation");
-        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
     @DisplayName("데이터베이스에 reservation을 저장한다")

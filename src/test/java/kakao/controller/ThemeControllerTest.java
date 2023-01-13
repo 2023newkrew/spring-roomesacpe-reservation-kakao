@@ -1,8 +1,10 @@
 package kakao.controller;
 
 import io.restassured.RestAssured;
+import kakao.Initiator;
 import kakao.dto.request.CreateThemeRequest;
 import kakao.dto.request.UpdateThemeRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,26 +23,28 @@ public class ThemeControllerTest {
     @LocalServerPort
     int port;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    Initiator initiator;
 
     private final String path = "themes";
-
     private final CreateThemeRequest createRequest = new CreateThemeRequest(
             "theme",
             "themeDesc",
             1000
     );
 
+    @Autowired
+    ThemeControllerTest(JdbcTemplate jdbcTemplate) {
+        initiator = new Initiator(jdbcTemplate);
+    }
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
 
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.execute("TRUNCATE TABLE theme");
-        jdbcTemplate.execute("ALTER TABLE theme ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
     @DisplayName("예약이 정상적으로 생성되면 201 status를 반환한다")
