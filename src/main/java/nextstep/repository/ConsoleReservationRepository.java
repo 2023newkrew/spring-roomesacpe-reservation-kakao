@@ -25,9 +25,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
             pstmt.setDate(1, Date.valueOf(reservation.getDate()));
             pstmt.setTime(2, Time.valueOf(reservation.getTime()));
             pstmt.setString(3, reservation.getName());
-            pstmt.setString(4, reservation.getTheme().getName());
-            pstmt.setString(5, reservation.getTheme().getDesc());
-            pstmt.setInt(6, reservation.getTheme().getPrice());
+            pstmt.setLong(4, reservation.getThemeId());
             pstmt.executeUpdate();
 
             return new Reservation(getGeneratedKey(pstmt), reservation);
@@ -55,11 +53,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
                         rs.getString("name"),
-                        new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
-                        )
+                        rs.getLong("theme_id")
                 );
                 return Optional.of(reservation);
             }

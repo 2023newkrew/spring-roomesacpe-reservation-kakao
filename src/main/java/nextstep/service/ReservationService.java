@@ -31,7 +31,14 @@ public class ReservationService {
             throw new DuplicateReservationException();
         }
 
-        Reservation savedReservation = reservationRepository.save(new Reservation(date, time, createReservationRequest.getName(), THEME));
+        Reservation savedReservation = reservationRepository.save(
+                new Reservation(
+                        date,
+                        time,
+                        createReservationRequest.getName(),
+                        createReservationRequest.getThemeId()
+                )
+        );
         return savedReservation.getId();
     }
 

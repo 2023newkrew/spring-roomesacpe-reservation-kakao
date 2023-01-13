@@ -3,7 +3,8 @@ package nextstep.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.domain.repository.ReservationRepository;
+import nextstep.domain.Theme;
+import nextstep.domain.repository.ThemeRepository;
 import nextstep.dto.CreateReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,21 +28,48 @@ public class ReservationAcceptanceTest {
     private int port;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ThemeRepository themeRepository;
+
+    private Long themeId;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        reservationRepository.deleteAll();
+        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE RESERVATION\n" +
+                "(\n" +
+                "    id          bigint not null auto_increment,\n" +
+                "    date        date,\n" +
+                "    time        time,\n" +
+                "    name        varchar(20),\n" +
+                "    theme_id    bigint not null,\n" +
+                "    primary key (id)\n" +
+                ");");
+
+        jdbcTemplate.execute("DROP TABLE theme IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE theme\n" +
+                "(\n" +
+                "    id    bigint not null auto_increment,\n" +
+                "    name  varchar(20),\n" +
+                "    desc  varchar(255),\n" +
+                "    price int,\n" +
+                "    primary key (id)\n" +
+                ");");
+
+        themeId = themeRepository.save(new Theme("테스트테마1", "안녕하세요 테마입니다.", 1500));
     }
 
     @Test
     void 예약_생성_요청에_성공한다() {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
+        CreateReservationRequest createReservationRequest
+                = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", themeId);
 
         // when
-        ExtractableResponse<Response> response = createReservation(createReservationRequest);
+        ExtractableResponse<Response> response
+                = createReservation(createReservationRequest);
         
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -49,11 +78,13 @@ public class ReservationAcceptanceTest {
     @Test
     void 날짜와_시간이_같은_예약은_생성할_수_없다() {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
+        CreateReservationRequest createReservationRequest
+                = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", themeId);
         createReservation(createReservationRequest);
 
         // when
-        ExtractableResponse<Response> response = createReservation(createReservationRequest);
+        ExtractableResponse<Response> response
+                = createReservation(createReservationRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -62,7 +93,8 @@ public class ReservationAcceptanceTest {
     @Test
     void id로_예약을_조회한다() {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "davi-eddie");
+        CreateReservationRequest createReservationRequest
+                = new CreateReservationRequest("2023-01-09", "13:00", "davi-eddie", themeId);
         ExtractableResponse<Response> response = createReservation(createReservationRequest);
         String expected = response.header("Location").split("/")[2];
 
@@ -100,7 +132,8 @@ public class ReservationAcceptanceTest {
     @Test
     void id에_해당하는_예약을_삭제한다() {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi");
+        CreateReservationRequest createReservationRequest
+                = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", themeId);
         ExtractableResponse<Response> response = createReservation(createReservationRequest);
 
         given()

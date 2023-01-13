@@ -8,18 +8,14 @@ public class FindReservationResponse {
     private String date;
     private String time;
     private String name;
-    private String themeName;
-    private String themeDesc;
-    private Integer themePrice;
+    private Long themeId;
 
-    private FindReservationResponse(Long id, String date, String time, String name, String themeName, String themeDesc, Integer themePrice) {
+    private FindReservationResponse(Long id, String date, String time, String name, Long themeId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.themeName = themeName;
-        this.themeDesc = themeDesc;
-        this.themePrice = themePrice;
+        this.themeId = themeId;
     }
 
     public static FindReservationResponse from(Reservation reservation) {
@@ -28,9 +24,7 @@ public class FindReservationResponse {
                 reservation.getDate().toString(),
                 reservation.getTime().toString(),
                 reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
+                reservation.getThemeId()
         );
     }
 
@@ -50,15 +44,7 @@ public class FindReservationResponse {
         return name;
     }
 
-    public String getThemeName() {
-        return themeName;
-    }
-
-    public String getThemeDesc() {
-        return themeDesc;
-    }
-
-    public Integer getThemePrice() {
-        return themePrice;
+    public Long getThemeId() {
+        return themeId;
     }
 }
