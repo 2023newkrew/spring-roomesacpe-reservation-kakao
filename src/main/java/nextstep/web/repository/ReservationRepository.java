@@ -6,7 +6,7 @@ import java.util.List;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
-public interface ReservationDAO {
+public interface ReservationRepository {
     Long insertWithKeyHolder(Reservation reservation);
     Reservation findById(Long id);
     List<Reservation> findByDateAndTime(LocalDate localDate, LocalTime localTime);

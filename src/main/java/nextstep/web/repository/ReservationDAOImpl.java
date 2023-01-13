@@ -70,6 +70,12 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
+    public List<Reservation> findByTheme(Theme theme) {
+        String sql = "select * from reservation where theme_name = ? and theme_desc = ? and theme_price = ?";
+        return jdbcTemplate.query(sql, reservationRowMapper, theme.getName(), theme.getDesc(), theme.getPrice());
+    }
+
+    @Override
     public Integer delete(Long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
