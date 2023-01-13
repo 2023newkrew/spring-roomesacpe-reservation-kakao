@@ -10,5 +10,4 @@ public interface CrudRepository<T, V> {
     List<V> findAll();
     void update(Long id, T request);
     Boolean existsById(Long id);
-
 }

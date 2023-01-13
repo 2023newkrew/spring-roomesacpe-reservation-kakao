@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class ReservationDAO implements ReservationRepository {
     private static final String SERVER_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER_NAME = "sa";
