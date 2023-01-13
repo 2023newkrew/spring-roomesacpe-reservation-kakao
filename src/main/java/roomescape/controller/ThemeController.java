@@ -8,6 +8,7 @@ import roomescape.dto.ThemeResponse;
 import roomescape.service.ThemeService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/themes")
@@ -40,6 +41,13 @@ public class ThemeController {
     ){
         return ResponseEntity.ok(
                 themeService.getTheme(id)
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ThemeResponse>> getThemes(){
+        return ResponseEntity.ok(
+                themeService.getThemes()
         );
     }
 

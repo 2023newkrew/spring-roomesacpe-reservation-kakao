@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Theme;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -48,6 +49,12 @@ public class ThemeRepository implements CrudRepository<Theme, Long> {
         return jdbcTemplate.query(sql,themeRowMapper , id)
                 .stream()
                 .findAny();
+    }
+
+    public List<Theme> findAll() {
+        String sql = "SELECT * from theme";
+
+        return jdbcTemplate.query(sql, themeRowMapper);
     }
 
     @Override

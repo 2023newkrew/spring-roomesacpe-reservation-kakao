@@ -10,6 +10,9 @@ import roomescape.exception.RoomEscapeException;
 import roomescape.mapper.ThemeMapper;
 import roomescape.repository.ThemeRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ThemeService {
     private final ThemeRepository themeRepository;
@@ -33,6 +36,13 @@ public class ThemeService {
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
 
         return ThemeMapper.INSTANCE.themeToThemeResponse(theme);
+    }
+
+    @Transactional
+    public List<ThemeResponse> getThemes() {
+        return themeRepository.findAll().stream()
+                .map(ThemeMapper.INSTANCE::themeToThemeResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional

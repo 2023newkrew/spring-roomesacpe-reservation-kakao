@@ -13,5 +13,6 @@ public interface ThemeMapper {
 
     @Mapping(target = "id", ignore = true)
     Theme themeRequestToTheme(ThemeRequest source);
+
     ThemeResponse themeToThemeResponse(Theme source);
 }
