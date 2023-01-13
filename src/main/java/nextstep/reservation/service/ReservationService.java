@@ -1,10 +1,10 @@
 package nextstep.reservation.service;
 
+import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.exception.ReservationExceptionCode;
 import nextstep.reservation.repository.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +13,11 @@ import java.util.Optional;
 import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-
-    @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
 
     public Reservation registerReservation(Reservation reservation) {
         if (reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime()).size() > 0) {

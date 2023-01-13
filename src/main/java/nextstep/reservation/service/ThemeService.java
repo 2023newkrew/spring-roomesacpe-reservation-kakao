@@ -1,5 +1,6 @@
 package nextstep.reservation.service;
 
+import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Theme;
 import nextstep.reservation.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
@@ -8,13 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class ThemeService {
     private final ThemeRepository themeRepository;
-
-    public ThemeService(ThemeRepository themeRepository) {
-        this.themeRepository = themeRepository;
-    }
 
     public Theme create(Theme theme) {
         return themeRepository.save(theme);

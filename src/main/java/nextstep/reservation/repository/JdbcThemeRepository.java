@@ -1,5 +1,6 @@
 package nextstep.reservation.repository;
 
+import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,12 +12,9 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcThemeRepository implements ThemeRepository {
     private final JdbcTemplate jdbcTemplate;
-
-    public JdbcThemeRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Theme save(Theme theme) {

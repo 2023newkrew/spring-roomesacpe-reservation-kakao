@@ -1,7 +1,7 @@
 package nextstep.reservation.repository;
 
+import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,13 +19,9 @@ import java.util.Optional;
 
 @Repository
 @Primary
+@RequiredArgsConstructor
 public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Reservation save(Reservation reservation) {

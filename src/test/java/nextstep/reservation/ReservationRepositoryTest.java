@@ -2,7 +2,6 @@ package nextstep.reservation;
 
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.repository.ReservationRepository;
 import nextstep.reservation.repository.ThemeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +16,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static nextstep.reservation.exception.ReservationExceptionCode.NO_SUCH_RESERVATION;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
@@ -77,10 +74,8 @@ class ReservationRepositoryTest {
         int result = reservationRepository.deleteById(created.getId());
         assertThat(result).isEqualTo(1);
 
-        assertThatThrownBy(
-                () -> reservationRepository.findById(created.getId()))
-                .isInstanceOf(ReservationException.class)
-                .hasMessage(NO_SUCH_RESERVATION.getMessage());
+        Optional<Reservation> deletedReservationOptional = reservationRepository.findById(created.getId());
+        assertThat(deletedReservationOptional.isPresent()).isFalse();
     }
 
     private boolean reservationDataEquals(Reservation a, Reservation b) {
