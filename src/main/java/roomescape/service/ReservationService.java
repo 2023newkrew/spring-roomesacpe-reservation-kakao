@@ -1,5 +1,8 @@
 package roomescape.service;
 
+import roomescape.exception.DuplicateReservationScheduleException;
+import roomescape.exception.ReservationNotFoundException;
+import roomescape.exception.ThemeNotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeRepository;
 import roomescape.domain.Reservation;
@@ -22,15 +25,15 @@ public class ReservationService {
 
     public Reservation createReservation(ReservationCreateRequest reservationCreateRequest) {
         if (reservationRepository.checkSchedule(reservationCreateRequest.getDate(), reservationCreateRequest.getTime()) != 0) {
-            throw new IllegalArgumentException("중복된 예약 발생");
+            throw new DuplicateReservationScheduleException("중복된 예약 발생");
         }
-        Theme theme = themeRepository.findThemeById(reservationCreateRequest.getThemeId());
+        Theme theme = themeRepository.findThemeById(reservationCreateRequest.getThemeId()).orElseThrow(ThemeNotFoundException::new);
         Long id = reservationRepository.addReservation(reservationCreateRequest.toReservation(theme));
-        return reservationRepository.findReservation(id).orElseThrow(NoSuchElementException::new);
+        return reservationRepository.findReservation(id).orElseThrow(ReservationNotFoundException::new);
     }
 
     public Reservation showReservation(Long id) {
-        Reservation reservation = reservationRepository.findReservation(id).orElseThrow(NoSuchElementException::new);
+        Reservation reservation = reservationRepository.findReservation(id).orElseThrow(ReservationNotFoundException::new);
         return reservation;
     }
 

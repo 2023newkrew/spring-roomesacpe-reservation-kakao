@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeCreateRequest;
 import roomescape.dto.ThemeShowResponse;
+import roomescape.exception.ThemeNotFoundException;
 import roomescape.repository.ThemeRepository;
 
 import java.util.NoSuchElementException;
@@ -26,11 +27,11 @@ public class ThemeService {
                 themeCreateRequest.getPrice()
                 )
         );
-        return themeRepository.findThemeById(id).orElseThrow(NoSuchElementException::new);
+        return themeRepository.findThemeById(id).orElseThrow(ThemeNotFoundException::new);
     }
 
     public ThemeShowResponse showTheme(Long id) {
-        Theme theme = themeRepository.findThemeById(id).orElseThrow(NoSuchElementException::new);
+        Theme theme = themeRepository.findThemeById(id).orElseThrow(ThemeNotFoundException::new);
         return ThemeShowResponse.of(theme);
     }
 
@@ -38,9 +39,9 @@ public class ThemeService {
     public Theme updateTheme(Theme theme) {
         int count = themeRepository.updateTheme(theme);
         if (count == 0) {
-            throw new NoSuchElementException("없는 테마 수정 요청");
+            throw new ThemeNotFoundException("없는 테마 수정 요청");
         }
-        return themeRepository.findThemeById(theme.getId()).orElseThrow(NoSuchElementException::new);
+        return themeRepository.findThemeById(theme.getId()).orElseThrow(ThemeNotFoundException::new);
     }
 
     public int deleteTheme(Long id) {
