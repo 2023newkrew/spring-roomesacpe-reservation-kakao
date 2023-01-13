@@ -1,0 +1,18 @@
+package nextstep.service;
+
+import java.sql.SQLException;
+import nextstep.dto.ReservationRequestDTO;
+import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public interface ReservationService {
+
+    Reservation createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException;
+
+    ReservationResponseDTO findReservation(Long id) throws SQLException;
+
+    void deleteById(Long id) throws SQLException;
+}

@@ -1,24 +1,35 @@
 package nextstep;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
+import nextstep.dto.ConnectionHandler;
+import nextstep.dto.ReservationRequestDTO;
+import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
+import nextstep.repository.ReservationJdbcRepositoryImpl;
+import nextstep.repository.ReservationRepository;
+import nextstep.service.ReservationService;
+import nextstep.service.ReservationServiceImpl;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class RoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
+    private static final ConnectionHandler connectionHandler = new ConnectionHandler();
+    private static final ReservationRepository reservationJDBCRepository = new ReservationJdbcRepositoryImpl(
+            connectionHandler);
+    private static final ReservationService reservationService = new ReservationServiceImpl(reservationJDBCRepository);
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    public static void main(String[] args) throws SQLException {
+        SpringApplication.run(RoomEscapeApplication.class, args);
+        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.println();
@@ -35,16 +46,8 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
-
-                Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
-
-                reservations.add(reservation);
+                Reservation reservation = reservationService.createReservation(
+                        new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -57,32 +60,27 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
+                ReservationResponseDTO reservationResponseDTO = reservationService.findReservation(id);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
-
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 번호: " + reservationResponseDTO.getId());
+                System.out.println("예약 날짜: " + reservationResponseDTO.getDate());
+                System.out.println("예약 시간: " + reservationResponseDTO.getTime());
+                System.out.println("예약자 이름: " + reservationResponseDTO.getName());
+                System.out.println("예약 테마 이름: " + reservationResponseDTO.getThemeName());
+                System.out.println("예약 테마 설명: " + reservationResponseDTO.getThemeDescription());
+                System.out.println("예약 테마 가격: " + reservationResponseDTO.getThemePrice());
             }
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                reservationService.deleteById(id);
+
             }
 
             if (input.equals(QUIT)) {
+                connectionHandler.release();
                 break;
             }
         }
