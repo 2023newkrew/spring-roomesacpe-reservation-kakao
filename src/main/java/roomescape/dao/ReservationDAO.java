@@ -1,7 +1,7 @@
 package roomescape.dao;
 
-import nextstep.Reservation;
-import roomescape.domain.ReservationRequest;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
-import nextstep.Theme;
+import roomescape.domain.Theme;
 
 @Repository
 public class ReservationDAO {

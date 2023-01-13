@@ -1,6 +1,7 @@
-package nextstep;
+package roomescape.domain;
 
-import roomescape.domain.ReservationRequest;
+import roomescape.domain.Theme;
+import roomescape.dto.ReservationRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -55,10 +56,6 @@ public class Reservation {
 
     public Theme getTheme() {
         return theme;
-    }
-
-    public boolean overlap(Reservation other) {
-        return this.date.equals(other.date) && this.time.equals(other.time);
     }
 
 }

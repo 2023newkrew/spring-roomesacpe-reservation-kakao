@@ -1,7 +1,7 @@
-package nextstep.console;
+package nextstep;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
 import java.sql.*;
 

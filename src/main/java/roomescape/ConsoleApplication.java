@@ -1,11 +1,12 @@
-package nextstep;
+package roomescape;
 
-import nextstep.console.ReservationDAO;
-import roomescape.domain.ReservationRequest;
+import nextstep.ReservationDAO;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
 
 import java.util.Scanner;
 
-public class RoomEscapeApplication {
+public class ConsoleApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
