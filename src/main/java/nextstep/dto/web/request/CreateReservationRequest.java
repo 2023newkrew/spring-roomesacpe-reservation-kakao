@@ -36,11 +36,19 @@ public class CreateReservationRequest {
         );
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
+        return date;
+    }
+
+    public LocalDate getDateInLocalDate() {
         return LocalDate.parse(date);
     }
 
-    public LocalTime getTime() {
+    public String getTime() {
+        return time;
+    }
+
+    public LocalTime getTimeInLocalTime() {
         return LocalTime.parse(time + ":00");
     }
 

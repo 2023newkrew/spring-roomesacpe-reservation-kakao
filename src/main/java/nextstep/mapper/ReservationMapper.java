@@ -12,8 +12,8 @@ public class ReservationMapper implements EntityMapper<CreateReservationRequest,
     @Override
     public Reservation requestToEntity(CreateReservationRequest request) {
         return Reservation.of(
-                request.getDate(),
-                request.getTime(),
+                request.getDateInLocalDate(),
+                request.getTimeInLocalTime(),
                 request.getName(),
                 Theme.of(request.getThemeId(), null, null, null)
         );
