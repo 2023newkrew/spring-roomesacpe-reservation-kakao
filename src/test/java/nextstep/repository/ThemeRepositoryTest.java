@@ -70,4 +70,14 @@ public class ThemeRepositoryTest {
         // then
         assertThat(themes.size()).isEqualTo(5);
     }
+
+    @Test
+    void id로_테마_삭제() {
+        // given
+        Theme theme = new Theme("테마2", "지금까지 이런 테마는 없었다.", 20200);
+        Long id = themeRepository.save(theme);
+
+        // when, then
+        assertThat(themeRepository.deleteThemeById(id)).isTrue();
+    }
 }

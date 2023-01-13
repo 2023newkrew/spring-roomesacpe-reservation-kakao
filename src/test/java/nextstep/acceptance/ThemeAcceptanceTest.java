@@ -82,6 +82,22 @@ public class ThemeAcceptanceTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @Test
+    void id로_테마_삭제_요청() {
+        CreateThemeRequest themeRequest = new CreateThemeRequest("테마1", "테마내용입니다", 19000);
+        ExtractableResponse<Response> response = createTheme(themeRequest);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+
+                // when
+                .when().delete(response.header("Location"))
+
+                // then
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
     private ExtractableResponse<Response> createTheme(CreateThemeRequest themeRequest) {
         return RestAssured
                 .given()
