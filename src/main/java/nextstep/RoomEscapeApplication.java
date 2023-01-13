@@ -1,9 +1,6 @@
 package nextstep;
 
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.dto.ThemeRequestDto;
-import roomescape.dto.ThemeResponseDto;
+import roomescape.dto.*;
 import roomescape.repository.ReservationConsoleRepository;
 import roomescape.repository.ThemeConsoleRepository;
 import roomescape.service.ReservationService;
@@ -11,6 +8,7 @@ import roomescape.service.ThemeService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -19,6 +17,7 @@ public class RoomEscapeApplication {
     private static final String DELETE_R = "delete res";
     private static final String ADD_T = "add theme";
     private static final String FIND_T = "find theme";
+    private static final String FINDALL_T = "findall theme";
     private static final String DELETE_T = "delete theme";
     private static final String QUIT = "quit";
 
@@ -37,6 +36,7 @@ public class RoomEscapeApplication {
             System.out.println("- 예약취소: delete res {id} ex) delete res 1");
             System.out.println("- 테마추가: add theme {name},{desc},{price} ex) add theme 테마테마,LoremIpsum,1000");
             System.out.println("- 테마조회: find theme {id} ex) find theme 1");
+            System.out.println("- 모든테마조회: findall theme ex) findall theme");
             System.out.println("- 테마삭제: delete theme {id} ex) delete theme 1");
             System.out.println("- 종료: quit");
 
@@ -114,6 +114,17 @@ public class RoomEscapeApplication {
                 System.out.println("테마 이름: " + themeResponseDto.getName());
                 System.out.println("테마 설명: " + themeResponseDto.getDesc());
                 System.out.println("테마 가격: " + themeResponseDto.getPrice());
+            }
+
+            if (input.startsWith(FINDALL_T)) {
+                List<ThemeResponseDto> themeResponseDtos = themeService.findAllTheme().getThemes();
+
+                for (ThemeResponseDto themeResponseDto : themeResponseDtos) {
+                    System.out.println("\n테마 번호: " + themeResponseDto.getId());
+                    System.out.println("테마 이름: " + themeResponseDto.getName());
+                    System.out.println("테마 설명: " + themeResponseDto.getDesc());
+                    System.out.println("테마 가격: " + themeResponseDto.getPrice());
+                }
             }
 
             if (input.startsWith(DELETE_T)) {
