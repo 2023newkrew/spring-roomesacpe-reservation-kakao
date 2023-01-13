@@ -1,7 +1,6 @@
 package nextstep.service;
 
-import nextstep.domain.dto.CreateReservationDto;
-import nextstep.domain.dto.GetReservationDto;
+import nextstep.domain.dto.reservation.CreateReservationDto;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.theme.Theme;
 import nextstep.exception.DuplicateTimeReservationException;

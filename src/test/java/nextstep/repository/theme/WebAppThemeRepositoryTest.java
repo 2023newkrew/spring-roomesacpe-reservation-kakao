@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@DisplayName("Theme Repository 테스트 (콘솔)")
+@DisplayName("Theme Repository 테스트 (웹)")
 @Sql(scripts = {"classpath:recreate.sql"})
 public class WebAppThemeRepositoryTest {
 
@@ -48,7 +48,7 @@ public class WebAppThemeRepositoryTest {
         List<Theme> themeList = webAppThemeRepository.findAll();
 
         // then
-        assertThat(themeList.size()).isEqualTo(4);
+        assertThat(themeList).hasSize(4);
     }
 
     @DisplayName("예외 없이 정상적으로 테마 업데이트 확인")

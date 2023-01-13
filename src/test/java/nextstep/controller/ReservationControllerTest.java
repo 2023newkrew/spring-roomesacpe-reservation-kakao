@@ -1,8 +1,7 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.domain.dto.CreateReservationDto;
-import nextstep.domain.theme.Theme;
+import nextstep.domain.dto.reservation.CreateReservationDto;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;

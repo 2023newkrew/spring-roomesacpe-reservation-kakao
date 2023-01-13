@@ -1,8 +1,7 @@
 package nextstep.controller;
 
-import nextstep.domain.dto.GetReservationDto;
-import nextstep.domain.dto.CreateReservationDto;
-import nextstep.domain.reservation.Reservation;
+import nextstep.domain.dto.reservation.GetReservationDto;
+import nextstep.domain.dto.reservation.CreateReservationDto;
 import nextstep.exception.DuplicateTimeReservationException;
 import nextstep.exception.IllegalReservationTimeException;
 import nextstep.service.ReservationService;

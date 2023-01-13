@@ -1,6 +1,6 @@
 package nextstep.service;
 
-import nextstep.domain.dto.CreateReservationDto;
+import nextstep.domain.dto.reservation.CreateReservationDto;
 import nextstep.domain.reservation.Reservation;
 import nextstep.exception.DeleteReservationFailureException;
 import nextstep.exception.DuplicateTimeReservationException;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
