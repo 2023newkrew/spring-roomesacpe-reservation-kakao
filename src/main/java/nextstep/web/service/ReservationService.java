@@ -26,7 +26,7 @@ public class ReservationService {
     private Theme findThemeByName(String themeName) {
         try {
             return themeDAOImpl.findByName(themeName);
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ReservationException(ErrorCode.THEME_NOT_FOUND);
         }
     }
@@ -53,7 +53,7 @@ public class ReservationService {
     public Reservation lookupReservation(Long id) {
         try {
             return reservationDAOImpl.findById(id);
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
         }
     }
@@ -63,7 +63,7 @@ public class ReservationService {
             Reservation reservation = reservationDAOImpl.findById(id);
             reservationDAOImpl.delete(id);
             return reservation;
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
         }
     }

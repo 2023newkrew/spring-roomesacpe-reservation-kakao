@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ThemeDAOImpl implements ThemeDAO{
+public class ThemeDAOImpl implements ThemeDAO {
     private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) -> {
         Theme theme = new Theme(
                 resultSet.getLong("id"),

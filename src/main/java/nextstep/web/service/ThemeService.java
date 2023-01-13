@@ -23,7 +23,7 @@ public class ThemeService {
     public Long createTheme(Theme theme) {
         try {
             themeRepositoryImpl.findByName(theme.getName());
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return themeRepositoryImpl.insertWithKeyHolder(theme);
         }
         throw new ThemeException(ErrorCode.ALREADY_THEME_EXISTS);
@@ -37,7 +37,7 @@ public class ThemeService {
         Theme theme;
         try {
             theme = themeRepositoryImpl.findById(id);
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ThemeException(ErrorCode.THEME_NOT_FOUND);
         }
 

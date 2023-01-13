@@ -8,7 +8,7 @@ import nextstep.domain.Theme;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository{
+public class ReservationRepositoryImpl implements ReservationRepository {
     private final ReservationDAOImpl reservationDAOImpl;
 
     public ReservationRepositoryImpl(ReservationDAOImpl reservationDAOImpl) {
