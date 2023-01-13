@@ -1,6 +1,7 @@
 package nextstep.entity;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public enum TimeTable {
     A(LocalTime.of(11, 30)),
@@ -17,4 +18,10 @@ public enum TimeTable {
     TimeTable(LocalTime time) {
         this.time = time;
     }
+
+    static boolean contains(LocalTime time){
+        return Arrays.stream(TimeTable.values()).anyMatch(tt -> tt.time.equals(time));
+    }
+
+
 }
