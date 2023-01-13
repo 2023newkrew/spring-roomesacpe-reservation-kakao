@@ -16,17 +16,17 @@
       }
       ```
     - 응답
-      ```http request
+      ```http response
       HTTP/1.1 201 Created
       Location: /reservations/1
       ```
   - 예약 조회
     - 요청
       ```http request
-        GET /reservations/1 HTTP/1.1
+      GET /reservations/1 HTTP/1.1
       ```
     - 응답
-      ```
+      ```http response
       HTTP/1.1 200
       Content-Type: application/json
       
@@ -42,16 +42,16 @@
       ```
   - 예약 취소
     - 요청
-      ```
+      ```http request
       DELETE /reservations/1 HTTP/1.1
       ```
     - 응답
-      ```
+      ```http response
       HTTP/1.1 204 
       ```
 - 예외 처리
   - 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
     - 응답
-      ```
-      HTTP/1.1 400
+      ```http response
+      HTTP/1.1 409
       ```
