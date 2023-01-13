@@ -9,15 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationConnRepository implements ReservationRepository {
-    private Connection conn;
-    private PreparedStatement pstmt;
-    private ResultSet resultSet;
 
-    private void getConnection() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
     }
 
-    private void closeOperation(){
+    private void closeOperation(Connection conn, PreparedStatement pstmt, ResultSet resultSet){
         try{
             if (resultSet != null) {
                 resultSet.close();
@@ -40,8 +37,11 @@ public class ReservationConnRepository implements ReservationRepository {
 
     @Override
     public Reservation create(Reservation reservation) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            getConnection();
+            conn = getConnection();
 
             String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
             pstmt = conn.prepareStatement(sql, new String[]{"id"});
@@ -61,14 +61,17 @@ public class ReservationConnRepository implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeOperation();
+            closeOperation(conn, pstmt, resultSet);
         }
     }
 
     @Override
     public Reservation find(long id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            getConnection();
+            conn = getConnection();
 
             String sql = "SELECT * FROM reservation WHERE id = ?";
             pstmt = conn.prepareStatement(sql);
@@ -92,15 +95,18 @@ public class ReservationConnRepository implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeOperation();
+            closeOperation(conn, pstmt, resultSet);
         }
         return null;
     }
 
     @Override
     public List<Reservation> findAll() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            getConnection();
+            conn = getConnection();
 
             String sql = "SELECT * FROM reservation";
             pstmt = conn.prepareStatement(sql);
@@ -125,14 +131,17 @@ public class ReservationConnRepository implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeOperation();
+            closeOperation(conn, pstmt, resultSet);
         }
     }
 
     @Override
     public boolean delete(long id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            getConnection();
+            conn = getConnection();
 
             String sql = "DELETE FROM reservation WHERE id = ?";
             pstmt = conn.prepareStatement(sql);
@@ -142,14 +151,17 @@ public class ReservationConnRepository implements ReservationRepository {
         } catch (SQLException e){
             throw new RuntimeException(e);
         } finally {
-            closeOperation();
+            closeOperation(conn, pstmt, resultSet);
         }
     }
 
     @Override
     public boolean duplicate(ReservationDTO reservationDTO) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
         try {
-            getConnection();
+            conn = getConnection();
 
             String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
             pstmt = conn.prepareStatement(sql);
@@ -163,7 +175,7 @@ public class ReservationConnRepository implements ReservationRepository {
         } catch (SQLException e){
             throw new RuntimeException();
         } finally {
-            closeOperation();
+            closeOperation(conn, pstmt, resultSet);
         }
         return false;
     }
