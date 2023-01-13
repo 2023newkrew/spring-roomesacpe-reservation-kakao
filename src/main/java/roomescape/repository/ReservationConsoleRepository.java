@@ -1,67 +1,21 @@
 package roomescape.repository;
 
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 
 import java.sql.*;
 import java.util.Optional;
+import org.springframework.jdbc.core.RowMapper;
+import roomescape.domain.Theme;
 
 public class ReservationConsoleRepository extends BaseConsoleRepository implements ReservationRepository {
 
-    @Override
-    public Long addReservation(Reservation reservation) {
-        Connection con = getConnection();
-        Long id = null;
-        try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            id = rs.getLong("id");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
-        return id;
-    }
-
-    @Override
-    public int checkSchedule(String date, String time) {
-        int count = 0;
-        Connection con = getConnection();
-        try {
-            String sql = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setDate(1, Date.valueOf(date));
-            ps.setTime(2, Time.valueOf(time));
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> {
+        Integer count = rs.getInt(1);
         return count;
-    }
+    };
 
-    @Override
-    public Optional<Reservation> findReservation(Long id) {
-        Optional<Reservation> reservation = null;
-        Connection con = getConnection();
-        try {
-            String sql = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            reservation = Optional.of(new Reservation(
+    private static final RowMapper<Optional<Reservation>> ROW_MAPPER = (rs, rowNum) -> {
+        Optional<Reservation> reservation = Optional.of(new Reservation(
                     rs.getLong("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getTime("time").toLocalTime(),
@@ -72,28 +26,42 @@ public class ReservationConsoleRepository extends BaseConsoleRepository implemen
                             rs.getString("theme_desc"),
                             rs.getInt("theme_price")
                     )
-            ));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
+        ));
+        return reservation;
+    };
+
+
+    @Override
+    public Long addReservation(Reservation reservation) {
+        final String SQL = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        return insert(SQL,
+                Date.valueOf(reservation.getDate()),
+                Time.valueOf(reservation.getTime()),
+                reservation.getName(),
+                reservation.getTheme().getName(),
+                reservation.getTheme().getDesc(),
+                reservation.getTheme().getPrice()
+        );
+    }
+
+    @Override
+    public int checkSchedule(String date, String time) {
+        final String SQL = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?;";
+        int count = query(SQL, COUNT_ROW_MAPPER, Date.valueOf(date), Time.valueOf(time)).get(0);
+        return count;
+    }
+
+    @Override
+    public Optional<Reservation> findReservation(Long id) {
+        final String SQL = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
+        Optional<Reservation> reservation = query(SQL, ROW_MAPPER, id).get(0);
         return reservation;
     }
 
     @Override
     public int removeReservation(Long id) {
-        int count = 0;
-        Connection con = getConnection();
-        try {
-            String sql = "DELETE FROM reservation WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setLong(1, id);
-            count = ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
-        return count;
+        final String SQL = "DELETE FROM reservation WHERE id = ?;";
+        return delete(SQL, id);
     }
 
 }

@@ -1,89 +1,45 @@
 package roomescape.repository;
 
+import org.springframework.jdbc.core.RowMapper;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeUpdateRequest;
 
-import java.sql.*;
 import java.util.Optional;
 
 public class ThemeConsoleRepository extends BaseConsoleRepository implements ThemeRepository {
 
+    private static final RowMapper<Optional<Theme>> ROW_MAPPER = (rs, rowNum) -> {
+        Optional<Theme> theme = Optional.of(new Theme(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("desc"),
+                rs.getInt("price")
+        ));
+        return theme;
+    };
+
     @Override
     public Long createTheme(Theme theme) {
-        Connection con = getConnection();
-        Long id = null;
-        try {
-            String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, theme.getName());
-            ps.setString(2, theme.getDesc());
-            ps.setInt(3, theme.getPrice());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            id = rs.getLong("id");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
-        return id;
+        final String SQL = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
+        return insert(SQL, theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
     @Override
     public Optional<Theme> findThemeById(Long id) {
-        Optional<Theme> theme = null;
-        Connection con = getConnection();
-        try {
-            String sql = "SELECT * FROM theme WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            theme = Optional.of(new Theme(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("desc"),
-                    rs.getInt("price")
-            ));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
-        return theme;
+        final String SQL = "SELECT * FROM theme WHERE id = ?;";
+        return query(SQL, ROW_MAPPER, id).get(0);
     }
 
     @Override
     public int updateTheme(ThemeUpdateRequest themeUpdateRequest, Long id) {
-        int count = 0;
-        Connection con = getConnection();
-        try {
-            String sql = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, themeUpdateRequest.getName());
-            ps.setString(2, themeUpdateRequest.getDesc());
-            ps.setInt(3, themeUpdateRequest.getPrice());
-            ps.setLong(4, id);
-            count = ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
-        return count;
+        final String SQL = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
+        return update(SQL, themeUpdateRequest.getName(), themeUpdateRequest.getDesc(), themeUpdateRequest.getPrice(), id);
     }
 
     @Override
     public int deleteTheme(Long id) {
-        int count = 0;
-        Connection con = getConnection();
-        try {
-            String sql = "DELETE FROM theme WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setLong(1, id);
-            count = ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        close(con);
-        return count;
+        final String SQL = "DELETE FROM theme WHERE id = ?;";
+        return delete(SQL, id);
     }
 
 }
