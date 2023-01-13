@@ -3,7 +3,6 @@ package nextstep.roomescape.reservation;
 import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.domain.entity.Reservation;
 import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.exception.CreateReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,12 +23,9 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservation) {
-        Reservation createReservation;
-        try {
-            createReservation = reservationService.create(reservation);
-        } catch (CreateReservationException e) {
-            throw new CreateReservationException();
-        }
+        ReservationResponseDTO createReservation;
+        createReservation = reservationService.create(reservation);
+
         return ResponseEntity.created(URI.create("/reservations/" + createReservation.getId())).build();
     }
 
@@ -46,8 +42,8 @@ public class ReservationController {
     }
 
 
-    @ExceptionHandler(CreateReservationException.class)
-    public ResponseEntity<String> handle() {
-        return ResponseEntity.badRequest().body("CreateReservationException");
+    @ExceptionHandler
+    public ResponseEntity<String> handle(RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

@@ -56,14 +56,19 @@ public class ReservationControllerTest {
         Reservation reservation = createRequest(LocalDate.parse("2099-02-02"));
         ExtractableResponse<Response> response = createReservation(reservation);
         String id = response.response().getHeader("Location").split("/")[2];
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("CreateReservationException"));
-        deleteReservation(Long.parseLong(id));
+        try {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(reservation)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body(is("예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있습니다."));
+        } finally {
+            deleteReservation(Long.parseLong(id));
+        }
+
+
     }
 
 
@@ -73,14 +78,18 @@ public class ReservationControllerTest {
 
         ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2099-03-03")));
         String id = reservation.response().getHeader("Location").split("/")[2];
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/" + id)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("date", is("2099-03-03"))
-                .body("time", is("13:00:00"));
-        deleteReservation(Long.parseLong(id));
+        try {
+            RestAssured.given().log().all()
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get("/reservations/" + id)
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("date", is("2099-03-03"))
+                    .body("time", is("13:00:00"));
+        } finally {
+            deleteReservation(Long.parseLong(id));
+        }
+
     }
 
 

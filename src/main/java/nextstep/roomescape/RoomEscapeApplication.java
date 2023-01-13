@@ -1,11 +1,11 @@
 package nextstep.roomescape;
 
 import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
-import nextstep.roomescape.reservation.domain.entity.Reservation;
 import nextstep.roomescape.reservation.ReservationRepositoryJdbcImpl;
 import nextstep.roomescape.reservation.ReservationServiceImpl;
 import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
 import nextstep.roomescape.reservation.domain.entity.Theme;
+import nextstep.roomescape.reservation.exception.DeleteReservationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -49,13 +49,15 @@ public class RoomEscapeApplication {
                         name,
                         theme
                 );
-                Reservation createReservation = reservationServiceImpl.create(reservation);
+                try {
+                    ReservationResponseDTO createReservation = reservationServiceImpl.create(reservation);
 
-                System.out.println("예약이 등록되었습니다.");
-                System.out.println("예약 번호: " + createReservation.getId());
-                System.out.println("예약 날짜: " + createReservation.getDate());
-                System.out.println("예약 시간: " + createReservation.getTime());
-                System.out.println("예약자 이름: " + createReservation.getName());
+                    System.out.println("예약이 등록되었습니다.");
+                    printReservation(createReservation);
+                } catch (ClassCastException e){
+                    System.out.println(e.getMessage());
+                }
+
             }
 
             if (input.startsWith(FIND)) {
@@ -63,23 +65,22 @@ public class RoomEscapeApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
                 ReservationResponseDTO reservation = reservationServiceImpl.findById(id);
 
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getThemeName());
-                System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
-                System.out.println("예약 테마 가격: " + reservation.getThemePrice());
+                printReservation(reservation);
+                printTheme(reservation);
             }
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-
-                if (reservationServiceImpl.delete(id)) {
-                    System.out.println("예약이 취소되었습니다.");
+                try {
+                    if (reservationServiceImpl.delete(id)) {
+                        System.out.println("예약이 취소되었습니다.");
+                    }
+                } catch (DeleteReservationException e){
+                    System.out.println(e.getMessage());
                 }
+
             }
 
             if (input.equals(QUIT)) {
@@ -95,5 +96,18 @@ public class RoomEscapeApplication {
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUrl("jdbc:h2:~/test");
         return dataSource;
+    }
+
+    public static void printReservation(ReservationResponseDTO reservation){
+        System.out.println("예약 번호: " + reservation.getId());
+        System.out.println("예약 날짜: " + reservation.getDate());
+        System.out.println("예약 시간: " + reservation.getTime());
+        System.out.println("예약자 이름: " + reservation.getName());
+    }
+
+    public static void printTheme(ReservationResponseDTO reservation){
+        System.out.println("예약 테마 이름: " + reservation.getThemeName());
+        System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+        System.out.println("예약 테마 가격: " + reservation.getThemePrice());
     }
 }

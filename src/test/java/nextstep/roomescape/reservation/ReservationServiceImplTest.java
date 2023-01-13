@@ -1,6 +1,6 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.domain.entity.Reservation;
+import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
 import nextstep.roomescape.reservation.domain.entity.Theme;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ public class ReservationServiceImplTest {
     @Test
     void createReservationTest() {
         ReservationRequestDTO reservation = createRequest(LocalDate.parse("9999-01-11"));
-        Reservation result = reservationServiceImpl.create(reservation);
+        ReservationResponseDTO result = reservationServiceImpl.create(reservation);
         assertEquals(result.getDate(), reservation.getDate());
         assertEquals(result.getTime(), reservation.getTime());
         assertEquals(result.getName(), reservation.getName());
