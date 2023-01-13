@@ -15,3 +15,6 @@ CREATE TABLE IF NOT EXISTS theme
     price int,
     primary key (id)
 );
+
+CREATE INDEX ON reservation(datetime);
+CREATE INDEX ON theme(name);
