@@ -3,6 +3,7 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
+import roomescape.dto.ThemeUpdateRequestDto;
 import roomescape.model.Theme;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeRepository;
@@ -26,16 +27,30 @@ public class ThemeService {
     }
 
     public ThemeResponseDto findTheme(Long themeId) {
-        Theme theme = themeRepository
-                .findOneById(themeId)
-                .orElseThrow(() -> {
-                    throw new NoSuchElementException("No Theme by that Id");});
+        Theme theme = findThemeByIdOrThrowException(themeId);
         return new ThemeResponseDto(theme);
+    }
+
+    public void updateTheme(Long themeId, ThemeUpdateRequestDto themeUpdateRequestDto) {
+        findThemeByIdOrThrowException(themeId);
+        if (themeUpdateRequestDto.getName() != null) {
+            themeRepository.updateNameOfId(themeId, themeUpdateRequestDto.getName());
+        }
+        if (themeUpdateRequestDto.getDesc() != null) {
+            themeRepository.updateDescOfId(themeId, themeUpdateRequestDto.getDesc());
+        }
+        if (themeUpdateRequestDto.getPrice() != null) {
+            themeRepository.updatePriceOfId(themeId, themeUpdateRequestDto.getPrice());
+        }
     }
 
     public void deleteTheme(Long themeId) {
         checkForReservationsForTheme(themeId);
         themeRepository.delete(themeId);
+    }
+
+    private Theme findThemeByIdOrThrowException(Long themeId) {
+        return themeRepository.findOneById(themeId).orElseThrow(() -> new NoSuchElementException("No Theme by that Id"));
     }
 
     private void checkForSameNameTheme(ThemeRequestDto themeRequest) {
