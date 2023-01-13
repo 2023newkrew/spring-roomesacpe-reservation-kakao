@@ -33,6 +33,10 @@ public class ThemeService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteAllThemes() {
+        themeRepository.deleteAll();
+    }
+
     public void deleteTheme(Long id) throws ReservedThemeException {
         if (reservationRepository.hasReservationWithTheme(id)) {
             throw new ReservedThemeException();
