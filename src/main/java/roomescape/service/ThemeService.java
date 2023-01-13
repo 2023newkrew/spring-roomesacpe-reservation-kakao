@@ -5,11 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
 import roomescape.dto.ThemeUpdateRequestDto;
+import roomescape.dto.ThemesResponseDto;
 import roomescape.model.Theme;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeRepository;
 
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,6 +34,10 @@ public class ThemeService {
     public ThemeResponseDto findTheme(Long themeId) {
         Theme theme = findThemeByIdOrThrowException(themeId);
         return new ThemeResponseDto(theme);
+    }
+
+    public ThemesResponseDto findAllTheme() {
+        return new ThemesResponseDto(themeRepository.findAll().stream().map(ThemeResponseDto::new).collect(Collectors.toList()));
     }
 
     @Transactional
