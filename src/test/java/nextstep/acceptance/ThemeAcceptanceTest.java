@@ -164,6 +164,57 @@ public class ThemeAcceptanceTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    void 테마_생성시_이름을_입력하지_않으면_예외가_발생한다() {
+        // given
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .formParam("desc", "최고 입니다.")
+                .formParam("price", 1000)
+
+                // when
+                .when().post("/themes")
+
+                // then
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 테마_생성시_설명을_입력하지_않으면_예외가_발생한다() {
+        // given
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .formParam("name", "아주 멋진 테마")
+                .formParam("price", 1000)
+
+                // when
+                .when().post("/themes")
+
+                // then
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 테마_생성시_가격을_입력하지_않으면_예외가_발생한다() {
+        // given
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .formParam("name", "아주 멋진 테마")
+                .formParam("desc", "최고 입니다.")
+
+                // when
+                .when().post("/themes")
+
+                // then
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     private ExtractableResponse<Response> createTheme(CreateThemeRequest themeRequest) {
         return RestAssured
                 .given()
