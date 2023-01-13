@@ -50,14 +50,30 @@ public class ThemeService {
     }
 
     @Transactional
-    public void deleteTheme(Long id){
+    public void updateTheme(Long id, ThemeRequest themeRequest) {
+        checkThemeExistence(id);
         checkThemeReferencedByReservation(id);
-        themeWebRepository.delete(id);
+
+        themeWebRepository.update(
+                id,
+                ThemeMapper.INSTANCE.themeRequestToTheme(themeRequest)
+        );
+    }
+
+    private void checkThemeExistence(Long theme_id){
+        themeWebRepository.findOne(theme_id)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
     }
 
     private void checkThemeReferencedByReservation(Long id){
         if(reservationWebRepository.findAllByTheme_id(id).size() > 0){
             throw new RoomEscapeException(ErrorCode.THEME_REFERENCED_BY_RESERVATION);
         }
+    }
+
+    @Transactional
+    public void deleteTheme(Long id){
+        checkThemeReferencedByReservation(id);
+        themeWebRepository.delete(id);
     }
 }
