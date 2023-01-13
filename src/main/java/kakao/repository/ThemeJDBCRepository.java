@@ -59,32 +59,11 @@ public class ThemeJDBCRepository {
             throw new RecordNotFoundException(ErrorCode.THEME_NOT_FOUND, e);
         }
     }
-
-    public int updateName(long id, String updateName) {
-        if (findByName(updateName).size() > 0)
-            return 0;
-
-        String UPDATE_SQL = "update theme set name=? where id=?";
-
-        return jdbcTemplate.update(UPDATE_SQL, updateName, id);
-    }
-
+    
     public List<Theme> findByName(String name) {
         String SELECT_SQL = "select * from theme where name=?";
 
         return jdbcTemplate.query(SELECT_SQL, themeRowMapper, name);
-    }
-
-    public int updateDesc(long id, String updateDesc) {
-        String UPDATE_SQL = "update theme set desc=? where id=?";
-
-        return jdbcTemplate.update(UPDATE_SQL, updateDesc, id);
-    }
-
-    public int updatePrice(long id, int updatePrice) {
-        String UPDATE_SQL = "update theme set price=? where id=?";
-
-        return jdbcTemplate.update(UPDATE_SQL, updatePrice, id);
     }
 
     public int update(UpdateThemeRequest request) {

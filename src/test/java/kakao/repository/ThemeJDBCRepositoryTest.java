@@ -71,45 +71,6 @@ public class ThemeJDBCRepositoryTest {
                 .isThrownBy(() -> themeJDBCRepository.findById(1L));
     }
 
-    @DisplayName("id에 해당하는 Theme의 name을 업데이트 하고, 업데이트된 count를 반환한다")
-    @Test
-    void updateNameById() {
-        themeJDBCRepository.save(themeModel);
-        Assertions.assertThat(themeJDBCRepository.updateName(1L, "updateName")).isOne();
-
-        Theme updateTheme = themeJDBCRepository.findById(1L);
-        Assertions.assertThat(updateTheme.getName()).isEqualTo("updateName");
-    }
-
-    @DisplayName("업데이트 하려는 중복된 name이 존재하면 업데이트 하지 않는다")
-    @Test
-    void updateDuplicate() {
-        themeJDBCRepository.save(themeModel);
-        themeJDBCRepository.save(new Theme("updateName", "desc", 1000));
-
-        Assertions.assertThat(themeJDBCRepository.updateName(1L, "updateName")).isZero();
-    }
-
-    @DisplayName("id에 해당하는 Theme의 desc을 업데이트하고 업데이트된 count를 반환한다")
-    @Test
-    void updateDescById() {
-        themeJDBCRepository.save(themeModel);
-
-        Assertions.assertThat(themeJDBCRepository.updateDesc(1L, "updateDesc")).isOne();
-
-        Assertions.assertThat(themeJDBCRepository.findById(1L).getDesc()).isEqualTo("updateDesc");
-    }
-
-    @DisplayName("id에 해당하는 Theme의 price를 업데이트하고 업데이트된 count를 반환한다")
-    @Test
-    void updatePriceById() {
-        themeJDBCRepository.save(themeModel);
-
-        Assertions.assertThat(themeJDBCRepository.updatePrice(1L, 2000)).isOne();
-
-        Assertions.assertThat(themeJDBCRepository.findById(1L).getPrice()).isEqualTo(2000);
-    }
-
     @DisplayName("UpdateThemeRequest에 해당하는 내용으로 업데이트하고 업데이트된 count를 반환한다")
     @Test
     void update() {
