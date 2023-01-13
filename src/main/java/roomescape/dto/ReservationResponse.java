@@ -4,8 +4,8 @@ public class ReservationResponse {
     private final Long id;
     private final String date;
     private final String time;
-    private final String themeName;
     private final String name;
+    private final String themeName;
     private final String themeDesc;
     private final Integer themePrice;
 

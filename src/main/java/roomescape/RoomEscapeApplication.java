@@ -3,8 +3,6 @@ package roomescape;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
-import roomescape.domain.Themes;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationConsoleRepository;
@@ -35,14 +33,13 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Theme theme = Themes.WANNA_GO_HOME;
 
         SpringApplication.run(RoomEscapeApplication.class, args);
 
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
+            System.out.println("- 예약하기: add {date},{time},{name},{theme_id} ex) add 2022-08-11,13:00,류성현");
             System.out.println("- 예약조회: find {id} ex) find 1");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
@@ -55,11 +52,12 @@ public class RoomEscapeApplication {
                 LocalDate date = LocalDate.parse(params.split(",")[0]);
                 LocalTime time = LocalTime.parse(params.split(",")[1] + ":00");
                 String name = params.split(",")[2];
+                Long theme_id = Long.valueOf(params.split(",")[3]);
 
                 Reservation reservation;
 
                 try {
-                    reservation = new Reservation(null, date, time, name, theme);
+                    reservation = new Reservation(null, date, time, name, theme_id);
                     reservationConsoleRepository.findReservationByDateAndTime(date, time)
                             .ifPresent((e) -> {
                                 throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
@@ -85,7 +83,6 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
                 Reservation reservation;
-
                 try {
                     reservation = reservationConsoleRepository.findOne(id)
                             .orElseThrow(() -> {
@@ -100,9 +97,9 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+//                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
+//                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
+//                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {

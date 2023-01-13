@@ -4,13 +4,14 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
-import roomescape.domain.Themes;
+import roomescape.domain.Theme;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.mapper.ReservationMapper;
 import roomescape.repository.ReservationWebRepository;
+import roomescape.repository.ThemeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,18 +19,23 @@ import java.time.LocalTime;
 @Service
 public class ReservationService {
     private final ReservationWebRepository reservationWebRepository;
+    private final ThemeRepository themeRepository;
 
-    public ReservationService(ReservationWebRepository reservationWebRepository) {
+    public ReservationService(
+            ReservationWebRepository reservationWebRepository,
+            ThemeRepository themeRepository
+    ) {
         this.reservationWebRepository = reservationWebRepository;
+        this.themeRepository = themeRepository;
     }
 
     @Transactional
     public Long createReservation(ReservationRequest reservationRequest) {
         LocalDate requestedDate = reservationRequest.getDate();
         LocalTime requestedTime = reservationRequest.getTime();
-        reservationRequest.setTheme(Themes.WANNA_GO_HOME);
 
         checkTimeDuplication(requestedDate, requestedTime);
+        checkThemeExistence(reservationRequest.getTheme_id());
 
         return reservationWebRepository.save(
                 ReservationMapper.INSTANCE.reservationRequestToReservation(reservationRequest)
@@ -43,12 +49,21 @@ public class ReservationService {
                 });
     }
 
+    private void checkThemeExistence(Long theme_id){
+        themeRepository.findOne(theme_id)
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
+    }
+
     @Transactional
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationWebRepository.findOne(reservationId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
-        return ReservationMapper.INSTANCE.reservationToReservationResponse(reservation);
+        Theme theme = themeRepository.findOne(reservation.getTheme_id())
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
+
+        return ReservationMapper.INSTANCE.reservationToReservationResponse(reservation, theme);
     }
+
     @Transactional
     public void deleteReservation(Long reservationId) {
         reservationWebRepository.delete(reservationId);

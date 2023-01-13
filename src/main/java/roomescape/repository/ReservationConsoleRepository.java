@@ -39,14 +39,12 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
             Connection con,
             Reservation reservation
     ) throws SQLException {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
         ps.setDate(1, Date.valueOf(reservation.getDate()));
         ps.setTime(2, Time.valueOf(reservation.getTime()));
         ps.setString(3, reservation.getName());
-        ps.setString(4, reservation.getTheme().getName());
-        ps.setString(5, reservation.getTheme().getDesc());
-        ps.setInt(6, reservation.getTheme().getPrice());
+        ps.setLong(4, reservation.getTheme_id());
 
         return ps;
     }
@@ -81,12 +79,7 @@ public class ReservationConsoleRepository implements CrudRepository<Reservation,
                     resultSet.getDate("date").toLocalDate(),
                     resultSet.getTime("time").toLocalTime(),
                     resultSet.getString("name"),
-                    new Theme(
-                            null,
-                            resultSet.getString("theme_name"),
-                            resultSet.getString("theme_desc"),
-                            resultSet.getInt("theme_price")
-                    )
+                    resultSet.getLong("theme_id")
             ));
         }
         return Optional.empty();
