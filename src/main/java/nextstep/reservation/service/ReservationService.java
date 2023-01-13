@@ -5,7 +5,7 @@ import nextstep.reservation.dto.ReservationRequest;
 
 public interface ReservationService {
 
-    Long create(ReservationRequest request);
+    ReservationDTO create(ReservationRequest request);
 
     ReservationDTO getById(Long id);
 

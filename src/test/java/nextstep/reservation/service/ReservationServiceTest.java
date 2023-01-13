@@ -31,9 +31,9 @@ class ReservationServiceTest {
         @ParameterizedTest
         @MethodSource
         void should_idIs1_when_created(ReservationRequest request) {
-            Long id = service.create(request);
+            ReservationDTO reservation = service.create(request);
 
-            Assertions.assertThat(id)
+            Assertions.assertThat(reservation.getId())
                     .isOne();
         }
 
@@ -71,9 +71,9 @@ class ReservationServiceTest {
             ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현");
             service.create(request);
 
-            Long id = service.create(anotherRequest);
+            ReservationDTO reservation = service.create(anotherRequest);
 
-            Assertions.assertThat(id)
+            Assertions.assertThat(reservation.getId())
                     .isEqualTo(2L);
         }
 
@@ -149,10 +149,10 @@ class ReservationServiceTest {
         @Test
         void should_returnNull_when_getDeleted() {
             ReservationRequest request = getTestRequest();
-            Long id = service.create(request);
-            service.deleteById(id);
+            ReservationDTO reservation = service.create(request);
+            service.deleteById(reservation.getId());
 
-            ReservationDTO actual = service.getById(id);
+            ReservationDTO actual = service.getById(reservation.getId());
 
             Assertions.assertThat(actual)
                     .isNull();
@@ -162,10 +162,10 @@ class ReservationServiceTest {
         @Test
         void should_returnResult_when_givenId() {
             ReservationRequest request = getTestRequest();
-            Long id = service.create(request);
-            service.deleteById(id);
+            ReservationDTO reservation = service.create(request);
+            service.deleteById(reservation.getId());
 
-            boolean actual = service.deleteById(id);
+            boolean actual = service.deleteById(reservation.getId());
 
             Assertions.assertThat(actual)
                     .isFalse();

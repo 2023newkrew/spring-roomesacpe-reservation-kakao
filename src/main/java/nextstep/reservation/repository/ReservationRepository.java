@@ -6,7 +6,7 @@ public interface ReservationRepository {
 
     boolean existsByDateAndTime(Reservation reservation);
 
-    Long insert(Reservation reservation);
+    Reservation insert(Reservation reservation);
 
     Reservation getById(Long id);
 

@@ -26,7 +26,7 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long insert(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         reservation = new Reservation(
                 ++reservationIdIndex,
                 reservation.getDate(),
@@ -36,7 +36,7 @@ public class FakeReservationRepository implements ReservationRepository {
         );
         reservations.put(reservationIdIndex, reservation);
 
-        return reservationIdIndex;
+        return reservation;
     }
 
     @Override

@@ -30,11 +30,12 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long insert(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(getInsertStatementCreator(reservation), keyHolder);
+        reservation.setId(keyHolder.getKeyAs(Long.class));
 
-        return keyHolder.getKeyAs(Long.class);
+        return reservation;
     }
 
     private static PreparedStatementCreator getInsertStatementCreator(Reservation reservation) {

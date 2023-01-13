@@ -23,13 +23,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
-    public Long create(ReservationRequest request) {
+    public ReservationDTO create(ReservationRequest request) {
         Reservation reservation = ReservationMapper.INSTANCE.fromRequest(request, THEME);
         if (repository.existsByDateAndTime(reservation)) {
             throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
         }
+        reservation = repository.insert(reservation);
 
-        return repository.insert(reservation);
+        return ReservationMapper.INSTANCE.toDto(reservation);
     }
 
     @Override

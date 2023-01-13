@@ -1,40 +1,30 @@
 package nextstep.reservation.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reservation {
+
+    @Getter
+    @Setter
     private Long id;
+
+    @Getter
     private LocalDate date;
+
+    @Getter
     private LocalTime time;
+
+    @Getter
     private String name;
+
+    @Getter
     private Theme theme;
-
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Theme getTheme() {
-        return theme;
-    }
 }

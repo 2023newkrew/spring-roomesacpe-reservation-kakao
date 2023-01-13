@@ -1,25 +1,19 @@
 package nextstep.reservation.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class Theme {
+
+    @Getter
     private String name;
+
+    @Getter
     private String desc;
+    
+    @Getter
     private Integer price;
-
-    public Theme(String name, String desc, Integer price) {
-        this.name = name;
-        this.desc = desc;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
 }

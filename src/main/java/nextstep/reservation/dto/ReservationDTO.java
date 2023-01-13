@@ -10,13 +10,13 @@ import java.time.LocalTime;
 @Data
 public class ReservationDTO {
 
-    private Long id;
+    private final Long id;
 
-    private LocalDate date;
+    private final LocalDate date;
 
-    private LocalTime time;
+    private final LocalTime time;
 
-    private String name;
+    private final String name;
 
-    private ThemeDTO theme;
+    private final ThemeDTO theme;
 }

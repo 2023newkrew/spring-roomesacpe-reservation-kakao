@@ -50,17 +50,18 @@ public class SimpleReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long insert(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         return tryQuery(getInsertQuery(reservation));
     }
 
-    private QueryFunction<Long> getInsertQuery(Reservation reservation) {
+    private QueryFunction<Reservation> getInsertQuery(Reservation reservation) {
         return connection -> {
             PreparedStatement ps = StatementCreator.createInsertStatement(connection, reservation);
             ps.executeUpdate();
             ResultSet keyHolder = ps.getGeneratedKeys();
+            reservation.setId(ResultSetParser.parseKey(keyHolder));
 
-            return ResultSetParser.parseKey(keyHolder);
+            return reservation;
         };
     }
 

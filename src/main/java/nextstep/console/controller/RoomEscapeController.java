@@ -42,8 +42,7 @@ public class RoomEscapeController {
 
     private void add(Params params) {
         ReservationRequest request = params.getReservationRequest();
-        Long id = service.create(request);
-        ReservationDTO reservation = service.getById(id);
+        ReservationDTO reservation = service.create(request);
         output.printAddReservation(reservation);
     }
 
