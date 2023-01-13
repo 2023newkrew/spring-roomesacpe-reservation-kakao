@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemeIdPreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
@@ -12,6 +13,7 @@ import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatemen
 import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
 
+@Repository
 public class SpringThemeDAO implements ThemeDAO {
 
     private final JdbcTemplate jdbcTemplate;

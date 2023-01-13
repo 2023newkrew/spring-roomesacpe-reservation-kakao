@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape;
 
 import static org.hamcrest.core.Is.is;
 
@@ -16,10 +16,10 @@ import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.Reservation;
 
 
-@DisplayName("웹 요청 / 응답 처리로 입출력 추가")
+@DisplayName("예약 웹 요청 / 응답 처리")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("classpath:/test.sql")
-public class ReservationControllerTest {
+public class ReservationTest {
 
     private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");

@@ -1,10 +1,12 @@
 package roomescape.service.theme;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
 
+@Service
 public class ThemeService implements ThemeServiceInterface {
 
     private final ThemeDAO themeDAO;
