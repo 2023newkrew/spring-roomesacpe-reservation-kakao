@@ -4,6 +4,7 @@ import nextstep.domain.dto.GetReservationDto;
 import nextstep.domain.dto.CreateReservationDto;
 import nextstep.domain.reservation.Reservation;
 import nextstep.exception.DuplicateTimeReservationException;
+import nextstep.exception.IllegalReservationTimeException;
 import nextstep.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,6 +29,8 @@ public class ReservationController {
             long id = reservationService.addReservation(reservationDto);
             return ResponseEntity.created(URI.create("/reservations/" + id)).build();
         } catch (DuplicateTimeReservationException ex) {
+            return ResponseEntity.badRequest().build();
+        } catch (IllegalReservationTimeException ex) {
             return ResponseEntity.badRequest().build();
         }
     }

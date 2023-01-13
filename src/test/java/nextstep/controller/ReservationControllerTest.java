@@ -28,7 +28,7 @@ public class ReservationControllerTest {
     @DisplayName("예약을 생성하면 201 status와 id를 포함한 Location을 응답")
     @Test
     void createReservation() {
-        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
+        CreateReservationDto reservationDto = new CreateReservationDto("2022-08-11", "14:30:00", "name", 1l);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDto)

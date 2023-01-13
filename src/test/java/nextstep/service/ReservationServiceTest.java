@@ -33,7 +33,7 @@ public class ReservationServiceTest {
     @DisplayName("예약 시간이 다르면 예외를 발생하지 않고 예약에 성공")
     @Test
     void reservationSuccess() {
-        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
+        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:30:00", "name", 1l);
         CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "14:00:00", "name2", 1l);
 
         reservationService.addReservation(createReservationDto1);
@@ -45,8 +45,8 @@ public class ReservationServiceTest {
     @DisplayName("중복된 시간에 예약을 추가시 예외 발생")
     @Test
     void duplicateReservationTest() {
-        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
-        CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "13:35:00", "name2", 1l);
+        CreateReservationDto createReservationDto1 = new CreateReservationDto("2022-08-11", "14:30:00", "name", 1l);
+        CreateReservationDto createReservationDto2 = new CreateReservationDto("2022-08-11", "14:30:00", "name2", 1l);
 
         reservationService.addReservation(createReservationDto1);
 
@@ -58,12 +58,12 @@ public class ReservationServiceTest {
     @Test
     void getReservationTest() {
         // given
-        CreateReservationDto createReservationDto = new CreateReservationDto("2022-08-11", "13:35:00", "name", 1l);
+        CreateReservationDto createReservationDto = new CreateReservationDto("2022-08-11", "14:30:00", "name", 1l);
 
         // when
         long id = reservationService.addReservation(createReservationDto);
         Reservation realReservation = reservationService.getReservation(id);
-        Reservation expectedReservation = new Reservation(id, LocalDate.of(2022,8,11), LocalTime.of(13,35), "name", defaultTheme);
+        Reservation expectedReservation = new Reservation(id, LocalDate.of(2022,8,11), LocalTime.of(14,30), "name", defaultTheme);
 
         // then
         assertThat(realReservation).isEqualTo(expectedReservation);
