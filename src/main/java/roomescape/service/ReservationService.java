@@ -6,10 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.domain.Themes;
+import roomescape.domain.Theme;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ThemeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,9 +18,11 @@ import java.time.LocalTime;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
     @Transactional
@@ -27,7 +30,10 @@ public class ReservationService {
         LocalDate date = reservationRequest.getDate();
         LocalTime time = reservationRequest.getTime();
         checkTimeDuplication(date, time);
-        Reservation reservation = reservationRequest.toEntity(Themes.WANNA_GO_HOME);
+
+        Theme theme = themeRepository.findThemeById(reservationRequest.getThemeId())
+                .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
+        Reservation reservation = reservationRequest.toEntity(theme);
         return reservationRepository.insertReservation(reservation);
     }
 

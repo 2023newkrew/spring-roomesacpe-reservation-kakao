@@ -14,11 +14,13 @@ public class ReservationRequest {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
+    private final Long themeId;
 
-    public ReservationRequest(String date, String time, String name) {
+    public ReservationRequest(String date, String time, String name, Long themeId) {
         this.date = validateDate(date);
         this.time = validateTime(time);
         this.name = name;
+        this.themeId = themeId;
     }
 
     private LocalDate validateDate(String date) {
@@ -47,6 +49,10 @@ public class ReservationRequest {
 
     public String getName() {
         return name;
+    }
+
+    public Long getThemeId() {
+        return themeId;
     }
 
     public Reservation toEntity(Theme theme) {

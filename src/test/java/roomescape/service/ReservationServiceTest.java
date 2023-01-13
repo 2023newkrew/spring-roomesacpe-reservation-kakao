@@ -9,8 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationWebRepository;
+import roomescape.repository.ThemeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,6 +31,11 @@ class ReservationServiceTest {
     @Autowired
     ReservationWebRepository reservationWebRepository;
 
+    @Autowired
+    ThemeRepository themeRepository;
+
+    Theme theme = new Theme("테마1", "설명1", 1000);
+
     @BeforeEach
     void setUp() {
         reservationWebRepository.deleteAllReservations();
@@ -43,10 +50,12 @@ class ReservationServiceTest {
     @Test
     void createReservation() {
         // given
+        Long themeId = themeRepository.insertTheme(theme);
         ReservationRequest reservationRequest = new ReservationRequest(
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
-                "name"
+                "name",
+                themeId
         );
 
         // when
@@ -60,17 +69,20 @@ class ReservationServiceTest {
     @Test
     void createReservationDuplicated() {
         // given
+        Long themeId = themeRepository.insertTheme(theme);
         ReservationRequest reservationRequest1 = new ReservationRequest(
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
-                "reservation1"
+                "reservation1",
+                themeId
         );
         reservationService.createReservation(reservationRequest1);
 
         ReservationRequest reservationRequest2 = new ReservationRequest(
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
-                "reservation2"
+                "reservation2",
+                themeId
         );
 
         // when & then
@@ -82,10 +94,12 @@ class ReservationServiceTest {
     @Test
     void getReservation() {
         // given
+        Long themeId = themeRepository.insertTheme(theme);
         ReservationRequest reservationRequest = new ReservationRequest(
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
-                "name"
+                "name",
+                themeId
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
 
@@ -97,6 +111,9 @@ class ReservationServiceTest {
         assertThat(reservationRequest.getName()).isEqualTo(reservationResponse.getName());
         assertThat(reservationRequest.getDate().toString()).isEqualTo(reservationResponse.getDate());
         assertThat(reservationRequest.getTime().toString()).isEqualTo(reservationResponse.getTime());
+        assertThat(theme.getName()).isEqualTo(reservationResponse.getTheme().getName());
+        assertThat(theme.getDesc()).isEqualTo(reservationResponse.getTheme().getDesc());
+        assertThat(theme.getPrice()).isEqualTo(reservationResponse.getTheme().getPrice());
     }
 
     @DisplayName("등록되지 않은 ReservationId를 가지고 조회 시, 예외가 발생한다.")
@@ -114,10 +131,12 @@ class ReservationServiceTest {
     @Test
     void deleteReservation() {
         // given
+        Long themeId = themeRepository.insertTheme(theme);
         ReservationRequest reservationRequest = new ReservationRequest(
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
-                "name"
+                "name",
+                themeId
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
 

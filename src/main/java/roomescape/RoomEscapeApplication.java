@@ -32,7 +32,7 @@ public class RoomEscapeApplication {
 
     private static void startConsoleApplication() {
         Scanner scanner = new Scanner(System.in);
-        ReservationService reservationService = new ReservationService(new ReservationConsoleRepository());
+        ReservationService reservationService = new ReservationService(new ReservationConsoleRepository(), null);
 
         while (true) {
             System.out.println();
@@ -54,7 +54,8 @@ public class RoomEscapeApplication {
                 ReservationRequest reservationRequest = new ReservationRequest(
                         date.toString(),
                         time.toString(),
-                        name
+                        name,
+                        1L
                 );
 
                 Long reservationId;
@@ -92,9 +93,9 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservationResponse.getDate());
                 System.out.println("예약 시간: " + reservationResponse.getTime());
                 System.out.println("예약자 이름: " + reservationResponse.getName());
-                System.out.println("예약 테마 이름: " + reservationResponse.getThemeName());
-                System.out.println("예약 테마 설명: " + reservationResponse.getThemeDesc());
-                System.out.println("예약 테마 가격: " + reservationResponse.getThemePrice());
+                System.out.println("예약 테마 이름: " + reservationResponse.getTheme().getName());
+                System.out.println("예약 테마 설명: " + reservationResponse.getTheme().getDesc());
+                System.out.println("예약 테마 가격: " + reservationResponse.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {

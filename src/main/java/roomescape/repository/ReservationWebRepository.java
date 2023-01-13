@@ -24,9 +24,10 @@ public class ReservationWebRepository implements ReservationRepository {
             resultSet.getTime("time").toLocalTime(),
             resultSet.getString("name"),
             new Theme(
-                    resultSet.getString("theme_name"),
-                    resultSet.getString("theme_desc"),
-                    resultSet.getInt("theme_price")
+                    resultSet.getLong("theme.id"),
+                    resultSet.getString("theme.name"),
+                    resultSet.getString("theme.desc"),
+                    resultSet.getInt("theme.price")
             )
     );
 
@@ -36,16 +37,14 @@ public class ReservationWebRepository implements ReservationRepository {
 
     @Override
     public Long insertReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -53,7 +52,9 @@ public class ReservationWebRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> getReservation(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = (?)";
+        String sql = "SELECT * FROM reservation " +
+                "JOIN theme ON reservation.theme_id = theme.id " +
+                "WHERE reservation.id = (?)";
         return jdbcTemplate.query(sql, reservationRowMapper, id)
                 .stream()
                 .findAny();
@@ -67,7 +68,9 @@ public class ReservationWebRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
+        String sql = "SELECT * FROM reservation " +
+                "JOIN theme ON reservation.theme_id = theme.id " +
+                "WHERE date = (?) and time = (?)";
         return jdbcTemplate.query(sql, reservationRowMapper, date, time)
                 .stream()
                 .findAny();
