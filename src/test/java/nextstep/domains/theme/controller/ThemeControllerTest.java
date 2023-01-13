@@ -105,4 +105,22 @@ public class ThemeControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("존재하지 않는 테마입니다."));
     }
+
+    @DisplayName("Theme - 테마 목록 조회")
+    @Test
+    void retrieveAll() {
+        ThemeRequestDto requestDto = new ThemeRequestDto(
+                "워너고홈2",
+                "병맛 어드벤처 회사 코믹물",
+                29_000
+        );
+        themeService.add(requestDto);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2));
+    }
 }

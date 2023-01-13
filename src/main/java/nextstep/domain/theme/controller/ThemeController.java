@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @Controller
 @RequestMapping("/themes")
@@ -29,5 +30,11 @@ public class ThemeController {
     public ResponseEntity<Theme> retrieve(@PathVariable Long id) {
         Theme theme = themeService.retrieve(id);
         return ResponseEntity.ok().body(theme);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<Theme>> retrieveAll() {
+        List<Theme> themes = themeService.retrieveAll();
+        return ResponseEntity.ok().body(themes);
     }
 }

@@ -7,6 +7,8 @@ import nextstep.global.exceptions.exception.DuplicatedNameThemeException;
 import nextstep.global.exceptions.exception.ThemeNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ThemeService {
 
@@ -32,5 +34,9 @@ public class ThemeService {
     public Theme retrieve(Long id) {
         return themeRepository.findById(id)
                 .orElseThrow(ThemeNotFoundException::new);
+    }
+
+    public List<Theme> retrieveAll() {
+        return themeRepository.findAll();
     }
 }
