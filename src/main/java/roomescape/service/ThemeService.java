@@ -8,31 +8,35 @@ import roomescape.dto.ThemeResponse;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.mapper.ThemeMapper;
-import roomescape.repository.ThemeRepository;
+import roomescape.repository.ReservationWebRepository;
+import roomescape.repository.ThemeWebRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ThemeService {
-    private final ThemeRepository themeRepository;
+    private final ThemeWebRepository themeWebRepository;
+    private final ReservationWebRepository reservationWebRepository;
 
     public ThemeService(
-            ThemeRepository themeRepository
+            ThemeWebRepository themeWebRepository,
+            ReservationWebRepository reservationWebRepository
     ){
-        this.themeRepository = themeRepository;
+        this.themeWebRepository = themeWebRepository;
+        this.reservationWebRepository = reservationWebRepository;
     }
 
     @Transactional
     public Long createTheme(ThemeRequest themeRequest) {
-        return themeRepository.save(
+        return themeWebRepository.save(
                 ThemeMapper.INSTANCE.themeRequestToTheme(themeRequest)
         );
     }
 
     @Transactional
     public ThemeResponse getTheme(Long id){
-        Theme theme = themeRepository.findOne(id)
+        Theme theme = themeWebRepository.findOne(id)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
 
         return ThemeMapper.INSTANCE.themeToThemeResponse(theme);
@@ -40,13 +44,20 @@ public class ThemeService {
 
     @Transactional
     public List<ThemeResponse> getThemes() {
-        return themeRepository.findAll().stream()
+        return themeWebRepository.findAll().stream()
                 .map(ThemeMapper.INSTANCE::themeToThemeResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void deleteTheme(Long id){
-        themeRepository.delete(id);
+        checkThemeReferencedByReservation(id);
+        themeWebRepository.delete(id);
+    }
+
+    private void checkThemeReferencedByReservation(Long id){
+        if(reservationWebRepository.findAllByTheme_id(id).size() > 0){
+            throw new RoomEscapeException(ErrorCode.THEME_REFERENCED_BY_RESERVATION);
+        }
     }
 }

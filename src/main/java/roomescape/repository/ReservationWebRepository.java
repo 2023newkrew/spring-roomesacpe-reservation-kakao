@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -60,13 +61,21 @@ public class ReservationWebRepository implements CrudRepository<Reservation, Lon
     @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = (?)";
+
         jdbcTemplate.update(sql, id);
     }
 
     public Optional<Reservation> findReservationByDateAndTime(LocalDate date, LocalTime time){
         String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
+
         return jdbcTemplate.query(sql, reservationRowMapper, date, time)
                 .stream()
                 .findAny();
+    }
+
+    public List<Reservation> findAllByTheme_id(Long theme_id){
+        String sql = "SELECT * FROM reservation WHERE theme_id = (?)";
+
+        return jdbcTemplate.query(sql, reservationRowMapper, theme_id);
     }
 }

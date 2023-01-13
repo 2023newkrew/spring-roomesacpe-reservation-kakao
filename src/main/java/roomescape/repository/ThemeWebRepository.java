@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ThemeRepository implements CrudRepository<Theme, Long> {
+public class ThemeWebRepository implements CrudRepository<Theme, Long> {
     private final JdbcTemplate jdbcTemplate;
 
-    public ThemeRepository(JdbcTemplate jdbcTemplate){
+    public ThemeWebRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
 

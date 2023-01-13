@@ -11,7 +11,7 @@ import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.mapper.ReservationMapper;
 import roomescape.repository.ReservationWebRepository;
-import roomescape.repository.ThemeRepository;
+import roomescape.repository.ThemeWebRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,14 +19,14 @@ import java.time.LocalTime;
 @Service
 public class ReservationService {
     private final ReservationWebRepository reservationWebRepository;
-    private final ThemeRepository themeRepository;
+    private final ThemeWebRepository themeWebRepository;
 
     public ReservationService(
             ReservationWebRepository reservationWebRepository,
-            ThemeRepository themeRepository
+            ThemeWebRepository themeWebRepository
     ) {
         this.reservationWebRepository = reservationWebRepository;
-        this.themeRepository = themeRepository;
+        this.themeWebRepository = themeWebRepository;
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class ReservationService {
     }
 
     private void checkThemeExistence(Long theme_id){
-        themeRepository.findOne(theme_id)
+        themeWebRepository.findOne(theme_id)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
     }
 
@@ -58,7 +58,7 @@ public class ReservationService {
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationWebRepository.findOne(reservationId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
-        Theme theme = themeRepository.findOne(reservation.getTheme_id())
+        Theme theme = themeWebRepository.findOne(reservation.getTheme_id())
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
 
         return ReservationMapper.INSTANCE.reservationToReservationResponse(reservation, theme);
