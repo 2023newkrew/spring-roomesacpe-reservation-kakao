@@ -2,6 +2,7 @@ package nextstep.reservation;
 
 import nextstep.reservation.entity.Theme;
 import nextstep.reservation.repository.JdbcThemeRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,6 +38,20 @@ class JdbcThemeRepositoryTest {
 
         //then
         assertThat(themeTestEquals(theme, created)).isTrue();
+    }
+
+    @Test
+    @DisplayName("id를 통한 조회")
+    void findById() {
+        //given
+        Theme created = jdbcThemeRepository.save(theme);
+
+        //when
+        Optional<Theme> foundedThemeOptional = jdbcThemeRepository.findById(created.getId());
+
+        //then
+        Assertions.assertThat(foundedThemeOptional.isPresent()).isTrue();
+        Assertions.assertThat(foundedThemeOptional.get()).isEqualTo(created);
     }
 
 

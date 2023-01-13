@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,6 +39,13 @@ public class JdbcThemeRepository implements ThemeRepository {
     }
 
     @Override
+    public Optional<Theme> findById(long id) {
+        String sql = "select * from THEME where id = ?";
+        List<Theme> theme = jdbcTemplate.query(sql, themeRowMapper(), id);
+        return theme.stream().findAny();
+    }
+
+    @Override
     public List<Theme> findAll() {
         String sql = "select * from THEME";
         List<Theme> themeList = jdbcTemplate.query(sql, themeRowMapper());
@@ -45,7 +53,7 @@ public class JdbcThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public int deleteById(Long id) {
+    public int deleteById(long id) {
         String sql = "delete from THEME where id = ?";
         return jdbcTemplate.update(sql, id);
     }
