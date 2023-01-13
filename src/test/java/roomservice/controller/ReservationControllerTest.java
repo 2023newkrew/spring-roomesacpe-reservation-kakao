@@ -1,33 +1,16 @@
 package roomservice.controller;
 
-import io.restassured.RestAssured;
-import org.assertj.core.api.Assertions;
-import org.codehaus.groovy.syntax.Numbers;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-import roomservice.domain.entity.Reservation;
-import roomservice.exceptions.ReservationAdvice;
-import roomservice.exceptions.exception.DuplicatedReservationException;
-
-import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Arrays;
+import roomservice.exceptions.WholeProgramAdvice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,7 +27,7 @@ public class ReservationControllerTest {
     @Autowired
     ReservationController reservationController;
     @Autowired
-    ReservationAdvice reservationAdvice;
+    WholeProgramAdvice reservationAdvice;
     private MockMvc mock;
     private String createBody;
 

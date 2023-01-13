@@ -10,6 +10,9 @@ import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * ReservationCreateDto contains what to get from client when creating reservation.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

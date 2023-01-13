@@ -8,6 +8,7 @@ import roomservice.domain.dto.ReservationFoundDto;
 import roomservice.domain.entity.Reservation;
 import roomservice.service.ReservationService;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 /**
@@ -30,7 +31,7 @@ public class ReservationController {
      * @return "created" response with id resulted by the program.
      */
     @PostMapping()
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateDto reservationDto) {
+    public ResponseEntity<Void> createReservation(@RequestBody @Valid ReservationCreateDto reservationDto) {
         Long id = reservationService.createReservation(reservationDto);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
@@ -38,7 +39,7 @@ public class ReservationController {
     /**
      * show a reservation which have specific id.
      * @param id which you want to find.
-     * @return "ok" response with reservation if successfully found.
+     * @return "ok" response with information of reservation if successfully found.
      */
     @GetMapping("/{id}")
     public ResponseEntity<ReservationFoundDto> showReservation(@PathVariable Long id) {
@@ -48,7 +49,7 @@ public class ReservationController {
     /**
      * Delete a reservation from this program.
      * @param id which you want to delete.
-     * @return reservation if successfully deleted.
+     * @return 204(No Content) (whether deleted or not)
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {

@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import lombok.*;
 
 /**
- * Reservation class is a DTO class, containing reservation information such as id, datetime, name and theme.
+ * Reservation class is Entity class, containing reservation information such as id, datetime, name and theme.
  */
 @Getter
 @AllArgsConstructor

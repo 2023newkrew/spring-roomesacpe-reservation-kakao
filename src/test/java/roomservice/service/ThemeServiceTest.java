@@ -27,7 +27,7 @@ public class ThemeServiceTest {
     }
     @Test
     void find(){
-        assertThat(themeService.findThemeById(1)).isEqualTo(defaultTheme);
+        assertThat(themeService.findThemeById(1).getName()).isEqualTo(defaultTheme.getName());
     }
 
     @Test

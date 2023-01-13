@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * ReservationFoundDto contains what to show to clients when presenting reservation.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

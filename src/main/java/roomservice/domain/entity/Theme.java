@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * Theme class is DTO class, containing room-escape theme information such as name, description, price.
+ * Theme class is Entity class, containing room-escape theme information such as name, description, price.
  */
 @Getter
 @AllArgsConstructor

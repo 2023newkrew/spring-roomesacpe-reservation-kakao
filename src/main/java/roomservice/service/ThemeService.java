@@ -12,6 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * ThemeService processes interior logic of theme-managing system.
+ * This class can request DAO to get information from database.
+ */
 @Service
 public class ThemeService {
     private ThemeDao themeDao;
@@ -20,6 +24,11 @@ public class ThemeService {
         this.themeDao = themeDao;
     }
 
+    /**
+     * Request DAO to insert theme, with some validations.
+     * @param themeDto information of theme to be added.
+     * @return id if successfully created.
+     */
     public Long createTheme(@Valid ThemeCreateDto themeDto){
         Theme theme = new Theme(
                 null,
@@ -29,14 +38,29 @@ public class ThemeService {
         return themeDao.createTheme(theme);
     }
 
-    public Theme findThemeById(long id){
-        return themeDao.selectThemeById(id);
+    /**
+     * Request repository to insert theme, with some validations.
+     * @param id which you want to find.
+     * @return information of found theme. if not found, return null.
+     */
+    public ThemeFindResultDto findThemeById(long id){
+        Theme theme = themeDao.selectThemeById(id);
+        if (theme == null){
+            return null;
+        }
+        ThemeFindResultDto resultDto = new ThemeFindResultDto(
+                theme.getId(),
+                theme.getName(),
+                theme.getDesc(),
+                theme.getPrice()
+        );
+        return resultDto;
     }
 
-    public void deleteThemeById(long id){
-        themeDao.deleteThemeById(id);
-    }
-
+    /**
+     * Request repository to find all themes in DB.
+     * @return all lists of information of theme.
+     */
     public List<ThemeFindResultDto> findAllTheme() {
         List<Theme> themes = themeDao.selectAllTheme();
         List<ThemeFindResultDto> result = Arrays.stream(themes.toArray(new Theme[0]))
@@ -45,5 +69,12 @@ public class ThemeService {
                             theme.getDesc(), theme.getPrice());
                 }).collect(Collectors.toList());
         return result;
+    }
+
+    /**
+     * Request repository to delete specific theme.
+     */
+    public void deleteThemeById(long id){
+        themeDao.deleteThemeById(id);
     }
 }

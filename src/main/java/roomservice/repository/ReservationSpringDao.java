@@ -14,7 +14,8 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 /**
- * ReservationSpringDao implements ReservationDao using spring-jdbc.
+ * ReservationSpringDao implements ReservationDao using spring-jdbc,
+ * responsible for RESERVATION table.
  */
 @Repository
 public class ReservationSpringDao implements ReservationDao {
@@ -39,6 +40,11 @@ public class ReservationSpringDao implements ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * conduct insertion query to DB
+     * @param reservation reservation to be added to DB.
+     * @return id automatically given by DB.
+     */
     public long insertReservation(Reservation reservation) {
         validateDuplication(reservation);
         String sql = "insert into RESERVATION (date, time, name, theme_name, theme_desc, theme_price)" +
@@ -57,22 +63,32 @@ public class ReservationSpringDao implements ReservationDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Reservation selectReservation(long id) {
-        String sql = "select * from RESERVATION WHERE id = ?";
-        List<Reservation> result = jdbcTemplate.query(sql, reservationRowMapper, id);
-        return result.size()==0 ? null : result.get(0);
-    }
-
-    public void deleteReservation(long id) {
-        String sql = "delete from RESERVATION where id = ?";
-        jdbcTemplate.update(sql, Long.valueOf(id));
-    }
-
     private void validateDuplication(Reservation reservation) {
         String sql = "select count(*) from RESERVATION WHERE date = ? and time = ?";
         if (jdbcTemplate.queryForObject(sql, Integer.class,
                 reservation.getDate(), reservation.getTime()) > 0) {
             throw new DuplicatedReservationException();
         }
+    }
+
+
+    /**
+     * conduct selection query to DB.
+     * @param id which you want to find.
+     * @return reservation if found, null if not found.
+     */
+    public Reservation selectReservation(long id) {
+        String sql = "select * from RESERVATION WHERE id = ?";
+        List<Reservation> result = jdbcTemplate.query(sql, reservationRowMapper, id);
+        return result.size()==0 ? null : result.get(0);
+    }
+
+    /**
+     * conduct deletion query to DB.
+     * @param id which you want to delete.
+     */
+    public void deleteReservation(long id) {
+        String sql = "delete from RESERVATION where id = ?";
+        jdbcTemplate.update(sql, Long.valueOf(id));
     }
 }

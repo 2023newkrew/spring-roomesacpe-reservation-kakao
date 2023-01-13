@@ -8,7 +8,7 @@ import roomservice.domain.dto.ReservationFoundDto;
 import roomservice.domain.entity.Reservation;
 import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.InvalidReservationTimeException;
-import roomservice.exceptions.exception.InvalidThemeException;
+import roomservice.exceptions.exception.InvalidThemeIdException;
 import roomservice.repository.ReservationDao;
 import roomservice.repository.ThemeDao;
 import java.util.*;
@@ -27,9 +27,9 @@ public class ReservationService {
     private final ThemeDao themeDao;
 
     /**
-     * Request DAO to insert reservation.
+     * Request DAO to insert reservation, with some validations.
      * @throws InvalidReservationTimeException when given time doesn't exist in {@link roomservice.domain.TimeTable}
-     * @throws InvalidThemeException when given theme id is not exist.
+     * @throws InvalidThemeIdException when given theme id is not exist.
      * @param reservationDto information of reservation to be added.
      * @return id if successfully created.
      */
@@ -44,10 +44,10 @@ public class ReservationService {
     }
     private void validateTheme(Theme theme){
         if (theme == null){
-            throw new InvalidThemeException();
+            throw new InvalidThemeIdException();
         }
         if (theme.getName().isBlank()){
-            throw new InvalidThemeException();
+            throw new InvalidThemeIdException();
         }
     }
     private void validateTime(LocalTime reservationTime){

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomservice.domain.TimeTable;
 import roomservice.domain.dto.ReservationCreateDto;
 import roomservice.exceptions.exception.InvalidReservationTimeException;
-import roomservice.exceptions.exception.InvalidThemeException;
+import roomservice.exceptions.exception.InvalidThemeIdException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,7 +35,7 @@ public class ReservationServiceTest {
                 LocalDate.now(),
                 TimeTable.A.getTime(),
                 "Kim"));
-        }).isInstanceOf(InvalidThemeException.class);
+        }).isInstanceOf(InvalidThemeIdException.class);
     }
 
     @Test
