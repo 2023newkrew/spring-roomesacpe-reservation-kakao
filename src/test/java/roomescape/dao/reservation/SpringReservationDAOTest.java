@@ -65,4 +65,14 @@ public class SpringReservationDAOTest {
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
         assertThat(count).isEqualTo(0L);
     }
+
+    @DisplayName("예약 존재 확인")
+    @Test
+    void existReservation() {
+        Reservation reservation1 = new Reservation(DATE_DATA1, TIME_DATA, NAME_DATA, THEME_ID_DATA);
+        Reservation reservation2 = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
+
+        assertThat(reservationDAO.exist(reservation1)).isTrue();
+        assertThat(reservationDAO.exist(reservation2)).isFalse();
+    }
 }
