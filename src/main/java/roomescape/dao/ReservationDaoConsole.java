@@ -44,18 +44,14 @@ public class ReservationDaoConsole implements ReservationDao {
             ps.setInt(6, reservation.getTheme().getPrice());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                reservation.setId(rs.getLong("id"));
-                return reservation;
-            } else {
-                throw new RuntimeException("key가 없음");
-            }
+            rs.next();
+            reservation.setId(rs.getLong("id"));
+            return reservation;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             close(con);
-
         }
     }
 
@@ -71,8 +67,9 @@ public class ReservationDaoConsole implements ReservationDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            close(con);
         }
-        close(con);
         return reservations;
     }
 
@@ -89,8 +86,9 @@ public class ReservationDaoConsole implements ReservationDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            close(con);
         }
-        close(con);
         return reservations;
     }
 
@@ -102,8 +100,8 @@ public class ReservationDaoConsole implements ReservationDao {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            close(con);
         }
-        close(con);
     }
-
 }
