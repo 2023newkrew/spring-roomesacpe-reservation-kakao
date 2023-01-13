@@ -1,8 +1,7 @@
-package nextstep.console;
+package nextstep.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,12 +9,17 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
+import javax.sql.DataSource;
 import nextstep.model.Reservation;
-import nextstep.repository.ReservationConverter;
-import nextstep.repository.ReservationRepository;
 
 
 public class JdbcReservationRepository implements ReservationRepository {
+
+    private final DataSource dataSource;
+
+    public JdbcReservationRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -84,15 +88,14 @@ public class JdbcReservationRepository implements ReservationRepository {
         }
     }
 
-    private static Connection createConnection() {
+    private Connection createConnection() {
         try {
-            Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            Connection con = dataSource.getConnection();
             System.out.println("정상적으로 연결되었습니다.");
             return con;
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw new IllegalStateException(e);
         }
     }
 }

@@ -4,6 +4,7 @@ import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import org.springframework.stereotype.Service;

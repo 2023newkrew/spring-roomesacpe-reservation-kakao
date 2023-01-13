@@ -1,16 +1,24 @@
 package nextstep.console;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.Scanner;
+import javax.sql.DataSource;
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.repository.JdbcReservationRepository;
 import nextstep.repository.ReservationRepository;
 
 public class RoomEscapeApplication {
+
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
@@ -18,7 +26,10 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationRepository reservationRepository = new JdbcReservationRepository();
+        DataSource dataSource = createHikariDataSource();
+        createDataBaseTables(dataSource);
+
+        ReservationRepository reservationRepository = new JdbcReservationRepository(dataSource);
 
         while (true) {
             String input = getInput(scanner);
@@ -43,6 +54,38 @@ public class RoomEscapeApplication {
             }
         }
         scanner.close();
+    }
+
+    private static void createDataBaseTables(DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS RESERVATION\n"
+                    + "(\n"
+                    + "    id          bigint not null auto_increment,\n"
+                    + "    date        date,\n"
+                    + "    time        time,\n"
+                    + "    name        varchar(20),\n"
+                    + "    theme_name  varchar(20),\n"
+                    + "    theme_desc  varchar(255),\n"
+                    + "    theme_price int,\n"
+                    + "    primary key (id)\n"
+                    + ");");
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static HikariDataSource createHikariDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:h2:mem:~/test");
+        config.setUsername("sa");
+        config.setPassword("");
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        HikariDataSource dataSource = new HikariDataSource(config);
+        return dataSource;
     }
 
     public static String getInput(Scanner scanner) {

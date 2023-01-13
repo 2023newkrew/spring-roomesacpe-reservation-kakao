@@ -1,4 +1,4 @@
-package nextstep.web;
+package nextstep.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;

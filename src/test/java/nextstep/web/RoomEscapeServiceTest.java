@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
+import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

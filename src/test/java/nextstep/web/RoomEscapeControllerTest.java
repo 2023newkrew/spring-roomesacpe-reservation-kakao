@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
 import org.junit.jupiter.api.AfterEach;
