@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.ThemeRequestDto;
+import roomescape.dto.ThemeUpdateRequestDto;
 
 import static org.hamcrest.core.Is.is;
 
@@ -60,7 +61,7 @@ public class ThemeControllerTest {
                 .body("price", is(10000));
     }
 
-    @DisplayName("예약 있는 테마 삭제 실패 테스트")
+    @DisplayName("예약 있는 테마 삭제 성공 테스트")
     @Test
     void themeDeleteTest() {
         RestAssured.given().log().all()
@@ -76,5 +77,17 @@ public class ThemeControllerTest {
                 .when().delete("/themes/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("테마 수정 테스트")
+    @Test
+    void themeUpdateTest() {
+        ThemeUpdateRequestDto themeUpdateRequest = new ThemeUpdateRequestDto("Test Theme2", null, null);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeUpdateRequest)
+                .when().patch("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
