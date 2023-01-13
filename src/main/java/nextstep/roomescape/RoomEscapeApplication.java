@@ -1,10 +1,10 @@
 package nextstep.roomescape;
 
-import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
-import nextstep.roomescape.reservation.ReservationRepositoryJdbcImpl;
-import nextstep.roomescape.reservation.ReservationServiceImpl;
-import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.domain.entity.Theme;
+import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
+import nextstep.roomescape.reservation.repository.ReservationRepositoryJdbcImpl;
+import nextstep.roomescape.reservation.service.ReservationServiceImpl;
+import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
+import nextstep.roomescape.reservation.model.Theme;
 import nextstep.roomescape.reservation.exception.DeleteReservationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;

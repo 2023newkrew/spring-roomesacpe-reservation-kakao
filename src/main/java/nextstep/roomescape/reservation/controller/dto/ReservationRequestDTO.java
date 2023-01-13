@@ -1,9 +1,9 @@
-package nextstep.roomescape.reservation.domain.dto;
+package nextstep.roomescape.reservation.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import nextstep.roomescape.reservation.domain.entity.Reservation;
-import nextstep.roomescape.reservation.domain.entity.Theme;
+import nextstep.roomescape.reservation.model.Reservation;
+import nextstep.roomescape.reservation.model.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

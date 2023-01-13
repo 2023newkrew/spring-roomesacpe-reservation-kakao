@@ -1,7 +1,8 @@
-package nextstep.roomescape.reservation;
+package nextstep.roomescape.reservation.service;
 
-import nextstep.roomescape.reservation.domain.dto.ReservationResponseDTO;
-import nextstep.roomescape.reservation.domain.dto.ReservationRequestDTO;
+import nextstep.roomescape.reservation.repository.ReservationRepository;
+import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
+import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

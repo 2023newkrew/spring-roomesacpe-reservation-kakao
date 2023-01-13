@@ -1,6 +1,6 @@
-package nextstep.roomescape.reservation;
+package nextstep.roomescape.reservation.repository;
 
-import nextstep.roomescape.reservation.domain.entity.Reservation;
+import nextstep.roomescape.reservation.model.Reservation;
 import nextstep.roomescape.reservation.exception.CreateReservationException;
 import org.springframework.transaction.annotation.Transactional;
 

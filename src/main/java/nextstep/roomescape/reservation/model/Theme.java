@@ -1,4 +1,4 @@
-package nextstep.roomescape.reservation.domain.entity;
+package nextstep.roomescape.reservation.model;
 
 import java.util.Objects;
 

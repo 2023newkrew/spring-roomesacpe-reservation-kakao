@@ -1,8 +1,10 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.domain.entity.Reservation;
-import nextstep.roomescape.reservation.domain.entity.Theme;
+import nextstep.roomescape.reservation.model.Reservation;
+import nextstep.roomescape.reservation.model.Theme;
 import nextstep.roomescape.reservation.exception.CreateReservationException;
+import nextstep.roomescape.reservation.repository.ReservationRepository;
+import nextstep.roomescape.reservation.repository.ReservationRepositoryMemoryImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.transaction.annotation.Transactional;
 

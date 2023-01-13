@@ -1,7 +1,7 @@
-package nextstep.roomescape.reservation;
+package nextstep.roomescape.reservation.repository;
 
-import nextstep.roomescape.reservation.domain.entity.Reservation;
-import nextstep.roomescape.reservation.domain.entity.Theme;
+import nextstep.roomescape.reservation.model.Reservation;
+import nextstep.roomescape.reservation.model.Theme;
 import nextstep.roomescape.reservation.exception.CreateReservationException;
 import nextstep.roomescape.reservation.exception.DeleteReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
