@@ -61,6 +61,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     public List<Reservation> findByThemeId(Long themeId) {
         List<Reservation> reservations = jdbcTemplate.query(
                 Queries.Reservation.SELECT_BY_THEME_ID_SQL,
+                new Object[]{themeId},
                 (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         LocalDate.parse(rs.getString("date")),

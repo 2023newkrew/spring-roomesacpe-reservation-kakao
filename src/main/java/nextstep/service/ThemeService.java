@@ -1,10 +1,12 @@
 package nextstep.service;
 
 import nextstep.domain.Theme;
+import nextstep.domain.repository.ReservationRepository;
 import nextstep.domain.repository.ThemeRepository;
 import nextstep.dto.CreateThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.dto.ThemesResponse;
+import nextstep.exception.ReservedThemeDeleteException;
 import nextstep.exception.ThemeNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,11 @@ import java.util.stream.Collectors;
 public class ThemeService {
 
     private final ThemeRepository themeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ThemeService(ThemeRepository themeRepository){
+    public ThemeService(ThemeRepository themeRepository, ReservationRepository reservationRepository){
         this.themeRepository = themeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public Long createTheme(CreateThemeRequest themeRequest){
@@ -39,6 +43,10 @@ public class ThemeService {
     }
 
     public boolean deleteThemeById(Long id) {
+        System.out.println(id);
+        if(reservationRepository.findByThemeId(id).size() > 0)
+            throw new ReservedThemeDeleteException();
+
         return themeRepository.deleteThemeById(id);
     }
 }

@@ -42,6 +42,14 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(ReservedThemeDeleteException.class)
+    public ResponseEntity<ErrorResponse> handleReservedThemeDeleteException(ReservedThemeDeleteException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
     @ExceptionHandler(JdbcException.class)
     public ResponseEntity<ErrorResponse> handleJdbcException(JdbcException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "예상치 못한 이유로 요청을 처리하지 못하였습니다.");
