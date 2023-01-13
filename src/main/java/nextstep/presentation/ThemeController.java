@@ -4,6 +4,7 @@ import nextstep.dto.CreateThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.dto.ThemesResponse;
 import nextstep.service.ThemeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,11 @@ public class ThemeController {
     @GetMapping
     public ResponseEntity<ThemesResponse> getAllThemes() {
         return ResponseEntity.ok(themeService.getAllThemes());
+    }
+
+    @DeleteMapping("/{themeId}")
+    public ResponseEntity<Void> deleteThemeById(@PathVariable Long themeId) {
+        themeService.deleteThemeById(themeId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -36,4 +36,8 @@ public class ThemeService {
                         .collect(Collectors.toList())
         );
     }
+
+    public boolean deleteThemeById(Long id) {
+        return themeRepository.deleteThemeById(id);
+    }
 }
