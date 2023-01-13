@@ -3,6 +3,8 @@ package roomescape.repository;
 import roomescape.model.Theme;
 import roomescape.repository.ThemeRepository;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ThemeConsoleRepository implements ThemeRepository {
@@ -57,6 +59,29 @@ public class ThemeConsoleRepository implements ThemeRepository {
                     resultSet.getString("desc"),
                     resultSet.getInt("price"))
             );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER_NAME, DB_PASSWORD)) {
+            String sql = "select * from theme";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
+            ArrayList<Theme> themes = new ArrayList<>();
+            while (resultSet.next()) {
+                themes.add(
+                        new Theme(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name"),
+                                resultSet.getString("desc"),
+                                resultSet.getInt("price")
+                        )
+                );
+            }
+            return themes;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

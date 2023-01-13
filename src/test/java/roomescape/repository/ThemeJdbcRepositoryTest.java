@@ -95,4 +95,16 @@ public class ThemeJdbcRepositoryTest {
         //then
         Assertions.assertThat(returnedTheme.getPrice()).isEqualTo(2000);
     }
+
+    @DisplayName("Theme 전체 조회")
+    @Test
+    @Transactional
+    public void findAllTest() {
+        //given
+        Theme theme = new Theme(null, "Test Theme", "lorem ipsum", 1000);
+        //when
+        themeRepository.save(theme);
+        //then
+        Assertions.assertThat(themeRepository.findAll()).isNotEmpty();
+    }
 }

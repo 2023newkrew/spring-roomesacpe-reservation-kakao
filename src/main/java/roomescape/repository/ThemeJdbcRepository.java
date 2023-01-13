@@ -8,6 +8,7 @@ import roomescape.model.Theme;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -50,6 +51,12 @@ public class ThemeJdbcRepository implements ThemeRepository {
     public Optional<Theme> findOneByName(String themeName) {
         String sql = "select * from theme where name = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, themeName).stream().findFirst();
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        String sql = "select * from theme";
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     @Override
