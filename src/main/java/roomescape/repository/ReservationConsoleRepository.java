@@ -35,7 +35,8 @@ public class ReservationConsoleRepository extends BaseConsoleRepository implemen
         int count = 0;
         Connection con = getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(CHECK_SCHEDULE_SQL);
+            String sql = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
             ResultSet rs = ps.executeQuery();
@@ -54,7 +55,8 @@ public class ReservationConsoleRepository extends BaseConsoleRepository implemen
         Reservation reservation = null;
         Connection con = getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(FIND_RESERVATION_SQL);
+            String sql = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -85,7 +87,8 @@ public class ReservationConsoleRepository extends BaseConsoleRepository implemen
         int count = 0;
         Connection con = getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(REMOVE_RESERVATION_SQL);
+            String sql = "DELETE FROM reservation WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             count = ps.executeUpdate();
         } catch (SQLException e) {

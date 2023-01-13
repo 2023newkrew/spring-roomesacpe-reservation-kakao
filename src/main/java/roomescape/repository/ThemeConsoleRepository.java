@@ -31,7 +31,8 @@ public class ThemeConsoleRepository extends BaseConsoleRepository implements The
         Theme theme = null;
         Connection con = getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(FIND_THEME_BY_ID_SQL);
+            String sql = "SELECT * FROM theme WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -45,7 +46,8 @@ public class ThemeConsoleRepository extends BaseConsoleRepository implements The
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        close(con);
+        return theme;
     }
 
     @Override
@@ -53,7 +55,8 @@ public class ThemeConsoleRepository extends BaseConsoleRepository implements The
         int count = 0;
         Connection con = getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(UPDATE_THEME_SQL);
+            String sql = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, theme.getName());
             ps.setString(2, theme.getDesc());
             ps.setInt(3, theme.getPrice());
@@ -71,7 +74,8 @@ public class ThemeConsoleRepository extends BaseConsoleRepository implements The
         int count = 0;
         Connection con = getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(DELETE_THEME_SQL);
+            String sql = "DELETE FROM theme WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             count = ps.executeUpdate();
         } catch (SQLException e) {
