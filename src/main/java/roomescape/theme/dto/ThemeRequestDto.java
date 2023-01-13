@@ -1,12 +1,11 @@
-package roomescape.dto;
+package roomescape.theme.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import roomescape.entity.Reservation;
 
-public class ReservationRequestDto {
+public class ThemeRequestDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
@@ -14,7 +13,7 @@ public class ReservationRequestDto {
     private LocalTime time;
     private String name;
 
-    public ReservationRequestDto(LocalDate date, LocalTime time, String name) {
+    public ThemeRequestDto(LocalDate date, LocalTime time, String name) {
         this.date = date;
         this.time = time;
         this.name = name;

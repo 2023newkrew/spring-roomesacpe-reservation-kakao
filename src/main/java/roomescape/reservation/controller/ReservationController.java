@@ -1,13 +1,13 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationResponseDto;
 
 import java.net.URI;
-import roomescape.service.RoomEscapeService;
+import roomescape.reservation.service.RoomEscapeService;
 
 @RestController
 @RequestMapping("/reservations")
@@ -18,8 +18,8 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDto requestDto) {
-        long id = roomEscapeService.makeReservation(requestDto);
+    public ResponseEntity<String> createReservation(@RequestBody ReservationRequestDto requestDto) {
+        Long id = roomEscapeService.makeReservation(requestDto);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 

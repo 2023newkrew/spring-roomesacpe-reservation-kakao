@@ -1,12 +1,13 @@
 package roomescape;
 
 import roomescape.entity.Reservation;
-import roomescape.repository.ReservationConsoleDao;
-import roomescape.repository.ReservationDao;
+import roomescape.exceptions.exception.NoSuchReservationException;
+import roomescape.reservation.repository.dao.ReservationDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import roomescape.reservation.repository.dao.ReservationDaoWithoutTemplateImpl;
 
 public class RoomEscapeConsoleApplication {
     private static final String ADD = "add";
@@ -14,7 +15,7 @@ public class RoomEscapeConsoleApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static final ReservationDao reservationDao = new ReservationConsoleDao();
+    private static final ReservationDao reservationDao = new ReservationDaoWithoutTemplateImpl();
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -42,7 +43,7 @@ public class RoomEscapeConsoleApplication {
                 reservation.setDate(LocalDate.parse(date));
                 reservation.setName(name);
 
-                reservation.setId(reservationDao.add(reservation));
+                reservation.setId(reservationDao.save(reservation));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -56,15 +57,15 @@ public class RoomEscapeConsoleApplication {
 
                 long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDao.findById(id);
+                Reservation reservation = reservationDao.findById(id).orElseThrow(() -> new NoSuchReservationException());
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+//                System.out.println("예약 테마 이름: " + reservation.getThemeId().getName());
+//                System.out.println("예약 테마 설명: " + reservation.getThemeId().getDesc());
+//                System.out.println("예약 테마 가격: " + reservation.getThemeId().getPrice());
             }
 
             if (input.startsWith(DELETE)) {
@@ -72,7 +73,7 @@ public class RoomEscapeConsoleApplication {
 
                 long id = Long.parseLong(params.split(",")[0]);
 
-                reservationDao.deleteById(id);
+                reservationDao.delete(id);
                 System.out.println("예약이 취소되었습니다.");
             }
 

@@ -14,13 +14,13 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = themeId;
     }
 }

@@ -21,7 +21,7 @@ public class ReservationExceptionHandler {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> handleDataAccessException() {
-        return ResponseEntity.internalServerError().body("Internal Server Error");
+    public ResponseEntity<String> handleDataAccessException(DataAccessException e) {
+        return ResponseEntity.internalServerError().body(e.getMessage() + "Internal Server Error");
     }
 }

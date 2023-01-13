@@ -1,10 +1,10 @@
-package roomescape.repository;
+package roomescape.reservation.repository;
 
 import java.util.Optional;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
-@Service
+@Repository
 public interface ReservationRepository {
     Long save(Reservation reservation);
 
@@ -12,5 +12,5 @@ public interface ReservationRepository {
 
     int delete(Long reservationId);
 
-    boolean isReservationIdDuplicated(Reservation reservation);
+    boolean isReservationDuplicated(Reservation reservation);
 }

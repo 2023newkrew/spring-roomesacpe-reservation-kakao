@@ -1,22 +1,23 @@
-package roomescape.repository;
+package roomescape.reservation.repository.dao;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Optional;
 import roomescape.entity.Reservation;
-import roomescape.exceptions.exception.DuplicatedReservationException;
-import roomescape.exceptions.exception.NoSuchReservationException;
 
-import java.sql.*;
-
-public class ReservationConsoleDao implements ReservationDao{
-    public ReservationConsoleDao(){
+public class ReservationDaoWithoutTemplateImpl implements ReservationDao {
+    public ReservationDaoWithoutTemplateImpl() {
         String dropSql = "DROP TABLE RESERVATION IF EXISTS";
         String createSql =  "CREATE TABLE RESERVATION(" +
                 "    id          bigint not null auto_increment,\n" +
                 "    date        date,\n" +
                 "    time        time,\n" +
                 "    name        varchar(20),\n" +
-                "    theme_name  varchar(20),\n" +
-                "    theme_desc  varchar(255),\n" +
-                "    theme_price int,\n" +
+                "    theme_id    bigint not null,\n" +
                 "    primary key (id)\n)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement dropPstmt = con.prepareStatement(dropSql);
@@ -28,76 +29,76 @@ public class ReservationConsoleDao implements ReservationDao{
             e.printStackTrace();
         }
     }
-    public long add(Reservation reservation) {
-        validateDuplication(reservation);
-        String sql = "INSERT INTO RESERVATION(date, time, name) VALUES (?, ?, ?)";
+
+    @Override
+    public Long save(Reservation reservation) {
+        String sql = "INSERT INTO RESERVATION(date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-                PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, reservation.getDate().toString());
             pstmt.setString(2, reservation.getTime().toString());
             pstmt.setString(3, reservation.getName());
+            pstmt.setString(4, String.valueOf(reservation.getThemeId()));
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()){
+            if (rs.next()) {
                 return rs.getLong("id");
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1L;
+        return null;
     }
 
-    public Reservation findById(long id){
+    @Override
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM RESERVATION WHERE id = ?";
+        Reservation reservation = null;
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            Reservation reservation = new Reservation();
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                reservation.setTime(rs.getTime("time").toLocalTime());
-                reservation.setDate(rs.getDate("date").toLocalDate());
-                reservation.setName(rs.getString("name"));
-                reservation.setId(rs.getLong("id"));
-//                reservation.setTheme(
-//                        new Theme(rs.getString("theme_name"),
-//                                rs.getString("theme_desc"),
-//                                rs.getInt("theme_price"))
-//                );
-                return reservation;
+                reservation = Reservation.builder()
+                        .id(rs.getLong("id"))
+                        .date(rs.getDate("date").toLocalDate())
+                        .time(rs.getTime("time").toLocalTime())
+                        .name(rs.getString("name"))
+                        .themeId(rs.getLong("theme_id"))
+                        .build();
             }
-            throw new NoSuchReservationException();
+        } catch (SQLException e) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(reservation);
+    }
+
+    @Override
+    public int delete(Long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            return pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        throw new IllegalArgumentException();
     }
 
-    public void deleteById(long id) {
-        String sql = "DELETE FROM RESERVATION WHERE id = ?";
-        try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
-             PreparedStatement pstmt = con.prepareStatement(sql)){
-            pstmt.setLong(1, id);
-            if (pstmt.executeUpdate() == 0) {
-                throw new NoSuchReservationException();
-            }
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void validateDuplication(Reservation reservation) {
-        String sql = "select * from RESERVATION WHERE date =  ? and time = ?";
+    public boolean isReservationDuplicated(Reservation reservation) {
+        String sql = "select count(*) from RESERVATION WHERE date =  ? and time = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, reservation.getDate().toString());
             pstmt.setString(2, reservation.getTime().toString());
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                throw new DuplicatedReservationException();
+                return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        throw new IllegalArgumentException();
     }
 }
