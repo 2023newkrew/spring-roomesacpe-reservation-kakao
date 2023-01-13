@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
 import roomescape.exception.BadRequestException;
 
 public abstract class ReservationDAO {
@@ -13,19 +12,14 @@ public abstract class ReservationDAO {
     private static final String DATE_TABLE = "date";
     private static final String TIME_TABLE = "time";
     private static final String NAME_TABLE = "name";
-    private static final String THEME_NAME_TABLE = "theme_name";
-    private static final String THEME_DESC_TABLE = "theme_desc";
-    private static final String THEME_PRICE_TABLE = "theme_price";
+    private static final String THEME_ID_TABLE = "theme_id";
 
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong(ID_TABLE),
             resultSet.getDate(DATE_TABLE).toLocalDate(),
             resultSet.getTime(TIME_TABLE).toLocalTime(),
             resultSet.getString(NAME_TABLE),
-            new Theme(
-                    resultSet.getString(THEME_NAME_TABLE),
-                    resultSet.getString(THEME_DESC_TABLE),
-                    resultSet.getInt(THEME_PRICE_TABLE)));
+            resultSet.getLong(THEME_ID_TABLE));
     private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean("result");
 
     protected void validateReservation(Reservation reservation) {

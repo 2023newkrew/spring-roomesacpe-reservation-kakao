@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
 public class ConsoleReservationDAOTest {
@@ -26,29 +25,9 @@ public class ConsoleReservationDAOTest {
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
     private static final String NAME_DATA = "test";
-    private static final String THEME_NAME_DATA = "워너고홈";
-    private static final String THEME_DESC_DATA = "병맛 어드벤처 회사 코믹물";
-    private static final Integer THEME_PRICE_DATA = 29000;
+    private static final Long THEME_ID_DATA = 1L;
 
-    private static final Theme THEME_DATA = new Theme(
-            THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA);
-
-    private static final String DROP_TABLE = "DROP TABLE IF EXISTS reservation";
-    private static final String CREATE_TABLE =
-            "CREATE TABLE reservation "
-                    + "(id bigint not null auto_increment,"
-                    + " date date,"
-                    + " time time,"
-                    + " name varchar(20),"
-                    + " theme_name varchar(20),"
-                    + " theme_desc varchar(20),"
-                    + " theme_price int,"
-                    + " primary key (id));";
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
-    private static final String ADD_DATE1_SQL =
-            "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) "
-                    + "VALUES ('" + DATE_DATA1 + "', '" + TIME_DATA + "', '" + NAME_DATA + "', '"
-                    + THEME_NAME_DATA + "', '" + THEME_DESC_DATA + "', '" + THEME_PRICE_DATA + "');";
 
     private final ReservationDAO reservationDAO = new ConsoleReservationDAO(URL, USER, PASSWORD);
     private Connection con;
@@ -56,10 +35,6 @@ public class ConsoleReservationDAOTest {
     @BeforeEach
     void setUp() throws SQLException {
         con = DriverManager.getConnection(URL, USER, PASSWORD);
-        con.createStatement().executeUpdate(DROP_TABLE);
-        con.createStatement().executeUpdate(CREATE_TABLE);
-
-        con.createStatement().executeUpdate(ADD_DATE1_SQL);
     }
 
     @AfterEach
@@ -72,7 +47,7 @@ public class ConsoleReservationDAOTest {
     @DisplayName("예약 생성")
     @Test
     void addReservation() throws SQLException {
-        Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_DATA);
+        Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         reservationDAO.addReservation(reservation);
         ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
@@ -87,9 +62,7 @@ public class ConsoleReservationDAOTest {
         assertThat(reservation.getName()).isEqualTo(NAME_DATA);
         assertThat(reservation.getDate()).isEqualTo(DATE_DATA1);
         assertThat(reservation.getTime()).isEqualTo(TIME_DATA);
-        assertThat(reservation.getTheme().getName()).isEqualTo(THEME_NAME_DATA);
-        assertThat(reservation.getTheme().getDesc()).isEqualTo(THEME_DESC_DATA);
-        assertThat(reservation.getTheme().getPrice()).isEqualTo(THEME_PRICE_DATA);
+        assertThat(reservation.getThemeId()).isEqualTo(THEME_ID_DATA);
     }
 
     @DisplayName("예약 삭제")

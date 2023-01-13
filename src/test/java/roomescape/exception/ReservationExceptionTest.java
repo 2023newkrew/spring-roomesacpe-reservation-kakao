@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
 
 @DisplayName("예외 처리")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,12 +23,7 @@ public class ReservationExceptionTest {
     private static final LocalDate DATE_DATA = LocalDate.parse("2022-08-01");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
     private static final String NAME_DATA = "test";
-    private static final String THEME_NAME_DATA = "워너고홈";
-    private static final String THEME_DESC_DATA = "병맛 어드벤처 회사 코믹물";
-    private static final int THEME_PRICE_DATA = 29000;
-
-    private static final Theme THEME_DATA = new Theme(
-            THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA);
+    private static final Long THEME_ID_DATA = 1L;
 
     private static final String RESERVATIONS_PATH = "/reservations";
 
@@ -55,7 +49,7 @@ public class ReservationExceptionTest {
     @DisplayName("예약 생성) 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.")
     @Test
     void failToCreateReservationAlreadyExist() {
-        Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_DATA);
+        Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

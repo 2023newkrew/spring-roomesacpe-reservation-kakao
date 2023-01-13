@@ -42,7 +42,7 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 Reservation reservation = new Reservation(
-                        LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
+                        LocalDate.parse(date), LocalTime.parse(time + ":00"), name, null);
                 dao.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
@@ -63,9 +63,9 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+//                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
+//                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
+//                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {

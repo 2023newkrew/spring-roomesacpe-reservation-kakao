@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
 
 
 @DisplayName("웹 요청 / 응답 처리로 입출력 추가")
@@ -26,13 +25,9 @@ public class ReservationControllerTest {
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
     private static final String NAME_DATA = "test";
-    private static final String THEME_NAME_DATA = "워너고홈";
-    private static final String THEME_DESC_DATA = "병맛 어드벤처 회사 코믹물";
-    private static final int THEME_PRICE_DATA = 29000;
+    private static final Long THEME_ID_DATA = 1L;
 
     private static final String SECOND_STRING = ":00";
-
-    private static final Theme THEME_DATA = new Theme(THEME_NAME_DATA, THEME_DESC_DATA, THEME_PRICE_DATA);
 
     private static final String RESERVATIONS_PATH = "/reservations";
     private static final String FIRST_RESERVATION_PATH = RESERVATIONS_PATH + "/1";
@@ -48,7 +43,7 @@ public class ReservationControllerTest {
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
-        Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_DATA);
+        Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
