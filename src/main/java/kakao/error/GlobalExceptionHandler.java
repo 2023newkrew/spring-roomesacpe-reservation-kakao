@@ -1,7 +1,7 @@
 package kakao.error;
 
 import javax.validation.ConstraintViolationException;
-import kakao.error.exception.CustomException;
+import kakao.error.exception.RoomReservationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -56,8 +56,8 @@ public class GlobalExceptionHandler {
 
     //Custom
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
+    @ExceptionHandler(RoomReservationException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(RoomReservationException e) {
         return handlerException(e, e.getErrorCode());
     }
 

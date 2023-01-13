@@ -33,18 +33,13 @@ public class RoomEscapeApplication {
 
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
-                String params = input.split(" ")[1];
-
-                String date = params.split(",")[0];
-                String time = params.split(",")[1];
-                String name = params.split(",")[2];
-                String themeId = params.split(",")[3];
+                String[] params = input.split(" ")[1].split(",");
 
                 CreateReservationRequest request = new CreateReservationRequest(
-                        LocalDate.parse(date),
-                        LocalTime.parse(time),
-                        name,
-                        Long.parseLong(themeId)
+                        LocalDate.parse(params[0]),
+                        LocalTime.parse(params[1]),
+                        params[2],
+                        Long.parseLong(params[3])
                 );
 
                 ReservationResponse response = reservationService.createReservation(request);

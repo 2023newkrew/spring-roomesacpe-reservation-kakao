@@ -2,11 +2,11 @@ package kakao.error.exception;
 
 import kakao.error.ErrorCode;
 
-public class CustomException extends RuntimeException{
+public class RoomReservationException extends RuntimeException{
 
     private final ErrorCode errorCode;
 
-    public CustomException(ErrorCode errorCode) {
+    public RoomReservationException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

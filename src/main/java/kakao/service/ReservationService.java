@@ -7,7 +7,7 @@ import kakao.domain.Theme;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.error.ErrorCode;
-import kakao.error.exception.CustomException;
+import kakao.error.exception.RoomReservationException;
 import kakao.repository.reservation.ReservationRepository;
 import kakao.repository.theme.ThemeRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class ReservationService {
     public ReservationResponse getReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id);
         if (Objects.isNull(reservation)) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new RoomReservationException(ErrorCode.RESERVATION_NOT_FOUND);
         }
         return new ReservationResponse(reservation);
     }
@@ -53,14 +53,14 @@ public class ReservationService {
     private void checkDuplicatedReservation(Long themeId, LocalDate date, LocalTime time) {
         boolean isDuplicate = reservationRepository.findByThemeIdAndDateAndTime (themeId, date, time).size() > 0;
         if (isDuplicate) {
-            throw new CustomException(ErrorCode.DUPLICATE_RESERVATION);
+            throw new RoomReservationException(ErrorCode.DUPLICATE_RESERVATION);
         }
     }
 
     private Theme getExistTheme(Long themeId) {
         Theme theme = themeRepository.findById(themeId);
         if (Objects.isNull(theme)) {
-            throw new CustomException(ErrorCode.THEME_NOT_FOUND);
+            throw new RoomReservationException(ErrorCode.THEME_NOT_FOUND);
         }
         return theme;
     }

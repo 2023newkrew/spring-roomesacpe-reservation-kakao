@@ -14,7 +14,7 @@ import kakao.domain.Theme;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.error.ErrorCode;
-import kakao.error.exception.CustomException;
+import kakao.error.exception.RoomReservationException;
 import kakao.repository.reservation.ReservationRepository;
 import kakao.repository.theme.ThemeRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -104,7 +104,7 @@ class ReservationServiceTest {
 
             //when //then
             assertThatThrownBy(() -> reservationService.createReservation(request))
-                    .isInstanceOf(CustomException.class)
+                    .isInstanceOf(RoomReservationException.class)
                     .hasMessage(ErrorCode.THEME_NOT_FOUND.getMessage());
             verify(reservationRepository)
                     .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
@@ -126,7 +126,7 @@ class ReservationServiceTest {
 
             //when //then
             assertThatThrownBy(() -> reservationService.createReservation(request))
-                    .isInstanceOf(CustomException.class)
+                    .isInstanceOf(RoomReservationException.class)
                     .hasMessage(ErrorCode.DUPLICATE_RESERVATION.getMessage());
             verify(reservationRepository)
                     .findByThemeIdAndDateAndTime(request.getThemeId(), request.getDate(), request.getTime());
@@ -165,7 +165,7 @@ class ReservationServiceTest {
 
             //when //then
             assertThatThrownBy(() -> reservationService.getReservation(0L))
-                    .isInstanceOf(CustomException.class)
+                    .isInstanceOf(RoomReservationException.class)
                     .hasMessage(ErrorCode.RESERVATION_NOT_FOUND.getMessage());
         }
     }
