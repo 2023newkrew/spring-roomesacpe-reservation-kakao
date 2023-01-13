@@ -2,6 +2,7 @@ package web.theme.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import web.exception.ErrorCode;
 
 @Getter
 public class ThemeException extends RuntimeException {

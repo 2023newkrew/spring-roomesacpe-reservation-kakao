@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.entity.Theme;
-import web.theme.exception.ErrorCode;
+import web.exception.ErrorCode;
 import web.theme.exception.ThemeException;
 
 import javax.sql.DataSource;

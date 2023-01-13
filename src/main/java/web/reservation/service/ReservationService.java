@@ -8,7 +8,7 @@ import web.reservation.dto.ReservationResponseDto;
 import web.reservation.exception.ReservationException;
 import web.reservation.repository.ReservationRepository;
 
-import static web.reservation.exception.ErrorCode.RESERVATION_NOT_FOUND;
+import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

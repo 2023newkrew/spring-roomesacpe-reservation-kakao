@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import web.entity.Theme;
-import web.theme.exception.ErrorCode;
+import web.exception.ErrorCode;
 import web.theme.exception.ThemeException;
 
 import javax.sql.DataSource;

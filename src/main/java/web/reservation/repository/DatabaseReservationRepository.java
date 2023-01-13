@@ -6,8 +6,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.entity.Reservation;
+import web.exception.ErrorCode;
 import web.reservation.exception.ReservationException;
-import web.theme.exception.ErrorCode;
 import web.theme.exception.ThemeException;
 import web.theme.repository.ThemeRepository;
 
@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
-import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
+import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
 
 @Repository
 public class DatabaseReservationRepository implements ReservationRepository {

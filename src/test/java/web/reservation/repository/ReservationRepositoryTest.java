@@ -20,7 +20,7 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static web.theme.exception.ErrorCode.THEME_NOT_FOUND;
+import static web.exception.ErrorCode.THEME_NOT_FOUND;
 
 public class ReservationRepositoryTest {
 

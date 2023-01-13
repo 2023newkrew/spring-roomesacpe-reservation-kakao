@@ -27,8 +27,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static web.theme.exception.ErrorCode.THEME_DUPLICATE;
-import static web.theme.exception.ErrorCode.THEME_NOT_FOUND;
+import static web.exception.ErrorCode.THEME_DUPLICATE;
+import static web.exception.ErrorCode.THEME_NOT_FOUND;
 
 @WebMvcTest(ThemeController.class)
 @ExtendWith(MockitoExtension.class)

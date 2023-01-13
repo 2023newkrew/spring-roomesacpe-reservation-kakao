@@ -5,6 +5,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import web.reservation.exception.ReservationException;
+import web.theme.exception.ThemeException;
 
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
@@ -28,6 +30,18 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> methodArgumentNotValidException(HttpMessageNotReadableException e) {
         return ResponseEntity.badRequest()
+                .body(ErrorResponse.from(e.getMessage()));
+    }
+
+    @ExceptionHandler(ReservationException.class)
+    public ResponseEntity<ErrorResponse> handleReservationException(ReservationException e) {
+        return ResponseEntity.status(e.getHttpStatus())
+                .body(ErrorResponse.from(e.getMessage()));
+    }
+    
+    @ExceptionHandler(ThemeException.class)
+    public ResponseEntity<ErrorResponse> handleThemeException(ThemeException e) {
+        return ResponseEntity.status(e.getHttpStatus())
                 .body(ErrorResponse.from(e.getMessage()));
     }
 }

@@ -14,8 +14,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalTime;
 
-import static web.reservation.exception.ErrorCode.NOT_UNIT_OF_30_MINUTES;
-import static web.reservation.exception.ErrorCode.OUT_OF_BUSINESS_HOURS;
+import static web.exception.ErrorCode.NOT_UNIT_OF_30_MINUTES;
+import static web.exception.ErrorCode.OUT_OF_BUSINESS_HOURS;
 
 @RequestMapping("/reservations")
 @RequiredArgsConstructor

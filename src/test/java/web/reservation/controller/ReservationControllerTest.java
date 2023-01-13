@@ -29,9 +29,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static web.reservation.exception.ErrorCode.RESERVATION_DUPLICATE;
-import static web.reservation.exception.ErrorCode.RESERVATION_NOT_FOUND;
-import static web.theme.exception.ErrorCode.THEME_NOT_FOUND;
+import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
+import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
+import static web.exception.ErrorCode.THEME_NOT_FOUND;
 
 @WebMvcTest(ReservationController.class)
 @ExtendWith(MockitoExtension.class)

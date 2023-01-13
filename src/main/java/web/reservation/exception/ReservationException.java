@@ -2,6 +2,7 @@ package web.reservation.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import web.exception.ErrorCode;
 
 @Getter
 public class ReservationException extends RuntimeException {
