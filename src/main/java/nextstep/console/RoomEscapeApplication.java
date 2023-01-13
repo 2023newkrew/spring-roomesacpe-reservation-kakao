@@ -37,16 +37,16 @@ public class RoomEscapeApplication {
             String input = getInput(scanner);
             try {
                 if (input.startsWith(ADD)) {
-                    Reservation reservation = addReservation(input, reservationRepository);
+                    Reservation reservation = addReservation(input);
                     printReservation(reservation);
                 }
                 if (input.startsWith(FIND)) {
-                    Reservation reservation = findReservation(input, reservationRepository);
+                    Reservation reservation = findReservation(input);
                     printReservation(reservation);
                     printReservationTheme(reservation.getTheme());
                 }
                 if (input.startsWith(DELETE)) {
-                    deleteReservation(input, reservationRepository);
+                    deleteReservation(input);
                 }
                 if (input.equals(QUIT)) {
                     break;
@@ -101,7 +101,7 @@ public class RoomEscapeApplication {
         return scanner.nextLine();
     }
 
-    public static Reservation addReservation(String input, ReservationRepository reservationRepository) {
+    public static Reservation addReservation(String input) {
         String params = input.split(" ")[1];
         String date = params.split(",")[0];
         String time = params.split(",")[1];
@@ -114,14 +114,14 @@ public class RoomEscapeApplication {
         return reservation;
     }
 
-    public static Reservation findReservation(String input, ReservationRepository reservationRepository) {
+    public static Reservation findReservation(String input) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
         return service.getReservation(id);
     }
 
-    public static void deleteReservation(String input, ReservationRepository reservationRepository) {
+    public static void deleteReservation(String input) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
