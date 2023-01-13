@@ -51,6 +51,16 @@ public class ThemeController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateTheme(
+            @PathVariable Long id,
+            @RequestBody ThemeRequest themeRequest
+    ){
+        themeService.updateTheme(id, themeRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTheme(
             @PathVariable Long id

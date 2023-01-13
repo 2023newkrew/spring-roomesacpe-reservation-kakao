@@ -57,6 +57,17 @@ public class ThemeWebRepository implements CrudRepository<Theme, Long> {
         return jdbcTemplate.query(sql, themeRowMapper);
     }
 
+    public void update(Long id, Theme theme){
+        String sql = "UPDATE theme SET name = (?), desc = (?), price = (?) WHERE id = (?)";
+        jdbcTemplate.update(
+          sql,
+          theme.getName(),
+          theme.getDesc(),
+          theme.getPrice(),
+          id
+        );
+    }
+
     @Override
     public void delete(Long id) {
         String sql = "DELETE FROM theme WHERE id = (?)";
