@@ -159,6 +159,7 @@ public class ReservationAcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .formParam("time", "13:00")
                     .formParam("name", "eddie-davi")
+                    .formParam("themeId", themeId)
 
             // when
             .when()
@@ -176,6 +177,7 @@ public class ReservationAcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .formParam("date", "2023-01-09")
                     .formParam("name", "eddie-davi")
+                    .formParam("themeId", themeId)
 
                     // when
                     .when()
@@ -193,16 +195,34 @@ public class ReservationAcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .formParam("date", "2023-01-09")
                     .formParam("time", "13:00")
+                    .formParam("themeId", themeId)
 
-                    // when
-                    .when()
+            // when
+            .when()
                     .post("/reservations")
 
-                    // then
-                    .then()
+            // then
+            .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
+        @Test
+        void 예약_시_테마_번호가_기재되지_않으면_예약을_생성할_수_없다() {
+            // given
+            given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .formParam("date", "2023-01-09")
+                    .formParam("time", "13:00")
+                    .formParam("name", "davi")
+
+            // when
+            .when()
+                    .post("/reservations")
+
+            // then
+            .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     private ExtractableResponse<Response> createReservation(CreateReservationRequest createReservationRequest) {
