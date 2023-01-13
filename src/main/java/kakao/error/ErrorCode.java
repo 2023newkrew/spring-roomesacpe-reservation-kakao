@@ -18,7 +18,8 @@ public enum ErrorCode {
 
     // 테마 에러
     THEME_NOT_FOUND(400, "해당 ID의 테마가 존재하지 않습니다."),
-    THEME_RESERVATIONS_YET_EXIST(400, "해당 테마의 예약건이 아직 존재합니다.");
+    THEME_RESERVATIONS_YET_EXIST(400, "해당 테마의 예약건이 아직 존재합니다."),
+    THEME_CANT_BE_UPDATED(400, "테마를 해당 요청대로 업데이트할 수 없습니다.");
 
     private final int status;
     private final String message;

@@ -25,6 +25,12 @@ public class Theme {
         this.id = id;
     }
 
+    public void update(String name, String desc, Integer price) {
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

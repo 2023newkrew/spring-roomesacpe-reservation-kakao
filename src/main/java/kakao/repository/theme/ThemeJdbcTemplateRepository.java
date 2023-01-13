@@ -34,6 +34,13 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository{
             .build();
 
     public Theme save(Theme theme) {
+        if (Objects.isNull(theme.getId())) {
+            return create(theme);
+        }
+        return update(theme);
+    }
+
+    private Theme create(Theme theme) {
         try {
             SqlParameterSource params = new MapSqlParameterSource()
                     .addValue("name", theme.getName())
@@ -44,6 +51,15 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository{
         } catch (DuplicateKeyException e) {
             return null;
         }
+    }
+
+    private Theme update(Theme theme) {
+        String UPDATE_SQL = "update theme set name = ?, desc = ?, price = ? where id = ?";
+        int updatedCount = jdbcTemplate.update(UPDATE_SQL, theme.getName(), theme.getDesc(), theme.getPrice(), theme.getId());
+        if (updatedCount == 0) {
+            return null;
+        }
+        return theme;
     }
 
     public List<Theme> findAll() {

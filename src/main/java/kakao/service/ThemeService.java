@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import kakao.domain.Reservation;
 import kakao.domain.Theme;
 import kakao.dto.request.CreateThemeRequest;
+import kakao.dto.request.UpdateThemeRequest;
 import kakao.dto.response.ThemeResponse;
 import kakao.error.ErrorCode;
 import kakao.error.exception.RoomReservationException;
@@ -43,6 +44,16 @@ public class ThemeService {
     @Transactional(readOnly = true)
     public ThemeResponse getThemeById(Long id) {
         return new ThemeResponse(themeUtilService.getThemeById(id));
+    }
+
+    public ThemeResponse updateTheme(Long id, UpdateThemeRequest request) {
+        Theme theme = themeUtilService.getThemeById(id);
+        theme.update(request.getName(), request.getDesc(), request.getPrice());
+        Theme updatedTheme = themeRepository.save(theme);
+        if (Objects.isNull(updatedTheme)) {
+            throw new RoomReservationException(ErrorCode.THEME_CANT_BE_UPDATED);
+        }
+        return new ThemeResponse(updatedTheme);
     }
 
     public int deleteThemeById(Long id) {

@@ -1,1 +1,1 @@
-insert into theme values (1L, "");
+insert into theme values (1L, "셜록 홈즈", "뭐 여러가지 해결해 보세요", 22000);

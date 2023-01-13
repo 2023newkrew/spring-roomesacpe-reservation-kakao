@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import kakao.dto.request.CreateThemeRequest;
+import kakao.dto.request.UpdateThemeRequest;
 import kakao.dto.response.ThemeResponse;
 import kakao.service.ThemeService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +43,12 @@ public class ThemeController {
     @GetMapping("/{id}")
     public ResponseEntity<ThemeResponse> getTheme(@PathVariable("id") @Min(1L) Long id) {
         return ResponseEntity.ok(themeService.getThemeById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ThemeResponse> updateTheme(@PathVariable("id") @Min(1L) Long id, @Valid @RequestBody UpdateThemeRequest request) {
+        ThemeResponse response = themeService.updateTheme(id, request);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{id}")
