@@ -22,7 +22,7 @@ public class WebThemeDAOTest {
     void setUp() {
         webThemeDAO = new WebThemeDAO(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE theme IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE theme"
+        jdbcTemplate.execute("CREATE TABLE theme("
                 + "    id    bigint not null auto_increment,"
                 + "    name  varchar(20),"
                 + "    desc  varchar(255),"
@@ -50,10 +50,10 @@ public class WebThemeDAOTest {
     @Test
     @DisplayName("이름을 통해 테마 정보를 잘 받아오는지 테스트")
     void findByNameTest() {
-        Theme theme = webThemeDAO.findByName("테마이름2");
+        List<Theme> theme = webThemeDAO.findByName("테마이름2");
 
         assertThat(theme).isNotNull();
-        assertThat(theme.getPrice()).isEqualTo(21000);
+        assertThat(theme.get(0).getPrice()).isEqualTo(21000);
     }
 
     @Test
