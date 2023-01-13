@@ -1,0 +1,1 @@
+insert into theme values (1L, "");
