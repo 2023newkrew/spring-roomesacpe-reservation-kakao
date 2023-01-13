@@ -34,7 +34,7 @@ public class ReservationServiceTest {
         reservationService = new ReservationService(reservationDAO);
     }
 
-    @DisplayName("콘솔 예약 생성")
+    @DisplayName("예약 생성")
     @Test
     void createReservation() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
@@ -43,5 +43,19 @@ public class ReservationServiceTest {
         when(reservationDAO.create(reservation)).thenReturn(ID_DATA);
 
         assertThat(reservationService.create(reservation)).isEqualTo(ID_DATA);
+    }
+
+    @DisplayName("예약 조회")
+    @Test
+    void listReservation() {
+        Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
+
+        when(reservationDAO.find(ID_DATA)).thenReturn(reservation);
+
+        Reservation actual = reservationService.find(ID_DATA);
+        assertThat(actual.getDate()).isEqualTo(DATE_DATA);
+        assertThat(actual.getTime()).isEqualTo(TIME_DATA);
+        assertThat(actual.getName()).isEqualTo(NAME_DATA);
+        assertThat(actual.getThemeId()).isEqualTo(THEME_ID_DATA);
     }
 }
