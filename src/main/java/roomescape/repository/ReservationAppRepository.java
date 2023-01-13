@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.Optional;
+
 import roomescape.domain.Theme;
 
 @Repository
@@ -56,11 +58,9 @@ public class ReservationAppRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findReservation(Long id) {
+    public Optional<Reservation> findReservation(Long id) {
         String sql = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
-        return jdbcTemplate.query(sql, actorRowMapper, id).stream()
-                .findFirst()
-                .orElse(null);
+        return jdbcTemplate.query(sql, actorRowMapper, id).stream().findFirst();
     }
 
     @Override

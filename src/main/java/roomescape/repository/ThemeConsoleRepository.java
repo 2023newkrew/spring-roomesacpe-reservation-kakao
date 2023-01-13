@@ -3,6 +3,7 @@ package roomescape.repository;
 import roomescape.domain.Theme;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class ThemeConsoleRepository extends BaseConsoleRepository implements ThemeRepository {
 
@@ -27,22 +28,21 @@ public class ThemeConsoleRepository extends BaseConsoleRepository implements The
     }
 
     @Override
-    public Theme findThemeById(Long id) {
-        Theme theme = null;
+    public Optional<Theme> findThemeById(Long id) {
+        Optional<Theme> theme = null;
         Connection con = getConnection();
         try {
             String sql = "SELECT * FROM theme WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                theme = new Theme(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("desc"),
-                        rs.getInt("price")
-                );
-            }
+            rs.next();
+            theme = Optional.of(new Theme(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("desc"),
+                    rs.getInt("price")
+            ));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

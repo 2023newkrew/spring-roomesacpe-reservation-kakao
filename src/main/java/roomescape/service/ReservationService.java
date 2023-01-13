@@ -26,14 +26,11 @@ public class ReservationService {
         }
         Theme theme = themeRepository.findThemeById(reservationCreateRequest.getThemeId());
         Long id = reservationRepository.addReservation(reservationCreateRequest.toReservation(theme));
-        return reservationRepository.findReservation(id);
+        return reservationRepository.findReservation(id).orElseThrow(NoSuchElementException::new);
     }
 
     public Reservation showReservation(Long id) {
-        Reservation reservation = reservationRepository.findReservation(id);
-        if (reservation == null) {
-            throw new NoSuchElementException("없는 예약 조회");
-        }
+        Reservation reservation = reservationRepository.findReservation(id).orElseThrow(NoSuchElementException::new);
         return reservation;
     }
 

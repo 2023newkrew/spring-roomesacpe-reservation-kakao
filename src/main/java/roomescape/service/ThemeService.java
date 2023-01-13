@@ -26,14 +26,11 @@ public class ThemeService {
                 themeCreateRequest.getPrice()
                 )
         );
-        return themeRepository.findThemeById(id);
+        return themeRepository.findThemeById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public ThemeShowResponse showTheme(Long id) {
-        Theme theme = themeRepository.findThemeById(id);
-        if (theme == null) {
-            throw new NoSuchElementException("없는 테마 조회");
-        }
+        Theme theme = themeRepository.findThemeById(id).orElseThrow(NoSuchElementException::new);
         return ThemeShowResponse.of(theme);
     }
 
@@ -43,7 +40,7 @@ public class ThemeService {
         if (count == 0) {
             throw new NoSuchElementException("없는 테마 수정 요청");
         }
-        return themeRepository.findThemeById(theme.getId());
+        return themeRepository.findThemeById(theme.getId()).orElseThrow(NoSuchElementException::new);
     }
 
     public int deleteTheme(Long id) {

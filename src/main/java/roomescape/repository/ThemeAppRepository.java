@@ -8,6 +8,7 @@ import roomescape.domain.Theme;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ThemeAppRepository implements ThemeRepository {
@@ -39,11 +40,9 @@ public class ThemeAppRepository implements ThemeRepository {
         return insertActor.executeAndReturnKey(themeInfo).longValue();
     }
 
-    public Theme findThemeById(Long id) {
+    public Optional<Theme> findThemeById(Long id) {
         String sql = "SELECT * FROM theme WHERE id = ?;";
-        return jdbcTemplate.query(sql, actorRowMapper, id).stream()
-                .findFirst()
-                .orElse(null);
+        return jdbcTemplate.query(sql, actorRowMapper, id).stream().findFirst();
     }
 
     public int updateTheme(Theme theme) {
