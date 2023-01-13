@@ -35,7 +35,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
         if (isDuplicateReservation(reservation)) {
             throw new ReservationException(ErrorCode.RESERVATION_DUPLICATE);
         }
-        if (isExistTheme(reservation)) {
+        if (isNotExistTheme(reservation)) {
             throw new ThemeException(ErrorCode.THEME_NOT_FOUND);
         }
         String sql = "INSERT INTO RESERVATION (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
@@ -55,7 +55,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
         }
     }
 
-    private boolean isExistTheme(Reservation reservation) {
+    private boolean isNotExistTheme(Reservation reservation) {
         return themeRepository.findById(reservation.getThemeId())
                 .isEmpty();
     }
