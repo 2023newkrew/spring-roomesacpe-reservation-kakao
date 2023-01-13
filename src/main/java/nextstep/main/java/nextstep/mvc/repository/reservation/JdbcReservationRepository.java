@@ -18,8 +18,6 @@ import java.util.Optional;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
-    private static final int EMPTY_SIZE = 0;
-
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

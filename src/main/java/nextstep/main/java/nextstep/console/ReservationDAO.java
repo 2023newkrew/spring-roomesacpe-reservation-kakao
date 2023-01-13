@@ -15,7 +15,7 @@ public class ReservationDAO implements ReservationRepository {
     private static final String SERVER_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER_NAME = "sa";
     private static final String PASSWORD = "";
-//
+
 //    @Override
 //    public Reservation save(Reservation reservation) {
 //        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
