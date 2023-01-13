@@ -34,6 +34,9 @@ public class ReservationService {
         if (reservationRepository.existsByDateAndTime(date, time)) {
             throw new DuplicateReservationException();
         }
+        if(themeRepository.findThemeById(createReservationRequest.getThemeId()).isEmpty()) {
+            throw new ThemeNotFoundException();
+        }
 
         Reservation savedReservation = reservationRepository.save(
                 new Reservation(

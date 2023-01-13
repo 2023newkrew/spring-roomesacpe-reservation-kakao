@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Theme;
 import nextstep.domain.repository.ThemeRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -32,17 +33,22 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public Optional<Theme> findThemeById(Long id) {
-        Theme theme = jdbcTemplate.queryForObject(
-                Queries.Theme.SELECT_BY_ID_SQL,
-                new Object[]{id},
-                (rs, rowNum) -> new Theme(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("desc"),
-                        rs.getInt("price")
-                )
-        );
-        return Optional.ofNullable(theme);
+        try{
+            Theme theme = jdbcTemplate.queryForObject(
+                    Queries.Theme.SELECT_BY_ID_SQL,
+                    new Object[]{id},
+                    (rs, rowNum) -> new Theme(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("desc"),
+                            rs.getInt("price")
+                    )
+            );
+            return Optional.ofNullable(theme);
+        }
+        catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
     }
 
     @Override

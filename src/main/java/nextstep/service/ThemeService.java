@@ -5,6 +5,7 @@ import nextstep.domain.repository.ThemeRepository;
 import nextstep.dto.CreateThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.dto.ThemesResponse;
+import nextstep.exception.ThemeNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class ThemeService {
     }
 
     public ThemeResponse findThemeById(Long id) {
-        Theme theme = themeRepository.findThemeById(id).orElseThrow(RuntimeException::new);
+        Theme theme = themeRepository.findThemeById(id).orElseThrow(ThemeNotFoundException::new);
         return ThemeResponse.from(theme);
     }
 
