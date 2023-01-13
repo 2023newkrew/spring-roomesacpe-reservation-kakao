@@ -58,7 +58,7 @@ public class ReservationService {
         return FindReservationResponse.from(reservation, theme);
     }
 
-    public void deleteReservationById(Long reservationId) {
-        reservationRepository.deleteById(reservationId);
+    public boolean deleteReservationById(Long reservationId) {
+        return reservationRepository.deleteById(reservationId);
     }
 }
