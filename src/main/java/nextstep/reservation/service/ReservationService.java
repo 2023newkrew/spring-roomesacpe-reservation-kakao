@@ -4,8 +4,10 @@ import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -19,6 +21,7 @@ public class ReservationService {
         return reservationRepository.create(reservation);
     }
 
+    @Transactional(readOnly = true)
     public Reservation findById(long id) {
         return reservationRepository.findById(id);
     }
