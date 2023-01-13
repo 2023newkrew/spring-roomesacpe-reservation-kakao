@@ -39,14 +39,15 @@ public class ReservationControllerTest {
         RestAssured.port = port;
 
         Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        themeService.create(theme);
+        Theme createdTheme = themeService.create(theme);
 
-        reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", 1L);
+        reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
     }
 
     @AfterEach
     void tearDown() {
         reservationService.clear();
+        themeService.clear();
     }
 
     @DisplayName("예약 등록")

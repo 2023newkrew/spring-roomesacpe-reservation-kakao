@@ -1,7 +1,10 @@
 package nextstep.reservation.service;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.exception.ReservationExceptionCode;
 import nextstep.reservation.repository.ReservationRepository;
@@ -18,21 +21,27 @@ import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ThemeService themeService;
 
-    public Reservation registerReservation(Reservation reservation) {
-        if (reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime()).size() > 0) {
+    public ReservationResponse registerReservation(ReservationRequest reservationRequest) {
+        if (reservationRepository.findByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime()).size() > 0) {
             throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
-        return reservationRepository.save(reservation);
+
+        Reservation savedReservation = reservationRepository.save(reservationRequest.toEntity());
+        Theme foundedTheme = themeService.findById(savedReservation.getThemeId());
+        return ReservationResponse.from(savedReservation, foundedTheme);
     }
 
     @Transactional(readOnly = true)
-    public Reservation findById(long id) {
+    public ReservationResponse findById(long id) {
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
         if (optionalReservation.isEmpty()) {
             throw new ReservationException(ReservationExceptionCode.NO_SUCH_RESERVATION);
         }
-        return optionalReservation.get();
+        Reservation reservation = optionalReservation.get();
+        Theme theme = themeService.findById(reservation.getThemeId());
+        return ReservationResponse.from(reservation, theme);
     }
 
     public Boolean delete(long id) {

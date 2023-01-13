@@ -1,6 +1,6 @@
 package nextstep.reservation;
 
-import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.repository.ThemeRepository;
@@ -26,22 +26,22 @@ class ReservationServiceTest {
     private ReservationService reservationService;
     @Autowired
     private ThemeRepository themeRepository;
-    private Reservation reservation;
+    private ReservationRequest reservation;
 
     @BeforeEach
     void setUp() {
         Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        themeRepository.save(theme);
+        Theme savedTheme = themeRepository.save(theme);
 
-        this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", 1L);
+        this.reservation = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
     }
 
     @Test
     @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생")
     void duplicate_time_Reservation_Exception() {
         //given
-        Reservation reservationDuplicated = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", 1L);
-        reservationService.registerReservation(reservation);
+        ReservationRequest reservationDuplicated = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", reservation.getThemeId());
+        reservationService.registerReservation(reservationDuplicated);
 
         //when
         //then

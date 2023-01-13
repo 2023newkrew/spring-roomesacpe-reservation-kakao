@@ -1,6 +1,8 @@
 package nextstep.reservation.controller;
 
-import nextstep.reservation.entity.Reservation;
+import lombok.RequiredArgsConstructor;
+import nextstep.reservation.dto.ReservationRequest;
+import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.ResponseEntity;
@@ -9,35 +11,33 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
 
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
 
     @PostMapping
-    public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
-        Reservation registeredReservation = reservationService.registerReservation(reservation);
+    public ResponseEntity<Object> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        ReservationResponse registeredReservation = reservationService.registerReservation(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + registeredReservation.getId())).build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Reservation> clear() {
+    public ResponseEntity<ReservationResponse> clear() {
         reservationService.clear();
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> findReservation(@PathVariable Long id) {
-        Reservation reservation = reservationService.findById(id);
+    public ResponseEntity<ReservationResponse> findReservation(@PathVariable Long id) {
+        ReservationResponse reservation = reservationService.findById(id);
         return ResponseEntity.ok().body(reservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Reservation> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> deleteReservation(@PathVariable Long id) {
         reservationService.delete(id);
         return ResponseEntity.noContent().build();
     }
