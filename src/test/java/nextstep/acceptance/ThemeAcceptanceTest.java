@@ -9,16 +9,14 @@ import nextstep.common.fixture.ThemeProvider;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.dto.request.CreateOrUpdateThemeRequest;
 import nextstep.dto.response.FindThemeResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static nextstep.common.fixture.ThemeProvider.테마_생성을_요청한다;
 import static org.hamcrest.CoreMatchers.*;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ThemeAcceptanceTest {
 
@@ -40,8 +39,13 @@ public class ThemeAcceptanceTest {
     @Autowired
     private DatabaseExecutor databaseExecutor;
 
+    @BeforeAll
+    static void createTable(@Autowired DatabaseExecutor databaseExecutor) {
+        databaseExecutor.createTables();
+    }
+
     @BeforeEach
-    void setPort() {
+    void setUp() {
         RestAssured.port = port;
         databaseExecutor.clearAll();
     }
