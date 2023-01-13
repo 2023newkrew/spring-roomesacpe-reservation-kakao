@@ -27,7 +27,7 @@ public class ReservationReadService {
     }
 
     @Transactional(readOnly = true)
-    public boolean existsByThemeId(Long themeId) {
+    public Boolean existsByThemeId(Long themeId) {
         return reservationRepository.existsByThemeId(themeId);
     }
 

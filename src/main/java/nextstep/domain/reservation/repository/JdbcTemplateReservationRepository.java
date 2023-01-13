@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -64,20 +65,20 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public boolean existsByThemeId(Long themeId) {
-        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_THEME_ID, Integer.class, themeId) > 0;
+    public Boolean existsByThemeId(Long themeId) {
+        return jdbcTemplate.query(SELECT_ONE_BY_THEME_ID, ResultSet::next, themeId);
     }
 
     @Override
-    public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
-        return jdbcTemplate.queryForObject(
-                SELECT_COUNT_BY_THEME_ID_AND_DATE_AND_TIME,
-                Integer.class,
-                themeId, Date.valueOf(date), Time.valueOf(time)) > 0;
+    public Boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return jdbcTemplate.query(
+                SELECT_ONE_BY_THEME_ID_AND_DATE_AND_TIME,
+                ResultSet::next,
+                themeId, Date.valueOf(date), Time.valueOf(time));
     }
 
     @Override
-    public boolean deleteById(Long reservationId) {
+    public Boolean deleteById(Long reservationId) {
         return jdbcTemplate.update(DELETE_BY_ID, reservationId) > 0;
     }
 

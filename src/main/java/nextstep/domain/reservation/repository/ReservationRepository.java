@@ -10,8 +10,8 @@ public interface ReservationRepository {
 
     Reservation save(Reservation reservation);
     Optional<Reservation> findById(Long reservationId);
-    boolean existsByThemeId(Long themeId);
-    boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time);
-    boolean deleteById(Long reservationId);
+    Boolean existsByThemeId(Long themeId);
+    Boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time);
+    Boolean deleteById(Long reservationId);
 
 }

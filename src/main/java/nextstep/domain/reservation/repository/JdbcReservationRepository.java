@@ -56,29 +56,29 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByThemeId(Long themeId) {
-        return execute(SELECT_COUNT_BY_THEME_ID, (pstmt, rs) -> {
+    public Boolean existsByThemeId(Long themeId) {
+        return execute(SELECT_ONE_BY_THEME_ID, (pstmt, rs) -> {
             pstmt.setLong(1, themeId);
             rs = pstmt.executeQuery();
 
-            return rs.next() && rs.getInt(1) > 0;
+            return rs.next();
         });
     }
 
     @Override
-    public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
-        return execute(SELECT_COUNT_BY_THEME_ID_AND_DATE_AND_TIME, (pstmt, rs) -> {
+    public Boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return execute(SELECT_ONE_BY_THEME_ID_AND_DATE_AND_TIME, (pstmt, rs) -> {
             pstmt.setLong(1, themeId);
             pstmt.setDate(2, Date.valueOf(date));
             pstmt.setTime(3, Time.valueOf(time));
             rs = pstmt.executeQuery();
 
-            return rs.next() && rs.getInt(1) > 0;
+            return rs.next();
         });
     }
 
     @Override
-    public boolean deleteById(Long reservationId) {
+    public Boolean deleteById(Long reservationId) {
         return execute(DELETE_BY_ID, pstmt -> {
             pstmt.setLong(1, reservationId);
 
