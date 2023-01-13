@@ -13,5 +13,6 @@ public class Queries {
     public static class Theme {
         public static final String INSERT_SQL = "INSERT INTO theme (name, desc, price) VALUES(?, ?, ?);";
         public static final String SELECT_BY_ID_SQL = "SELECT * FROM theme WHERE id = ?;";
+        public static final String SELECT_ALL_SQL = "SELECT * FROM theme";
     }
 }

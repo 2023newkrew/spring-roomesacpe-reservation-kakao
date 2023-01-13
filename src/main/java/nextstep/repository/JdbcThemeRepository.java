@@ -47,7 +47,16 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public List<Theme> getAllThemes() {
-        return null;
+        List<Theme> themes = jdbcTemplate.query(
+                Queries.Theme.SELECT_ALL_SQL,
+                (rs, rowNum) -> new Theme(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("desc"),
+                        rs.getInt("price")
+                )
+        );
+        return themes;
     }
 
     @Override
