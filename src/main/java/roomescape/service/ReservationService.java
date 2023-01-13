@@ -41,7 +41,7 @@ public class ReservationService {
     }
 
     public void cancelReservation(Long id) {
-        Boolean isCanceled = reservationRepository.delete(id) == 1;
+        Boolean isCanceled = reservationRepository.delete(id);
         if (!isCanceled) {
             throw new RoomEscapeException(ErrorCode.NO_SUCH_ELEMENT);
         }

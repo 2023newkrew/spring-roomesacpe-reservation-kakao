@@ -39,9 +39,8 @@ public class ThemeMemoryRepository implements ThemeRepository {
     }
 
     @Override
-    public Integer delete(Long id) {
-        themes.remove(id);
-        return 1;
+    public Boolean delete(Long id) {
+        return themes.remove(id) != null;
     }
 
     @Override

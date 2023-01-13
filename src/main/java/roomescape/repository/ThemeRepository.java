@@ -12,7 +12,7 @@ public interface ThemeRepository {
 
     List<Theme> findAll();
 
-    Integer delete(Long id);
+    Boolean delete(Long id);
 
     Boolean existsByName(String name);
 }

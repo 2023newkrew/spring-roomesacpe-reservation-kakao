@@ -10,7 +10,7 @@ public interface ReservationRepository {
 
     Optional<Reservation> find(Long id);
 
-    Integer delete(Long id);
+    Boolean delete(Long id);
 
     Boolean existsByDateTime(LocalDateTime datetime);
 }

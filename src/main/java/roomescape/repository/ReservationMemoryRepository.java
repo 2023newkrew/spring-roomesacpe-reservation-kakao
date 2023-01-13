@@ -33,9 +33,8 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Integer delete(Long id) {
-        reservations.remove(id);
-        return 1;
+    public Boolean delete(Long id) {
+        return reservations.remove(id) != null;
     }
 
     @Override

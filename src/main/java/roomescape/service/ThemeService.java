@@ -36,7 +36,7 @@ public class ThemeService {
     }
 
     public void deleteTheme(Long id) {
-        Boolean isDeleted = themeRepository.delete(id) == 1;
+        Boolean isDeleted = themeRepository.delete(id);
         if (!isDeleted) {
             throw new RoomEscapeException(ErrorCode.NO_SUCH_ELEMENT);
         }
