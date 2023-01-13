@@ -2,7 +2,6 @@ package nextstep.domain.reservation.repository;
 
 import nextstep.domain.reservation.domain.Reservation;
 import nextstep.domain.theme.domain.Theme;
-import nextstep.global.exceptions.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
@@ -50,10 +50,10 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
                     new Reservation(
                             rs.getLong("id"),
                             rs.getDate("date").toLocalDate(),
@@ -63,9 +63,9 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
                                     rs.getString("theme_name"),
                                     rs.getString("theme_desc"),
                                     rs.getInt("theme_price"))
-                    ), id);
+                    ), id));
         } catch (EmptyResultDataAccessException e) {
-            throw new ReservationNotFoundException();
+            return Optional.empty();
         }
     }
 

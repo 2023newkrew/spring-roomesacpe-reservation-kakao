@@ -6,6 +6,7 @@ import nextstep.domain.reservation.dto.ReservationResponseDto;
 import nextstep.domain.reservation.repository.ReservationRepository;
 import nextstep.domain.theme.domain.Theme;
 import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
+import nextstep.global.exceptions.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +36,18 @@ public class ReservationService {
     }
 
     public ReservationResponseDto retrieve(Long id) {
-        Reservation reservation = reservationRepository.findById(id);
-        if (reservation != null) {
-            return new ReservationResponseDto(
-                    reservation.getId(),
-                    reservation.getDate(),
-                    reservation.getTime(),
-                    reservation.getName(),
-                    reservation.getTheme().getName(),
-                    reservation.getTheme().getDesc(),
-                    reservation.getTheme().getPrice()
-            );
-        }
-        return null;
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(ReservationNotFoundException::new);
+
+        return new ReservationResponseDto(
+                reservation.getId(),
+                reservation.getDate(),
+                reservation.getTime(),
+                reservation.getName(),
+                reservation.getTheme().getName(),
+                reservation.getTheme().getDesc(),
+                reservation.getTheme().getPrice()
+        );
     }
 
     public void delete(Long id) {

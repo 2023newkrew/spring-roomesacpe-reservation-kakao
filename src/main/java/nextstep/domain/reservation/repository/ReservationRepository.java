@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository {
@@ -12,7 +13,7 @@ public interface ReservationRepository {
 
     int countByDateAndTime(LocalDate date, LocalTime time);
 
-    Reservation findById(Long id);
+    Optional<Reservation> findById(Long id);
 
     void delete(Long id);
 }

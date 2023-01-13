@@ -2,12 +2,12 @@ package nextstep.domain.reservation.repository;
 
 import nextstep.domain.reservation.domain.Reservation;
 import nextstep.domain.theme.domain.Theme;
-import nextstep.global.exceptions.exception.ReservationNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -127,7 +127,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return count;
     }
 
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         Connection con = null;
         ResultSet rs;
         Reservation reservation;
@@ -158,15 +158,15 @@ public class ReservationJdbcRepository implements ReservationRepository {
             System.err.println("con 오류:" + e.getMessage());
         }
 
-        return reservation;
+        return Optional.ofNullable(reservation);
     }
 
-    private static Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
+    private Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
         if (!rs.next()) {
-            throw new ReservationNotFoundException();
+            return null;
         }
 
-        Reservation reservation = new Reservation(
+        return new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
@@ -175,8 +175,6 @@ public class ReservationJdbcRepository implements ReservationRepository {
                         rs.getString("theme_desc"),
                         rs.getInt("theme_price"))
         );
-
-        return reservation;
     }
 
     public void delete(Long id) {
