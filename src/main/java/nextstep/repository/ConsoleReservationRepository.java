@@ -9,6 +9,8 @@ import nextstep.utils.JdbcUtils;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ConsoleReservationRepository implements ReservationRepository {
@@ -64,6 +66,36 @@ public class ConsoleReservationRepository implements ReservationRepository {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Reservation> reservations = new ArrayList<>();
+
+        try{
+            conn = JdbcUtils.getConnection();
+            pstmt = conn.prepareStatement(Queries.Reservation.SELECT_BY_THEME_ID_SQL);
+            pstmt.setLong(1, themeId);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Reservation reservation = new Reservation(
+                        rs.getLong("id"),
+                        LocalDate.parse(rs.getString("date")),
+                        LocalTime.parse(rs.getString("time")),
+                        rs.getString("name"),
+                        rs.getLong("theme_id")
+                );
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            JdbcUtils.close(rs, pstmt, conn);
+        }
+        return reservations;
     }
 
     @Override

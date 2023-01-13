@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -54,6 +55,21 @@ public class JdbcReservationRepository implements ReservationRepository {
         } catch (EmptyResultDataAccessException e){
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        List<Reservation> reservations = jdbcTemplate.query(
+                Queries.Reservation.SELECT_BY_THEME_ID_SQL,
+                (rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        LocalDate.parse(rs.getString("date")),
+                        LocalTime.parse(rs.getString("time")),
+                        rs.getString("name"),
+                        rs.getLong("theme_id")
+                )
+        );
+        return reservations;
     }
 
     @Override

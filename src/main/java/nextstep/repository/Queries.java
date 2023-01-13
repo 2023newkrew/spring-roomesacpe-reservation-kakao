@@ -8,6 +8,7 @@ public class Queries {
         public static final String SELECT_COUNT_BY_DATE_AND_TIME_SQL = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
         public static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
         public static final String DELETE_ALL_SQL = "DELETE FROM reservation";
+        public static final String SELECT_BY_THEME_ID_SQL = "SELECT * FROM reservation WHERE theme_id = ?;";
     }
 
     public static class Theme {
