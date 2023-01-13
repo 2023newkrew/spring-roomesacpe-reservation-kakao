@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -26,9 +25,13 @@ public class ReservationTest {
     private final static LocalDate testDate = LocalDate.of(2023, 1, 1);
     private final static LocalTime testTime = LocalTime.of(13, 0);
     private final static String testName = "hi";
-    private final static Long testThemeId = 100L;
-    private ReservationRequestDto reservationRequestDto = new ReservationRequestDto(testDate, testTime, testName,
-            testThemeId);
+    private final static Long testThemeId = 3L;
+    private ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
+            .date(testDate)
+            .time(testTime)
+            .name(testName)
+            .themeId(testThemeId)
+            .build();
     private final RestTemplate restTemplate = new RestTemplate();
     private String baseUrl;
     @Autowired
@@ -53,7 +56,7 @@ public class ReservationTest {
     @DisplayName("Http Method - POST")
     @Test
     @Order(1)
-    void createReservation() throws JsonProcessingException {
+    void createReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationRequestDto)
@@ -99,7 +102,7 @@ public class ReservationTest {
                 .when().get("/reservations/0")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("존재하지 않는 예약 id입니다."));
+                .body(is("존재하지 않는 예약입니다."));
     }
 
     @DisplayName("Http Method - DELETE")
@@ -122,6 +125,6 @@ public class ReservationTest {
                 .when().delete("/reservations/0")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("존재하지 않는 예약 id입니다."));
+                .body(is("존재하지 않는 예약입니다."));
     }
 }

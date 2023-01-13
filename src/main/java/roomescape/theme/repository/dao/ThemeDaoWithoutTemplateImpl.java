@@ -1,4 +1,4 @@
-package roomescape.reservation.repository.dao;
+package roomescape.theme.repository.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,19 +6,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import roomescape.entity.Reservation;
+import roomescape.entity.Theme;
 
-public class ReservationDaoWithoutTemplateImpl implements ReservationDao {
+public class ThemeDaoWithoutTemplateImpl implements ThemeDao {
     @Override
-    public Long create(Reservation reservation) {
-        String sql = "INSERT INTO RESERVATION(date, time, name, theme_id) VALUES (?, ?, ?, ?)";
+    public Long create(Theme theme) {
+        String sql = "insert into theme (name, desc, price) values (?, ?, ?)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, reservation.getDate().toString());
-            pstmt.setString(2, reservation.getTime().toString());
-            pstmt.setString(3, reservation.getName());
-            pstmt.setString(4, String.valueOf(reservation.getThemeId()));
+            pstmt.setString(1, theme.getName());
+            pstmt.setString(2, theme.getDesc());
+            pstmt.setString(3, String.valueOf(theme.getPrice()));
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
@@ -31,31 +32,51 @@ public class ReservationDaoWithoutTemplateImpl implements ReservationDao {
     }
 
     @Override
-    public Optional<Reservation> selectById(Long id) {
-        String sql = "SELECT * FROM RESERVATION WHERE id = ?";
-        Reservation reservation = null;
+    public Optional<Theme> selectById(Long id) {
+        String sql = "select * from theme WHERE id = ?";
+        Theme theme = null;
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                reservation = Reservation.builder()
-                        .id(rs.getLong("id"))
-                        .date(rs.getDate("date").toLocalDate())
-                        .time(rs.getTime("time").toLocalTime())
+                theme = Theme.builder()
+                        .themeId(rs.getLong("id"))
                         .name(rs.getString("name"))
-                        .themeId(rs.getLong("theme_id"))
+                        .desc(rs.getString("desc"))
+                        .price(rs.getInt("price"))
                         .build();
             }
         } catch (SQLException e) {
             return Optional.empty();
         }
-        return Optional.ofNullable(reservation);
+        return Optional.ofNullable(theme);
+    }
+
+    @Override
+    public List<Theme> selectAll() {
+        String sql = "select * from theme";
+        List<Theme> themes = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
+             PreparedStatement pstmt = con.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while(rs.next()) {
+                themes.add(Theme.builder()
+                        .themeId(rs.getLong("id"))
+                        .name(rs.getString("name"))
+                        .desc(rs.getString("desc"))
+                        .price(rs.getInt("price"))
+                        .build());
+            }
+
+        } catch (SQLException e) {
+        }
+        return themes;
     }
 
     @Override
     public int delete(Long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = "delete from theme where id = ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setLong(1, id);
@@ -66,12 +87,12 @@ public class ReservationDaoWithoutTemplateImpl implements ReservationDao {
         throw new IllegalArgumentException();
     }
 
-    public boolean isReservationDuplicated(Reservation reservation) {
-        String sql = "select count(*) from RESERVATION WHERE date =  ? and time = ?";
+    @Override
+    public boolean isThemeNameDuplicated(String themeName) {
+        String sql = "select count(*) from theme where name =  ?";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setString(1, reservation.getDate().toString());
-            pstmt.setString(2, reservation.getTime().toString());
+            pstmt.setString(1, themeName);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;

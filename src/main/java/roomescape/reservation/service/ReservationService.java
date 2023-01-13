@@ -1,18 +1,24 @@
 package roomescape.reservation.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.entity.Theme;
 import roomescape.exceptions.exception.DuplicatedReservationException;
+import roomescape.exceptions.exception.ThemeNotFoundException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.exceptions.exception.ReservationNotFoundException;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
-@Service
-public class RoomEscapeService {
-    private final ReservationRepository reservationRepository;
+import roomescape.theme.repository.ThemeRepository;
 
-    public RoomEscapeService(ReservationRepository reservationRepository) {
+@Service
+public class ReservationService {
+    private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
+
+    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
     public Long makeReservation(ReservationRequestDto reservationRequestDto) {
@@ -30,7 +36,9 @@ public class RoomEscapeService {
     public ReservationResponseDto findReservationById(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationNotFoundException::new);
-        return ReservationResponseDto.of(reservation);
+        Theme theme = themeRepository.findById(reservation.getThemeId())
+                .orElseThrow(ThemeNotFoundException::new);
+        return ReservationResponseDto.of(reservation, theme);
     }
 
     public void cancelReservation(Long reservationId) {

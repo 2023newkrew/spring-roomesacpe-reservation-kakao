@@ -6,13 +6,17 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import roomescape.reservation.repository.dao.ReservationDao;
 import roomescape.reservation.repository.dao.ReservationDaoImpl;
+import roomescape.theme.repository.dao.ThemeDao;
+import roomescape.theme.repository.dao.ThemeDaoImpl;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
     private final ReservationDao reservationDao;
+    private final ThemeDao themeDao;
 
     public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.reservationDao = new ReservationDaoImpl(jdbcTemplate);
+        this.themeDao = new ThemeDaoImpl(jdbcTemplate);
     }
 
     @Override

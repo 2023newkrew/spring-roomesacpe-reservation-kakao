@@ -1,7 +1,9 @@
 package roomescape.theme.dto;
 
+import lombok.Getter;
 import roomescape.entity.Theme;
 
+@Getter
 public class ThemeResponseDto {
     private Long themeId;
     private String name;

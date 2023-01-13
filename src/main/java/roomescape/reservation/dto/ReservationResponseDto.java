@@ -3,8 +3,13 @@ package roomescape.reservation.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Builder;
+import lombok.Getter;
 import roomescape.entity.Reservation;
+import roomescape.entity.Theme;
 
+@Getter
+@Builder
 public class ReservationResponseDto {
     private Long id;
     private LocalDate date;
@@ -15,45 +20,15 @@ public class ReservationResponseDto {
     private String themeDesc;
     private Integer themePrice;
 
-    public ReservationResponseDto(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-//        this.themeName = theme.getName();
-//        this.themeDesc = theme.getDesc();
-//        this.themePrice = theme.getPrice();
-    }
-
-    public static ReservationResponseDto of(Reservation reservation) {
-        return new ReservationResponseDto(reservation.getId(), reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getThemeName() {
-        return themeName;
-    }
-
-    public String getThemeDesc() {
-        return themeDesc;
-    }
-
-    public Integer getThemePrice() {
-        return themePrice;
+    public static ReservationResponseDto of(Reservation reservation, Theme theme) {
+        return ReservationResponseDto.builder()
+                .id(reservation.getId())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
+                .name(reservation.getName())
+                .themeName(theme.getName())
+                .themeDesc(theme.getDesc())
+                .themePrice(theme.getPrice())
+                .build();
     }
 }

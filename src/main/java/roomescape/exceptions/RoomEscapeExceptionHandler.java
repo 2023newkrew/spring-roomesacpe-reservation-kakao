@@ -12,7 +12,7 @@ import roomescape.exceptions.exception.ReservationNotFoundException;
 import roomescape.exceptions.exception.ThemeNotFoundException;
 
 @ControllerAdvice
-public class ReservationExceptionHandler {
+public class RoomEscapeExceptionHandler {
     @ExceptionHandler(DuplicatedReservationException.class)
     public ResponseEntity handleDuplicatedReservationException(DuplicatedReservationException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -39,7 +39,7 @@ public class ReservationExceptionHandler {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> handleDataAccessException() {
-        return ResponseEntity.internalServerError().body("Internal Server Error");
+    public ResponseEntity<String> handleDataAccessException(DataAccessException e) {
+        return ResponseEntity.internalServerError().body(e.getCause() + "Internal Server Error");
     }
 }
