@@ -7,6 +7,7 @@ import roomescape.controller.dto.ThemeResponse;
 import roomescape.domain.Theme;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ThemeRepository;
 
 import java.util.List;
@@ -15,9 +16,11 @@ import java.util.List;
 public class ThemeService {
 
     private final ThemeRepository themeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ThemeService(ThemeRepository themeRepository) {
+    public ThemeService(ThemeRepository themeRepository, ReservationRepository reservationRepository) {
         this.themeRepository = themeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public List<ThemeResponse> getAllThemes() {
@@ -45,10 +48,17 @@ public class ThemeService {
     public void changeTheme(Long themeId, ThemeRequest themeRequest) {
         Theme theme = themeRepository.findThemeById(themeId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.THEME_NOT_FOUND));
-        themeRepository.changeTheme(theme.getId(), themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
+        themeRepository.changeTheme(
+                theme.getId(),
+                themeRequest.getName(),
+                themeRequest.getDesc(),
+                themeRequest.getPrice()
+        );
     }
 
+    @Transactional
     public void deleteTheme(Long themeId) {
+        reservationRepository.deleteReservationByThemeId(themeId);
         themeRepository.deleteTheme(themeId);
     }
 }

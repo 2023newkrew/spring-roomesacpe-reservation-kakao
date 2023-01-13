@@ -160,4 +160,25 @@ public class ReservationConsoleRepository implements ReservationRepository {
             System.err.println("오류:" + e.getMessage());
         }
     }
+
+    @Override
+    public void deleteReservationByThemeId(Long themeId) {
+        try (
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = createDeleteReservationByThemIdPreparedStatement(con, themeId)
+        ) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private PreparedStatement createDeleteReservationByThemIdPreparedStatement(Connection con, Long themeId) throws SQLException {
+        String sql = "DELETE FROM reservation WHERE theme_id = (?)";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setLong(1, themeId);
+
+        return ps;
+    }
 }

@@ -21,10 +21,10 @@ public class ThemeWebRepository implements ThemeRepository {
     }
 
     private final RowMapper<Theme> themeRowMapper = (resultSet, rowNum) -> new Theme(
-        resultSet.getLong("id"),
-        resultSet.getString("name"),
-        resultSet.getString("desc"),
-        resultSet.getInt("price")
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("desc"),
+            resultSet.getInt("price")
     );
 
     @Override

@@ -1,7 +1,7 @@
 package roomescape.domain;
 
 public class Theme {
-    private Long id;
+    private final Long id;
     private final String name;
     private final String desc;
     private final Integer price;

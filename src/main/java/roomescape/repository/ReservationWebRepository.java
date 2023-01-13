@@ -81,4 +81,10 @@ public class ReservationWebRepository implements ReservationRepository {
         String sql = "DELETE FROM reservation";
         jdbcTemplate.execute(sql);
     }
+
+    @Override
+    public void deleteReservationByThemeId(Long themeId) {
+        String sql = "DELETE FROM reservation WHERE theme_id = (?)";
+        jdbcTemplate.update(sql, themeId);
+    }
 }
