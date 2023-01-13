@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import web.entity.Reservation;
+import web.exception.ErrorCode;
 import web.reservation.dto.ReservationResponseDto;
 import web.reservation.exception.ReservationException;
 import web.reservation.service.ReservationService;
@@ -29,9 +30,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
-import static web.exception.ErrorCode.RESERVATION_NOT_FOUND;
-import static web.exception.ErrorCode.THEME_NOT_FOUND;
 
 @WebMvcTest(ReservationController.class)
 @ExtendWith(MockitoExtension.class)
@@ -66,13 +64,13 @@ public class ReservationControllerTest {
 
         @Test
         void should_responseConflict_when_duplicateReservation() throws Exception {
-            when(reservationService.reservation(any())).thenThrow(new ReservationException(RESERVATION_DUPLICATE));
+            when(reservationService.reservation(any())).thenThrow(new ReservationException(ErrorCode.RESERVATION_DUPLICATE));
             String content = getValidContent();
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content))
                     .andExpect(status().isConflict())
-                    .andExpect(jsonPath("$.message").value(RESERVATION_DUPLICATE.getMessage()));
+                    .andExpect(jsonPath("$.message").value(ErrorCode.RESERVATION_DUPLICATE.getMessage()));
         }
 
         @ParameterizedTest
@@ -174,13 +172,13 @@ public class ReservationControllerTest {
 
         @Test
         void should_response404NotFound_when_notExistTheme() throws Exception {
-            when(reservationService.reservation(any())).thenThrow(new ThemeException(THEME_NOT_FOUND));
+            when(reservationService.reservation(any())).thenThrow(new ThemeException(ErrorCode.THEME_NOT_FOUND));
             String content = getValidContent();
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content))
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value(THEME_NOT_FOUND.getMessage()));
+                    .andExpect(jsonPath("$.message").value(ErrorCode.THEME_NOT_FOUND.getMessage()));
         }
     }
 
@@ -211,11 +209,11 @@ public class ReservationControllerTest {
 
         @Test
         void should_responseNotFound_when_notExistId() throws Exception {
-            when(reservationService.findReservationById(anyLong())).thenThrow(new ReservationException(RESERVATION_NOT_FOUND));
+            when(reservationService.findReservationById(anyLong())).thenThrow(new ReservationException(ErrorCode.RESERVATION_NOT_FOUND));
             mockMvc.perform(get("/reservations/-1")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value(RESERVATION_NOT_FOUND.getMessage()));
+                    .andExpect(jsonPath("$.message").value(ErrorCode.RESERVATION_NOT_FOUND.getMessage()));
         }
     }
 
@@ -232,10 +230,10 @@ public class ReservationControllerTest {
 
         @Test
         void shoud_responseNotFound_then_notExistId() throws Exception {
-            doThrow(new ReservationException(RESERVATION_NOT_FOUND)).when(reservationService).cancelReservation(anyLong());
+            doThrow(new ReservationException(ErrorCode.RESERVATION_NOT_FOUND)).when(reservationService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value(RESERVATION_NOT_FOUND.getMessage()));
+                    .andExpect(jsonPath("$.message").value(ErrorCode.RESERVATION_NOT_FOUND.getMessage()));
         }
     }
 

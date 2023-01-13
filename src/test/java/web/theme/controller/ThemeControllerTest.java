@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import web.entity.Theme;
+import web.exception.ErrorCode;
 import web.theme.dto.ThemeResponseDto;
 import web.theme.exception.ThemeException;
 import web.theme.service.ThemeService;
@@ -27,8 +28,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static web.exception.ErrorCode.THEME_DUPLICATE;
-import static web.exception.ErrorCode.THEME_NOT_FOUND;
 
 @WebMvcTest(ThemeController.class)
 @ExtendWith(MockitoExtension.class)
@@ -61,13 +60,13 @@ class ThemeControllerTest {
 
         @Test
         void should_responseConflict_when_duplicateTheme() throws Exception {
-            when(themeService.save(any())).thenThrow(new ThemeException(THEME_DUPLICATE));
+            when(themeService.save(any())).thenThrow(new ThemeException(ErrorCode.THEME_DUPLICATE));
             String content = getValidContent();
             mockMvc.perform(post("/themes")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content))
                     .andExpect(status().isConflict())
-                    .andExpect(jsonPath("$.message").value(THEME_DUPLICATE.getMessage()));
+                    .andExpect(jsonPath("$.message").value(ErrorCode.THEME_DUPLICATE.getMessage()));
         }
 
         @ParameterizedTest
@@ -209,10 +208,10 @@ class ThemeControllerTest {
 
         @Test
         void shoud_responseNotFound_then_notExistId() throws Exception {
-            doThrow(new ThemeException(THEME_NOT_FOUND)).when(themeService).deleteById(anyLong());
+            doThrow(new ThemeException(ErrorCode.THEME_NOT_FOUND)).when(themeService).deleteById(anyLong());
             mockMvc.perform(delete("/themes/-1"))
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value(THEME_NOT_FOUND.getMessage()));
+                    .andExpect(jsonPath("$.message").value(ErrorCode.THEME_NOT_FOUND.getMessage()));
         }
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import web.exception.ErrorCode;
 import web.reservation.dto.ReservationRequestDto;
 import web.reservation.dto.ReservationResponseDto;
 import web.reservation.exception.ReservationException;
@@ -13,9 +14,6 @@ import web.reservation.service.ReservationService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalTime;
-
-import static web.exception.ErrorCode.NOT_UNIT_OF_30_MINUTES;
-import static web.exception.ErrorCode.OUT_OF_BUSINESS_HOURS;
 
 @RequestMapping("/reservations")
 @RequiredArgsConstructor
@@ -41,13 +39,13 @@ public class ReservationController {
 
     private void checkOutOfBusinessHours(LocalTime time) {
         if (time.isBefore(BEGIN_TIME) || time.isAfter(LAST_TIME)) {
-            throw new ReservationException(OUT_OF_BUSINESS_HOURS);
+            throw new ReservationException(ErrorCode.OUT_OF_BUSINESS_HOURS);
         }
     }
 
     private void checkUnitOf30Minutes(LocalTime time) {
         if (time.getMinute() % 30 != 0) {
-            throw new ReservationException(NOT_UNIT_OF_30_MINUTES);
+            throw new ReservationException(ErrorCode.NOT_UNIT_OF_30_MINUTES);
         }
     }
 

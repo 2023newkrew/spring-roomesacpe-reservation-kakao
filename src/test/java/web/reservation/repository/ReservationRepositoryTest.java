@@ -8,6 +8,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import web.entity.Reservation;
 import web.entity.Theme;
+import web.exception.ErrorCode;
 import web.reservation.exception.ReservationException;
 import web.theme.exception.ThemeException;
 import web.theme.repository.ThemeRepository;
@@ -20,7 +21,6 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static web.exception.ErrorCode.THEME_NOT_FOUND;
 
 public class ReservationRepositoryTest {
 
@@ -93,7 +93,7 @@ public class ReservationRepositoryTest {
 
             assertThatThrownBy(() -> reservationRepository.save(reservation))
                     .isInstanceOf(ThemeException.class)
-                    .hasMessage(THEME_NOT_FOUND.getMessage());
+                    .hasMessage(ErrorCode.THEME_NOT_FOUND.getMessage());
         }
     }
 

@@ -19,8 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
-import static web.exception.ErrorCode.RESERVATION_DUPLICATE;
-
 @Repository
 public class DatabaseReservationRepository implements ReservationRepository {
 
@@ -35,7 +33,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     @Override
     public long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
-            throw new ReservationException(RESERVATION_DUPLICATE);
+            throw new ReservationException(ErrorCode.RESERVATION_DUPLICATE);
         }
         if (isExistTheme(reservation)) {
             throw new ThemeException(ErrorCode.THEME_NOT_FOUND);
