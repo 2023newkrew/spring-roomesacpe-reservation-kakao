@@ -21,7 +21,7 @@ public class ReservationController {
     @Autowired
     private ReservationDAO reservationDAO;
 
-    @PostMapping(value = "", produces = "application/json; charset=utf-8")
+    @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
         long id = reservationDAO.addReservation(reservation);
         return ResponseEntity
@@ -30,13 +30,13 @@ public class ReservationController {
                 .build();
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
         Reservation reservation = reservationDAO.findReservation(id);
         return ResponseEntity.status(HttpStatus.OK).body(reservation);
     }
 
-    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
         reservationDAO.findReservation(id);
         reservationDAO.deleteReservation(id);
