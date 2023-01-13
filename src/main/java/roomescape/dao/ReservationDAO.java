@@ -23,7 +23,8 @@ public abstract class ReservationDAO {
     private static final RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean("result");
 
     protected void validateReservation(Reservation reservation) {
-        if (!reservation.isValid()) {
+        if (reservation.getDate() == null || reservation.getTime() == null
+                || reservation.getName() == null) {
             throw new BadRequestException();
         }
         if (existReservation(reservation.getDate(), reservation.getTime())) {

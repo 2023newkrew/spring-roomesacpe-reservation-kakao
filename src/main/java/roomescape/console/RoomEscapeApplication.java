@@ -23,7 +23,7 @@ public class RoomEscapeApplication {
         Scanner scanner = new Scanner(System.in);
         ReservationDAO dao = new ConsoleReservationDAO(URL, USER, PASSWORD);
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+//        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();
@@ -42,7 +42,7 @@ public class RoomEscapeApplication {
                 String name = params.split(",")[2];
 
                 Reservation reservation = new Reservation(
-                        LocalDate.parse(date), LocalTime.parse(time + ":00"), name, null);
+                        LocalDate.parse(date), LocalTime.parse(time + ":00"), name, 1L);
                 dao.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");

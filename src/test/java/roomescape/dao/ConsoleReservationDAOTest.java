@@ -12,13 +12,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.Reservation;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Sql("classpath:/test.sql")
 public class ConsoleReservationDAOTest {
 
-    private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
-    private static final String USER = "";
+    private static final String URL = "jdbc:h2:mem:test";
+    private static final String USER = "sa";
     private static final String PASSWORD = "";
 
     private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
