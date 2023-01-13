@@ -1,11 +1,18 @@
 package nextstep.reservation.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
+@RequiredArgsConstructor
+@Getter
+@EqualsAndHashCode
+@Builder
 public class Reservation {
     @Nullable
     private final Long id;
@@ -14,44 +21,4 @@ public class Reservation {
     private final String name;
     private final Long themeId;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, long theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.themeId = theme;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getThemeId() {
-        return themeId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
-        return Objects.equals(date, that.date) && Objects.equals(time, that.time) && Objects.equals(name, that.name) && Objects.equals(themeId, that.themeId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, date, time, name, themeId);
-    }
 }

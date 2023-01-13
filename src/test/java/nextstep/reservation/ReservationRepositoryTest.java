@@ -43,8 +43,8 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약 삽입")
     void createReservationTest() {
-        Reservation result = reservationRepository.create(reservation);
-        assertThat(result).isEqualTo(reservation);
+        Reservation created = reservationRepository.create(reservation);
+        assertThat(reservationDataEquals(created, reservation)).isTrue();
     }
 
     @Test
@@ -90,5 +90,12 @@ class ReservationRepositoryTest {
                 () -> reservationRepository.findById(created.getId()))
                 .isInstanceOf(ReservationException.class)
                 .hasMessage(NO_SUCH_RESERVATION.getMessage());
+    }
+
+    private boolean reservationDataEquals(Reservation a, Reservation b) {
+        return a.getName().equals(b.getName()) &&
+                a.getDate().equals(b.getDate()) &&
+                a.getTime().equals(b.getTime()) &&
+                a.getThemeId().equals(b.getThemeId());
     }
 }
