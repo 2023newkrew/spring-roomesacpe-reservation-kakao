@@ -23,12 +23,12 @@ public class ReservationService {
     }
 
     public Reservation save(ReservationCreateRequestDto request) {
-        themeRepository.findById(request.getThemeId())
-                .orElseThrow(NoSuchThemeException::new);
-        Reservation reservation = new Reservation(request.getDate(), request.getTime(), request.getName(), request.getThemeId());
-        if (reservationRepository.existsByDateAndTime(reservation.getDate(), reservation.getTime())) {
+        validateThemeExist(request);
+        if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
         }
+//        validateDuplicate(request);
+        Reservation reservation = new Reservation(request.getDate(), request.getTime(), request.getName(), request.getThemeId());
         return reservationRepository.save(reservation);
     }
 
@@ -40,6 +40,17 @@ public class ReservationService {
     public void deleteOneById(Long id) {
         if (!reservationRepository.deleteOne(id)) {
             throw new NoSuchReservationException();
+        }
+    }
+
+    protected void validateThemeExist(ReservationCreateRequestDto requestDto) {
+        themeRepository.findById(requestDto.getThemeId())
+                .orElseThrow(NoSuchThemeException::new);
+    }
+
+    protected void validateDuplicate(ReservationCreateRequestDto requestDto) {
+        if (reservationRepository.existsByDateAndTime(requestDto.getDate(), requestDto.getTime())) {
+            throw new DuplicateReservationException();
         }
     }
 }

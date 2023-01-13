@@ -35,6 +35,18 @@ public class ReservationServiceTest {
     private ReservationService reservationService;
 
     @Test
+    @DisplayName("예약 생성 테스트")
+    void createReservationTest() {
+        ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", 1L);
+        Reservation reservation = new Reservation(1L, requestDto.getDate(), requestDto.getTime(), requestDto.getName(), requestDto.getThemeId());
+        Theme theme = new Theme(1L, "theme", "desc", 1000);
+
+        when(themeRepository.findById(any(Long.class))).thenReturn(Optional.of(theme));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+        assertThat(reservationService.save(requestDto)).isEqualTo(reservation);
+    }
+
+    @Test
     @DisplayName("예약 단건 조회 테스트")
     void findOneByIdTest() {
         Reservation savedReservation = new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", 1L);
@@ -63,12 +75,15 @@ public class ReservationServiceTest {
         when(reservationRepository.deleteOne(any(Long.class))).thenReturn(false);
         assertThatCode(() -> reservationService.deleteOneById(any(Long.class))).isInstanceOf(NoSuchReservationException.class);
     }
-    @Disabled
+
     @Test
     @DisplayName("이름 중복 예약 생성 시 예외 발생 테스트")
     void createDuplicateTest() {
         ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", 1L);
-        when(themeRepository.findById(requestDto.getThemeId())).thenReturn(any(Optional.class));
+        Reservation reservation = new Reservation(1L, requestDto.getDate(), requestDto.getTime(), requestDto.getName(), requestDto.getThemeId());
+        Theme theme = new Theme(1L, "theme", "desc", 1000);
+
+        when(themeRepository.findById(any(Long.class))).thenReturn(Optional.of(theme));
         when(reservationRepository.existsByDateAndTime(any(LocalDate.class), any(LocalTime.class))).thenReturn(true);
         assertThatCode(() -> reservationService.save(requestDto)).isInstanceOf(DuplicateReservationException.class);
     }
