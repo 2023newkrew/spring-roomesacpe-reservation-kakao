@@ -47,10 +47,8 @@ public class ReservationService {
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationWebRepository.findOne(reservationId)
                 .orElseThrow(() -> new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND));
-
         return ReservationMapper.INSTANCE.reservationToReservationResponse(reservation);
     }
-
     @Transactional
     public void deleteReservation(Long reservationId) {
         reservationWebRepository.delete(reservationId);
