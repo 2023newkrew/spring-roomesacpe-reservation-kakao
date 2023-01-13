@@ -28,7 +28,7 @@ public class ThemeController {
     public ResponseEntity<ThemeResponseDto> createTheme(@RequestBody ThemeRequestDto req) {
         ThemeResponseDto res = themeService.createTheme(req);
         String id = res.getId().toString();
-        return ResponseEntity.created(URI.create("/themes").resolve(id)).body(res);
+        return ResponseEntity.created(URI.create("/themes/").resolve(id)).body(res);
     }
 
     @DeleteMapping("/themes/{id}")

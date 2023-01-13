@@ -27,7 +27,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto req) {
         ReservationResponseDto res = reservationService.createReservation(req);
         String id = res.getId().toString();
-        return ResponseEntity.created(URI.create("/reservations").resolve(id)).body(res);
+        return ResponseEntity.created(URI.create("/reservations/").resolve(id)).body(res);
     }
 
     @DeleteMapping("/reservations/{id}")
