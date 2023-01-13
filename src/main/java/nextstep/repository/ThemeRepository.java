@@ -47,4 +47,8 @@ public class ThemeRepository {
     public List<Theme> findAll() {
         return jdbcTemplate.query("SELECT id, name, desc, price FROM theme", THEME_ROW_MAPPER);
     }
+
+    public void deleteById(Long id) {
+        jdbcTemplate.update("DELETE FROM theme WHERE id = ?", id);
+    }
 }

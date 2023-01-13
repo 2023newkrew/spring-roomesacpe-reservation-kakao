@@ -8,7 +8,9 @@ import nextstep.service.ThemeService;
 import nextstep.web.dto.ThemeRequest;
 import nextstep.web.dto.ThemeResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,4 +41,9 @@ public class ThemeController {
         return ResponseEntity.ok(responses);
     }
 
+    @DeleteMapping("/themes/{id}")
+    public ResponseEntity<Void> deleteTheme(@PathVariable Long id) {
+        themeService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
