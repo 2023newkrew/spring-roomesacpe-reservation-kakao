@@ -1,9 +1,11 @@
 package roomescape;
 
-import nextstep.ReservationDAO;
+import roomescape.dao.ReservationDaoConsole;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationDto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleApplication {
@@ -12,7 +14,7 @@ public class ConsoleApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static ReservationDAO reservationDAO = new ReservationDAO();
+    private static ReservationDaoConsole reservationDAO = new ReservationDaoConsole();
 
     public static void main(String[] args) {
 
@@ -33,27 +35,30 @@ public class ConsoleApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                
+                if (reservationDAO.findReservationByDateAndTime(date, time).size() > 0) {
+                    System.out.println("이미 예약된 시간입니다.");
+                    continue;
+                }
 
-                Reservation reservation = new Reservation(new ReservationRequest(date, time, name));
-                reservationDAO.addReservation(reservation);
-
+                Reservation reservation = reservationDAO.addReservation(new Reservation(new ReservationDto(date, time, name)));
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
+
             }
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = null;
+                Reservation reservation;
                 try {
-                    reservation = reservationDAO.findReservation(id);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("WARNING: 해당 예약은 없는 예약입니다.");
-                    e.printStackTrace();
+                    reservation = reservationDAO.findReservationById(id).get(0);
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("해당 예약은 없는 예약입니다.");
                     continue;
                 }
 
