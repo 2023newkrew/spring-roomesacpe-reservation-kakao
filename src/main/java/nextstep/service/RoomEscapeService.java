@@ -1,4 +1,4 @@
-package nextstep.web;
+package nextstep.service;
 
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
@@ -14,7 +14,7 @@ public class RoomEscapeService {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomEscapeService(JdbcTemplateReservationRepository reservationRepository) {
+    public RoomEscapeService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

@@ -2,6 +2,7 @@ package nextstep.web;
 
 import java.net.URI;
 import nextstep.model.Reservation;
+import nextstep.service.RoomEscapeService;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
 import org.springframework.http.ResponseEntity;

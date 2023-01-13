@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateReservationRepository implements nextstep.repository.ReservationRepository {
+public class JdbcTemplateReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {

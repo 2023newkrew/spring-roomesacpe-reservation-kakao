@@ -7,15 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 import java.util.Scanner;
 import javax.sql.DataSource;
-import nextstep.exception.ReservationDuplicateException;
-import nextstep.exception.ReservationNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.JdbcReservationRepository;
 import nextstep.repository.ReservationRepository;
+import nextstep.service.RoomEscapeService;
+import nextstep.web.dto.ReservationRequest;
 
 public class RoomEscapeApplication {
 
@@ -24,12 +23,15 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
+    private static RoomEscapeService service;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         DataSource dataSource = createHikariDataSource();
         createDataBaseTables(dataSource);
 
         ReservationRepository reservationRepository = new JdbcReservationRepository(dataSource);
+        service = new RoomEscapeService(reservationRepository);
 
         while (true) {
             String input = getInput(scanner);
@@ -105,19 +107,9 @@ public class RoomEscapeApplication {
         String time = params.split(",")[1];
         String name = params.split(",")[2];
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Reservation reservation = service.createReservation(
+                new ReservationRequest(name, LocalDate.parse(date), LocalTime.parse(time)));
 
-        if (reservationRepository.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time + ":00"))) {
-            throw new ReservationDuplicateException();
-        }
-
-        Reservation reservation = reservationRepository.save(new Reservation(
-                0L,
-                LocalDate.parse(date),
-                LocalTime.parse(time + ":00"),
-                name,
-                theme
-        ));
         System.out.println("예약이 등록되었습니다.");
         return reservation;
     }
@@ -126,20 +118,14 @@ public class RoomEscapeApplication {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
-        Optional<Reservation> result = reservationRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new ReservationNotFoundException(id);
-        }
-        return result.get();
+        return service.getReservation(id);
     }
 
     public static void deleteReservation(String input, ReservationRepository reservationRepository) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
 
-        reservationRepository.deleteById(id);
-
-        System.out.println("예약이 취소되었습니다.");
+        service.deleteReservation(id);
     }
 
     public static void printReservation(Reservation reservation) {
