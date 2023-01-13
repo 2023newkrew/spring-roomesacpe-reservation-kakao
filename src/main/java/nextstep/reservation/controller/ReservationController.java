@@ -3,7 +3,7 @@ package nextstep.reservation.controller;
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
-import nextstep.reservation.exception.ReservationException;
+import nextstep.reservation.exception.RoomEscapeException;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +42,8 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(ReservationException.class)
-    public ResponseEntity<String> handle(ReservationException exception) {
+    @ExceptionHandler(RoomEscapeException.class)
+    public ResponseEntity<String> handle(RoomEscapeException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

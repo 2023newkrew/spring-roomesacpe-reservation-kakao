@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.ThemeRequest;
 import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.exception.ReservationException;
+import nextstep.reservation.exception.RoomEscapeException;
 import nextstep.reservation.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static nextstep.reservation.exception.ReservationExceptionCode.NO_SUCH_THEME;
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class ThemeService {
     public ThemeResponse findById(long id) {
         Optional<Theme> foundedThemeOptional = themeRepository.findById(id);
         if (foundedThemeOptional.isEmpty()) {
-            throw new ReservationException(NO_SUCH_THEME);
+            throw new RoomEscapeException(NO_SUCH_THEME);
         }
         Theme foundedTheme = foundedThemeOptional.get();
         return ThemeResponse.from(foundedTheme);

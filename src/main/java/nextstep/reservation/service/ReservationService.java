@@ -5,15 +5,15 @@ import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.exception.ReservationException;
-import nextstep.reservation.exception.ReservationExceptionCode;
+import nextstep.reservation.exception.RoomEscapeException;
+import nextstep.reservation.exception.RoomEscapeExceptionCode;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class ReservationService {
 
     public ReservationResponse registerReservation(ReservationRequest reservationRequest) {
         if (reservationRepository.findByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime()).size() > 0) {
-            throw new ReservationException(DUPLICATE_TIME_RESERVATION);
+            throw new RoomEscapeException(DUPLICATE_TIME_RESERVATION);
         }
 
         Reservation savedReservation = reservationRepository.save(reservationRequest.toEntity());
@@ -37,7 +37,7 @@ public class ReservationService {
     public ReservationResponse findById(long id) {
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
         if (optionalReservation.isEmpty()) {
-            throw new ReservationException(ReservationExceptionCode.NO_SUCH_RESERVATION);
+            throw new RoomEscapeException(RoomEscapeExceptionCode.NO_SUCH_RESERVATION);
         }
         Reservation reservation = optionalReservation.get();
         ThemeResponse theme = themeService.findById(reservation.getThemeId());

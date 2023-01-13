@@ -2,7 +2,7 @@ package nextstep.reservation;
 
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.exception.ReservationException;
+import nextstep.reservation.exception.RoomEscapeException;
 import nextstep.reservation.repository.ThemeRepository;
 import nextstep.reservation.service.ReservationService;
 import org.assertj.core.api.Assertions;
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
-import static nextstep.reservation.exception.ReservationExceptionCode.NO_SUCH_RESERVATION;
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_RESERVATION;
 
 @SpringBootTest
 @Transactional
@@ -47,7 +47,7 @@ class ReservationServiceTest {
         //then
         Assertions.assertThatThrownBy(
                 () -> reservationService.registerReservation(reservationDuplicated)
-        ).isInstanceOf(ReservationException.class).hasMessage(DUPLICATE_TIME_RESERVATION.getMessage());
+        ).isInstanceOf(RoomEscapeException.class).hasMessage(DUPLICATE_TIME_RESERVATION.getMessage());
     }
 
     @Test
@@ -58,6 +58,6 @@ class ReservationServiceTest {
         //then
         Assertions.assertThatThrownBy(
                 () -> reservationService.findById(1L)
-        ).isInstanceOf(ReservationException.class).hasMessage(NO_SUCH_RESERVATION.getMessage());
+        ).isInstanceOf(RoomEscapeException.class).hasMessage(NO_SUCH_RESERVATION.getMessage());
     }
 }
