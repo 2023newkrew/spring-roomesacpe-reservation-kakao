@@ -3,10 +3,12 @@ package nextstep.service;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.domain.repository.ReservationRepository;
+import nextstep.domain.repository.ThemeRepository;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
+import nextstep.exception.ThemeNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,9 +20,11 @@ public class ReservationService {
     private static final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
     public Long createReservation(CreateReservationRequest createReservationRequest) {
@@ -45,8 +49,10 @@ public class ReservationService {
     public FindReservationResponse findReservationById(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationNotFoundException::new);
+        Theme theme = themeRepository.findThemeById(reservation.getThemeId())
+                .orElseThrow(ThemeNotFoundException::new);
 
-        return FindReservationResponse.from(reservation);
+        return FindReservationResponse.from(reservation, theme);
     }
 
     public void deleteReservationById(Long reservationId) {

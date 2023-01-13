@@ -108,10 +108,10 @@ public class ReservationAcceptanceTest {
         // then
         .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("id", equalTo(Integer.valueOf(expected)))
-                .body("date", equalTo(createReservationRequest.getDate()))
-                .body("time", equalTo(createReservationRequest.getTime()))
-                .body("name", equalTo(createReservationRequest.getName()));
+                .body("reservationId", equalTo(Integer.valueOf(expected)))
+                .body("reservationDate", equalTo(createReservationRequest.getDate()))
+                .body("reservationTime", equalTo(createReservationRequest.getTime()))
+                .body("reservationName", equalTo(createReservationRequest.getName()));
     }
 
     @Test
