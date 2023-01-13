@@ -1,25 +1,22 @@
-package nextstep;
+package nextstep.dto;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Reservation {
-    private Long id;
+public class ReservationRequestDto {
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+
+    @DateTimeFormat(pattern = "hh:mm")
     private LocalTime time;
     private String name;
-    private Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
+    public ReservationRequestDto(LocalDate date, LocalTime time, String name) {
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public LocalDate getDate() {
@@ -32,9 +29,5 @@ public class Reservation {
 
     public String getName() {
         return name;
-    }
-
-    public Theme getTheme() {
-        return theme;
     }
 }
