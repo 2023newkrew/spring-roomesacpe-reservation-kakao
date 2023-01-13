@@ -1,17 +1,21 @@
-package nextstep;
+package console;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
+import web.domain.Reservation;
+import web.domain.Theme;
+import web.exception.NoSuchReservationException;
 
 public class RoomEscapeApplication {
+
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
+    private static final ReservationDAO reservationDAO = new ReservationDAO();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -44,7 +48,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                reservations.add(reservation);
+                reservationDAO.addReservation(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -58,10 +62,8 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                Reservation reservation = reservationDAO.findById(id)
+                        .orElseThrow(NoSuchReservationException::new);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -77,8 +79,13 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
+                boolean isDeleted = reservationDAO.deleteById(id);
+                if (isDeleted) {
+                    System.out.println("정상적으로 삭제되었습니다.");
+                }
+
+                if (!isDeleted) {
+                    System.out.println("존재하지 않는 예약입니다.");
                 }
             }
 

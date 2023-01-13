@@ -1,16 +1,17 @@
-package nextstep;
+package web.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+
     private Long id;
     private LocalDate date;
     private LocalTime time;
     private String name;
     private Theme theme;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, web.domain.Theme theme) {
         this.id = id;
         this.date = date;
         this.time = time;

@@ -1,6 +1,7 @@
-package nextstep;
+package web.domain;
 
 public class Theme {
+
     private String name;
     private String desc;
     private Integer price;
