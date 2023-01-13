@@ -5,6 +5,7 @@ import nextstep.domain.dto.GetReservationDto;
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.theme.Theme;
 import nextstep.exception.DuplicateTimeReservationException;
+import nextstep.exception.IllegalReservationTimeException;
 import nextstep.exception.NoReservationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,15 @@ public class ReservationServiceTest {
 
         assertThatThrownBy(()->reservationService.addReservation(createReservationDto2))
                 .isInstanceOf(DuplicateTimeReservationException.class);
+    }
+
+    @DisplayName("30분 단위가 아닌 예약을 추가시 예외 발생")
+    @Test
+    void illegalReservationTest() {
+        CreateReservationDto createReservationDto = new CreateReservationDto("2022-08-11", "14:35:00", "name", 1l);
+
+        assertThatThrownBy(()->reservationService.addReservation(createReservationDto))
+                .isInstanceOf(IllegalReservationTimeException.class);
     }
 
     @DisplayName("추가된 예약을 조회시 동일한 값이 들어있는지 확인")
