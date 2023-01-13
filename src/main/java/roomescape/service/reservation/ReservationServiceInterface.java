@@ -4,5 +4,6 @@ import roomescape.dto.Reservation;
 
 public interface ReservationServiceInterface {
     Long create(Reservation reservation);
-    Reservation find(Long idData);
+    Reservation find(Long id);
+    void remove(Long id);
 }

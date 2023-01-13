@@ -50,7 +50,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
 
     private void validateResultSet(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) {
-            throw new SQLException();
+            throw new BadRequestException();
         }
     }
 
@@ -98,50 +98,40 @@ public class ConsoleReservationDAO extends ReservationDAO {
         return resultSet.getBoolean("result");
     }
 
-    private Long executeAddConnection(Connection con, Reservation reservation) {
-        try {
-            PreparedStatement ps = createAddReservationPreparedStatement(con, reservation);
-            ps.executeUpdate();
-            return getGeneratedKey(ps);
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private Long executeAddConnection(Connection con, Reservation reservation) throws SQLException {
+        PreparedStatement ps = createAddReservationPreparedStatement(con, reservation);
+        ps.executeUpdate();
+        return getGeneratedKey(ps);
     }
 
-    private Reservation executeFindConnection(Connection con, Long id) {
-        try {
-            PreparedStatement ps = createFindReservationPreparedStatement(con, id);
-            ResultSet resultSet = ps.executeQuery();
-            return parseFindResultSet(resultSet);
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private Reservation executeFindConnection(Connection con, Long id) throws SQLException {
+        PreparedStatement ps = createFindReservationPreparedStatement(con, id);
+        ResultSet resultSet = ps.executeQuery();
+        return parseFindResultSet(resultSet);
     }
 
-    private void executeDeleteConnection(Connection con, Long id) {
-        try {
-            PreparedStatement ps = createDeleteReservationPreparedStatement(con, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private void executeDeleteConnection(Connection con, Long id) throws SQLException {
+        PreparedStatement ps = createDeleteReservationPreparedStatement(con, id);
+        ps.executeUpdate();
     }
 
-    private boolean executeExistConnection(Connection con, Reservation reservation) {
-        try {
-            PreparedStatement ps = createExistReservationPreparedStatement(con, reservation);
-            ResultSet resultSet = ps.executeQuery();
-            return parseExistResultSet(resultSet);
-        } catch (SQLException e) {
-            throw new BadRequestException();
-        }
+    private boolean executeExistConnection(Connection con, Reservation reservation) throws SQLException {
+        PreparedStatement ps = createExistReservationPreparedStatement(con, reservation);
+        ResultSet resultSet = ps.executeQuery();
+        return parseExistResultSet(resultSet);
     }
 
     @Override
     public boolean exist(Reservation reservation) {
         Connection con = openConnection();
-        boolean result = executeExistConnection(con, reservation);
-        closeConnection(con);
+        boolean result;
+        try {
+            result = executeExistConnection(con, reservation);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
         return result;
     }
 
@@ -149,23 +139,40 @@ public class ConsoleReservationDAO extends ReservationDAO {
     public Long create(Reservation reservation) {
         validate(reservation);
         Connection con = openConnection();
-        Long id = executeAddConnection(con, reservation);
-        closeConnection(con);
+        Long id;
+        try {
+            id = executeAddConnection(con, reservation);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
         return id;
     }
 
     @Override
     public Reservation find(Long id) {
         Connection con = openConnection();
-        Reservation reservation = executeFindConnection(con, id);
-        closeConnection(con);
+        Reservation reservation;
+        try {
+            reservation = executeFindConnection(con, id);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
         return reservation;
     }
 
     @Override
     public void remove(Long id) {
         Connection con = openConnection();
-        executeDeleteConnection(con, id);
-        closeConnection(con);
+        try {
+            executeDeleteConnection(con, id);
+        } catch (SQLException e) {
+            throw new BadRequestException();
+        } finally {
+            closeConnection(con);
+        }
     }
 }

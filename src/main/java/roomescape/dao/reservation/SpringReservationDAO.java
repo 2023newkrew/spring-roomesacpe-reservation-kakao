@@ -22,7 +22,7 @@ public class SpringReservationDAO extends ReservationDAO {
     }
 
     private <T> void validateResult(List<T> result) {
-        if (result.size() != 1) {
+        if (result.size() == 0) {
             throw new BadRequestException();
         }
     }

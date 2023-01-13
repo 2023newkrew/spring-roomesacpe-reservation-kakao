@@ -1,6 +1,8 @@
 package roomescape.service.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -43,6 +45,8 @@ public class ReservationServiceTest {
         when(reservationDAO.create(reservation)).thenReturn(ID_DATA);
 
         assertThat(reservationService.create(reservation)).isEqualTo(ID_DATA);
+        verify(reservationDAO, times(1)).exist(reservation);
+        verify(reservationDAO, times(1)).create(reservation);
     }
 
     @DisplayName("예약 조회")
@@ -57,5 +61,18 @@ public class ReservationServiceTest {
         assertThat(actual.getTime()).isEqualTo(TIME_DATA);
         assertThat(actual.getName()).isEqualTo(NAME_DATA);
         assertThat(actual.getThemeId()).isEqualTo(THEME_ID_DATA);
+        verify(reservationDAO, times(1)).find(ID_DATA);
+    }
+
+    @DisplayName("예약 삭제")
+    @Test
+    void removeReservation() {
+        Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
+
+        when(reservationDAO.find(ID_DATA)).thenReturn(reservation);
+
+        reservationService.remove(ID_DATA);
+        verify(reservationDAO, times(1)).find(ID_DATA);
+        verify(reservationDAO, times(1)).remove(ID_DATA);
     }
 }
