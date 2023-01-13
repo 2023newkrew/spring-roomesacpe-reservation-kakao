@@ -3,6 +3,7 @@ package nextstep.repository;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
