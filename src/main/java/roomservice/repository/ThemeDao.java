@@ -37,6 +37,7 @@ public class ThemeDao {
     /**
      * insert a theme into DB.
      *
+     * @throws DuplicatedThemeNameException if name already exist.
      * @param theme to be inserted into DB.
      * @return id automatically given by DB.
      */
@@ -95,6 +96,7 @@ public class ThemeDao {
     /**
      * delete one theme specified by id.
      *
+     * @throws ReferencedThemeDeletionException if theme is referenced by some reservation.
      * @param id which you want to delete.
      */
     public void deleteThemeById(Long id) {
