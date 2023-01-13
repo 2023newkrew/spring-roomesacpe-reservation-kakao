@@ -9,7 +9,7 @@ import roomescape.model.Reservation;
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -37,11 +37,12 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public Long save(Reservation reservation) {
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("date", reservation.getDate().toString());
-        parameters.put("time", reservation.getTime().toString());
-        parameters.put("name", reservation.getName());
-        parameters.put("theme_id", reservation.getThemeId().toString());
+        Map<String, String> parameters = Map.of(
+                "date", reservation.getDate().toString(),
+                "time", reservation.getTime().toString(),
+                "name", reservation.getName(),
+                "theme_id", reservation.getThemeId().toString()
+        );
         return insertActor.executeAndReturnKey(parameters).longValue();
     }
 

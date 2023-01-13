@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import roomescape.model.Theme;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -34,10 +34,11 @@ public class ThemeJdbcRepository implements ThemeRepository {
 
     @Override
     public Long save(Theme theme) {
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("name", theme.getName());
-        parameters.put("desc", theme.getDesc());
-        parameters.put("price", theme.getPrice().toString());
+        Map<String, String> parameters = Map.of(
+                "name", theme.getName(),
+                "desc", theme.getDesc(),
+                "price", theme.getPrice().toString()
+        );
         return insertActor.executeAndReturnKey(parameters).longValue();
     }
 
