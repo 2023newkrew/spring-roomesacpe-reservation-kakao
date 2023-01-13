@@ -20,7 +20,7 @@ public class ReservationValidator {
         if (request.date.isBefore(LocalDate.now()) || request.date.isEqual(LocalDate.now()))
             throw new IllegalCreateReservationRequestException(ErrorCode.ILLEGAL_DATE);
 
-        if (reservationJDBCRepository.findByDateAndTime(request.date, request.time).size() > 0) {
+        if (!reservationJDBCRepository.findByDateAndTime(request.date, request.time).isEmpty()) {
             throw new DuplicatedReservationException();
         }
     }

@@ -17,12 +17,12 @@ public class ThemeValidator {
     }
 
     public void validateForUpdate(Long themeId) {
-        if (reservationJDBCRepository.findByRequestId(themeId).size() > 0)
+        if (!reservationJDBCRepository.findByRequestId(themeId).isEmpty())
             throw new UsingThemeException();
     }
 
     public void validateForCreate(CreateThemeRequest request) {
-        if (themeJDBCRepository.findByName(request.name).size() > 0)
+        if (!themeJDBCRepository.findByName(request.name).isEmpty())
             throw new DuplicatedThemeException();
     }
 }

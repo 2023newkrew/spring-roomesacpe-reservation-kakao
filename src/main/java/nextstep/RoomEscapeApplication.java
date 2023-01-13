@@ -111,7 +111,7 @@ public class RoomEscapeApplication {
                 String desc = params.split(",")[2];
                 Integer price = Integer.parseInt(params.split(",")[3]);
 
-                if (reservationDAO.findByThemeId(id).size() > 0) throw new RuntimeException("해당 테마는 이미 예약되어 있습니다");
+                if (!reservationDAO.findByThemeId(id).isEmpty()) throw new RuntimeException("해당 테마는 이미 예약되어 있습니다");
                 themeDAO.update(new UpdateThemeRequest(id, name, desc, price));
             }
 
