@@ -27,6 +27,10 @@ java {
     }
 }
 
+bootRun {
+    standardInput = System.in
+}
+
 test {
     useJUnitPlatform()
 }
