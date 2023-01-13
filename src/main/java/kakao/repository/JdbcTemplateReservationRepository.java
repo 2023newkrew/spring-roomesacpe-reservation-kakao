@@ -1,5 +1,6 @@
 package kakao.repository;
 
+import kakao.exception.ReservationNotFoundException;
 import kakao.model.entity.Reservation;
 import kakao.model.request.ReservationRequest;
 import kakao.model.response.ReservationResponse;
@@ -63,7 +64,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
+        if (findById(id).isPresent()) {
+            jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
+            return;
+        }
+        throw new ReservationNotFoundException();
     }
 
     private RowMapper<Reservation> reservationResponseRowMapper() {
