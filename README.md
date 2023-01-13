@@ -16,7 +16,7 @@
 * 성공적으로 처리 시 `noResponse(204)` 반환.
 
 ## service
-* `controller`에서 받은 DTO 데이터를 Entity로 변환해 `repository`에 전달
+* `controller`에서 받은 DTO 데이터를 Entity로 변환해 `repository`에 전달, 혹은 그 반대 역할을 함
 * `예약 하기`의 경우 입력값에 대한 검증을 수행(`Theme id`값이 유효한지 등).
 
 ## repository
@@ -41,6 +41,7 @@
 * `POST /themes`
 * `body`로 테마에 대한 정보 넘겨줌
 * 성공적으로 수행 시 `created`와 헤더에 `Location : /themes/{id}`를 반환해야 함
+* 중복된 이름의 테마 추가 시 예외 발생
 
 ### 테마 조회
 * `GET /themes`
@@ -51,7 +52,7 @@
 * 수행 시 `No content` 반환.
 
 ## service
-* `controller`에서 받은 DTO 데이터를 Entity로 변환해 `repository`에 전달
+* `controller`에서 받은 DTO 데이터를 Entity로 변환해 `repository`에 전달하거나, 그 반대 역할을 함.
 
 ## repository
 ### 테마 추가
@@ -63,3 +64,4 @@
 
 ### 테마 삭제
 * id를 받아 id가 일치하는 데이터를 삭제하는 쿼리를 보냄
+* 이 때, `RESERVATION`에서 참조하는 `theme`는 삭제하지 못함(삭제 시도 시 예외)
