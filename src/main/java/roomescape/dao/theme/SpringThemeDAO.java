@@ -4,10 +4,12 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ListThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatementCreator;
 import roomescape.dto.Theme;
+import roomescape.exception.BadRequestException;
 
 public class SpringThemeDAO extends ThemeDAO {
 
@@ -17,10 +19,18 @@ public class SpringThemeDAO extends ThemeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private <T> void validateResult(List<T> result) {
+        if (result.size() != 1) {
+            throw new BadRequestException();
+        }
+    }
 
     @Override
     public boolean exist(Theme theme) {
-        return false;
+        List<Boolean> result = jdbcTemplate.query(
+                new ExistThemePreparedStatementCreator(theme), getExistRowMapper());
+        validateResult(result);
+        return result.get(0);
     }
 
     @Override

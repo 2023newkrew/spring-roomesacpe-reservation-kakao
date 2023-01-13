@@ -64,4 +64,14 @@ public class SpringThemeDAOTest {
         Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
         assertThat(count).isEqualTo(0L);
     }
+
+    @DisplayName("테마 존재 확인")
+    @Test
+    void existTheme() {
+        Theme theme1 = new Theme(NAME_DATA1, DESC_DATA, PRICE_DATA);
+        Theme theme2 = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
+
+        assertThat(themeDAO.exist(theme1)).isTrue();
+        assertThat(themeDAO.exist(theme2)).isFalse();
+    }
 }
