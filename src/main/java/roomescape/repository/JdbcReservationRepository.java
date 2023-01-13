@@ -7,7 +7,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import javax.sql.DataSource;
+import roomescape.view.ReservationOutputView;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,10 +18,12 @@ import java.util.Optional;
 @Repository
 public class JdbcReservationRepository implements ReservationRepository{
     public final JdbcTemplate jdbcTemplate;
+    private ReservationOutputView reservationOutputView;
 
     @Autowired
-    public JdbcReservationRepository(DataSource dataSource){
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.reservationOutputView = new ReservationOutputView();
     }
 
     @Override
@@ -39,7 +42,7 @@ public class JdbcReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public Optional<Reservation> findById(int reservationId) {
+    public Optional<Reservation> findById(long reservationId) {
         String sql = "select date, time, name, theme_name, theme_desc, theme_price from RESERVATION where id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql,
                 new Object[]{reservationId},
@@ -63,7 +66,7 @@ public class JdbcReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public Integer deleteReservation(int deleteId) {
+    public Integer deleteReservation(long deleteId) {
         String sql = "DELETE FROM RESERVATION WHERE id=?";
         return jdbcTemplate.update(sql, deleteId);
     }

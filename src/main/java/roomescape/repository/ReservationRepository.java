@@ -7,9 +7,9 @@ import java.util.Optional;
 public interface ReservationRepository {
     Long createReservation(Reservation reservation);
 
-    Optional<Reservation> findById(int reservationId);
+    Optional<Reservation> findById(long reservationId);
 
     Integer findByDateAndTime(Reservation reservation);
 
-    Integer deleteReservation(int deleteId);
+    Integer deleteReservation(long deleteId);
 }
