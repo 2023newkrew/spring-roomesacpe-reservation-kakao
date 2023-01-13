@@ -41,7 +41,7 @@ class ThemeServiceTest {
     @Test
     void create() {
         // given
-        ThemeRequest themeRequest = new ThemeRequest("테마1", "설명1", 1000);
+        ThemeRequest themeRequest = new ThemeRequest("테마1", "설명1", "1000");
 
         // when
         Long themeId = themeService.createTheme(themeRequest);
@@ -61,7 +61,7 @@ class ThemeServiceTest {
         String duplicatedName = "테마1";
         Theme theme1 = new Theme(duplicatedName, "설명1", 1000);
         themeRepository.insertTheme(theme1);
-        ThemeRequest themeRequest = new ThemeRequest(duplicatedName, "다른설명1", 3000);
+        ThemeRequest themeRequest = new ThemeRequest(duplicatedName, "다른설명1", "3000");
 
         // when & then
         assertThatCode(() -> themeService.createTheme(themeRequest))
@@ -119,7 +119,7 @@ class ThemeServiceTest {
         // given
         Theme theme = new Theme("테마1", "설명1", 1000);
         Long themeId = themeRepository.insertTheme(theme);
-        ThemeRequest themeRequest = new ThemeRequest("바뀐테마1", "바뀐설명1", 5000);
+        ThemeRequest themeRequest = new ThemeRequest("바뀐테마1", "바뀐설명1", "5000");
 
         // when
         themeService.changeTheme(themeId, themeRequest);
@@ -137,7 +137,7 @@ class ThemeServiceTest {
     void changeThemeException() {
         // given
         Long invalidThemeId = 1000000L;
-        ThemeRequest themeRequest = new ThemeRequest("바뀐테마1", "바뀐설명1", 5000);
+        ThemeRequest themeRequest = new ThemeRequest("바뀐테마1", "바뀐설명1", "5000");
 
         // when & then
         assertThatCode(() -> themeService.changeTheme(invalidThemeId, themeRequest))
