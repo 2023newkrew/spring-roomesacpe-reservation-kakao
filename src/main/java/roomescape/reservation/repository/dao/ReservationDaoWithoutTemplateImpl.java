@@ -31,7 +31,7 @@ public class ReservationDaoWithoutTemplateImpl implements ReservationDao {
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Long create(Reservation reservation) {
         String sql = "INSERT INTO RESERVATION(date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -51,7 +51,7 @@ public class ReservationDaoWithoutTemplateImpl implements ReservationDao {
     }
 
     @Override
-    public Optional<Reservation> findById(Long id) {
+    public Optional<Reservation> selectById(Long id) {
         String sql = "SELECT * FROM RESERVATION WHERE id = ?";
         Reservation reservation = null;
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");

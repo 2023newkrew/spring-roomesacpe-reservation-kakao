@@ -1,7 +1,7 @@
 package roomescape;
 
 import roomescape.entity.Reservation;
-import roomescape.exceptions.exception.NoSuchReservationException;
+import roomescape.exceptions.exception.ReservationNotFoundException;
 import roomescape.reservation.repository.dao.ReservationDao;
 
 import java.time.LocalDate;
@@ -43,7 +43,7 @@ public class RoomEscapeConsoleApplication {
                 reservation.setDate(LocalDate.parse(date));
                 reservation.setName(name);
 
-                reservation.setId(reservationDao.save(reservation));
+                reservation.setId(reservationDao.create(reservation));
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -57,7 +57,7 @@ public class RoomEscapeConsoleApplication {
 
                 long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDao.findById(id).orElseThrow(() -> new NoSuchReservationException());
+                Reservation reservation = reservationDao.selectById(id).orElseThrow(() -> new ReservationNotFoundException());
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());

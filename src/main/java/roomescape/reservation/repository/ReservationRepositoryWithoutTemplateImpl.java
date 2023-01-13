@@ -10,12 +10,12 @@ public class ReservationRepositoryWithoutTemplateImpl implements ReservationRepo
 
     @Override
     public Long save(Reservation reservation) {
-        return reservationDao.save(reservation);
+        return reservationDao.create(reservation);
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        return reservationDao.findById(id);
+        return reservationDao.selectById(id);
     }
 
     @Override

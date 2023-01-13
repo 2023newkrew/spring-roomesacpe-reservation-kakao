@@ -18,7 +18,7 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Long create(Reservation reservation) {
         String sql = "insert into RESERVATION (date, time, name, theme_id) values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -34,7 +34,7 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public Optional<Reservation> findById(Long id) {
+    public Optional<Reservation> selectById(Long id) {
         String sql = "select * from RESERVATION WHERE id = ?";
         Reservation reservation;
         try {

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.entity.Reservation;
-import roomescape.entity.Theme;
 
 public class ReservationResponseDto {
     private Long id;
@@ -26,8 +25,8 @@ public class ReservationResponseDto {
 //        this.themePrice = theme.getPrice();
     }
 
-    public static ReservationResponseDto of(Long id, Reservation reservation) {
-        return new ReservationResponseDto(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
+    public static ReservationResponseDto of(Reservation reservation) {
+        return new ReservationResponseDto(reservation.getId(), reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
     }
 
     public Long getId() {

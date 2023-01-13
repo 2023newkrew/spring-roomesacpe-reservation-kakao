@@ -3,7 +3,7 @@ package roomescape.reservation.service;
 import org.springframework.stereotype.Service;
 import roomescape.exceptions.exception.DuplicatedReservationException;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.exceptions.exception.NoSuchReservationException;
+import roomescape.exceptions.exception.ReservationNotFoundException;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
@@ -17,11 +17,11 @@ public class RoomEscapeService {
 
     public Long makeReservation(ReservationRequestDto reservationRequestDto) {
         Reservation reservation = reservationRequestDto.toEntity();
-        validateNotExistentReservation(reservation);
+        validateNonExistentReservation(reservation);
         return reservationRepository.save(reservation);
     }
 
-    private void validateNotExistentReservation(Reservation reservation) {
+    private void validateNonExistentReservation(Reservation reservation) {
         if (reservationRepository.isReservationDuplicated(reservation)) {
             throw new DuplicatedReservationException();
         }
@@ -29,14 +29,14 @@ public class RoomEscapeService {
 
     public ReservationResponseDto findReservationById(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new NoSuchReservationException());
-        return ReservationResponseDto.of(reservationId, reservation);
+                .orElseThrow(ReservationNotFoundException::new);
+        return ReservationResponseDto.of(reservation);
     }
 
     public void cancelReservation(Long reservationId) {
         int deleteReservationCount = reservationRepository.delete(reservationId);
         if (deleteReservationCount == 0) {
-            throw new NoSuchReservationException();
+            throw new ReservationNotFoundException();
         }
     }
 }

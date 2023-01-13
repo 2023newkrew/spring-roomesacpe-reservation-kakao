@@ -29,34 +29,34 @@ public class ReservationDaoWithoutTemplateImplTest {
 
     @Test
     void createTest() {
-        assertThat(reservationDao.save(testReservation)).isPositive();
+        assertThat(reservationDao.create(testReservation)).isPositive();
     }
 
     @Test
     void throwExceptionWhenDuplicated() {
         testReservation.setTime(testReservation.getTime().plusHours(1));
         assertThat(reservationDao.isReservationDuplicated(testReservation)).isEqualTo(false);
-        reservationDao.save(testReservation);
+        reservationDao.create(testReservation);
         assertThat(reservationDao.isReservationDuplicated(testReservation)).isEqualTo(true);
     }
 
     @Test
     void showTest() {
         testReservation.setTime(testReservation.getTime().plusHours(2));
-        long id = reservationDao.save(testReservation);
+        long id = reservationDao.create(testReservation);
         testReservation.setId(id);
-        assertThat(reservationDao.findById(id)).hasValue(testReservation);
+        assertThat(reservationDao.selectById(id)).hasValue(testReservation);
     }
 
     @Test
     void throwExceptionWhenReservationNotExist() {
-        assertThat(reservationDao.findById(0L)).isEmpty();
+        assertThat(reservationDao.selectById(0L)).isEmpty();
     }
 
     @Test
     void deleteTest() {
         testReservation.setTime(testReservation.getTime().plusHours(3));
-        long id = reservationDao.save(testReservation);
+        long id = reservationDao.create(testReservation);
         assertThat(reservationDao.delete(id)).isEqualTo(1);
         assertThat(reservationDao.delete(id)).isEqualTo(0);
     }
