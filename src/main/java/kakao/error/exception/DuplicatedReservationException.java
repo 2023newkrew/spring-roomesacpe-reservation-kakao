@@ -3,10 +3,10 @@ package kakao.error.exception;
 import kakao.error.ErrorCode;
 
 public class DuplicatedReservationException extends CustomRuntimeException {
-    private final ErrorCode errorCode = ErrorCode.DUPLICATE_RESERVATION;
+    private static final ErrorCode errorCode = ErrorCode.DUPLICATE_RESERVATION;
 
     public DuplicatedReservationException() {
-        super(ErrorCode.DUPLICATE_RESERVATION, null);
+        super(errorCode, null);
     }
 
     @Override

@@ -3,12 +3,12 @@ package kakao.error.exception;
 import kakao.error.ErrorCode;
 
 public class DuplicatedThemeException extends CustomRuntimeException {
-    private final ErrorCode errorCode = ErrorCode.DUPLICATE_THEME;
+    private static final ErrorCode errorCode = ErrorCode.DUPLICATE_THEME;
 
     public DuplicatedThemeException() {
-        super(ErrorCode.DUPLICATE_THEME, null);
+        super(errorCode, null);
     }
-    
+
     @Override
     public ErrorCode getErrorCode() {
         return errorCode;
