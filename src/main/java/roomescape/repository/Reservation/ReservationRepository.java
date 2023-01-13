@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.Reservation;
 
 import roomescape.domain.Reservation;
 
@@ -9,7 +9,7 @@ public interface ReservationRepository {
 
     Optional<Reservation> findById(long reservationId);
 
-    Integer findByDateAndTime(Reservation reservation);
+    Integer findIdByDateAndTime(Reservation reservation);
 
     Integer deleteReservation(long deleteId);
 }

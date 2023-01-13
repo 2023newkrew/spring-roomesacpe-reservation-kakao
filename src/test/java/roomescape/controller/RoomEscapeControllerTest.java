@@ -25,7 +25,7 @@ public class RoomEscapeControllerTest {
 
     Reservation reservation;
     @Autowired
-    RoomEscapeController roomEscapeController;
+    ReservationController roomEscapeController;
 
     @BeforeEach
     void setUp() {
@@ -34,7 +34,7 @@ public class RoomEscapeControllerTest {
                 LocalDate.of(2013,1,12),
                 LocalTime.of(14,0,0),
                 "name23",
-                "Theme2", "desc", 30000);
+                12L);
     }
 
     @DisplayName("방탈출 예약이 가능함")

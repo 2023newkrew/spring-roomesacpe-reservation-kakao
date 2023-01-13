@@ -2,6 +2,7 @@ package roomescape.domain;
 
 
 public class Theme {
+    private Long id;
     private String name;
     private String desc;
     private Integer price;
@@ -16,6 +17,10 @@ public class Theme {
         this.price = price;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -26,5 +31,9 @@ public class Theme {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public String toMessage(){
+        return "Name: " + name + ", Desc: " + desc + ", Price: " + price;
     }
 }
