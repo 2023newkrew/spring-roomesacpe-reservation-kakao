@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
 import roomescape.dto.ThemeCreateRequest;
 import roomescape.dto.ThemeShowResponse;
@@ -36,6 +37,7 @@ public class ThemeService {
         return ThemeShowResponse.of(theme);
     }
 
+    @Transactional
     public Theme updateTheme(Theme theme) {
         int count = themeRepository.updateTheme(theme);
         if (count == 0) {
