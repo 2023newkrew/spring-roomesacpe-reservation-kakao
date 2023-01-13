@@ -24,7 +24,7 @@ public class ReservationService {
         if (reservationRepository.checkSchedule(reservationCreateRequest.getDate(), reservationCreateRequest.getTime()) != 0) {
             throw new IllegalArgumentException("중복된 예약 발생");
         }
-        Theme theme = themeRepository.findThemeById(reservationCreateRequest.getTheme_id());
+        Theme theme = themeRepository.findThemeById(reservationCreateRequest.getThemeId());
         Long id = reservationRepository.addReservation(reservationCreateRequest.toReservation(theme));
         return reservationRepository.findReservation(id);
     }

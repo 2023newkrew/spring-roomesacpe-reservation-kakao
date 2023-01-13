@@ -12,15 +12,15 @@ public class ReservationCreateRequest {
     private String date;
     private String time;
     private String name;
-    private Long theme_id;
+    private Long themeId;
 
     public ReservationCreateRequest() {}
 
-    public ReservationCreateRequest(String date, String time, String name, Long theme_id) {
+    public ReservationCreateRequest(String date, String time, String name, Long themeId) {
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme_id = theme_id;
+        this.themeId = themeId;
     }
 
     public Reservation toReservation(Theme theme) {
@@ -46,8 +46,8 @@ public class ReservationCreateRequest {
         return name;
     }
 
-    public Long getTheme_id() {
-        return theme_id;
+    public Long getThemeId() {
+        return themeId;
     }
 
 }
