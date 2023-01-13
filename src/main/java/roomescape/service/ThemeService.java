@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
 import roomescape.dto.ThemeUpdateRequestDto;
@@ -11,6 +12,7 @@ import roomescape.repository.ThemeRepository;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional(readOnly = true)
 public class ThemeService {
     private final ThemeRepository themeRepository;
     private final ReservationRepository reservationRepository;
@@ -20,6 +22,7 @@ public class ThemeService {
         this.reservationRepository = reservationRepository;
     }
 
+    @Transactional
     public Long createTheme(ThemeRequestDto themeRequest) {
         checkForSameNameTheme(themeRequest);
         Theme theme = themeRequest.toEntity();
@@ -31,6 +34,7 @@ public class ThemeService {
         return new ThemeResponseDto(theme);
     }
 
+    @Transactional
     public void updateTheme(Long themeId, ThemeUpdateRequestDto themeUpdateRequestDto) {
         findThemeByIdOrThrowException(themeId);
         if (themeUpdateRequestDto.getName() != null) {
@@ -44,6 +48,7 @@ public class ThemeService {
         }
     }
 
+    @Transactional
     public void deleteTheme(Long themeId) {
         checkForReservationsForTheme(themeId);
         themeRepository.delete(themeId);

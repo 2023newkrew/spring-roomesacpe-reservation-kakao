@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
@@ -10,6 +11,7 @@ import roomescape.repository.*;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional(readOnly = true)
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
@@ -19,6 +21,7 @@ public class ReservationService {
         this.themeRepository = themeRepository;
     }
 
+    @Transactional
     public Long createReservation(ReservationRequestDto reservationRequest) {
         Theme theme = themeRepository
                 .findOneById(reservationRequest.getThemeId())
@@ -34,6 +37,7 @@ public class ReservationService {
         return new ReservationResponseDto(reservation);
     }
 
+    @Transactional
     public void deleteReservation(Long reservationId) {
         reservationRepository.delete(reservationId);
     }
