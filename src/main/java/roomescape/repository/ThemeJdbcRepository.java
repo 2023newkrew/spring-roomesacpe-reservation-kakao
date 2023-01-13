@@ -33,13 +33,14 @@ public class ThemeJdbcRepository implements ThemeRepository {
     );
 
     @Override
-    public Long save(Theme theme) {
+    public Theme save(Theme theme) {
         Map<String, String> parameters = Map.of(
                 "name", theme.getName(),
                 "desc", theme.getDesc(),
                 "price", theme.getPrice().toString()
         );
-        return insertActor.executeAndReturnKey(parameters).longValue();
+        Long id = insertActor.executeAndReturnKey(parameters).longValue();
+        return new Theme(id, theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
     @Override

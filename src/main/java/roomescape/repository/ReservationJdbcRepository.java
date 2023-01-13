@@ -34,13 +34,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
     );
 
     @Override
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Map<String, String> parameters = Map.of(
                 "datetime", reservation.getDateTime().toString(),
                 "name", reservation.getName(),
                 "theme_id", reservation.getThemeId().toString()
         );
-        return insertActor.executeAndReturnKey(parameters).longValue();
+        Long id = insertActor.executeAndReturnKey(parameters).longValue();
+        return new Reservation(id, reservation.getDateTime(), reservation.getName(), reservation.getThemeId());
     }
 
     @Override

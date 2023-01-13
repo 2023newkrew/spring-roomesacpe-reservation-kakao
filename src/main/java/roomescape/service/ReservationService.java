@@ -27,7 +27,7 @@ public class ReservationService {
         LocalDateTime dateTime = LocalDateTime.of(req.getDate(), req.getTime());
         Reservation reservation = new Reservation(null, dateTime, req.getName(), req.getThemeId());
         try {
-            reservation.setId(reservationRepository.save(reservation));
+            reservation = reservationRepository.save(reservation);
         } catch (DuplicateKeyException e) {
             throw new RoomEscapeException(ErrorCode.RESERVATION_DATETIME_ALREADY_EXISTS);
         }

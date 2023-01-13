@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ThemeRepository {
-    Long save(Theme theme);
+    Theme save(Theme theme);
 
     Optional<Theme> find(Long id);
 

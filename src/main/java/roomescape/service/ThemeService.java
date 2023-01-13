@@ -24,7 +24,7 @@ public class ThemeService {
     public ThemeResponseDto createTheme(ThemeRequestDto req) {
         Theme theme = new Theme(null, req.getName(), req.getDesc(), req.getPrice());
         try {
-            theme.setId(themeRepository.save(theme));
+            theme = themeRepository.save(theme);
         } catch (DuplicateKeyException e) {
             throw new RoomEscapeException(ErrorCode.THEME_NAME_ALREADY_EXISTS);
         }

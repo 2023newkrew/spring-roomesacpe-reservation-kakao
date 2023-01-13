@@ -21,11 +21,11 @@ public class ThemeMemoryRepository implements ThemeRepository {
     }
 
     @Override
-    public Long save(Theme theme) {
+    public Theme save(Theme theme) {
         Long id = themeIdIndex.getAndIncrement();
-        theme.setId(id);
-        themes.put(id, theme);
-        return id;
+        Theme inserted = new Theme(id, theme.getName(), theme.getDesc(), theme.getPrice());
+        themes.put(id, inserted);
+        return inserted;
     }
 
     @Override
