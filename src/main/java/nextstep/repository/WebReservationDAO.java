@@ -16,7 +16,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-public class WebReservationDAO {
+public class WebReservationDAO implements ReservationDAO {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
@@ -38,6 +38,7 @@ public class WebReservationDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Long insertWithKeyHolder(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
 
@@ -56,18 +57,21 @@ public class WebReservationDAO {
         return keyHolder.getKey().longValue();
     }
 
+    @Override
     public Reservation findById(Long id) {
         String sql = "select * from reservation where id = ?";
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
+    @Override
     public List<Reservation> findByDateAndTime(LocalDate localDate, LocalTime localTime) {
         String sql = "select * from reservation where date = ? and time = ?";
         return jdbcTemplate.query(sql, reservationRowMapper, localDate, localTime);
     }
 
-    public int delete(Long id) {
+    @Override
+    public Integer delete(Long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, Long.valueOf(id));
+        return jdbcTemplate.update(sql, id);
     }
 }
