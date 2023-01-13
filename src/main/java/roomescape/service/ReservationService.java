@@ -10,6 +10,8 @@ import roomescape.model.Theme;
 import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
 
+import java.time.LocalDateTime;
+
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
@@ -21,10 +23,11 @@ public class ReservationService {
     }
 
     public ReservationResponseDto createReservation(ReservationRequestDto req) {
-        if (reservationRepository.has(req.getDate(), req.getTime())) {
+        LocalDateTime dateTime = LocalDateTime.of(req.getDate(), req.getTime());
+        if (reservationRepository.has(dateTime)) {
             throw new RoomEscapeException(ErrorCode.RESERVATION_DATETIME_ALREADY_EXISTS);
         }
-        Reservation reservation = new Reservation(null, req.getDate(), req.getTime(), req.getName(), req.getThemeId());
+        Reservation reservation = new Reservation(null, dateTime, req.getName(), req.getThemeId());
         Long id = reservationRepository.save(reservation);
         reservation.setId(id);
         Theme theme = themeService.getTheme(reservation.getThemeId());

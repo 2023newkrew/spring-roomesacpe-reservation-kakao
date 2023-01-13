@@ -1,8 +1,7 @@
 CREATE TABLE IF NOT EXISTS reservation
 (
     id       bigint not null auto_increment,
-    date     date,
-    time     time,
+    datetime datetime,
     name     varchar(20),
     theme_id bigint not null,
     primary key (id)

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
 import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,8 +27,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> (
             new Reservation(
                     resultSet.getLong("id"),
-                    resultSet.getDate("date").toLocalDate(),
-                    resultSet.getTime("time").toLocalTime(),
+                    resultSet.getTimestamp("datetime").toLocalDateTime(),
                     resultSet.getString("name"),
                     resultSet.getLong("theme_id")
             )
@@ -38,8 +36,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     @Override
     public Long save(Reservation reservation) {
         Map<String, String> parameters = Map.of(
-                "date", reservation.getDate().toString(),
-                "time", reservation.getTime().toString(),
+                "datetime", reservation.getDateTime().toString(),
                 "name", reservation.getName(),
                 "theme_id", reservation.getThemeId().toString()
         );
@@ -59,8 +56,8 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean has(LocalDate date, LocalTime time) {
-        String sql = "select * from reservation where date = ? and time = ? limit 1";
-        return jdbcTemplate.query(sql, actorRowMapper, date, time).size() > 0;
+    public Boolean has(LocalDateTime dateTime) {
+        String sql = "select * from reservation where datetime = ? limit 1";
+        return jdbcTemplate.query(sql, actorRowMapper, dateTime).size() > 0;
     }
 }

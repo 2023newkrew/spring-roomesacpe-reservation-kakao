@@ -17,8 +17,8 @@ public class ReservationResponseDto {
 
     public ReservationResponseDto(Reservation reservation, Theme theme) {
         this.id = reservation.getId();
-        this.date = reservation.getDate();
-        this.time = reservation.getTime();
+        this.date = reservation.getDateTime().toLocalDate();
+        this.time = reservation.getDateTime().toLocalTime();
         this.name = reservation.getName();
         this.themeName = theme.getName();
         this.themeDesc = theme.getDesc();

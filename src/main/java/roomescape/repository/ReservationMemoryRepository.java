@@ -3,8 +3,7 @@ package roomescape.repository;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,9 +39,9 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean has(LocalDate date, LocalTime time) {
+    public Boolean has(LocalDateTime dateTime) {
         return reservations.values()
                 .stream()
-                .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));
+                .anyMatch(reservation -> reservation.getDateTime().equals(dateTime));
     }
 }
