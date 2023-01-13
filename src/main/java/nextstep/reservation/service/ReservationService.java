@@ -27,7 +27,8 @@ public class ReservationService {
     }
 
     public Boolean delete(long id) {
-        return reservationRepository.deleteById(id);
+        int deleteRowNumber = reservationRepository.deleteById(id);
+        return deleteRowNumber == 1;
     }
 
     public void clear() {

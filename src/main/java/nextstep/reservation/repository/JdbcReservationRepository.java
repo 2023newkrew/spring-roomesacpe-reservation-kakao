@@ -32,7 +32,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        if (findByDateAndTime(reservation.getDate(), reservation.getTime())) {
+        if (findByDateAndTime(reservation.getDate(), reservation.getTime()).size() > 0) {
             throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
 
@@ -69,15 +69,15 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean findByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "select exists (select * from reservation where date= ? and time = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, date, time);
+    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
+        String sql = "select * from reservation where date= ? and time = ?";
+        return jdbcTemplate.query(sql, reservationRowMapper(), date, time);
     }
 
     @Override
-    public Boolean deleteById(long id) {
+    public int deleteById(long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, id) == 1;
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override

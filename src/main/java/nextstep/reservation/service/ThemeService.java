@@ -25,8 +25,9 @@ public class ThemeService {
         return themeRepository.findAll();
     }
 
-    public void deleteById(Long id) {
-        themeRepository.deleteById(id);
+    public boolean deleteById(Long id) {
+        int deletedRowNumber = themeRepository.deleteById(id);
+        return deletedRowNumber == 1;
     }
 
     public void clear() {

@@ -4,15 +4,16 @@ import nextstep.reservation.entity.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
 
     Reservation findById(long id);
 
-    Boolean findByDateAndTime(LocalDate date, LocalTime time);
+    List<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 
-    Boolean deleteById(long id);
+    int deleteById(long id);
 
     void clear();
 }

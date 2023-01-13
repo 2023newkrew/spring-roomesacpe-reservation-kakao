@@ -32,6 +32,7 @@ public class JdbcThemeRepository implements ThemeRepository {
         }), themeKeyHolder);
 
         return Theme.builder()
+                .id(themeKeyHolder.getKey().longValue())
                 .name(theme.getName())
                 .desc(theme.getDesc())
                 .price(theme.getPrice())

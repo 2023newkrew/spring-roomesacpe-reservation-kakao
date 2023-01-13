@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static nextstep.reservation.exception.ReservationExceptionCode.NO_SUCH_RESERVATION;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,15 +60,15 @@ class ReservationRepositoryTest {
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 있을 때)")
     void findByDateTimeTest() {
         reservationRepository.save(reservation);
-        Boolean result = reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime());
-        assertThat(result).isEqualTo(true);
+        List<Reservation> result = reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime());
+        assertThat(reservationDataEquals(reservation, result.get(0))).isTrue();
     }
 
     @Test
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 없을 때")
     void findByDateTimeEmptyTest() {
-        Boolean result = reservationRepository.findByDateAndTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
-        assertThat(result).isEqualTo(false);
+        List<Reservation> result = reservationRepository.findByDateAndTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
+        assertThat(result).isEqualTo(List.of());
     }
 
     @Test
@@ -83,8 +84,8 @@ class ReservationRepositoryTest {
     @DisplayName("예약 삭제")
     void deleteReservation() {
         Reservation created = reservationRepository.save(reservation);
-        Boolean result = reservationRepository.deleteById(created.getId());
-        assertThat(result).isEqualTo(true);
+        int result = reservationRepository.deleteById(created.getId());
+        assertThat(result).isEqualTo(1);
 
         assertThatThrownBy(
                 () -> reservationRepository.findById(created.getId()))

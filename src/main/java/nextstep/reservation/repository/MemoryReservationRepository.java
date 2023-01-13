@@ -6,8 +6,10 @@ import nextstep.reservation.exception.ReservationException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static nextstep.reservation.exception.ReservationExceptionCode.DUPLICATE_TIME_RESERVATION;
 
@@ -18,7 +20,7 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        if (findByDateAndTime(reservation.getDate(), reservation.getTime())) {
+        if (findByDateAndTime(reservation.getDate(), reservation.getTime()).size() > 0) {
             throw new ReservationException(DUPLICATE_TIME_RESERVATION);
         }
         Long id = reservationCount.getAndIncrement();
@@ -31,21 +33,23 @@ public class MemoryReservationRepository implements ReservationRepository {
     public Reservation findById(long id) {
         return reservationList.getOrDefault(id, null);
     }
+
     @Override
-    public Boolean findByDateAndTime(LocalDate date, LocalTime time) {
+    public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
         return reservationList
                 .values()
                 .stream()
-                .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));
+                .filter(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Boolean deleteById(long id) {
+    public int deleteById(long id) {
         if (reservationList.containsKey(id)) {
             reservationList.remove(id);
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
 
     @Override
