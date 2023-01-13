@@ -22,7 +22,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReservation(@Validated @RequestBody CreateReservationRequest createReservationRequest, BindingResult bindingResult) {
+    public ResponseEntity<Void> createReservation(
+            @Validated @RequestBody CreateReservationRequest createReservationRequest,
+            BindingResult bindingResult) {
         if(bindingResult.hasErrors())
             throw new InvalidCreateReservationRequestException();
 
