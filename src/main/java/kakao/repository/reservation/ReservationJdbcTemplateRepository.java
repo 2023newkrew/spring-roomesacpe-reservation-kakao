@@ -47,6 +47,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
                 .build();
     };
 
+    @Override
     public Reservation save(Reservation reservation) {
         try {
             SqlParameterSource params = new MapSqlParameterSource()
@@ -61,6 +62,13 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         }
     }
 
+    @Override
+    public List<Reservation> findAllByTheme(Theme theme) {
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where theme.id = ?";
+        return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, theme.getId());
+    }
+
+    @Override
     public Reservation findById(Long id) {
         String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.id=?";
         try {
@@ -70,11 +78,13 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         }
     }
 
+    @Override
     public List<Reservation> findByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
         String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where theme.id = ? and date=? and time=?";
         return jdbcTemplate.query(SELECT_SQL, reservationRowMapper, themeId, date, time);
     }
 
+    @Override
     public int delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
         return jdbcTemplate.update(DELETE_SQL, id);

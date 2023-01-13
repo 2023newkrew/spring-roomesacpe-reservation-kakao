@@ -11,6 +11,7 @@ import kakao.domain.Theme;
 public class ReservationJdbcRepository implements ReservationRepository{
     private static final String DB_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
 
+    @Override
     public Reservation save(Reservation reservation) {
         String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         // 드라이버 연결
@@ -40,6 +41,39 @@ public class ReservationJdbcRepository implements ReservationRepository{
         return null;
     }
 
+    @Override
+    public List<Reservation> findAllByTheme(Theme theme) {
+        String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where theme.id = ?";
+        List<Reservation> reservations = new ArrayList<>();
+        try (
+                Connection con = DriverManager.getConnection(DB_URL, "sa", "");
+                PreparedStatement ps = con.prepareStatement(SELECT_SQL);
+        ) {
+            ps.setLong(1, theme.getId());
+            try (
+                    ResultSet rs = ps.executeQuery();
+            ) {
+                while (rs.next()) {
+                    reservations.add(Reservation.builder()
+                            .id(rs.getLong(1))
+                            .date(rs.getDate(2).toLocalDate())
+                            .time(rs.getTime(3).toLocalTime())
+                            .name(rs.getString(4))
+                            .theme(theme)
+                            .build());
+                }
+            } catch (SQLException e) {
+                System.err.println("반환 오류:" + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            System.err.println("연결 오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+        return reservations;
+    }
+
+    @Override
     public Reservation findById(Long id) {
         String SELECT_SQL = "select * from reservation join theme on reservation.theme_id = theme.id where reservation.id=?";
         // 드라이버 연결
@@ -106,7 +140,6 @@ public class ReservationJdbcRepository implements ReservationRepository{
                             .theme(theme)
                             .build());
                 }
-                return reservations;
             } catch (SQLException e) {
                 System.err.println("반환 오류:" + e.getMessage());
                 e.printStackTrace();
@@ -118,6 +151,7 @@ public class ReservationJdbcRepository implements ReservationRepository{
         return reservations;
     }
 
+    @Override
     public int delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
         try (

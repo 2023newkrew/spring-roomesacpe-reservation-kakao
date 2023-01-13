@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import kakao.domain.Reservation;
+import kakao.domain.Theme;
 
 public interface ReservationRepository {
 
     Reservation save(Reservation reservation);
+
+    List<Reservation> findAllByTheme(Theme theme);
 
     Reservation findById(Long id);
 
