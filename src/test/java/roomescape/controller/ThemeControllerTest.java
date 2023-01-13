@@ -49,7 +49,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 조회 테스트")
     @Test
-    void reservationFindTest() {
+    void themeFindTest() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/themes/1")
@@ -62,7 +62,7 @@ public class ThemeControllerTest {
 
     @DisplayName("예약 있는 테마 삭제 실패 테스트")
     @Test
-    void reservationDeleteTest() {
+    void themeDeleteTest() {
         RestAssured.given().log().all()
                 .when().delete("/themes/2")
                 .then().log().all()
@@ -71,7 +71,7 @@ public class ThemeControllerTest {
 
     @DisplayName("예약 있는 테마 삭제 실패 테스트")
     @Test
-    void reservationDeleteFailTest() {
+    void themeDeleteFailTest() {
         RestAssured.given().log().all()
                 .when().delete("/themes/1")
                 .then().log().all()
