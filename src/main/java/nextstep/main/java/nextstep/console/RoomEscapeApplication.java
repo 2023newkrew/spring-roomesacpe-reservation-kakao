@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import static nextstep.main.java.nextstep.global.constant.ExceptionMessage.DUPLICATE_RESERVATION_MESSAGE;
 
+@Deprecated
 public class RoomEscapeApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";

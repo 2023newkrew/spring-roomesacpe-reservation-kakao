@@ -1,5 +1,6 @@
 package nextstep.main.java.nextstep.console;
 
+import nextstep.main.java.nextstep.global.constant.ExceptionMessage;
 import nextstep.main.java.nextstep.global.exception.exception.NotSupportedOperationException;
 import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
@@ -13,6 +14,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static nextstep.main.java.nextstep.global.constant.ExceptionMessage.*;
+
+@Deprecated
 public class ReservationDAO implements ReservationRepository {
     private static final String SERVER_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER_NAME = "sa";
@@ -82,12 +86,12 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        throw new NotSupportedOperationException();
+        throw new NotSupportedOperationException(NOT_SUPPORTED_OPERATIONS_MESSAGE);
     }
 
     @Override
     public void update(Long id, ReservationCreateRequest request) {
-        throw new NotSupportedOperationException();
+        throw new NotSupportedOperationException(NOT_SUPPORTED_OPERATIONS_MESSAGE);
     }
 
     @Override
