@@ -36,6 +36,11 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public void deleteByThemeId(Long themeId) {
+        jdbcTemplate.update(deleteByThemeIdSql, themeId);
+    }
+
+    @Override
     public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
         validateReservation(date, time);
         KeyHolder keyHolder = new GeneratedKeyHolder();

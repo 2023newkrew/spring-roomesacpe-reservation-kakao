@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
@@ -114,11 +114,7 @@ class ConsoleReservationRepositoryTest {
         );
 
         //when
-        try {
-            consoleReservationRepository.deleteById(savedId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        consoleReservationRepository.deleteById(savedId);
 
         //then
         assertThatThrownBy(() -> consoleReservationRepository.findById(savedId))

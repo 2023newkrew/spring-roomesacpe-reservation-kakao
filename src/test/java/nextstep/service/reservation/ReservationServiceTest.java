@@ -1,7 +1,8 @@
-package nextstep.service;
+package nextstep.service.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.service.ReservationService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class ReservationServiceTest {
 
-    @Autowired ReservationService reservationService;
+    @Autowired
+    ReservationService reservationService;
     static Theme theme;
 
     @BeforeAll
@@ -62,11 +64,7 @@ class ReservationServiceTest {
                 reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
 
         //when
-        try {
-            reservationService.deleteReservation(savedId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        reservationService.deleteReservation(savedId);
 
         //then
         assertThatThrownBy(() -> reservationService.findById(savedId))

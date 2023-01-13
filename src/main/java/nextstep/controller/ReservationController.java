@@ -39,7 +39,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable("id") Long id) throws SQLException {
+    public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
