@@ -12,32 +12,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 import roomescape.exception.NoSuchReservationException;
 
 @JdbcTest
 public class ReservationJdbcTemplateRepositoryTest {
 
     private final ReservationRepository reservationRepository;
-    private final Theme defaultTheme;
 
     @Autowired
     public ReservationJdbcTemplateRepositoryTest(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.reservationRepository = new ReservationJdbcTemplateRepository(jdbcTemplate,
                 dataSource);
-        this.defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
     }
 
     private static final String expectedName = "name";
     private static final LocalDate expectedDate = LocalDate.parse("2022-08-11");
     private static final LocalTime expectedTime = LocalTime.parse("13:00:00");
     private static final Long invalidId = -1L;
+    private static final Long themeId = 1L;
     private Long reservationId;
 
     @BeforeEach
     void setUp() {
         final Reservation reservation = Reservation.builder().name(expectedName).date(expectedDate)
-                .time(expectedTime).theme(defaultTheme).build();
+                .time(expectedTime).themeId(themeId).build();
 
         reservationId = reservationRepository.save(reservation);
     }

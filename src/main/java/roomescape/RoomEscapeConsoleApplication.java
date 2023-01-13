@@ -41,7 +41,7 @@ public class RoomEscapeConsoleApplication {
                         .date(LocalDate.parse(date))
                         .time(LocalTime.parse(time + ":00"))
                         .name(name)
-                        .theme(theme)
+                        .themeId(1L)
                         .build();
 
                 final Long newReservationId = RESERVATION_JDBC_REPOSITORY.save(reservation);
@@ -65,9 +65,9 @@ public class RoomEscapeConsoleApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 이름: " + theme.getName());
+                System.out.println("예약 테마 설명: " + theme.getDesc());
+                System.out.println("예약 테마 가격: " + theme.getPrice());
             }
 
             if (input.startsWith(DELETE)) {

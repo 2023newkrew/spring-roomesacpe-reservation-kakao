@@ -18,7 +18,7 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 
     public Long getId() {
         return id;
@@ -36,8 +36,8 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Long getThemeId() {
+        return themeId;
     }
 
     public Map<String, Object> buildParams() {
@@ -45,9 +45,7 @@ public class Reservation {
         params.put("date", this.date);
         params.put("time", this.time);
         params.put("name", this.name);
-        params.put("theme_name", this.theme.getName());
-        params.put("theme_desc", this.theme.getDesc());
-        params.put("theme_price", this.theme.getPrice());
+        params.put("theme_id", this.themeId);
 
         return params;
     }
@@ -58,7 +56,7 @@ public class Reservation {
                 .date(rs.getDate("date").toLocalDate())
                 .time(rs.getTime("time").toLocalTime())
                 .name(rs.getString("name"))
-                .theme(Theme.from(rs))
+                .themeId(rs.getLong("theme_id"))
                 .build();
     }
 }

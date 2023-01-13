@@ -1,12 +1,13 @@
 package roomescape.dto.response;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 
 @Getter
+@Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationResponseDTO {
 
@@ -14,15 +15,15 @@ public class ReservationResponseDTO {
     private final String date;
     private final String time;
     private final String name;
-    private final String themeName;
-    private final String themeDesc;
-    private final Integer themePrice;
+    private final Long themeId;
 
     public static ReservationResponseDTO from(Reservation reservation) {
-        Theme theme = reservation.getTheme();
-
-        return new ReservationResponseDTO(reservation.getId(), reservation.getDate().toString(),
-                reservation.getTime().toString(),
-                reservation.getName(), theme.getName(), theme.getDesc(), theme.getPrice());
+        return ReservationResponseDTO.builder()
+                .id(reservation.getId())
+                .date(reservation.getDate().toString())
+                .time(reservation.getTime().toString())
+                .name(reservation.getName())
+                .themeId(reservation.getThemeId())
+                .build();
     }
 }
