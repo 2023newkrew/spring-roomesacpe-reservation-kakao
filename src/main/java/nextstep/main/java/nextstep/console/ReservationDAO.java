@@ -13,7 +13,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-@Deprecated
 public class ReservationDAO implements ReservationRepository {
     private static final String SERVER_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     private static final String USER_NAME = "sa";
@@ -21,7 +20,8 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Long save(ReservationCreateRequest reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (DATE, TIME, NAME, THEME_ID) " +
+                "VALUES (:date, :time, :name, (SELECT id FROM theme WHERE name = :theme_name))";
 
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"})) {

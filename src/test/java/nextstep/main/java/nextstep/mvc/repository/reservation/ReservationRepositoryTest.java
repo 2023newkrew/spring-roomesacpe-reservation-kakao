@@ -1,5 +1,6 @@
 package nextstep.main.java.nextstep.mvc.repository.reservation;
 
+import nextstep.main.java.nextstep.global.exception.exception.NotSupportedOperationException;
 import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 import nextstep.main.java.nextstep.mvc.domain.reservation.request.ReservationCreateRequest;
 import nextstep.main.java.nextstep.mvc.domain.theme.Theme;
@@ -15,8 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.context.annotation.ComponentScan.Filter;
 import static org.springframework.context.annotation.FilterType.ANNOTATION;
 
@@ -92,6 +92,19 @@ public class ReservationRepositoryTest {
         LocalDate date = LocalDate.of(2024, 1, 2);
         LocalTime time = LocalTime.of(9, 30);
         assertThat(reservationRepository.existsByDateAndTime(date, time)).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("[미지원 기능] 모두 조회는 지원하지 않음")
+    void isNotSupportedFindAll() {
+        assertThatThrownBy(() -> reservationRepository.findAll()).isInstanceOf(NotSupportedOperationException.class);
+    }
+
+    @Test
+    @DisplayName("[미지원 기능] 예약 수정은 지원하지 않암")
+    void isNotSupportedUpdate() {
+        assertThatThrownBy(() -> reservationRepository.update(1L, getCreateRequest()))
+                .isInstanceOf(NotSupportedOperationException.class);
     }
 
     private Reservation createReservationFromIdAndRequest(Long id, ReservationCreateRequest request) {

@@ -81,8 +81,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        throw new NotSupportedOperationException();
     }
 
     @Override
