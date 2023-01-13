@@ -1,6 +1,5 @@
 package nextstep.reservation.repository;
 
-import nextstep.etc.util.StatementCreator;
 import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.domain.Theme;
 import nextstep.reservation.dto.ReservationRequest;
@@ -31,13 +30,17 @@ class JdbcReservationRepositoryTest {
 
     final JdbcTemplate jdbcTemplate;
 
+    final ReservationStatementCreator statementCreator;
+    final ReservationResultSetParser resultSetParser;
     final ReservationRepository repository;
     final ReservationMapper mapper;
 
     @Autowired
     public JdbcReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.repository = new JdbcReservationRepository(jdbcTemplate);
+        this.statementCreator = new ReservationStatementCreator();
+        this.resultSetParser = new ReservationResultSetParser();
+        this.repository = new JdbcReservationRepository(jdbcTemplate, statementCreator, resultSetParser);
         this.mapper = Mappers.getMapper(ReservationMapper.class);
     }
 
@@ -238,7 +241,7 @@ class JdbcReservationRepositoryTest {
     private void insertTestReservations(List<ReservationRequest> requests) {
         requests.forEach(req -> {
             Reservation reservation = fromRequest(req);
-            jdbcTemplate.update(conn -> StatementCreator.createInsertStatement(conn, reservation));
+            jdbcTemplate.update(conn -> statementCreator.createInsertStatement(conn, reservation));
         });
     }
 

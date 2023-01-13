@@ -1,11 +1,11 @@
 package nextstep.reservation.repository;
 
-import nextstep.etc.util.ResultSetParser;
-import nextstep.etc.util.StatementCreator;
+import lombok.RequiredArgsConstructor;
 import nextstep.reservation.domain.Reservation;
 
 import java.sql.*;
 
+@RequiredArgsConstructor
 public class SimpleReservationRepository implements ReservationRepository {
 
     private static final String URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
@@ -13,6 +13,10 @@ public class SimpleReservationRepository implements ReservationRepository {
     private static final String USER = "sa";
 
     private static final String PASSWORD = "";
+
+    private final ReservationStatementCreator statementCreator;
+
+    private final ReservationResultSetParser resultSetParser;
 
     @FunctionalInterface
     private interface QueryFunction<R> {
@@ -41,11 +45,14 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = StatementCreator.createSelectByDateAndTimeStatement(connection, reservation);
+            PreparedStatement ps = statementCreator.createSelectByDateAndTimeStatement(
+                    connection,
+                    reservation
+            );
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
 
-            return ResultSetParser.existsRow(rs);
+            return resultSetParser.existsRow(rs);
         };
     }
 
@@ -56,10 +63,10 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Reservation> getInsertQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = StatementCreator.createInsertStatement(connection, reservation);
+            PreparedStatement ps = statementCreator.createInsertStatement(connection, reservation);
             ps.executeUpdate();
             ResultSet keyHolder = ps.getGeneratedKeys();
-            reservation.setId(ResultSetParser.parseKey(keyHolder));
+            reservation.setId(resultSetParser.parseKey(keyHolder));
 
             return reservation;
         };
@@ -72,10 +79,10 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Reservation> getSelectByIdQuery(Long id) {
         return connection -> {
-            PreparedStatement ps = StatementCreator.createSelectByIdStatement(connection, id);
+            PreparedStatement ps = statementCreator.createSelectByIdStatement(connection, id);
             ResultSet rs = ps.executeQuery();
 
-            return ResultSetParser.parseReservation(rs);
+            return resultSetParser.parseReservation(rs);
         };
     }
 
@@ -86,7 +93,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getDeleteByIdQuery(Long id) {
         return connection -> {
-            PreparedStatement ps = StatementCreator.createDeleteByIdStatement(connection, id);
+            PreparedStatement ps = statementCreator.createDeleteByIdStatement(connection, id);
             int deletedRow = ps.executeUpdate();
 
             return deletedRow > 0;

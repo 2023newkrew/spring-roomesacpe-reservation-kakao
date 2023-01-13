@@ -1,8 +1,6 @@
 package nextstep.reservation.repository;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.etc.util.ResultSetParser;
-import nextstep.etc.util.StatementCreator;
 import nextstep.reservation.domain.Reservation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -16,17 +14,21 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final ReservationStatementCreator statementCreator;
+
+    private final ReservationResultSetParser resultSetParser;
+
     @Override
     public boolean existsByDateAndTime(Reservation reservation) {
         return Boolean.TRUE.equals(
                 jdbcTemplate.query(
                         getExistsByDateAndTimeStatementCreator(reservation),
-                        ResultSetParser::existsRow
+                        resultSetParser::existsRow
                 ));
     }
 
-    private static PreparedStatementCreator getExistsByDateAndTimeStatementCreator(Reservation reservation) {
-        return con -> StatementCreator.createSelectByDateAndTimeStatement(con, reservation);
+    private PreparedStatementCreator getExistsByDateAndTimeStatementCreator(Reservation reservation) {
+        return connection -> statementCreator.createSelectByDateAndTimeStatement(connection, reservation);
     }
 
     @Override
@@ -38,20 +40,20 @@ public class JdbcReservationRepository implements ReservationRepository {
         return reservation;
     }
 
-    private static PreparedStatementCreator getInsertStatementCreator(Reservation reservation) {
-        return con -> StatementCreator.createInsertStatement(con, reservation);
+    private PreparedStatementCreator getInsertStatementCreator(Reservation reservation) {
+        return connection -> statementCreator.createInsertStatement(connection, reservation);
     }
 
     @Override
     public Reservation getById(Long id) {
         return jdbcTemplate.query(
                 getSelectByIdStatementCreator(id),
-                ResultSetParser::parseReservation
+                resultSetParser::parseReservation
         );
     }
 
-    private static PreparedStatementCreator getSelectByIdStatementCreator(Long id) {
-        return con -> StatementCreator.createSelectByIdStatement(con, id);
+    private PreparedStatementCreator getSelectByIdStatementCreator(Long id) {
+        return connection -> statementCreator.createSelectByIdStatement(connection, id);
     }
 
     @Override
@@ -61,7 +63,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         return deletedRow > 0;
     }
 
-    private static PreparedStatementCreator getDeleteByIdStatementCreator(Long id) {
-        return con -> StatementCreator.createDeleteByIdStatement(con, id);
+    private PreparedStatementCreator getDeleteByIdStatementCreator(Long id) {
+        return connection -> statementCreator.createDeleteByIdStatement(connection, id);
     }
 }

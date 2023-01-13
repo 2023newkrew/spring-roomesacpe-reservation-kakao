@@ -1,5 +1,7 @@
 package nextstep.reservation.service;
 
+import nextstep.etc.exception.ErrorMessage;
+import nextstep.etc.exception.ReservationConflictException;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
@@ -55,8 +57,8 @@ class ReservationServiceTest {
             service.create(request);
 
             Assertions.assertThatThrownBy(() -> service.create(request))
-                    .isInstanceOf(RuntimeException.class)
-                    .hasMessage("해당 시각에는 이미 예약이 존재합니다.");
+                    .isInstanceOf(ReservationConflictException.class)
+                    .hasMessage(ErrorMessage.RESERVATION_CONFLICT.getErrorMessage());
         }
 
         List<Arguments> should_throwException_when_givenSameDateAndTime() {
