@@ -1,4 +1,4 @@
-package roomescape.dao.preparedstatementcreator;
+package roomescape.dao.reservation.preparedstatementcreator;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import roomescape.dto.Reservation;
 
 public class ExistReservationPreparedStatementCreator implements PreparedStatementCreator {
 
@@ -16,6 +17,10 @@ public class ExistReservationPreparedStatementCreator implements PreparedStateme
 
     private final Date date;
     private final Time time;
+
+    public ExistReservationPreparedStatementCreator(Reservation reservation) {
+        this(reservation.getDate(), reservation.getTime());
+    }
 
     public ExistReservationPreparedStatementCreator(LocalDate date, LocalTime time) {
         this(Date.valueOf(date), Time.valueOf(time));

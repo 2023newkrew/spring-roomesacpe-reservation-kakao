@@ -1,17 +1,15 @@
-package roomescape.dao;
+package roomescape.dao.reservation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.AddReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.DeleteReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.ExistReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.FindReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
@@ -61,7 +59,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
     private PreparedStatement createAddReservationPreparedStatement(
             Connection con, Reservation reservation) throws SQLException {
         PreparedStatementCreator preparedStatementCreator =
-                new AddReservationPreparedStatementCreator(reservation);
+                new InsertReservationPreparedStatementCreator(reservation);
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
@@ -75,14 +73,14 @@ public class ConsoleReservationDAO extends ReservationDAO {
     private PreparedStatement createDeleteReservationPreparedStatement(
             Connection con, Long id) throws SQLException {
         PreparedStatementCreator preparedStatementCreator =
-                new DeleteReservationPreparedStatementCreator(id);
+                new RemoveReservationPreparedStatementCreator(id);
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
     private PreparedStatement createExistReservationPreparedStatement(
-            Connection con, LocalDate date, LocalTime time) throws SQLException {
+            Connection con, Reservation reservation) throws SQLException {
         PreparedStatementCreator preparedStatementCreator =
-                new ExistReservationPreparedStatementCreator(date, time);
+                new ExistReservationPreparedStatementCreator(reservation);
         return preparedStatementCreator.createPreparedStatement(con);
     }
 
@@ -94,7 +92,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
 
     private Reservation parseFindResultSet(ResultSet resultSet) throws SQLException {
         validateResultSet(resultSet);
-        return getReservationRowMapper().mapRow(resultSet, 1);
+        return getRowMapper().mapRow(resultSet, 1);
     }
 
     private boolean parseExistResultSet(ResultSet resultSet) throws SQLException {
@@ -131,9 +129,9 @@ public class ConsoleReservationDAO extends ReservationDAO {
         }
     }
 
-    private boolean executeExistConnection(Connection con, LocalDate date, LocalTime time) {
+    private boolean executeExistConnection(Connection con, Reservation reservation) {
         try {
-            PreparedStatement ps = createExistReservationPreparedStatement(con, date, time);
+            PreparedStatement ps = createExistReservationPreparedStatement(con, reservation);
             ResultSet resultSet = ps.executeQuery();
             return parseExistResultSet(resultSet);
         } catch (SQLException e) {
@@ -142,16 +140,16 @@ public class ConsoleReservationDAO extends ReservationDAO {
     }
 
     @Override
-    protected boolean existReservation(LocalDate date, LocalTime time) {
+    public boolean exist(Reservation reservation) {
         Connection con = openConnection();
-        boolean result = executeExistConnection(con, date, time);
+        boolean result = executeExistConnection(con, reservation);
         closeConnection(con);
         return result;
     }
 
     @Override
-    public Long addReservation(Reservation reservation) {
-        validateReservation(reservation);
+    public Long insert(Reservation reservation) {
+        validate(reservation);
         Connection con = openConnection();
         Long id = executeAddConnection(con, reservation);
         closeConnection(con);
@@ -159,7 +157,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
     }
 
     @Override
-    public Reservation findReservation(Long id) {
+    public Reservation find(Long id) {
         Connection con = openConnection();
         Reservation reservation = executeFindConnection(con, id);
         closeConnection(con);
@@ -167,7 +165,7 @@ public class ConsoleReservationDAO extends ReservationDAO {
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void remove(Long id) {
         Connection con = openConnection();
         executeDeleteConnection(con, id);
         closeConnection(con);

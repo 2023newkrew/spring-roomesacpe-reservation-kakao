@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDAO;
+import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dto.Reservation;
 
 
@@ -23,7 +23,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
-        long id = reservationDAO.addReservation(reservation);
+        long id = reservationDAO.insert(reservation);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", String.format("/reservations/%d", id))
@@ -32,14 +32,14 @@ public class ReservationController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
-        Reservation reservation = reservationDAO.findReservation(id);
+        Reservation reservation = reservationDAO.find(id);
         return ResponseEntity.status(HttpStatus.OK).body(reservation);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
-        reservationDAO.findReservation(id);
-        reservationDAO.deleteReservation(id);
+        reservationDAO.find(id);
+        reservationDAO.remove(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

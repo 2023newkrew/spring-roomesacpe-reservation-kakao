@@ -1,4 +1,4 @@
-package roomescape.dao.preparedstatementcreator;
+package roomescape.dao.reservation.preparedstatementcreator;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,7 +8,7 @@ import java.sql.Time;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import roomescape.dto.Reservation;
 
-public class AddReservationPreparedStatementCreator implements PreparedStatementCreator {
+public class InsertReservationPreparedStatementCreator implements PreparedStatementCreator {
 
     private static final String SQL =
             "INSERT INTO reservation(date, time, name, theme_id) "
@@ -16,7 +16,7 @@ public class AddReservationPreparedStatementCreator implements PreparedStatement
 
     private final Reservation reservation;
 
-    public AddReservationPreparedStatementCreator(Reservation reservation) {
+    public InsertReservationPreparedStatementCreator(Reservation reservation) {
         this.reservation = reservation;
     }
 

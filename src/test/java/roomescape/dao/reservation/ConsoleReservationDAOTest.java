@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.dao.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +34,7 @@ public class ConsoleReservationDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
 
-    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(URL, USER, PASSWORD);
+    private final ReservationDAO dao = new ConsoleReservationDAO(URL, USER, PASSWORD);
     private Connection con;
 
     @BeforeEach
@@ -54,7 +54,7 @@ public class ConsoleReservationDAOTest {
     void addReservation() throws SQLException {
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
-        reservationDAO.addReservation(reservation);
+        dao.insert(reservation);
         ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
         assertThat(resultSet.next()).isTrue();
         assertThat(resultSet.getInt(1)).isEqualTo(2);
@@ -63,7 +63,7 @@ public class ConsoleReservationDAOTest {
     @DisplayName("예약 조회")
     @Test
     void findReservation() {
-        Reservation reservation = reservationDAO.findReservation(1L);
+        Reservation reservation = dao.find(1L);
         assertThat(reservation.getName()).isEqualTo(NAME_DATA);
         assertThat(reservation.getDate()).isEqualTo(DATE_DATA1);
         assertThat(reservation.getTime()).isEqualTo(TIME_DATA);
@@ -73,7 +73,8 @@ public class ConsoleReservationDAOTest {
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() throws SQLException {
-        reservationDAO.deleteReservation(1L);
+        dao.remove(1L);
+
         ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
         assertThat(resultSet.next()).isTrue();
         assertThat(resultSet.getInt(1)).isEqualTo(0);

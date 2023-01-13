@@ -1,16 +1,14 @@
-package roomescape.dao;
+package roomescape.dao.reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.preparedstatementcreator.AddReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.DeleteReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.ExistReservationPreparedStatementCreator;
-import roomescape.dao.preparedstatementcreator.FindReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
@@ -30,33 +28,33 @@ public class SpringReservationDAO extends ReservationDAO {
     }
 
     @Override
-    protected boolean existReservation(LocalDate date, LocalTime time) {
+    public boolean exist(Reservation reservation) {
         List<Boolean> result = jdbcTemplate.query(
-                new ExistReservationPreparedStatementCreator(date, time), getExistRowMapper());
+                new ExistReservationPreparedStatementCreator(reservation), getExistRowMapper());
         validateResult(result);
         return result.get(0);
     }
 
     @Override
-    public Long addReservation(Reservation reservation) {
-        validateReservation(reservation);
+    public Long insert(Reservation reservation) {
+        validate(reservation);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                new AddReservationPreparedStatementCreator(reservation), keyHolder);
+                new InsertReservationPreparedStatementCreator(reservation), keyHolder);
         return keyHolder.getKeyAs(Long.class);
     }
 
     @Override
-    public Reservation findReservation(Long id) {
+    public Reservation find(Long id) {
         List<Reservation> result = jdbcTemplate.query(
-                new FindReservationPreparedStatementCreator(id), getReservationRowMapper());
+                new FindReservationPreparedStatementCreator(id), getRowMapper());
         validateResult(result);
         return result.get(0);
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void remove(Long id) {
         jdbcTemplate.update(
-                new DeleteReservationPreparedStatementCreator(id));
+                new RemoveReservationPreparedStatementCreator(id));
     }
 }

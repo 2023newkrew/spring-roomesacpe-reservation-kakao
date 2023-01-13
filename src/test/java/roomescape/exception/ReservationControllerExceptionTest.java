@@ -18,7 +18,7 @@ import roomescape.dto.Reservation;
 @DisplayName("예외 처리")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("classpath:/test.sql")
-public class ReservationExceptionTest {
+public class ReservationControllerExceptionTest {
 
     private static final LocalDate DATE_DATA = LocalDate.parse("2022-08-01");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
@@ -40,8 +40,7 @@ public class ReservationExceptionTest {
     @ValueSource(strings = {MediaType.TEXT_PLAIN_VALUE, MediaType.TEXT_HTML_VALUE,
             MediaType.TEXT_XML_VALUE, MediaType.APPLICATION_XML_VALUE})
     void notJson(String contentType) {
-        RestAssured.given().log().all()
-                .contentType(contentType).body("").when()
+        RestAssured.given().log().all().contentType(contentType).body("").when()
                 .post("/reservations").then().log().all()
                 .statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
     }
@@ -51,11 +50,8 @@ public class ReservationExceptionTest {
     void failToCreateReservationAlreadyExist() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
-                .when().post(RESERVATIONS_PATH)
-                .then().log().all()
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation).when().post(RESERVATIONS_PATH).then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -65,11 +61,8 @@ public class ReservationExceptionTest {
             "{\"name\":\"abc\",\"date\":\"2022-08-12\"}",
             "{\"date\":\"2022-08-12\",\"time\":\"13:00:00\"}",})
     void notContainRequiredField(String body) {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(body)
-                .when().post(RESERVATIONS_PATH)
-                .then().log().all()
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
+                .when().post(RESERVATIONS_PATH).then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -80,10 +73,8 @@ public class ReservationExceptionTest {
             "{\"name\":\"abc\",\"date\":\"test\",\"time\":\"13:00:00\"}",
             "{\"name\":\"abc\",\"date\":\"2022-08-09\",\"time\":13}"})
     void isNotValidField(String body) {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
-                .when().post(RESERVATIONS_PATH)
-                .then().log().all()
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
+                .when().post(RESERVATIONS_PATH).then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -92,9 +83,7 @@ public class ReservationExceptionTest {
     @ValueSource(strings = {RESERVATIONS_PATH + "/10", RESERVATIONS_PATH + "/1.1",
             RESERVATIONS_PATH + "/test"})
     void notExistID(String path) {
-        RestAssured.given().log().all()
-                .when().get(path)
-                .then().log().all()
+        RestAssured.given().log().all().when().get(path).then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -103,10 +92,7 @@ public class ReservationExceptionTest {
     @ValueSource(strings = {RESERVATIONS_PATH + "/10", RESERVATIONS_PATH + "/1.1",
             RESERVATIONS_PATH + "/test"})
     void failToDeleteWithInvalidId(String path) {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete(path)
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
+                .delete(path).then().log().all().statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

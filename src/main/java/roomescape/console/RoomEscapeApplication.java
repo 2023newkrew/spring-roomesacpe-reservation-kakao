@@ -3,10 +3,9 @@ package roomescape.console;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
-import roomescape.dao.ConsoleReservationDAO;
-import roomescape.dao.ReservationDAO;
+import roomescape.dao.reservation.ConsoleReservationDAO;
+import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dto.Reservation;
-import roomescape.dto.Theme;
 
 public class RoomEscapeApplication {
 
@@ -43,7 +42,7 @@ public class RoomEscapeApplication {
 
                 Reservation reservation = new Reservation(
                         LocalDate.parse(date), LocalTime.parse(time + ":00"), name, 1L);
-                dao.addReservation(reservation);
+                dao.insert(reservation);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -57,7 +56,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = dao.findReservation(id);
+                Reservation reservation = dao.find(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -73,7 +72,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                dao.deleteReservation(id);
+                dao.remove(id);
                 System.out.println("예약이 취소되었습니다.");
             }
 
