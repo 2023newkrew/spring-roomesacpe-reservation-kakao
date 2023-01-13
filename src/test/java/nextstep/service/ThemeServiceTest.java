@@ -3,6 +3,7 @@ package nextstep.service;
 import nextstep.domain.dto.theme.CreateThemeDto;
 import nextstep.domain.dto.theme.UpdateThemeDto;
 import nextstep.domain.theme.Theme;
+import nextstep.exception.NegativeThemePriceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,18 @@ public class ThemeServiceTest {
     void addTheme() {
         assertThatNoException()
                 .isThrownBy(() -> themeService.addTheme(createThemeDto));
+    }
+
+    @DisplayName("가격이 음수면 추가시 예외 발생")
+    @Test
+    void addNegativePriceTheme() {
+        CreateThemeDto newTheme = new CreateThemeDto(
+                "카페 라떼",
+                "LIH 바이러스 위기에서 탈출",
+                -32000
+        );
+        assertThatThrownBy(() -> themeService.addTheme(newTheme))
+                .isInstanceOf(NegativeThemePriceException.class);
     }
 
     @DisplayName("전체 테마 조회, 기존 1개 + 3개 추 = 4개 조회")

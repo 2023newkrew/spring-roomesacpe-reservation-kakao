@@ -62,7 +62,6 @@ public class RoomEscapeConsoleApplication {
             if (input.startsWith(THEME)) {
                 String themeOrder = input.split(" ")[1];
 
-
                 if (themeOrder.startsWith(LIST)) {
                     showThemeList();
                 }

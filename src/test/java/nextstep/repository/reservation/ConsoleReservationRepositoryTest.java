@@ -2,8 +2,6 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
-import nextstep.repository.reservation.ConsoleReservationRepository;
-import nextstep.repository.reservation.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
