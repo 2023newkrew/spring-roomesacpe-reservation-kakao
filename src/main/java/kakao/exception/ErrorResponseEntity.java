@@ -1,4 +1,4 @@
-package kakao.error;
+package kakao.exception;
 
 import lombok.Builder;
 import lombok.Data;

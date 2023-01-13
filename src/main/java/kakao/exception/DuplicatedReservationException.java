@@ -1,8 +1,8 @@
-package kakao.error.exception;
+package kakao.exception;
 
-import kakao.error.CustomRuntimeException;
+import kakao.exception.CustomRuntimeException;
 
-import static kakao.error.ErrorCode.DUPLICATE_RESERVATION;
+import static kakao.exception.ErrorCode.DUPLICATE_RESERVATION;
 
 public class DuplicatedReservationException extends CustomRuntimeException {
 

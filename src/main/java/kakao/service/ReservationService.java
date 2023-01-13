@@ -1,7 +1,7 @@
 package kakao.service;
 
-import kakao.error.exception.DuplicatedReservationException;
-import kakao.error.exception.ReservationNotFoundException;
+import kakao.exception.DuplicatedReservationException;
+import kakao.exception.ReservationNotFoundException;
 import kakao.model.request.ReservationRequest;
 import kakao.model.response.ReservationResponse;
 import kakao.repository.ReservationRepository;

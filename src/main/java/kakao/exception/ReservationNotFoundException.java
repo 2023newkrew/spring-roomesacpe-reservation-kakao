@@ -1,8 +1,8 @@
-package kakao.error.exception;
+package kakao.exception;
 
-import kakao.error.CustomRuntimeException;
+import kakao.exception.CustomRuntimeException;
 
-import static kakao.error.ErrorCode.RESERVATION_NOT_FOUND;
+import static kakao.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 public class ReservationNotFoundException extends CustomRuntimeException {
 
