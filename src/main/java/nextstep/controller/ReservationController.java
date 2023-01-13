@@ -29,8 +29,8 @@ public class ReservationController {
     @PostMapping(value = "")
     public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO)
             throws SQLException {
-        Long roomId = reservationService.createReservation(reservationRequestDTO);
-        return ResponseEntity.created(URI.create(String.format("/reservations/%d", roomId))).build();
+        return ResponseEntity.created(URI.create(String.format("/reservations/%d",
+                reservationService.createReservation(reservationRequestDTO).getId()))).build();
     }
 
     @GetMapping(value = "{id}")
