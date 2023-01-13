@@ -2,9 +2,6 @@ package nextstep;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -15,11 +12,10 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
-
+        long reservationIdIndex = 0L;
+        ReservationDAO reservationDAO = new ReservationDAO();
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
+        reservationDAO.makeConnection();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -44,8 +40,7 @@ public class RoomEscapeApplication {
                         theme
                 );
 
-                reservations.add(reservation);
-
+                reservationDAO.addReservation(reservation);
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -58,10 +53,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                Reservation reservation = reservationDAO.lookUpReservation(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -74,17 +66,14 @@ public class RoomEscapeApplication {
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
-
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                reservationDAO.deleteReservation(id);
+                System.out.println("예약이 취소되었습니다.");
             }
-
             if (input.equals(QUIT)) {
                 break;
             }
         }
+        reservationDAO.disconnection();
     }
 }
