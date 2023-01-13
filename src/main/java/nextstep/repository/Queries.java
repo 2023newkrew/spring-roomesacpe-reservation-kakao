@@ -17,5 +17,6 @@ public class Queries {
         public static final String SELECT_ALL_SQL = "SELECT * FROM theme;";
         public static final String DELETE_BY_ID_SQL = "DELETE FROM theme WHERE id = ?;";
         public static final String DELETE_ALL_SQL = "DELETE FROM theme";
+        public static final String SELECT_BY_NAME_SQL = "SELECT COUNT(*) FROM theme WHERE name = ?;";
     }
 }

@@ -26,6 +26,14 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(DuplicateThemeException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateThemeException(DuplicateThemeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
     @ExceptionHandler(InvalidCreateReservationRequestException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCreateReservationRequestException(InvalidCreateReservationRequestException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());

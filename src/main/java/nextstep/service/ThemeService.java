@@ -6,6 +6,7 @@ import nextstep.domain.repository.ThemeRepository;
 import nextstep.dto.CreateThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.dto.ThemesResponse;
+import nextstep.exception.DuplicateThemeException;
 import nextstep.exception.ReservedThemeDeleteException;
 import nextstep.exception.ThemeNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class ThemeService {
     }
 
     public Long createTheme(CreateThemeRequest themeRequest){
+        if(themeRepository.existByThemeName(themeRequest.getName()))
+            throw new DuplicateThemeException();
+
         return themeRepository.save(new Theme(themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice()));
     }
 

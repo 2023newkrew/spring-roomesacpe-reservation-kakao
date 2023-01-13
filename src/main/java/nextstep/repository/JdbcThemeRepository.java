@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +51,15 @@ public class JdbcThemeRepository implements ThemeRepository {
         catch (EmptyResultDataAccessException e){
             return Optional.empty();
         }
+    }
+
+    @Override
+    public boolean existByThemeName(String name) {
+        return jdbcTemplate.queryForObject(
+                Queries.Theme.SELECT_BY_NAME_SQL,
+                new Object[] {name},
+                Integer.class
+        ) > 0;
     }
 
     @Override

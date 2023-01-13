@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface ThemeRepository {
     Long save(Theme theme);
     Optional<Theme> findThemeById(Long id);
+    boolean existByThemeName(String name);
     List<Theme> getAllThemes();
     boolean deleteThemeById(Long id);
 }
