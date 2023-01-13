@@ -223,6 +223,18 @@ public class ReservationAcceptanceTest {
             .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+
+        @Test
+        void 예약_시_존재하지_않는_테마로_예약할_수_없다() {
+            // given
+            CreateReservationRequest createReservationRequest
+                    = new CreateReservationRequest("2023-01-09", "13:00", "eddie-davi", 1000L);
+            // when
+            ExtractableResponse<Response> response
+                    = createReservation(createReservationRequest);
+            // then
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     private ExtractableResponse<Response> createReservation(CreateReservationRequest createReservationRequest) {

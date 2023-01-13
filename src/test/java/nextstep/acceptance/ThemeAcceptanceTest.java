@@ -98,6 +98,20 @@ public class ThemeAcceptanceTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @Test
+    void 존재하지_않는_테마를_조회하면_예외가_발생한다() {
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+
+                // when
+                .when().get("/themes/1000")
+
+                // then
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     private ExtractableResponse<Response> createTheme(CreateThemeRequest themeRequest) {
         return RestAssured
                 .given()
