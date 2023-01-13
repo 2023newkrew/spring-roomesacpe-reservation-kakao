@@ -45,7 +45,7 @@ public class ThemeMemoryRepository implements ThemeRepository {
     }
 
     @Override
-    public Boolean has(String name) {
+    public Boolean existsByName(String name) {
         return themes.values()
                 .stream()
                 .anyMatch(theme -> theme.getName().equals(name));

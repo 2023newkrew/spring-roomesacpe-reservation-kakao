@@ -39,7 +39,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean has(LocalDateTime dateTime) {
+    public Boolean existsByDateTime(LocalDateTime dateTime) {
         return reservations.values()
                 .stream()
                 .anyMatch(reservation -> reservation.getDateTime().equals(dateTime));

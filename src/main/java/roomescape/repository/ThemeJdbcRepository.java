@@ -61,7 +61,7 @@ public class ThemeJdbcRepository implements ThemeRepository {
     }
 
     @Override
-    public Boolean has(String name) {
+    public Boolean existsByName(String name) {
         String sql = "select * from theme where name = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, name).size() > 0;
     }

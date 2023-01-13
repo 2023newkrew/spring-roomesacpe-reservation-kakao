@@ -21,7 +21,7 @@ public class ThemeService {
     }
 
     public ThemeResponseDto createTheme(ThemeRequestDto req) {
-        if (themeRepository.has(req.getName())) {
+        if (themeRepository.existsByName(req.getName())) {
             throw new RoomEscapeException(ErrorCode.THEME_NAME_ALREADY_EXISTS);
         }
         Theme theme = new Theme(null, req.getName(), req.getDesc(), req.getPrice());

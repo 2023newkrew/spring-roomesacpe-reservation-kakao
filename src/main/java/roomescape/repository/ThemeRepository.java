@@ -14,5 +14,5 @@ public interface ThemeRepository {
 
     Integer delete(Long id);
 
-    Boolean has(String name);
+    Boolean existsByName(String name);
 }

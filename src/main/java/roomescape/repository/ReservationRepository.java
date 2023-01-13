@@ -12,5 +12,5 @@ public interface ReservationRepository {
 
     Integer delete(Long id);
 
-    Boolean has(LocalDateTime datetime);
+    Boolean existsByDateTime(LocalDateTime datetime);
 }

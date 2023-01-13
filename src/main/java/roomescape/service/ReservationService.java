@@ -24,7 +24,7 @@ public class ReservationService {
 
     public ReservationResponseDto createReservation(ReservationRequestDto req) {
         LocalDateTime dateTime = LocalDateTime.of(req.getDate(), req.getTime());
-        if (reservationRepository.has(dateTime)) {
+        if (reservationRepository.existsByDateTime(dateTime)) {
             throw new RoomEscapeException(ErrorCode.RESERVATION_DATETIME_ALREADY_EXISTS);
         }
         Reservation reservation = new Reservation(null, dateTime, req.getName(), req.getThemeId());

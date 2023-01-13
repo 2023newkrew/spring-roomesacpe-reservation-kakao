@@ -56,7 +56,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean has(LocalDateTime dateTime) {
+    public Boolean existsByDateTime(LocalDateTime dateTime) {
         String sql = "select * from reservation where datetime = ? limit 1";
         return jdbcTemplate.query(sql, actorRowMapper, dateTime).size() > 0;
     }
