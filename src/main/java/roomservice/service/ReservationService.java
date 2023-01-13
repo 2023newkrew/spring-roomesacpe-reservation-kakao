@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomservice.domain.TimeTable;
 import roomservice.domain.dto.ReservationCreateDto;
+import roomservice.domain.dto.ReservationFoundDto;
 import roomservice.domain.entity.Reservation;
 import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.InvalidReservationTimeException;
 import roomservice.exceptions.exception.InvalidThemeException;
 import roomservice.repository.ReservationDao;
 import roomservice.repository.ThemeDao;
+import java.util.*;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 
 /**
  * ReservationService processes interior logic of reservation system.
@@ -63,8 +64,19 @@ public class ReservationService {
      * @param id which you want to find.
      * @return reservation if successfully found.
      */
-    public Reservation findReservation(Long id){
-        return reservationDao.selectReservation(id);
+    public ReservationFoundDto findReservation(Long id){
+        Reservation reservation = reservationDao.selectReservation(id);
+        if (reservation == null){
+            return null;
+        }
+        ReservationFoundDto result = new ReservationFoundDto(
+                reservation.getId(),
+                reservation.getDate(),
+                reservation.getTime(),
+                reservation.getName(),
+                reservation.getTheme().getName()
+        );
+        return result;
     }
 
     /**

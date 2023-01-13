@@ -41,13 +41,17 @@ public class ReservationSpringDao implements ReservationDao {
 
     public long insertReservation(Reservation reservation) {
         validateDuplication(reservation);
-        String sql = "insert into RESERVATION (date, time, name) values (?, ?, ?)";
+        String sql = "insert into RESERVATION (date, time, name, theme_name, theme_desc, theme_price)" +
+                " values (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getDate().toString());
             ps.setString(2, reservation.getTime().toString());
             ps.setString(3, reservation.getName());
+            ps.setString(4, reservation.getTheme().getName());
+            ps.setString(5, reservation.getTheme().getDesc());
+            ps.setInt(6, reservation.getTheme().getPrice());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();

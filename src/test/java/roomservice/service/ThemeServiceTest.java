@@ -17,11 +17,13 @@ public class ThemeServiceTest {
     ThemeService themeService;
     @Test
     void create(){
-        assertThat(themeService.createTheme(new ThemeCreateDto(
+        Long givenId = themeService.createTheme(new ThemeCreateDto(
                 "test",
                 "testDescription",
                 15000
-        ))).isEqualTo(2L);
+        ));
+        assertThat(themeService.findThemeById(givenId).getName()).isEqualTo("test");
+        assertThat(themeService.findThemeById(givenId).getDesc()).isEqualTo("testDescription");
     }
     @Test
     void find(){

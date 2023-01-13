@@ -22,10 +22,11 @@ public class ReservationServiceTest {
 
     @Test
     void createTest(){
-        assertThat(reservationService.createReservation(new ReservationCreateDto(1L,
+        Long givenId = reservationService.createReservation(new ReservationCreateDto(1L,
                 LocalDate.now(),
                 TimeTable.A.getTime(),
-                "Kim"))).isEqualTo(3L);
+                "Kim"));
+        assertThat(reservationService.findReservation(givenId).getName()).isEqualTo("Kim");
     }
     @Test
     void notCreateIfNotValidThemeId(){

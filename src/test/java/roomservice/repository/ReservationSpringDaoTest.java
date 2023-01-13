@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import roomservice.domain.entity.Reservation;
+import roomservice.domain.entity.Theme;
 import roomservice.exceptions.exception.DuplicatedReservationException;
 
 import java.time.LocalDate;
@@ -28,12 +29,17 @@ public class ReservationSpringDaoTest {
     @BeforeEach
     void setUp() {
         reservationDao = new ReservationSpringDao(jdbcTemplate);
-        testReservation = new Reservation(null, testDate, testTime, "daniel", null);
+        testReservation = new Reservation(null, testDate, testTime, "daniel",
+                new Theme(1L, "위너고홈", "병맛 어드벤처 회사 코믹물", 29000));
     }
 
     @Test
     void createTest() {
-        assertThat(reservationDao.insertReservation(testReservation)).isEqualTo(3L);
+        long givenId = reservationDao.insertReservation(testReservation);
+        assertThat(reservationDao.selectReservation(givenId).getTime()).isEqualTo(testTime);
+        assertThat(reservationDao.selectReservation(givenId).getDate()).isEqualTo(testDate);
+        assertThat(reservationDao.selectReservation(givenId).getName()).isEqualTo("daniel");
+
     }
 
     @Test

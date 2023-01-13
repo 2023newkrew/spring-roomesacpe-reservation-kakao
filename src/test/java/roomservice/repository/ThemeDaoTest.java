@@ -22,7 +22,10 @@ public class ThemeDaoTest {
 
     @Test
     void create(){
-        assertThat(themeDao.createTheme(theme)).isEqualTo(2L);
+        long givenId = themeDao.createTheme(theme);
+        assertThat(themeDao.selectThemeById(givenId).getName()).isEqualTo("test");
+        assertThat(themeDao.selectThemeById(givenId).getDesc()).isEqualTo("test");
+        assertThat(themeDao.selectThemeById(givenId).getPrice()).isEqualTo(20000);
     }
 
     @Test

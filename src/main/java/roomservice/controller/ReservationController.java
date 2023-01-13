@@ -3,8 +3,9 @@ package roomservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomservice.domain.Reservation;
-import roomservice.repository.ReservationDao;
+import roomservice.domain.dto.ReservationCreateDto;
+import roomservice.domain.dto.ReservationFoundDto;
+import roomservice.domain.entity.Reservation;
 import roomservice.service.ReservationService;
 
 import java.net.URI;
@@ -25,12 +26,12 @@ public class ReservationController {
 
     /**
      * Add a reservation to this program.
-     * @param reservation reservation to be added.
+     * @param reservationDto information of reservation to be added.
      * @return "created" response with id resulted by the program.
      */
     @PostMapping()
-    public ResponseEntity<Void> createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationService.createReservation(reservation);
+    public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateDto reservationDto) {
+        Long id = reservationService.createReservation(reservationDto);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
@@ -40,7 +41,7 @@ public class ReservationController {
      * @return "ok" response with reservation if successfully found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> showReservation(@PathVariable Long id) {
+    public ResponseEntity<ReservationFoundDto> showReservation(@PathVariable Long id) {
         return ResponseEntity.ok().body(reservationService.findReservation(id));
     }
 
