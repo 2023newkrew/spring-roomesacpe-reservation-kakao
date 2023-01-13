@@ -52,12 +52,14 @@ public class DatabaseExecutor {
 
     @Transactional
     public void clearAll() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+
         for (String tableName : tableNames) {
-            jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
             jdbcTemplate.execute("TRUNCATE TABLE " + tableName);
             jdbcTemplate.execute("ALTER TABLE " + tableName + " ALTER COLUMN id RESTART WITH 1");
-            jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
         }
+
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
 }
