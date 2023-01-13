@@ -2,11 +2,10 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import roomescape.domain.Reservation;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -23,18 +22,18 @@ public class ReservationDaoWeb implements ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addReservation(Reservation reservation) { //예약을 추가하고 키를 리턴한다.
+    public Long addReservation(Reservation reservation) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
         reservation.setId(insertActor.executeAndReturnKey(parameters).longValue());
         return reservation.getId();
     }
 
-    public Integer checkSchedule(ReservationDto reservationDto) {
-        return jdbcTemplate.queryForObject(countByDateAndTime, Integer.class, reservationDto.getDate(), reservationDto.getTime());
+    public List<Reservation> findReservationById(Long id) {
+        return jdbcTemplate.query(selectById, new ReservationMapper(), id);
     }
 
-    public List<Reservation> findReservation(Long id) {
-        return jdbcTemplate.query(selectById, new ReservationMapper(), id);
+    public List<Reservation> findReservationByDateAndTime(String date, String time) {
+        return jdbcTemplate.query(selectByDateAndTime, new ReservationMapper(), date, time);
     }
 
     public int removeReservation(Long id) {

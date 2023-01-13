@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationDAO;
-import roomescape.dto.ReservationRequest;
+import roomescape.dao.ReservationDaoWeb;
+import roomescape.dto.ReservationDto;
 
 import java.net.URI;
 import java.util.List;
@@ -15,20 +15,20 @@ import java.util.List;
 public class ReservationController {
 
     @Autowired
-    private ReservationDAO reservationDAO;
+    private ReservationDaoWeb reservationDAO;
 
     @PostMapping("/reservations")
-    public ResponseEntity createReservation(@RequestBody ReservationRequest reservationRequest) {
-        if (reservationDAO.checkSchedule(reservationRequest) > 0) {
+    public ResponseEntity createReservation(@RequestBody ReservationDto reservationDto) {
+        if (reservationDAO.findReservationByDateAndTime(reservationDto.getDate(), reservationDto.getTime()).size() > 0) {
             return ResponseEntity.unprocessableEntity().body("이미 예약된 시간입니다.");
         }
-        Reservation reservation = reservationDAO.addReservation(reservationRequest);
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
+        Long id = reservationDAO.addReservation(new Reservation(reservationDto));
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/reservations/{id}")
     public ResponseEntity showReservation(@PathVariable Long id) {
-        List<Reservation> reservations = reservationDAO.findReservation(id);
+        List<Reservation> reservations = reservationDAO.findReservationById(id);
         if (reservations.size() == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약은 없는 예약입니다.");
         }
