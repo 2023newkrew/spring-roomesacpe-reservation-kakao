@@ -87,7 +87,19 @@ public class DatabaseReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAllByThemeId(long themeId) {
-        return null;
+        String sql = "SELECT * FROM RESERVATION WHERE THEME_ID = ?";
+        List<Reservation> reservations;
+        try {
+            reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> Reservation.of(
+                    resultSet.getLong("ID"),
+                    resultSet.getDate("DATE").toLocalDate(),
+                    resultSet.getTime("TIME").toLocalTime(),
+                    resultSet.getString("NAME"),
+                    resultSet.getLong("THEME_ID")), themeId);
+        } catch (DataAccessException e) {
+            return List.of();
+        }
+        return reservations;
     }
 
     @Override
