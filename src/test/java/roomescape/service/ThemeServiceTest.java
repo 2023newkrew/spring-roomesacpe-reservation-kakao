@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ThemeRequestDto;
-import roomescape.dto.ThemeResponseDto;
-import roomescape.dto.ThemeUpdateRequestDto;
+import roomescape.dto.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -136,5 +133,19 @@ public class ThemeServiceTest {
         Assertions.assertThat(theme.getName()).isEqualTo("테스트테마2");
         Assertions.assertThat(theme.getDesc()).isEqualTo("Lorem Ipsum2");
         Assertions.assertThat(theme.getPrice()).isEqualTo(2000);
+    }
+
+    @DisplayName("모든 Theme 조회 후 결과에 미리 추가한 항목 있는지 검사")
+    @Test
+    @Transactional
+    public void findAllTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        ThemeResponseDto theme = themeService.findTheme(themeId);
+        ThemesResponseDto allTheme = themeService.findAllTheme();
+        //then
+        Assertions.assertThat(allTheme.getThemes()).contains(theme);
     }
 }
