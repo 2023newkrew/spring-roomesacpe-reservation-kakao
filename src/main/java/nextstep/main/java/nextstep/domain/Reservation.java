@@ -19,10 +19,10 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final Theme theme;
+    private final Long themeId;
 
     public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
     }
 
     public static Reservation of(ResultSet resultSet) throws SQLException {
@@ -32,11 +32,7 @@ public class Reservation {
                 resultSet.getTime("time")
                         .toLocalTime(),
                 resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
+                resultSet.getLong("theme_id")
         );
     }
 }

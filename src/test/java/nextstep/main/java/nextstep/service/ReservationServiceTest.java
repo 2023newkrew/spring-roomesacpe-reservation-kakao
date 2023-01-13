@@ -5,10 +5,13 @@ import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
 import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.repository.MemoryReservationRepository;
+import nextstep.main.java.nextstep.repository.ThemeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,14 +20,16 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ReservationServiceTest {
 
-    private static final ReservationService service = new ReservationService(new MemoryReservationRepository());
+    @Mock
+    private static ThemeRepository themeRepository;
+    private static final ReservationService service = new ReservationService(new MemoryReservationRepository(),themeRepository);
 
     @BeforeEach
     void setUp() {
         MemoryReservationRepository.reservationMap
-                .put(1L, new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", null));
+                .put(1L, new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", 1L));
         MemoryReservationRepository.reservationMap
-                .put(2L, new Reservation(2L, LocalDate.of(2025, 1, 9), LocalTime.of(1, 30), "reservation2", null));
+                .put(2L, new Reservation(2L, LocalDate.of(2025, 1, 9), LocalTime.of(1, 30), "reservation2", 1L));
     }
 
     @AfterEach
@@ -65,7 +70,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("예약 중복 등록 테스트")
     void createDuplicateTest() {
-        ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name");
+        ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name",1L);
         assertThatThrownBy(() -> service.save(requestDto)).isInstanceOf(DuplicateReservationException.class);
     }
 

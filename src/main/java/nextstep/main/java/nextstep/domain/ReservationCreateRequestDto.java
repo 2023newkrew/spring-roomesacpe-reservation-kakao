@@ -14,4 +14,5 @@ public class ReservationCreateRequestDto {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
+    private final Long themeId;
 }

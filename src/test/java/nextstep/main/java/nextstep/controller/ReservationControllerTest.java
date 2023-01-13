@@ -27,8 +27,9 @@ public class ReservationControllerTest {
     ReservationCreateRequestDto request = new ReservationCreateRequestDto(
             LocalDate.of(2023, 1, 9),
             LocalTime.of(1, 30),
-            "name"
+            "name", 1L
     );
+
     @MockBean
     private ReservationService reservationService;
 
