@@ -10,4 +10,7 @@ public class Queries {
         public static final String DELETE_ALL_SQL = "DELETE FROM reservation";
     }
 
+    public static class Theme {
+        public static final String INSERT_SQL = "INSERT INTO theme (name, desc, price) VALUES(?, ?, ?);";
+    }
 }
