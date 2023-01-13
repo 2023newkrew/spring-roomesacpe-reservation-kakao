@@ -1,9 +1,10 @@
 package nextstep.repository.theme;
 
-import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConsoleThemeRepository implements ThemeRepository {
 
@@ -30,7 +31,22 @@ public class ConsoleThemeRepository implements ThemeRepository {
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
-            return Theme.from(resultSet);
+            return from(resultSet);
+        } catch (Exception e) {
+            throw new RuntimeException("테마를 찾을 수 없습니다.");
+        }
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        try {
+            PreparedStatement ps = con.prepareStatement(findAllSql, new String[]{"id"});
+            ResultSet resultSet = ps.executeQuery();
+            List<Theme> themeList = new ArrayList<>();
+            while (resultSet.next()){
+                themeList.add(from(resultSet));
+            }
+            return themeList;
         } catch (Exception e) {
             throw new RuntimeException("테마를 찾을 수 없습니다.");
         }
@@ -57,6 +73,21 @@ public class ConsoleThemeRepository implements ThemeRepository {
             return generatedKeys.getLong("id");
         } catch (SQLException | IllegalArgumentException e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Theme findByTheme(Theme theme) {
+        try {
+            PreparedStatement ps = con.prepareStatement(findByThemeSql, new String[]{"id"});
+            ps.setString(1, theme.getName());
+            ps.setString(2, theme.getDesc());
+            ps.setInt(3, theme.getPrice());
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+            return from(resultSet);
+        } catch (Exception e) {
+            throw new RuntimeException("테마를 찾을 수 없습니다.");
         }
     }
 

@@ -22,7 +22,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private final RowMapper<Reservation> reservationActorRowMapper = (resultSet, rowNum) ->
-            Reservation.from(resultSet);
+            from(resultSet);
 
 
     @Override

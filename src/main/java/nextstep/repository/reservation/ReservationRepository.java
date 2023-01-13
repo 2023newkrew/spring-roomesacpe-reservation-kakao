@@ -42,6 +42,19 @@ public interface ReservationRepository {
         return ps;
     }
 
+    default Reservation from(ResultSet resultSet) throws SQLException {
+        return new Reservation(resultSet.getLong("ID"),
+                resultSet.getDate("DATE").toLocalDate(),
+                resultSet.getTime("TIME").toLocalTime(),
+                resultSet.getString("NAME"),
+                new Theme(
+                        resultSet.getString("theme_name"),
+                        resultSet.getString("theme_desc"),
+                        resultSet.getInt("theme_price")
+                )
+        );
+    }
+
     Reservation findById(Long id);
 
     void deleteById(Long id) throws SQLException;

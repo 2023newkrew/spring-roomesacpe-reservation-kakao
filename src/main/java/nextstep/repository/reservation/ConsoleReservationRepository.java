@@ -33,7 +33,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
-            return Reservation.from(resultSet);
+            return from(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("예약 내역을 찾을 수 없습니다.");
         }

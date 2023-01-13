@@ -56,17 +56,4 @@ public class Reservation {
     public void setTheme(Theme theme) {
         this.theme = theme;
     }
-
-    public static Reservation from(ResultSet resultSet) throws SQLException {
-        return new Reservation(resultSet.getLong("ID"),
-                resultSet.getDate("DATE").toLocalDate(),
-                resultSet.getTime("TIME").toLocalTime(),
-                resultSet.getString("NAME"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
-        );
-    }
 }

@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class JdbcThemeRepository implements ThemeRepository {
 
@@ -17,11 +19,18 @@ public class JdbcThemeRepository implements ThemeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
     private final RowMapper<Theme> themeActorRowMapper = (resultSet, rowNum) ->
-            Theme.from(resultSet);
+            from(resultSet);
 
     @Override
     public Theme findByThemeId(Long id) {
         return jdbcTemplate.queryForObject(findSql, themeActorRowMapper, id);
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        return jdbcTemplate.query(
+                findAllSql,
+                (resultSet, rowNum) -> from(resultSet));
     }
 
     @Override
@@ -38,6 +47,15 @@ public class JdbcThemeRepository implements ThemeRepository {
 
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    @Override
+    public Theme findByTheme(Theme theme) {
+        try {
+            return jdbcTemplate.queryForObject(findByThemeSql, themeActorRowMapper, theme.getName(), theme.getDesc(), theme.getPrice());
+        }catch (Exception e){
+            throw new RuntimeException("테마를 찾을 수 없습니다.");
+        }
     }
 
     private void validateTheme(Theme theme) {

@@ -37,12 +37,4 @@ public class Theme {
     public Integer getPrice() {
         return price;
     }
-
-    public static Theme from(ResultSet resultSet) throws SQLException {
-        return new Theme(resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("desc"),
-                resultSet.getInt("price")
-        );
-    }
 }

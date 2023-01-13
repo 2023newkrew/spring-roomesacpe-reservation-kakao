@@ -3,6 +3,7 @@ package nextstep;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.repository.reservation.ConsoleReservationRepository;
+import nextstep.repository.theme.ConsoleThemeRepository;
 import nextstep.service.ReservationService;
 
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ public class ConsoleApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final ReservationService reservationService = new ReservationService(new ConsoleReservationRepository());
+    private static final ReservationService reservationService = new ReservationService(new ConsoleReservationRepository(), new ConsoleThemeRepository());
 
     public static void main() {
         Scanner scanner = new Scanner(System.in);
