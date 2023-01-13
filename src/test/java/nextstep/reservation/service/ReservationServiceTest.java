@@ -2,6 +2,7 @@ package nextstep.reservation.service;
 
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
+import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.ReservationRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -20,7 +22,8 @@ class ReservationServiceTest {
     @BeforeEach
     void init() {
         ReservationRepository repository = new FakeReservationRepository();
-        service = new ReservationServiceImpl(repository);
+        ReservationMapper mapper = Mappers.getMapper(ReservationMapper.class);
+        service = new ReservationServiceImpl(repository, mapper);
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)

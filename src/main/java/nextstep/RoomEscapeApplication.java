@@ -3,10 +3,12 @@ package nextstep;
 import nextstep.console.controller.RoomEscapeController;
 import nextstep.console.view.RoomEscapeInput;
 import nextstep.console.view.RoomEscapeOutput;
+import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.ReservationRepository;
 import nextstep.reservation.repository.SimpleReservationRepository;
 import nextstep.reservation.service.ReservationService;
 import nextstep.reservation.service.ReservationServiceImpl;
+import org.mapstruct.factory.Mappers;
 
 public class RoomEscapeApplication {
 
@@ -25,7 +27,8 @@ public class RoomEscapeApplication {
 
     private static ReservationService createService() {
         ReservationRepository repository = new SimpleReservationRepository();
+        ReservationMapper mapper = Mappers.getMapper(ReservationMapper.class);
 
-        return new ReservationServiceImpl(repository);
+        return new ReservationServiceImpl(repository, mapper);
     }
 }

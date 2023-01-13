@@ -21,23 +21,25 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository repository;
 
+    private final ReservationMapper mapper;
+
     @Transactional
     @Override
     public ReservationResponse create(ReservationRequest request) {
-        Reservation reservation = ReservationMapper.INSTANCE.fromRequest(request, THEME);
+        Reservation reservation = mapper.fromRequest(request, THEME);
         if (repository.existsByDateAndTime(reservation)) {
             throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
         }
         reservation = repository.insert(reservation);
 
-        return ReservationMapper.INSTANCE.toResponse(reservation);
+        return mapper.toResponse(reservation);
     }
 
     @Override
     public ReservationResponse getById(Long id) {
         Reservation reservation = repository.getById(id);
 
-        return ReservationMapper.INSTANCE.toResponse(reservation);
+        return mapper.toResponse(reservation);
     }
 
     @Transactional

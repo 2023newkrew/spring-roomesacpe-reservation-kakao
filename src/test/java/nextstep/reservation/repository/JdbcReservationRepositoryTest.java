@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,11 +32,13 @@ class JdbcReservationRepositoryTest {
     final JdbcTemplate jdbcTemplate;
 
     final ReservationRepository repository;
+    final ReservationMapper mapper;
 
     @Autowired
     public JdbcReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.repository = new JdbcReservationRepository(jdbcTemplate);
+        this.mapper = Mappers.getMapper(ReservationMapper.class);
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -241,7 +244,7 @@ class JdbcReservationRepositoryTest {
 
     private Reservation fromRequest(ReservationRequest req) {
         Theme theme = new Theme("", "", 0);
-        return ReservationMapper.INSTANCE.fromRequest(req, theme);
+        return mapper.fromRequest(req, theme);
     }
 }
 

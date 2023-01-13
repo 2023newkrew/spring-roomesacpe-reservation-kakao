@@ -6,12 +6,9 @@ import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "Spring")
 public interface ReservationMapper {
-    ReservationMapper INSTANCE = Mappers.getMapper(ReservationMapper.class);
-
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "request.name")
