@@ -63,6 +63,13 @@ public class WebAppThemeRepositoryTest {
                 32000
         );
 
-        assertThatNoException().isThrownBy(() -> webAppThemeRepository.updateTheme(updatedTheme));
+        assertThatNoException().isThrownBy(() -> webAppThemeRepository.update(updatedTheme));
+    }
+
+    @DisplayName("예외 없이 정상적으로 테마 삭제 확인")
+    @Test
+    void deleteTheme() {
+        long id = webAppThemeRepository.add(newTheme);
+        assertThatNoException().isThrownBy(() -> webAppThemeRepository.delete(id));
     }
 }

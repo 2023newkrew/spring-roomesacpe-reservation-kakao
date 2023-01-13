@@ -50,13 +50,14 @@ public class WebAppThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public int updateTheme(Theme theme) {
+    public int update(Theme theme) {
         String sql = "UPDATE THEME SET name = ?, desc = ?, price = ? WHERE id = ?;";
         return jdbcTemplate.update(sql, theme.getName(), theme.getDesc(), theme.getPrice(), theme.getId());
     }
 
     @Override
-    public int deleteTheme(long id) {
-        return 0;
+    public int delete(long id) {
+        String sql = "DELETE FROM theme WHERE id = ?;";
+        return jdbcTemplate.update(sql, id);
     }
 }

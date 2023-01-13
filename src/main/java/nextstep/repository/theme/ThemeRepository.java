@@ -10,7 +10,7 @@ public interface ThemeRepository {
 
     List<Theme> findAll();
 
-    int updateTheme(Theme theme);
+    int update(Theme theme);
 
-    int deleteTheme(long id);
+    int delete(long id);
 }

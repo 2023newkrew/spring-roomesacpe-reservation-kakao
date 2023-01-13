@@ -72,7 +72,7 @@ public class ConsoleThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public int updateTheme(Theme theme) {
+    public int update(Theme theme) {
         Connection con = null;
         PreparedStatement ps = null;
         int result = 0;
@@ -97,7 +97,24 @@ public class ConsoleThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public int deleteTheme(long id) {
-        return 0;
+    public int delete(long id) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        try {
+            String sql = "DELETE FROM theme WHERE id = ?;";
+            con = ConnectionManager.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setLong(1, id);
+            result = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionManager.closeAll(ps, con);
+        }
+
+        return result;
     }
 }

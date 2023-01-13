@@ -55,6 +55,13 @@ public class ConsoleThemeRepositoryTest {
                 32000
         );
 
-        assertThatNoException().isThrownBy(() -> consoleThemeRepository.updateTheme(updatedTheme));
+        assertThatNoException().isThrownBy(() -> consoleThemeRepository.update(updatedTheme));
+    }
+
+    @DisplayName("예외 없이 정상적으로 테마 삭제 확인")
+    @Test
+    void deleteTheme() {
+        long id = consoleThemeRepository.add(newTheme);
+        assertThatNoException().isThrownBy(() -> consoleThemeRepository.delete(id));
     }
 }
