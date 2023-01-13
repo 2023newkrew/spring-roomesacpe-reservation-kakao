@@ -22,9 +22,14 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
     public Optional<Theme> findByName(String name) {
         try {
             String sql = "SELECT * FROM theme WHERE name = ?";
-            Optional<Theme> theme = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Theme.class, name));
-            return theme;
-        } catch (EmptyResultDataAccessException e) {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                            new Theme(rs.getLong("id"),
+                                    rs.getString("name"),
+                                    rs.getString("desc"),
+                                    rs.getInt("price")),
+                    name));
+        } catch (
+                EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }

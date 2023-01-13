@@ -60,7 +60,7 @@ public class ThemeControllerTest {
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/themes/1");
+                .header("Location", "/themes/2");
     }
 
     @DisplayName("Theme - 테마 생성 - 동일 이름 테마 생성 불가")
