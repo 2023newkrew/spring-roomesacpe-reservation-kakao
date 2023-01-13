@@ -27,7 +27,7 @@ public class ReservationControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("Reservation을 생성을 성공하면 201 반환")
+    @DisplayName("예약 생성을 성공하면 201 반환")
     @Test
     @Order(1)
     void createReservation() {
@@ -42,7 +42,7 @@ public class ReservationControllerTest {
                 .header("Location", "/reservations/1");
     }
 
-    @DisplayName("유효하지 않은 Reservation 생성은 400 반환")
+    @DisplayName("유효하지 않은 날짜로 예약 생성하면 400 반환")
     @Test
     void invalidDateTimeReservation() {
         ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "name");
@@ -69,7 +69,7 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.CONFLICT.value());
     }
 
-    @DisplayName("Reservation 조회를 성공하면 200 반환")
+    @DisplayName("예약 조회를 성공하면 200 반환")
     @Test
     @Order(2)
     void retrieveReservation() {
@@ -88,7 +88,7 @@ public class ReservationControllerTest {
                 .body("themePrice", is(29000));
     }
 
-    @DisplayName("없는 Reservation 조회 시 404 반환")
+    @DisplayName("없는 예약 조회 시 404 반환")
     @Test
     void retrieveNotExistingReservation() {
         RestAssured.given().log().all()
@@ -98,7 +98,7 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    @DisplayName("Reservation 취소를 성공하면 204 반환")
+    @DisplayName("예약 취소를 성공하면 204 반환")
     @Test
     @Order(4)
     void deleteReservation() {
