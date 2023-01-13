@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Http Method")
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @Transactional
 public class ReservationControllerTest {
     @Autowired
