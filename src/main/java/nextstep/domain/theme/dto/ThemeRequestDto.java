@@ -1,9 +1,9 @@
 package nextstep.domain.theme.dto;
 
 public class ThemeRequestDto {
-    private String name;
-    private String desc;
-    private int price;
+    private final String name;
+    private final String desc;
+    private final int price;
 
     public ThemeRequestDto(String name, String desc, int price) {
         this.name = name;
