@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ThemeRequestDto;
+import roomescape.dto.ThemeResponseDto;
+import roomescape.dto.ThemeUpdateRequestDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -54,5 +56,85 @@ public class ThemeServiceTest {
         //when
         //then
         Assertions.assertThatIllegalArgumentException().isThrownBy(() -> themeService.deleteTheme(themeId));
+    }
+
+    @DisplayName("Theme의 이름 업데이트")
+    @Test
+    @Transactional
+    public void updateNameTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        themeService.updateTheme(themeId, new ThemeUpdateRequestDto("테스트테마2", null, null));
+        ThemeResponseDto theme = themeService.findTheme(themeId);
+        //then
+        Assertions.assertThat(theme.getName()).isEqualTo("테스트테마2");
+        Assertions.assertThat(theme.getDesc()).isNotNull();
+        Assertions.assertThat(theme.getPrice()).isNotNull();
+    }
+
+    @DisplayName("Theme의 설명 업데이트")
+    @Test
+    @Transactional
+    public void updateDescTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        themeService.updateTheme(themeId, new ThemeUpdateRequestDto(null, "Lorem Ipsum2", null));
+        ThemeResponseDto theme = themeService.findTheme(themeId);
+        //then
+        Assertions.assertThat(theme.getName()).isNotNull();
+        Assertions.assertThat(theme.getDesc()).isEqualTo("Lorem Ipsum2");
+        Assertions.assertThat(theme.getPrice()).isNotNull();
+    }
+
+    @DisplayName("Theme의 가격 업데이트")
+    @Test
+    @Transactional
+    public void updatePriceTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        themeService.updateTheme(themeId, new ThemeUpdateRequestDto(null, null, 2000));
+        ThemeResponseDto theme = themeService.findTheme(themeId);
+        //then
+        Assertions.assertThat(theme.getName()).isNotNull();
+        Assertions.assertThat(theme.getDesc()).isNotNull();
+        Assertions.assertThat(theme.getPrice()).isEqualTo(2000);
+    }
+
+    @DisplayName("Theme의 이름과 가격 업데이트")
+    @Test
+    @Transactional
+    public void updateNameAndPriceTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        themeService.updateTheme(themeId, new ThemeUpdateRequestDto("테스트테마2", null, 2000));
+        ThemeResponseDto theme = themeService.findTheme(themeId);
+        //then
+        Assertions.assertThat(theme.getName()).isEqualTo("테스트테마2");
+        Assertions.assertThat(theme.getDesc()).isNotNull();
+        Assertions.assertThat(theme.getPrice()).isEqualTo(2000);
+    }
+
+    @DisplayName("Theme 전부 업데이트")
+    @Test
+    @Transactional
+    public void updateAllTest() {
+        //given
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테스트테마", "Lorem Ipsum", 1000);
+        //when
+        Long themeId = themeService.createTheme(themeRequestDto);
+        themeService.updateTheme(themeId, new ThemeUpdateRequestDto("테스트테마2", "Lorem Ipsum2", 2000));
+        ThemeResponseDto theme = themeService.findTheme(themeId);
+        //then
+        Assertions.assertThat(theme.getName()).isEqualTo("테스트테마2");
+        Assertions.assertThat(theme.getDesc()).isEqualTo("Lorem Ipsum2");
+        Assertions.assertThat(theme.getPrice()).isEqualTo(2000);
     }
 }
