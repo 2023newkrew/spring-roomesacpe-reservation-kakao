@@ -57,7 +57,7 @@ class ReservationServiceTest {
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
                 "name",
-                themeId
+                themeId.toString()
         );
 
         // when
@@ -76,7 +76,7 @@ class ReservationServiceTest {
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
                 "reservation1",
-                themeId
+                themeId.toString()
         );
         reservationService.createReservation(reservationRequest1);
 
@@ -84,7 +84,7 @@ class ReservationServiceTest {
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
                 "reservation2",
-                themeId
+                themeId.toString()
         );
 
         // when & then
@@ -101,7 +101,7 @@ class ReservationServiceTest {
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
                 "name",
-                themeId
+                themeId.toString()
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
 
@@ -138,7 +138,7 @@ class ReservationServiceTest {
                 LocalDate.now().toString(),
                 LocalTime.of(11, 30).toString(),
                 "name",
-                themeId
+                themeId.toString()
         );
         Long reservationId = reservationService.createReservation(reservationRequest);
 

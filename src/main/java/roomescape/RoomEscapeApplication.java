@@ -60,7 +60,7 @@ public class RoomEscapeApplication {
                         date.toString(),
                         time.toString(),
                         name,
-                        WANNA_GO_HOME.getId()
+                        WANNA_GO_HOME.getId().toString()
                 );
 
                 Long reservationId;
