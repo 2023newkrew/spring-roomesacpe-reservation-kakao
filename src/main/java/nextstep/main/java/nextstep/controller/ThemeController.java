@@ -4,12 +4,10 @@ import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.ThemeCreateRequestDto;
 import nextstep.main.java.nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/themes")
@@ -26,5 +24,10 @@ public class ThemeController {
         System.out.println("createdTheme = " + createdTheme);
         return ResponseEntity.created(URI.create("/themes/" + createdTheme.getId()))
                 .build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Theme>> findAllTheme(){
+        return ResponseEntity.ok(themeService.findAllTheme());
     }
 }
