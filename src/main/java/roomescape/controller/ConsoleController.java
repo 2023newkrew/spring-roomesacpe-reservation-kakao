@@ -22,12 +22,11 @@ public class ConsoleController {
         this.consoleView = consoleView;
     }
 
-    public String getCommand() {
+    public String getInput() {
         return consoleView.inputCommand();
     }
 
-    public void createReservation(String input) {
-        String[] params = splitParams(input);
+    public void createReservation(String[] params) {
         LocalDate date = LocalDate.parse(params[0]);
         LocalTime time = LocalTime.parse(params[1] + ":00");
         String name = params[2];
@@ -43,8 +42,7 @@ public class ConsoleController {
         consoleView.showCreatedReservation(res);
     }
 
-    public void findReservation(String input) {
-        String[] params = splitParams(input);
+    public void findReservation(String[] params) {
         Long id = Long.parseLong(params[0]);
         ReservationResponseDto res;
         try {
@@ -56,8 +54,7 @@ public class ConsoleController {
         consoleView.showFoundReservation(res);
     }
 
-    public void cancelReservation(String input) {
-        String[] params = splitParams(input);
+    public void cancelReservation(String[] params) {
         Long id = Long.parseLong(params[0]);
         try {
             reservationService.cancelReservation(id);
@@ -68,8 +65,7 @@ public class ConsoleController {
         consoleView.showReservationCanceled();
     }
 
-    public void createTheme(String input) {
-        String[] params = splitParams(input);
+    public void createTheme(String[] params) {
         String name = params[0];
         String desc = params[1];
         Integer price = Integer.valueOf(params[2]);
@@ -95,8 +91,7 @@ public class ConsoleController {
         consoleView.showThemes(res);
     }
 
-    public void deleteTheme(String input) {
-        String[] params = splitParams(input);
+    public void deleteTheme(String[] params) {
         Long id = Long.parseLong(params[0]);
         try {
             themeService.deleteTheme(id);
@@ -107,10 +102,15 @@ public class ConsoleController {
         consoleView.showThemeDeleted();
     }
 
-    // 이름, 설명 등의 공백은 유지
-    private String[] splitParams(String input) {
+    public String getCommand(String input) {
         String[] splitted = input.split(" ");
-        String[] subArray = Arrays.copyOfRange(splitted, 2, splitted.length);
+        return String.join("_", Arrays.copyOf(splitted, Math.min(splitted.length, 2))).toUpperCase();
+    }
+
+    // 이름, 설명 등의 공백은 유지
+    public String[] getParams(String input) {
+        String[] splitted = input.split(" ");
+        String[] subArray = Arrays.copyOfRange(splitted, Math.min(splitted.length, 2), splitted.length);
         return Arrays.stream(String.join(" ", subArray).split(","))
                 .map(String::strip)
                 .toArray(String[]::new);
