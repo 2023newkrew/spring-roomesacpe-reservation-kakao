@@ -1,7 +1,8 @@
 package nextstep.reservation;
 
 import io.restassured.RestAssured;
-import nextstep.reservation.entity.Theme;
+import nextstep.reservation.dto.ThemeRequest;
+import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.service.ThemeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -23,12 +24,12 @@ public class ThemeControllerTest {
     int port;
     @Autowired
     private ThemeService themeService;
-    private Theme theme;
+    private ThemeRequest themeRequest;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        this.theme = new Theme(null, "호러", "매우 무서운", 24000);
+        this.themeRequest = new ThemeRequest("호러", "매우 무서운", 24000);
     }
 
     @AfterEach
@@ -41,7 +42,7 @@ public class ThemeControllerTest {
     void create() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(theme)
+                .body(themeRequest)
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -51,28 +52,28 @@ public class ThemeControllerTest {
     @DisplayName("전체 테마 조회")
     void findAll() {
         //given
-        themeService.create(theme);
-        Theme theme2 = new Theme(null, "ad", "cd", 2000);
-        themeService.create(theme2);
+        themeService.registerTheme(themeRequest);
+        ThemeRequest themeRequest2 = new ThemeRequest("ad", "cd", 2000);
+        themeService.registerTheme(themeRequest2);
 
         //when
-        List<Theme> themeList = RestAssured.given().log().all()
+        List<ThemeResponse> themeList = RestAssured.given().log().all()
                 .when().get("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract().response().jsonPath()
-                .getList("", Theme.class);
+                .getList("", ThemeResponse.class);
 
         //then
-        Assertions.assertThat(themeTestEquals(theme, themeList.get(0))).isTrue();
-        Assertions.assertThat(themeTestEquals(theme2, themeList.get(1))).isTrue();
+        Assertions.assertThat(themeTestEquals(themeRequest, themeList.get(0))).isTrue();
+        Assertions.assertThat(themeTestEquals(themeRequest2, themeList.get(1))).isTrue();
     }
 
     @Test
     @DisplayName("테마 id로 삭제")
     void deleteById() {
         //given
-        Theme created = themeService.create(theme);
+        ThemeResponse created = themeService.registerTheme(themeRequest);
 
         //when
         RestAssured.given().log().all()
@@ -81,7 +82,7 @@ public class ThemeControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private boolean themeTestEquals(Theme a, Theme b) {
+    private boolean themeTestEquals(ThemeRequest a, ThemeResponse b) {
         return a.getName().equals(b.getName()) &&
                 a.getDesc().equals(b.getDesc()) &&
                 a.getPrice().equals(b.getPrice());

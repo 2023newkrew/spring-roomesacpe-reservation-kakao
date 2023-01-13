@@ -3,8 +3,8 @@ package nextstep.reservation.service;
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
+import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.entity.Theme;
 import nextstep.reservation.exception.ReservationException;
 import nextstep.reservation.exception.ReservationExceptionCode;
 import nextstep.reservation.repository.ReservationRepository;
@@ -29,7 +29,7 @@ public class ReservationService {
         }
 
         Reservation savedReservation = reservationRepository.save(reservationRequest.toEntity());
-        Theme foundedTheme = themeService.findById(savedReservation.getThemeId());
+        ThemeResponse foundedTheme = themeService.findById(savedReservation.getThemeId());
         return ReservationResponse.from(savedReservation, foundedTheme);
     }
 
@@ -40,7 +40,7 @@ public class ReservationService {
             throw new ReservationException(ReservationExceptionCode.NO_SUCH_RESERVATION);
         }
         Reservation reservation = optionalReservation.get();
-        Theme theme = themeService.findById(reservation.getThemeId());
+        ThemeResponse theme = themeService.findById(reservation.getThemeId());
         return ReservationResponse.from(reservation, theme);
     }
 

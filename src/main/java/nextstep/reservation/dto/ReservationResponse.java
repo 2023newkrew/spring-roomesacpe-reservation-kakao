@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.entity.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,7 +12,7 @@ import java.time.LocalTime;
 @Builder
 @Getter
 public class ReservationResponse {
-    private final Long id;
+    private final long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
@@ -21,7 +20,7 @@ public class ReservationResponse {
     private final String themeDesc;
     private final int themePrice;
 
-    public static ReservationResponse from(Reservation reservation, Theme theme) {
+    public static ReservationResponse from(Reservation reservation, ThemeResponse theme) {
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .date(reservation.getDate())

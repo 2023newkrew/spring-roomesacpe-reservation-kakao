@@ -2,8 +2,9 @@ package nextstep.reservation;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import nextstep.reservation.dto.ThemeRequest;
+import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.entity.Reservation;
-import nextstep.reservation.entity.Theme;
 import nextstep.reservation.service.ReservationService;
 import nextstep.reservation.service.ThemeService;
 import org.junit.jupiter.api.AfterEach;
@@ -38,8 +39,8 @@ public class ReservationControllerTest {
     void setUp() {
         RestAssured.port = port;
 
-        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme createdTheme = themeService.create(theme);
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
 
         reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
     }
