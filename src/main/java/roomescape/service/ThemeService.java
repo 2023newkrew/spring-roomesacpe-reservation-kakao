@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ThemeRequestDto;
 import roomescape.dto.ThemeResponseDto;
@@ -21,12 +22,12 @@ public class ThemeService {
     }
 
     public ThemeResponseDto createTheme(ThemeRequestDto req) {
-        if (themeRepository.existsByName(req.getName())) {
+        Theme theme = new Theme(null, req.getName(), req.getDesc(), req.getPrice());
+        try {
+            theme.setId(themeRepository.save(theme));
+        } catch (DuplicateKeyException e) {
             throw new RoomEscapeException(ErrorCode.THEME_NAME_ALREADY_EXISTS);
         }
-        Theme theme = new Theme(null, req.getName(), req.getDesc(), req.getPrice());
-        Long id = themeRepository.save(theme);
-        theme.setId(id);
         return new ThemeResponseDto(theme);
     }
 

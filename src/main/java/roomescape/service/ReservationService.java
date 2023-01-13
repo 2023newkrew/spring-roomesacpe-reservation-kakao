@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
@@ -24,12 +25,12 @@ public class ReservationService {
 
     public ReservationResponseDto createReservation(ReservationRequestDto req) {
         LocalDateTime dateTime = LocalDateTime.of(req.getDate(), req.getTime());
-        if (reservationRepository.existsByDateTime(dateTime)) {
+        Reservation reservation = new Reservation(null, dateTime, req.getName(), req.getThemeId());
+        try {
+            reservation.setId(reservationRepository.save(reservation));
+        } catch (DuplicateKeyException e) {
             throw new RoomEscapeException(ErrorCode.RESERVATION_DATETIME_ALREADY_EXISTS);
         }
-        Reservation reservation = new Reservation(null, dateTime, req.getName(), req.getThemeId());
-        Long id = reservationRepository.save(reservation);
-        reservation.setId(id);
         Theme theme = themeService.getTheme(reservation.getThemeId());
         return new ReservationResponseDto(reservation, theme);
     }

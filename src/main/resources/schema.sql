@@ -18,3 +18,6 @@ CREATE TABLE IF NOT EXISTS theme
 
 CREATE INDEX ON reservation(datetime);
 CREATE INDEX ON theme(name);
+
+alter table reservation add constraint datetime_unique unique(datetime);
+alter table theme add constraint name_unique unique(name);
