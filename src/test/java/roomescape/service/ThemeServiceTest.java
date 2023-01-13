@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
 import roomescape.service.theme.ThemeService;
@@ -20,6 +21,7 @@ import roomescape.service.theme.ThemeServiceInterface;
 
 @DisplayName("테마 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class ThemeServiceTest {
 
     private static final Long ID_DATA = 1L;

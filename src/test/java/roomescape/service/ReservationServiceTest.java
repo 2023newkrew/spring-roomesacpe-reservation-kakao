@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dto.Reservation;
 import roomescape.service.reservation.ReservationService;
@@ -21,6 +22,7 @@ import roomescape.service.reservation.ReservationServiceInterface;
 
 @DisplayName("예약 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class ReservationServiceTest {
 
     private static final Long ID_DATA = 1L;
