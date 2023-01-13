@@ -48,8 +48,9 @@ public class ServiceTest {
         // when
         given(reservationRepository.save(any()))
                 .willReturn(1L);
-
-        assertThat(reservationRepository.save(reservation)).isEqualTo(1L);
+        given(themeRepository.checkExistById(any()))
+                .willReturn(true);
+        assertThat(reservationService.createReservation(req)).isEqualTo(1L);
     }
 
     @Test
