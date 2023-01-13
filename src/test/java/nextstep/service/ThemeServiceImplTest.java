@@ -34,14 +34,22 @@ class ThemeServiceImplTest {
 
     @Test
     void create_theme_test() {
+        //given
         themeService.createTheme(new ThemeCreateDto("name1", "desc", 1234));
+
+        //when
         Long count = jdbcTemplate.query("SELECT COUNT(*) FROM THEME;", (rs, rowNum) -> rs.getLong(1)).get(0);
+
+        //then
         assertThat(count).isEqualTo(2);
     }
 
     @Test
     void find_theme_test() {
+        //when
         ThemeResponseDto themeResponseDto = themeService.findTheme(id);
+
+        //expected
         assertThat(themeResponseDto.getName()).isEqualTo(NAME);
         assertThat(themeResponseDto.getDescription()).isEqualTo(DESC);
         assertThat(themeResponseDto.getPrice()).isEqualTo(PRICE);
@@ -49,7 +57,10 @@ class ThemeServiceImplTest {
 
     @Test
     void delete_theme_test(){
+        //when
         themeService.deleteById(id);
+
+        //expected
         Long count = jdbcTemplate.query("SELECT COUNT(*) FROM THEME;", (rs, rowNum) -> rs.getLong(1)).get(0);
         assertThat(count).isEqualTo(0);
     }
