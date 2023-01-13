@@ -109,4 +109,15 @@ public class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("전체 테마 조회 테스트")
+    @Test
+    void themeFindAllTest() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("themes.size()", is(2));
+    }
 }
