@@ -32,7 +32,17 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public Optional<Theme> findThemeById(Long id) {
-        return Optional.empty();
+        Theme theme = jdbcTemplate.queryForObject(
+                Queries.Theme.SELECT_BY_ID_SQL,
+                new Object[]{id},
+                (rs, rowNum) -> new Theme(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("desc"),
+                        rs.getInt("price")
+                )
+        );
+        return Optional.ofNullable(theme);
     }
 
     @Override

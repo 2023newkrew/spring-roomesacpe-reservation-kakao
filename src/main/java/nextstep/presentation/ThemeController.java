@@ -1,12 +1,10 @@
 package nextstep.presentation;
 
 import nextstep.dto.CreateThemeRequest;
+import nextstep.dto.ThemeResponse;
 import nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -24,5 +22,10 @@ public class ThemeController {
     public ResponseEntity<Void> createTheme(@RequestBody CreateThemeRequest request) {
         Long id = themeService.createTheme(request);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
+    }
+
+    @GetMapping("/{themeId}")
+    public ResponseEntity<ThemeResponse> findThemeById(@PathVariable Long themeId) {
+        return ResponseEntity.ok(themeService.findThemeById(themeId));
     }
 }
