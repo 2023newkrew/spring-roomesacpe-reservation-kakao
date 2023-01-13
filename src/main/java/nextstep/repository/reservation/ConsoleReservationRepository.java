@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 import static nextstep.exception.ErrorCode.*;
 
-public class ConsoleReservationRepository implements ReservationRepository {
+public class ConsoleReservationRepository extends ReservationRepository {
 
     private static final String CONNECTION_SUCCESS_MESSAGE = "정상적으로 연결되었습니다.";
     private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";

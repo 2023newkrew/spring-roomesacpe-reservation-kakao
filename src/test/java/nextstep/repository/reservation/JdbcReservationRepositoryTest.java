@@ -1,8 +1,9 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
+import nextstep.repository.reservation.JdbcReservationRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

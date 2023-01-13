@@ -1,9 +1,8 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -19,7 +18,7 @@ import static nextstep.exception.ErrorCode.DUPLICATED_RESERVATION_EXISTS;
 import static nextstep.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 @Repository
-public class JdbcReservationRepository implements ReservationRepository {
+public class JdbcReservationRepository extends ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

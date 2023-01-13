@@ -3,7 +3,7 @@ package nextstep;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
-import nextstep.repository.ConsoleReservationRepository;
+import nextstep.repository.reservation.ConsoleReservationRepository;
 import nextstep.service.ReservationService;
 
 import java.time.LocalDate;
