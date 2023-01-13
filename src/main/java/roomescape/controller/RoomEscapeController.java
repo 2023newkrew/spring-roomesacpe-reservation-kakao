@@ -1,54 +1,38 @@
 package roomescape.controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.repository.JdbcReservationRepository;
+import roomescape.service.ReservationService;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 public class RoomEscapeController {
-
-    final JdbcReservationRepository jdbcReservationRepository;
-
-    public RoomEscapeController(JdbcReservationRepository jdbcReservationRepository) {
-        this.jdbcReservationRepository = jdbcReservationRepository;
+    final ReservationService reservationService;
+    @Autowired
+    public RoomEscapeController(@Qualifier("WebService") ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping("/reservations")
         public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation){
-        if (jdbcReservationRepository.findByDateAndTime(reservation) == 1) {
-            throw new DuplicateRequestException("요청 날짜/시간에 이미 예약이 있습니다.");
-        }
-        Long reserveId = jdbcReservationRepository.createReservation(reservation);
-        if (reserveId > 0){
-            System.out.println(reservation.getName() + "님의 예약이 등록되었습니다.");
-        }
-        String retString = "Location: /reservation/" + reserveId;
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(retString);
+        String userMessage = reservationService.createReservation(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(userMessage);
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<Optional<Reservation>> lookUpReservation(@PathVariable("id") String reservationId) {
-        Optional<Reservation> reservation = jdbcReservationRepository.findById(Integer.parseInt(reservationId));
-        if (reservation.isPresent()) {
-            return ResponseEntity.ok().body(reservation);
-        }
-        return ResponseEntity.badRequest().body(null);
+    public ResponseEntity<String> lookUpReservation(@PathVariable("id") String reservationId) {
+        String userMessage = reservationService.lookUpReservation(Long.valueOf(reservationId));
+        return ResponseEntity.ok().body(userMessage);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable("id") String deleteId) {
-        Integer deleteResult = jdbcReservationRepository.deleteReservation(Integer.parseInt(deleteId));
-        if (deleteResult == 1) {
-            System.out.println("Id: " + deleteResult + "의 예약이 취소되었습니다.");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        reservationService.deleteReservation(Long.valueOf(deleteId));
+        return ResponseEntity.noContent().build();
     }
 }
