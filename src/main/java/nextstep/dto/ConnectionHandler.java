@@ -53,7 +53,6 @@ public class ConnectionHandler {
         return tokens[1];
     }
 
-
     public ConnectionHandler() {
         this.connection = connect();
 

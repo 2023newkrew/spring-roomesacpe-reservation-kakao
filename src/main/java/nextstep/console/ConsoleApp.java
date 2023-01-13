@@ -14,7 +14,6 @@ import nextstep.service.ReservationServiceImpl;
 
 public class ConsoleApp {
 
-
     private static final ConnectionHandler connectionHandler = new ConnectionHandler();
     private static final ReservationRepository reservationJDBCRepository = new ReservationJdbcRepositoryImpl(
             connectionHandler);
