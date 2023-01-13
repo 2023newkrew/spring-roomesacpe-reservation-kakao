@@ -80,6 +80,7 @@ class ReservationControllerTest {
     @Test
     void deleteReservationTest() {
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
