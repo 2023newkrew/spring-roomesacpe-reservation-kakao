@@ -1,7 +1,6 @@
 package nextstep.main.java.nextstep.controller;
 
 import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
 import nextstep.main.java.nextstep.service.ReservationService;
@@ -9,7 +8,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;

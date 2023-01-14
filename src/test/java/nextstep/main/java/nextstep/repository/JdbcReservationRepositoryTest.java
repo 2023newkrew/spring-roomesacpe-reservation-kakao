@@ -61,7 +61,7 @@ public class JdbcReservationRepositoryTest {
 
     @Test
     @DisplayName("테마 아이디로 예약 조회 테스트")
-    void findAllByThemeIdTest(){
+    void findAllByThemeIdTest() {
         repository.save(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "reservation1", DEFAULT_THEME_ID));
         repository.save(new Reservation(LocalDate.of(2025, 1, 9), LocalTime.of(1, 30), "reservation2", DEFAULT_THEME_ID));
         assertThat(repository.findAllByThemeId(DEFAULT_THEME_ID)

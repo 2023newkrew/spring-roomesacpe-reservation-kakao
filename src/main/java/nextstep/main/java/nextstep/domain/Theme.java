@@ -13,10 +13,10 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 @EqualsAndHashCode
 public class Theme {
-    private Long id;
     private final String name;
     private final String desc;
     private final Integer price;
+    private Long id;
 
     public Theme(Long id, Theme theme) {
         this(id, theme.getName(), theme.getDesc(), theme.getPrice());

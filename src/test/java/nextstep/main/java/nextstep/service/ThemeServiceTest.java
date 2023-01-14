@@ -8,7 +8,6 @@ import nextstep.main.java.nextstep.exception.exception.NoSuchThemeException;
 import nextstep.main.java.nextstep.exception.exception.RelatedThemeDeletionException;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import nextstep.main.java.nextstep.repository.ThemeRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,12 +17,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ThemeServiceTest {
@@ -49,7 +49,7 @@ public class ThemeServiceTest {
 
     @Test
     @DisplayName("중복 이름을 가진 테마 생성 시 예외 발생 테스트")
-    void createDuplicateThemeTest(){
+    void createDuplicateThemeTest() {
         ThemeCreateRequestDto themeCreateRequestDto = new ThemeCreateRequestDto("name", "desc", 0);
         Theme savedTheme = new Theme(1L, themeCreateRequestDto.getName(), "otherDesc", 1000);
 
@@ -60,7 +60,7 @@ public class ThemeServiceTest {
 
     @Test
     @DisplayName("테마 목록 조회 기능 테스")
-    void findAllThemeTest(){
+    void findAllThemeTest() {
         List<Theme> savedThemeList = List.of(new Theme(1L, "theme1", "theme_desc1", 1000),
                 new Theme(2L, "theme2", "theme_desc2", 2000),
                 new Theme(3L, "theme3", "theme_desc3", 3000));
@@ -74,7 +74,7 @@ public class ThemeServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 테마 삭제시 예외 발생 테스트")
-    void deleteThemeTest(){
+    void deleteThemeTest() {
         Long nonExistThemeId = 0L;
         when(themeRepository.findById(nonExistThemeId)).thenThrow(NoSuchThemeException.class);
         assertThatCode(() -> themeService.deleteTheme(nonExistThemeId)).isInstanceOf(NoSuchThemeException.class);
@@ -82,7 +82,7 @@ public class ThemeServiceTest {
 
     @Test
     @DisplayName("존재하는 예약과 관계있는 테마 삭제 시 예외 발생 테스트")
-    void deleteRelatedToReservationThemeTest(){
+    void deleteRelatedToReservationThemeTest() {
         List<Reservation> reservations = List.of(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "reservation1", 1L),
                 new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "reservation2", 1L));
 

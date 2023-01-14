@@ -30,7 +30,8 @@ public class MemoryReservationRepository implements ReservationRepository {
         return reservationMap.values()
                 .stream()
                 .filter(reservation -> reservation.getThemeId()
-                        .equals(themeId)).collect(Collectors.toList());
+                        .equals(themeId))
+                .collect(Collectors.toList());
     }
 
     @Override

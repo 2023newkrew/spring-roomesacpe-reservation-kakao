@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.ThemeCreateRequestDto;
 import nextstep.main.java.nextstep.service.ThemeService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,7 +74,7 @@ public class ThemeControllerTest {
 
     @Test
     @DisplayName("테마 삭제 DELETE method 테스트")
-    void deleteThemeByIdTest(){
+    void deleteThemeByIdTest() {
         RestAssured.given()
                 .log()
                 .all()

@@ -7,7 +7,6 @@ import nextstep.main.java.nextstep.exception.exception.DuplicateReservationExcep
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.repository.ReservationRepository;
 import nextstep.main.java.nextstep.repository.ThemeRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

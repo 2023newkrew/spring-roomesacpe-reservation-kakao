@@ -1,6 +1,6 @@
 package nextstep.main.java.nextstep.exception.exception;
 
-public class NoSuchThemeException extends RuntimeException{
+public class NoSuchThemeException extends RuntimeException {
     public NoSuchThemeException() {
         super();
     }

@@ -15,11 +15,11 @@ import java.time.LocalTime;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class Reservation {
-    private Long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
     private final Long themeId;
+    private Long id;
 
     public Reservation(Long id, Reservation reservation) {
         this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
