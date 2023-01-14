@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.hamcrest.core.Is.is;
 
@@ -18,7 +18,7 @@ import roomescape.dto.Theme;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Sql("classpath:/test.sql")
-public class ThemeTest {
+public class ThemeControllerTest {
 
     private static final String NAME_DATA1 = "워너고홈";
     private static final String NAME_DATA2 = "테스트 이름";

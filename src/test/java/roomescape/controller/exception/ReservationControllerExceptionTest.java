@@ -1,4 +1,4 @@
-package roomescape.exception;
+package roomescape.controller.exception;
 
 import io.restassured.RestAssured;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ import roomescape.dto.Reservation;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Sql("classpath:/test.sql")
-public class ReservationExceptionTest {
+public class ReservationControllerExceptionTest {
 
     private static final LocalDate DATE_DATA = LocalDate.parse("2022-08-01");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
