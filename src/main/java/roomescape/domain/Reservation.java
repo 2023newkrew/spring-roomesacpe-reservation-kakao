@@ -1,11 +1,13 @@
 package roomescape.domain;
 
+import lombok.EqualsAndHashCode;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@EqualsAndHashCode
 public class Reservation {
     private final Long id;
     private final LocalDate date;

@@ -12,6 +12,7 @@ import roomescape.dto.ReservationResponse;
 public interface ReservationMapper {
     ReservationMapper INSTANCE = Mappers.getMapper(ReservationMapper.class);
 
+    @Mapping(target = "id", ignore = true)
     Reservation reservationRequestToReservation(ReservationRequest source);
 
     @Mapping(target = "id", source = "reservation.id")

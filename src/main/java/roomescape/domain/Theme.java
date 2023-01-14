@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Theme {
     private final Long id;
     private final String name;
