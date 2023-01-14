@@ -103,7 +103,7 @@ public class ThemeDAO {
             ps.setString(1, name);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return null;
+                if (!rs.next()) return result;
 
                 while (rs.next()) {
                     result.add(createTheme(rs));
