@@ -1,30 +1,28 @@
 package roomescape.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.util.Objects;
+import java.util.Properties;
 
-@Configuration
 public class AppConfig {
-    @Value("${spring.datasource.url}")
-    private String URL;
-    @Value("${spring.datasource.username}")
-    private String USER;
-    @Value("${spring.datasource.driver-class-name}")
-    private String DRIVER;
-    @Value("${spring.datasource.password}")
-    private String PASSWORD;
-
-    @Bean
-    DataSource dataSource() {
+    public DataSource getDataSource() throws ClassNotFoundException {
+        YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
+        yamlFactory.setResources(new ClassPathResource("application.yaml"));
+        Properties props = yamlFactory.getObject();
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setUrl(URL);
-        driverManagerDataSource.setUsername(USER);
-        driverManagerDataSource.setPassword(PASSWORD);
-        driverManagerDataSource.setDriverClassName(DRIVER);
+        String url = Objects.requireNonNull(props).getProperty("spring.datasource.url");
+        String username = props.getProperty("spring.datasource.username");
+        String password = props.getProperty("spring.datasource.password");
+        String driverClassName = props.getProperty("spring.datasource.driver-class-name");
+        Class.forName(driverClassName);
+        driverManagerDataSource.setUrl(url);
+        driverManagerDataSource.setUsername(username);
+        driverManagerDataSource.setPassword(password);
+        driverManagerDataSource.setDriverClassName(driverClassName);
         return driverManagerDataSource;
     }
 }

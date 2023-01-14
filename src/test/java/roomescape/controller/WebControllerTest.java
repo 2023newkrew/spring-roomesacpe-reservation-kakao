@@ -14,18 +14,19 @@ import roomescape.domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @DisplayName("Http Method")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-public class RoomEscapeControllerTest {
+public class WebControllerTest {
 
     @LocalServerPort
     int port;
 
     Reservation reservation;
     @Autowired
-    ReservationController roomEscapeController;
+    WebReservationController roomEscapeController;
 
     @BeforeEach
     void setUp() {
@@ -53,7 +54,7 @@ public class RoomEscapeControllerTest {
     @Test
     void showReservationTest() {
         String createBody = roomEscapeController.createReservation(reservation).getBody();
-        String reserveId = createBody.split("/")[2];
+        String reserveId = Objects.requireNonNull(createBody).split("/")[2];
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/" + reserveId)
@@ -65,7 +66,7 @@ public class RoomEscapeControllerTest {
     @Test
     void deleteReservationTest() {
         String createBody = roomEscapeController.createReservation(reservation).getBody();
-        String deleteId = createBody.split("/")[2];
+        String deleteId = Objects.requireNonNull(createBody).split("/")[2];
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/" + deleteId)

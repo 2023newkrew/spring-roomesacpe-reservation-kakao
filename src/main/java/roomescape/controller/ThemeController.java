@@ -21,14 +21,15 @@ public class ThemeController {
 
     @PostMapping("/themes")
     public ResponseEntity<String> createTheme(@RequestBody @Valid Theme theme){
-        String userMessage = themeService.createTheme(theme);
-        return ResponseEntity.created(URI.create("/themes/" + theme.getId())).body(userMessage);
+        Theme userTheme = themeService.createTheme(theme);
+        return ResponseEntity.created(URI.create("/themes/" + theme.getId()))
+                .body(userTheme.createMessage(theme.getId()));
     }
 
     @GetMapping("/themes/{id}")
     public ResponseEntity<String> lookUpTheme(@PathVariable("id") String themeId) {
-        String userMessage = themeService.lookUpTheme(Long.valueOf(themeId));
-        return ResponseEntity.ok().body(userMessage);
+        Theme userTheme = themeService.lookUpTheme(Long.valueOf(themeId));
+        return ResponseEntity.ok().body(userTheme.toMessage());
     }
 
     @DeleteMapping("/themes/{id}")

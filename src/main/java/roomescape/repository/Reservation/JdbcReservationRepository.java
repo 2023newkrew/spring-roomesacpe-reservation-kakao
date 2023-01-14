@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.config.AppConfig;
 import roomescape.domain.Reservation;
 
 import java.sql.*;
@@ -19,8 +20,9 @@ public class JdbcReservationRepository implements ReservationRepository{
     public final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcReservationRepository() throws ClassNotFoundException {
+        AppConfig appConfig = new AppConfig();
+        this.jdbcTemplate = new JdbcTemplate(appConfig.getDataSource());
     }
 
     @Override

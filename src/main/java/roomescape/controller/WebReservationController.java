@@ -11,23 +11,24 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-public class ReservationController {
+public class WebReservationController {
     final ReservationService reservationService;
     @Autowired
-    public ReservationController(@Qualifier("WebReservation") ReservationService reservationService) {
+    public WebReservationController(@Qualifier("WebReservation") ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation){
-        String userMessage = reservationService.createReservation(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(userMessage);
+        Reservation userReservation = reservationService.createReservation(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
+                .body(userReservation.createMessage(userReservation.getId()));
     }
 
     @GetMapping("/reservations/{id}")
     public ResponseEntity<String> lookUpReservation(@PathVariable("id") String reservationId) {
-        String userMessage = reservationService.lookUpReservation(Long.valueOf(reservationId));
-        return ResponseEntity.ok().body(userMessage);
+        Reservation userReservation = reservationService.lookUpReservation(Long.valueOf(reservationId));
+        return ResponseEntity.ok().body(userReservation.toMessage());
     }
 
     @DeleteMapping("/reservations/{id}")

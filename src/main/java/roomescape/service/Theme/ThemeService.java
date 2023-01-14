@@ -3,7 +3,7 @@ import roomescape.domain.Theme;
 
 
 public interface ThemeService {
-    String createTheme(Theme theme);
-    String lookUpTheme(Long themeId);
+    Theme createTheme(Theme theme);
+    Theme lookUpTheme(Long themeId);
     void deleteTheme(Long deleteId);
 }

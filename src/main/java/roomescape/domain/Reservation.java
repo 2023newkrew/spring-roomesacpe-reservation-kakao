@@ -41,7 +41,11 @@ public class Reservation {
         return themeId;
     }
 
+    public String createMessage(long reserveId){
+        return "Location: /reservation/" + reserveId;
+    }
+
     public String toMessage(){
-        return "date: " + date + ",time: " + time + " ,name: " + name + " ,themeId: " + themeId;
+        return "Id: " + id + "Date: " + date + ",Time: " + time + " ,Name: " + name + " ,ThemeId: " + themeId;
     }
 }
