@@ -2,7 +2,6 @@ package nextstep.main.java.nextstep.service;
 
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
 import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
 import nextstep.main.java.nextstep.exception.exception.NoSuchThemeException;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationService {
-    public static final Theme DEFAULT_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-    public static final Long DEFAULT_THEME_ID = 1L;
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
 
@@ -27,7 +24,6 @@ public class ReservationService {
         if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
         }
-//        validateDuplicate(request);
         Reservation reservation = new Reservation(request.getDate(), request.getTime(), request.getName(), request.getThemeId());
         return reservationRepository.save(reservation);
     }
@@ -46,11 +42,5 @@ public class ReservationService {
     protected void validateThemeExist(ReservationCreateRequestDto requestDto) {
         themeRepository.findById(requestDto.getThemeId())
                 .orElseThrow(NoSuchThemeException::new);
-    }
-
-    protected void validateDuplicate(ReservationCreateRequestDto requestDto) {
-        if (reservationRepository.existsByDateAndTime(requestDto.getDate(), requestDto.getTime())) {
-            throw new DuplicateReservationException();
-        }
     }
 }
