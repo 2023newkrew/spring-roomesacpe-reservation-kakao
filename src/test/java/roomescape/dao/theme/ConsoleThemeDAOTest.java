@@ -56,7 +56,7 @@ public class ConsoleThemeDAOTest {
         return resultSet.getObject(1, tClass);
     }
 
-    @DisplayName("예약 생성")
+    @DisplayName("테마 생성")
     @Test
     void insertTheme() throws SQLException {
         long count = getCount(Long.class);
@@ -69,7 +69,17 @@ public class ConsoleThemeDAOTest {
         assertThat(actual).isEqualTo(count + 1L);
     }
 
-    @DisplayName("예약 조회")
+    @DisplayName("테마 조회")
+    @Test
+    void findTheme() {
+        Theme theme = themeDAO.find(1L);
+
+        assertThat(theme.getName()).isEqualTo(NAME_DATA1);
+        assertThat(theme.getDesc()).isEqualTo(DESC_DATA);
+        assertThat(theme.getPrice()).isEqualTo(PRICE_DATA);
+    }
+
+    @DisplayName("테마 목록 조회")
     @Test
     void listTheme() throws SQLException {
         int count = getCount(Integer.class);
@@ -82,7 +92,7 @@ public class ConsoleThemeDAOTest {
         assertThat(theme.get(0).getPrice()).isEqualTo(PRICE_DATA);
     }
 
-    @DisplayName("예약 삭제")
+    @DisplayName("테마 삭제")
     @Test
     void removeTheme() throws SQLException {
         long count = getCount(Long.class);
@@ -93,7 +103,7 @@ public class ConsoleThemeDAOTest {
         assertThat(actual).isEqualTo(count - 1L);
     }
 
-    @DisplayName("예약 존재 확인")
+    @DisplayName("테마 존재 확인")
     @Test
     void existTheme() {
         Theme theme1 = new Theme(NAME_DATA1, DESC_DATA, PRICE_DATA);

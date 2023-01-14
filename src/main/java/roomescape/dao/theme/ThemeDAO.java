@@ -19,9 +19,10 @@ public interface ThemeDAO {
     RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
             "result");
 
-    boolean exist(Theme theme);
-    boolean existId(Long id);
+    Boolean exist(Theme theme);
+    Boolean existId(long id);
     Long create(Theme theme);
     List<Theme> list();
-    void remove(Long l);
+    void remove(long l);
+    Theme find(long l);
 }

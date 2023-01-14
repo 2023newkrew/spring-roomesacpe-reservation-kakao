@@ -5,13 +5,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.DAOResult;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemeIdPreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ListThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatementCreator;
 import roomescape.dto.Theme;
-import roomescape.exception.BadRequestException;
 
 @Repository
 public class SpringThemeDAO implements ThemeDAO {
@@ -22,26 +22,18 @@ public class SpringThemeDAO implements ThemeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private <T> void validateResult(List<T> result) {
-        if (result.size() != 1) {
-            throw new BadRequestException();
-        }
-    }
-
     @Override
-    public boolean exist(Theme theme) {
+    public Boolean exist(Theme theme) {
         List<Boolean> result = jdbcTemplate.query(
                 new ExistThemePreparedStatementCreator(theme), existRowMapper);
-        validateResult(result);
-        return result.get(0);
+        return DAOResult.getResult(result);
     }
 
     @Override
-    public boolean existId(Long id) {
+    public Boolean existId(long id) {
         List<Boolean> result = jdbcTemplate.query(
                 new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
-        validateResult(result);
-        return result.get(0);
+        return DAOResult.getResult(result);
     }
 
     @Override
@@ -58,8 +50,13 @@ public class SpringThemeDAO implements ThemeDAO {
     }
 
     @Override
-    public void remove(Long id) {
+    public void remove(long id) {
         jdbcTemplate.update(
                 new RemoveThemePreparedStatementCreator(id));
+    }
+
+    @Override
+    public Theme find(long l) {
+        return null;
     }
 }

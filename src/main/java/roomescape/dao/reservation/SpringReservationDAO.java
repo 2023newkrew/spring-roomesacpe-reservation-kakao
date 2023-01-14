@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.DAOResult;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationThemeIdPreparedStatementCreator;
@@ -12,7 +13,6 @@ import roomescape.dao.reservation.preparedstatementcreator.FindReservationPrepar
 import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
 import roomescape.dto.Reservation;
-import roomescape.exception.BadRequestException;
 
 @Repository
 public class SpringReservationDAO implements ReservationDAO {
@@ -23,33 +23,24 @@ public class SpringReservationDAO implements ReservationDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private <T> void validateResult(List<T> result) {
-        if (result.size() == 0) {
-            throw new BadRequestException();
-        }
-    }
-
     @Override
     public boolean exist(Reservation reservation) {
         List<Boolean> result = jdbcTemplate.query(
                 new ExistReservationPreparedStatementCreator(reservation), existRowMapper);
-        validateResult(result);
-        return result.get(0);
+        return DAOResult.getResult(result);
     }
 
     @Override
     public boolean existId(Long id) {
         List<Boolean> result = jdbcTemplate.query(
                 new ExistReservationIdPreparedStatementCreator(id), existRowMapper);
-        validateResult(result);
-        return result.get(0);
+        return DAOResult.getResult(result);
     }
     @Override
     public boolean existThemeId(Long id) {
         List<Boolean> result = jdbcTemplate.query(
                 new ExistReservationThemeIdPreparedStatementCreator(id), existRowMapper);
-        validateResult(result);
-        return result.get(0);
+        return DAOResult.getResult(result);
     }
 
     @Override
@@ -64,8 +55,7 @@ public class SpringReservationDAO implements ReservationDAO {
     public Reservation find(Long id) {
         List<Reservation> result = jdbcTemplate.query(
                 new FindReservationPreparedStatementCreator(id), rowMapper);
-        validateResult(result);
-        return result.get(0);
+        return DAOResult.getResult(result);
     }
 
     @Override
