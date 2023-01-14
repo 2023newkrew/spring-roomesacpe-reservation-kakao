@@ -95,10 +95,10 @@ public class ReservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reservationRequest))
         ).andExpect(status().is(expected.getHttpStatus().value()))
-        .andExpect(content().string(expected.getMessage()));
+                .andExpect(content().string(expected.getMessage()));
     }
 
-    @DisplayName("[RESERVAION][POST] 다른 예약과 중복되는 시간대에 예약 요청시 예약생성 실패")
+    @DisplayName("[RESERVATION][POST] 다른 예약과 중복되는 시간대에 예약 요청시 예약생성 실패")
     @Test
     void creatReservationToDuplicatedTimeFail() throws Exception {
         //given
@@ -133,7 +133,7 @@ public class ReservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
                 .andExpect(
-                        content().string(
+                        content().json(
                                 objectMapper.writeValueAsString(ReservationMapper.INSTANCE.reservationToReservationResponse(reservation, theme))
                         )
                 );

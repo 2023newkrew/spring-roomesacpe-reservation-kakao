@@ -67,7 +67,7 @@ public class ThemeService {
 
     private void checkThemeReferencedByReservation(Long id){
         if(reservationWebRepository.findAllByTheme_id(id).size() > 0){
-            throw new RoomEscapeException(ErrorCode.THEME_REFERENCED_BY_RESERVATION);
+            throw new RoomEscapeException(ErrorCode.THEME_HAS_RESERVATION);
         }
     }
 
