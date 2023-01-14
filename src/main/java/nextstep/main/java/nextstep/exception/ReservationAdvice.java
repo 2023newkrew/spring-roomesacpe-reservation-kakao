@@ -1,9 +1,6 @@
 package nextstep.main.java.nextstep.exception;
 
-import nextstep.main.java.nextstep.exception.exception.DuplicateReservationException;
-import nextstep.main.java.nextstep.exception.exception.DuplicateThemeException;
-import nextstep.main.java.nextstep.exception.exception.NoSuchReservationException;
-import nextstep.main.java.nextstep.exception.exception.NoSuchThemeException;
+import nextstep.main.java.nextstep.exception.exception.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,5 +27,10 @@ public class ReservationAdvice {
     @ExceptionHandler(NoSuchThemeException.class)
     public ResponseEntity<?> handleNoSuchThemeException() {
         return new ResponseEntity<>(NO_SUCH_THEME_ERROR.getErrorMessage(), NO_SUCH_THEME_ERROR.getErrorCode());
+    }
+
+    @ExceptionHandler(RelatedThemeDeletionException.class)
+    public ResponseEntity<?> handleRelatedThemeDeletionException() {
+        return new ResponseEntity<>(RELATED_THEME_DELETE_ERROR.getErrorMessage(), RELATED_THEME_DELETE_ERROR.getErrorCode());
     }
 }

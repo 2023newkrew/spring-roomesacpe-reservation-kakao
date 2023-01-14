@@ -5,4 +5,5 @@ public class ExceptionMessage {
     public static final String NO_SUCH_RESERVATION_MESSAGE = "존재하지 않는 예약입니다.";
     public static final String DUPLICATE_THEME_MESSAGE = "이름이 동일한 테마가 이미 존재합니다.";
     public static final String NO_SUCH_THEME_MESSAGE = "존재하지 않는 테마입니다.";
+    public static final String RELATED_THEME_DELETION_MESSAGE = "예약과 연관된 테마입니다.";
 }

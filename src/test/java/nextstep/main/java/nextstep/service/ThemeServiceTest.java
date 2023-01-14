@@ -1,9 +1,12 @@
 package nextstep.main.java.nextstep.service;
 
+import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.Theme;
 import nextstep.main.java.nextstep.domain.ThemeCreateRequestDto;
 import nextstep.main.java.nextstep.exception.exception.DuplicateThemeException;
 import nextstep.main.java.nextstep.exception.exception.NoSuchThemeException;
+import nextstep.main.java.nextstep.exception.exception.RelatedThemeDeletionException;
+import nextstep.main.java.nextstep.repository.ReservationRepository;
 import nextstep.main.java.nextstep.repository.ThemeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +30,8 @@ public class ThemeServiceTest {
 
     @Mock
     private ThemeRepository themeRepository;
+    @Mock
+    private ReservationRepository reservationRepository;
     @InjectMocks
     private ThemeService themeService;
 
@@ -71,5 +78,16 @@ public class ThemeServiceTest {
         Long nonExistThemeId = 0L;
         when(themeRepository.findById(nonExistThemeId)).thenThrow(NoSuchThemeException.class);
         assertThatCode(() -> themeService.deleteTheme(nonExistThemeId)).isInstanceOf(NoSuchThemeException.class);
+    }
+
+    @Test
+    @DisplayName("존재하는 예약과 관계있는 테마 삭제 시 예외 발생 테스트")
+    void deleteRelatedToReservationThemeTest(){
+        List<Reservation> reservations = List.of(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "reservation1", 1L),
+                new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "reservation2", 1L));
+
+        when(reservationRepository.findAllByThemeId(1L)).thenReturn(reservations);
+
+        assertThatCode(() -> themeService.deleteTheme(1L)).isInstanceOf(RelatedThemeDeletionException.class);
     }
 }
