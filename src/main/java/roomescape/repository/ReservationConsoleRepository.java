@@ -2,12 +2,13 @@ package roomescape.repository;
 
 
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
+import roomescape.repository.mapper.ReservationMapper;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
+
 
 public class ReservationConsoleRepository implements ReservationRepository {
 
@@ -19,8 +20,8 @@ public class ReservationConsoleRepository implements ReservationRepository {
     public Long insertReservation(Reservation reservation) {
         ResultSet resultSet = null;
         try (
-            Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            PreparedStatement ps = createInsertReservationPreparedStatement(con, reservation)
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = createInsertReservationPreparedStatement(con, reservation)
         ) {
             ps.executeUpdate();
             resultSet = ps.getGeneratedKeys();
@@ -38,17 +39,15 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     private PreparedStatement createInsertReservationPreparedStatement(
-        Connection con,
-        Reservation reservation
+            Connection con,
+            Reservation reservation
     ) throws SQLException {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
         ps.setDate(1, Date.valueOf(reservation.getDate()));
         ps.setTime(2, Time.valueOf(reservation.getTime()));
         ps.setString(3, reservation.getName());
-        ps.setString(4, reservation.getTheme().getName());
-        ps.setString(5, reservation.getTheme().getDesc());
-        ps.setInt(6, reservation.getTheme().getPrice());
+        ps.setLong(4, reservation.getTheme().getId());
 
         return ps;
     }
@@ -63,9 +62,9 @@ public class ReservationConsoleRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> getReservation(Long id) {
         try (
-            Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            PreparedStatement ps = createGetReservationPreparedStatement(con, id);
-            ResultSet resultSet = ps.executeQuery()
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = createGetReservationPreparedStatement(con, id);
+                ResultSet resultSet = ps.executeQuery()
         ) {
             return resultSetToReservation(resultSet);
         } catch (SQLException e) {
@@ -76,7 +75,9 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     private PreparedStatement createGetReservationPreparedStatement(Connection con, Long id) throws SQLException {
-        String sql = "SELECT * FROM reservation WHERE id = (?);";
+        String sql = "SELECT * FROM reservation " +
+                "JOIN theme ON reservation.theme_id = theme.id " +
+                "WHERE reservation.id = (?)";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setLong(1, id);
 
@@ -85,17 +86,7 @@ public class ReservationConsoleRepository implements ReservationRepository {
 
     private Optional<Reservation> resultSetToReservation(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
-            return Optional.of(new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                new Theme(
-                    resultSet.getString("theme_name"),
-                    resultSet.getString("theme_desc"),
-                    resultSet.getInt("theme_price")
-                )
-            ));
+            return Optional.of(ReservationMapper.mapToReservation(resultSet));
         }
         return Optional.empty();
     }
@@ -103,8 +94,8 @@ public class ReservationConsoleRepository implements ReservationRepository {
     @Override
     public void deleteReservation(Long id) {
         try (
-            Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            PreparedStatement ps = createDeleteReservationPreparedStatement(con, id)
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = createDeleteReservationPreparedStatement(con, id)
         ) {
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -124,9 +115,9 @@ public class ReservationConsoleRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
         try (
-            Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            PreparedStatement ps = createGetReservationByDateAndTimePreparedStatement(con, date, time);
-            ResultSet resultSet = ps.executeQuery()
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = createGetReservationByDateAndTimePreparedStatement(con, date, time);
+                ResultSet resultSet = ps.executeQuery()
         ) {
             return resultSetToReservation(resultSet);
         } catch (SQLException e) {
@@ -136,11 +127,13 @@ public class ReservationConsoleRepository implements ReservationRepository {
     }
 
     private PreparedStatement createGetReservationByDateAndTimePreparedStatement(
-        Connection con,
-        LocalDate date,
-        LocalTime time
+            Connection con,
+            LocalDate date,
+            LocalTime time
     ) throws SQLException {
-        String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
+        String sql = "SELECT * FROM reservation " +
+                "JOIN theme ON reservation.theme_id = theme.id " +
+                "WHERE date = (?) and time = (?)";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));
@@ -152,12 +145,33 @@ public class ReservationConsoleRepository implements ReservationRepository {
     public void deleteAllReservations() {
         String sql = "DELETE FROM reservation";
         try (
-            Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            PreparedStatement ps = con.prepareStatement(sql)
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = con.prepareStatement(sql)
         ) {
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("오류:" + e.getMessage());
         }
+    }
+
+    @Override
+    public void deleteReservationByThemeId(Long themeId) {
+        try (
+                Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+                PreparedStatement ps = createDeleteReservationByThemIdPreparedStatement(con, themeId)
+        ) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("오류:" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private PreparedStatement createDeleteReservationByThemIdPreparedStatement(Connection con, Long themeId) throws SQLException {
+        String sql = "DELETE FROM reservation WHERE theme_id = (?)";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setLong(1, themeId);
+
+        return ps;
     }
 }

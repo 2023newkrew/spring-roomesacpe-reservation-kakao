@@ -2,16 +2,19 @@ package roomescape;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
-import roomescape.domain.Themes;
-import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 import roomescape.repository.ReservationConsoleRepository;
+import roomescape.repository.ThemeConsoleRepository;
+import roomescape.service.ReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+
+import static roomescape.DataLoader.WANNA_GO_HOME;
 
 @SpringBootApplication
 public class RoomEscapeApplication {
@@ -31,8 +34,10 @@ public class RoomEscapeApplication {
 
     private static void startConsoleApplication() {
         Scanner scanner = new Scanner(System.in);
-        Theme theme = Themes.WANNA_GO_HOME;
-        ReservationConsoleRepository reservationConsoleRepository = new ReservationConsoleRepository();
+        ReservationService reservationService = new ReservationService(
+                new ReservationConsoleRepository(),
+                new ThemeConsoleRepository()
+        );
 
         while (true) {
             System.out.println();
@@ -51,21 +56,23 @@ public class RoomEscapeApplication {
                 LocalTime time = LocalTime.parse(params.split(",")[1] + ":00");
                 String name = params.split(",")[2];
 
-                Reservation reservation;
+                ReservationRequest reservationRequest = new ReservationRequest(
+                        date.toString(),
+                        time.toString(),
+                        name,
+                        WANNA_GO_HOME.getId().toString()
+                );
+
+                Long reservationId;
 
                 try {
-                    reservation = new Reservation(date, time, name, theme);
-                    reservationConsoleRepository.getReservationByDateAndTime(date, time)
-                        .ifPresent((e) -> {
-                            throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
-                        });
+                    reservationId = reservationService.createReservation(reservationRequest);
                 } catch (RoomEscapeException e) {
                     System.err.println(e.getMessage());
                     continue;
                 }
 
-                Long reservationId = reservationConsoleRepository.insertReservation(reservation);
-                reservation.setId(reservationId);
+                Reservation reservation = new Reservation(reservationId, date, time, name, WANNA_GO_HOME);
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -77,25 +84,23 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                Reservation reservation;
+
+                ReservationResponse reservationResponse;
 
                 try {
-                    reservation = reservationConsoleRepository.getReservation(id)
-                        .orElseThrow(() -> {
-                            throw new RoomEscapeException(ErrorCode.RESERVATION_NOT_FOUND);
-                        });
+                    reservationResponse = reservationService.getReservation(id);
                 } catch (RoomEscapeException e) {
                     System.err.println(e.getMessage());
                     continue;
                 }
 
-                System.out.println("예약 번호: " + reservation.getId());
-                System.out.println("예약 날짜: " + reservation.getDate());
-                System.out.println("예약 시간: " + reservation.getTime());
-                System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 번호: " + reservationResponse.getId());
+                System.out.println("예약 날짜: " + reservationResponse.getDate());
+                System.out.println("예약 시간: " + reservationResponse.getTime());
+                System.out.println("예약자 이름: " + reservationResponse.getName());
+                System.out.println("예약 테마 이름: " + reservationResponse.getTheme().getName());
+                System.out.println("예약 테마 설명: " + reservationResponse.getTheme().getDesc());
+                System.out.println("예약 테마 가격: " + reservationResponse.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {
@@ -103,9 +108,12 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationConsoleRepository.getReservation(id).isPresent()) {
-                    reservationConsoleRepository.deleteReservation(id);
+                try {
+                    reservationService.deleteReservation(id);
                     System.out.println("예약이 취소되었습니다.");
+                } catch (RoomEscapeException e) {
+                    System.err.println(e.getMessage());
+                    continue;
                 }
             }
 

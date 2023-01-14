@@ -20,7 +20,7 @@ class ReservationTest {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.of(11, 30);
         String name = "name";
-        Theme theme = Themes.WANNA_GO_HOME;
+        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         // when & then
         assertDoesNotThrow(() -> new Reservation(id, date, time, name, theme));
@@ -34,10 +34,10 @@ class ReservationTest {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.of(12, 56);
         String name = "name";
-        Theme theme = Themes.WANNA_GO_HOME;
+        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         // when & then
         assertThatCode(() -> new Reservation(id, date, time, name, theme))
-            .isInstanceOf(RoomEscapeException.class);
+                .isInstanceOf(RoomEscapeException.class);
     }
 }

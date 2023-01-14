@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
-    private Long id;
+    private final Long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
@@ -30,10 +30,6 @@ public class Reservation {
 
     public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
         this(null, date, time, name, theme);
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId() {

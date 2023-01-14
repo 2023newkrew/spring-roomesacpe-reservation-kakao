@@ -14,12 +14,15 @@ public class ReservationRequest {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
+    private final Long themeId;
 
-    public ReservationRequest(String date, String time, String name) {
+    public ReservationRequest(String date, String time, String name, String themeId) {
         this.date = validateDate(date);
         this.time = validateTime(time);
         this.name = name;
+        this.themeId = validateThemeId(themeId);
     }
+
 
     private LocalDate validateDate(String date) {
         try {
@@ -37,6 +40,14 @@ public class ReservationRequest {
         }
     }
 
+    private Long validateThemeId(String themeId) {
+        try {
+            return Long.valueOf(themeId);
+        } catch (NumberFormatException e) {
+            throw new RoomEscapeException(ErrorCode.VALID_INPUT_REQUIRED);
+        }
+    }
+
     public LocalDate getDate() {
         return date;
     }
@@ -49,12 +60,16 @@ public class ReservationRequest {
         return name;
     }
 
+    public Long getThemeId() {
+        return themeId;
+    }
+
     public Reservation toEntity(Theme theme) {
         return new Reservation(
-            date,
-            time,
-            name,
-            theme
+                date,
+                time,
+                name,
+                theme
         );
     }
 }
