@@ -8,6 +8,7 @@ import roomescape.service.ThemeService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class RoomEscapeApplication {
     private static final String FIND_R = "find res";
     private static final String DELETE_R = "delete res";
     private static final String ADD_T = "add theme";
+    private static final String UPDATE_T = "update theme";
     private static final String FIND_T = "find theme";
     private static final String FINDALL_T = "findall theme";
     private static final String DELETE_T = "delete theme";
@@ -35,6 +37,7 @@ public class RoomEscapeApplication {
             System.out.println("- 예약조회: find res {id} ex) find res 1");
             System.out.println("- 예약취소: delete res {id} ex) delete res 1");
             System.out.println("- 테마추가: add theme {name},{desc},{price} ex) add theme 테마테마,LoremIpsum,1000");
+            System.out.println("- 테마수정: update theme {theme_id},name={name},desc={desc},price={price} ex) update theme 1,name=테마테마,price=1000");
             System.out.println("- 테마조회: find theme {id} ex) find theme 1");
             System.out.println("- 모든테마조회: findall theme ex) findall theme");
             System.out.println("- 테마삭제: delete theme {id} ex) delete theme 1");
@@ -101,6 +104,30 @@ public class RoomEscapeApplication {
                 System.out.println("테마 이름: " + themeRequestDto.getName());
                 System.out.println("테마 설명: " + themeRequestDto.getDesc());
                 System.out.println("테마 가격: " + themeRequestDto.getPrice());
+            }
+
+            if (input.startsWith(UPDATE_T)) {
+                String params = input.split(" ")[2];
+
+                String[] splitUserInput = params.split(",");
+                long themeId = Long.parseLong(splitUserInput[0]);
+                String name = null;
+                String desc = null;
+                Integer price = null;
+
+                for (String keyValue : Arrays.copyOfRange(splitUserInput, 1, splitUserInput.length) ) {
+                    String key = keyValue.split("=")[0];
+                    String value = keyValue.split("=")[1];
+                    if (key.equals("name")) name = value;
+                    if (key.equals("desc")) desc = value;
+                    if (key.equals("price")) price = Integer.parseInt(value);
+                }
+
+                ThemeUpdateRequestDto themeUpdateRequestDto = new ThemeUpdateRequestDto(name, desc, price);
+                themeService.updateTheme(themeId, themeUpdateRequestDto);
+
+                System.out.println("테마가 수정되었습니다.");
+                System.out.println("테마 번호: " + themeId);
             }
 
             if (input.startsWith(FIND_T)) {
