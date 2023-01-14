@@ -16,6 +16,7 @@ public class ReservationResponse {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
+    private final long themeId;
     private final String themeName;
     private final String themeDesc;
     private final int themePrice;
@@ -26,6 +27,7 @@ public class ReservationResponse {
                 .date(reservation.getDate())
                 .time(reservation.getTime())
                 .name(reservation.getName())
+                .themeId(theme.getId())
                 .themeName(theme.getName())
                 .themeDesc(theme.getDesc())
                 .themePrice(theme.getPrice())
