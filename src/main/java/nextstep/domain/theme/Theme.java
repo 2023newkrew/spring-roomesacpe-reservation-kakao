@@ -1,4 +1,4 @@
-package nextstep;
+package nextstep.domain.theme;
 
 public class Theme {
     private String name;
@@ -21,5 +21,11 @@ public class Theme {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public boolean equals(Theme theme) {
+        return this.name.equals(theme.getName())
+                && this.desc.equals(theme.getDesc())
+                && this.price.equals(theme.getPrice());
     }
 }
