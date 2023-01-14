@@ -1,17 +1,15 @@
 package nextstep.repository;
 
-import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationJdbcDao implements ReservationDao {
+public class ThemeJdbcDao implements ThemeDao{
     private Connection getConnection() {
         Connection con = null;
         try {
@@ -33,14 +31,14 @@ public class ReservationJdbcDao implements ReservationDao {
         }
     }
 
-    public Long save(Reservation reservation) {
-        // 드라이버 연결
+    @Override
+    public Long save(Theme theme) {
         Connection con = getConnection();
 
         long id;
         try {
-            PreparedStatement ps = getPreparedStatementCreatorForSave(reservation).createPreparedStatement(con);
-            ps.executeUpdate();
+            PreparedStatement ps = getPreparedStatementCreatorForSave(theme).createPreparedStatement(con);
+            ps.executeQuery();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             id = rs.getLong(1);
@@ -52,86 +50,91 @@ public class ReservationJdbcDao implements ReservationDao {
         return id;
     }
 
-    public int countByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long id) {
-        // 드라이버 연결
+    @Override
+    public Optional<Theme> findByName(String name) {
+        Optional<Theme> theme;
         Connection con = getConnection();
 
-        int count = 0;
         try {
-            String sql = "SELECT count(*) FROM reservation WHERE date = ? and time = ? and theme_id = ?";
+            String sql = "SELECT * FROM theme WHERE name = ?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setDate(1, Date.valueOf(date));
-            ps.setTime(2, Time.valueOf(time));
-            ps.setLong(3, id);
+            ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
-
-            rs.next();
-            count = rs.getInt(1);
+            theme = getThemesFromResultSet(rs).stream().findAny();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         closeConnection(con);
-        return count;
+        return theme;
     }
 
-    public int countByThemeId(Long themeId) {
-        Connection con = getConnection();
-
-        int count = 0;
-        try {
-            String sql = "SELECT count(*) FROM reservation WHERE theme_id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setLong(1, themeId);
-            ResultSet rs = ps.executeQuery();
-
-            rs.next();
-            count = rs.getInt(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    private List<Theme> getThemesFromResultSet(ResultSet rs) throws SQLException {
+        int NO_MEANING = 0;
+        List<Theme> themes = new ArrayList<>();
+        while (rs.next()) {
+            themes.add(getRowMapper().mapRow(rs, NO_MEANING));
         }
-
-        closeConnection(con);
-        return count;
+        return themes;
     }
 
-    public Optional<Reservation> findById(Long id) {
-        Optional<Reservation> reservation;
-        // 드라이버 연결
+    @Override
+    public Optional<Theme> findById(Long id) {
+        Optional<Theme> theme;
         Connection con = getConnection();
 
         try {
-            String sql = "SELECT *, theme.name AS theme_name, theme.desc AS theme_desc, theme.price AS theme_price " +
-                    "FROM reservation " +
-                    "LEFT JOIN theme ON reservation.theme_id = theme.id " +
-                    "WHERE reservation.id = ?";
+            String sql = "SELECT * FROM theme WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
-            reservation = getReservationsFromResultSet(rs).stream().findAny();
+            theme = getThemesFromResultSet(rs).stream().findAny();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         closeConnection(con);
-        return reservation;
+        return theme;
     }
 
-    private List<Reservation> getReservationsFromResultSet(ResultSet rs) throws SQLException {
-        int NO_MEANING = 0;
-        List<Reservation> reservations = new ArrayList<>();
-        while (rs.next()) {
-            reservations.add(getRowMapper().mapRow(rs, NO_MEANING));
-        }
-        return reservations;
-    }
-
-    public void delete(Long id) {
-        // 드라이버 연결
+    @Override
+    public List<Theme> findAll() {
+        List<Theme> themes;
         Connection con = getConnection();
 
         try {
-            String sql = "DELETE FROM reservation WHERE id = ?;";
+            String sql = "SELECT * FROM theme";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            themes = getThemesFromResultSet(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        closeConnection(con);
+        return themes;
+    }
+
+    @Override
+    public void update(Theme theme) {
+        Connection con = getConnection();
+
+        try {
+            PreparedStatement ps = getPreparedStatementCreatorForUpdate(theme).createPreparedStatement(con);
+            ps.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        closeConnection(con);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Connection con = getConnection();
+
+        try {
+            String sql = "DELETE FROM theme WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ps.executeUpdate();
