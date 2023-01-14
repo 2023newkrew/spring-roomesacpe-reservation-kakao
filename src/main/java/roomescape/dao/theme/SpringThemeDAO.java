@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.dao.DAOResult;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemeIdPreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
+import roomescape.dao.theme.preparedstatementcreator.FindThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.InsertThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ListThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.RemoveThemePreparedStatementCreator;
@@ -56,7 +57,9 @@ public class SpringThemeDAO implements ThemeDAO {
     }
 
     @Override
-    public Theme find(long l) {
-        return null;
+    public Theme find(long id) {
+        List<Theme> result = jdbcTemplate.query(
+                new FindThemePreparedStatementCreator(id), rowMapper);
+        return DAOResult.getResult(result);
     }
 }

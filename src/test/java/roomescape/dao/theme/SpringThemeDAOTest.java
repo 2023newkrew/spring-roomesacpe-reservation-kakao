@@ -55,6 +55,16 @@ public class SpringThemeDAOTest {
         assertThat(actual).isEqualTo(count + 1L);
     }
 
+    @DisplayName("테마 조회")
+    @Test
+    void findTheme() {
+        Theme theme = themeDAO.find(1L);
+
+        assertThat(theme.getName()).isEqualTo(NAME_DATA1);
+        assertThat(theme.getDesc()).isEqualTo(DESC_DATA);
+        assertThat(theme.getPrice()).isEqualTo(PRICE_DATA);
+    }
+
     @DisplayName("테마 목록 조회")
     @Test
     void listTheme() {
