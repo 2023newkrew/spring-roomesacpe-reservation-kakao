@@ -24,96 +24,138 @@
   - [ ] **실제 애플리케이션이라고 생각했을 때 발생할 수 있는 예외 상황을 고려하고 처리한다.**
 
 
-- [X] **Console**
-- [X] **API**
-  - [X] 예약 하기
-    ```
-    POST /reservations HTTP/1.1
-    content-type: application/json; charset=UTF-8
-    host: localhost:8080
+- [X] Controller
+  - [X] **Console**
+    - [X] 예약 하기
+    - [X] 예약 조회
+    - [X] 예약 취소
+    - [X] 테마 생성
+    - [ ] 테마 조회
+    - [X] 테마 목록 조회
+    - [X] 테마 삭제
+  - [X] **API**
+    - [X] 예약 하기
+      ```
+      POST /reservations HTTP/1.1
+      content-type: application/json; charset=UTF-8
+      host: localhost:8080
       
-    {
-      "date" : "2022-08-11",
-      "time" : "12:34:56",
-      "name" : "사람 이름"
-    }
-    ```
-    ```
-    HTTP/1.1 201 Created
-    Location: /reservations/1
-    ```
-  - [X] 예약 조회
-    ```
-    GET /reservations/1 HTTP/1.1
-    ```
-    ```
-    HTTP/1.1 200 
-    Content-Type: application/json
+      {
+        "date" : "2022-08-11",
+        "time" : "12:34:56",
+        "name" : "사람 이름"
+      }
+      ```
+      ```
+      HTTP/1.1 201 Created
+      Location: /reservations/1
+      ```
+    - [X] 예약 조회
+      ```
+      GET /reservations/1 HTTP/1.1
+      ```
+      ```
+      HTTP/1.1 200 
+      Content-Type: application/json
       
-    {
-      "id": 1,
-      "date": "2022-08-11",
-      "time": "13:00",
-      "name": "name",
-      "themeName": "워너고홈",영
-      "themeDesc": "병맛 어드벤처 회사 코믹물",
-      "themePrice": 29000
-    }
-    ```
-  - [X] 예약 취소
-    ```
-    DELETE /reservations/1 HTTP/1.1
-    ```
-    ```
-    HTTP/1.1 204 
-    ```
-  - [X] **테마 생성**
-    ```
-    POST /themes HTTP/1.1
-    content-type: application/json; charset=UTF-8
+      {
+        "id": 1,
+        "date": "2022-08-11",
+        "time": "13:00",
+        "name": "name",
+        "themeName": "워너고홈",영
+        "themeDesc": "병맛 어드벤처 회사 코믹물",
+        "themePrice": 29000
+      }
+      ```
+    - [X] 예약 취소
+      ```
+      DELETE /reservations/1 HTTP/1.1
+      ```
+      ```
+      HTTP/1.1 204 
+      ```
+    - [X] **테마 생성**
+      ```
+      POST /themes HTTP/1.1
+      content-type: application/json; charset=UTF-8
       
-    {
-        "name": "테마이름",
-        "desc": "테마설명",
-        "price": 22000
-    }
+      {
+          "name": "테마이름",
+          "desc": "테마설명",
+          "price": 22000
+      }
       
-    ```
-    ```
-    HTTP/1.1 201 Created
-    Location: /themes/1
-    ```
-  - [X] **테마 목록 조회**
-    ```
-    GET /themes HTTP/1.1
-    ```
-    ```
-    HTTP/1.1 200 
-    Content-Type: application/json
+      ```
+      ```
+      HTTP/1.1 201 Created
+      Location: /themes/1
+      ```
+    - [ ] 테마 조회
+      ```
+      GET /themes/1 HTTP/1.1
+      ```
+      ```
+      HTTP/1.1 200 
+      Content-Type: application/json
       
-    [
-        {
-            "id": 1,
-            "name": "테마이름",
-            "desc": "테마설명",
-            "price": 22000
-        }
-    ]
-    ```
-  - [X] **테마 삭제**
-    ```
-    DELETE /themes/1 HTTP/1.1
-    ```
-    ```
-    HTTP/1.1 204 
-    ```
+      {
+          "id": 1,
+          "name": "테마이름",
+          "desc": "테마설명",
+          "price": 22000
+      }
+      ```
+    - [X] **테마 목록 조회**
+      ```
+      GET /themes HTTP/1.1
+      ```
+      ```
+      HTTP/1.1 200 
+      Content-Type: application/json
+      
+      [
+          {
+              "id": 1,
+              "name": "테마이름",
+              "desc": "테마설명",
+              "price": 22000
+          }
+      ]
+      ```
+    - [X] **테마 삭제**
+      ```
+      DELETE /themes/1 HTTP/1.1
+      ```
+      ```
+      HTTP/1.1 204 
+      ```
+    - [ ] 예외처리
+      - [X] 예약 생성) content-type이 application/json이 아닌 경우 값을 받지 않는다.
+      - [X] 예약 생성) 값의 포맷이 맞지 않을 경우 생성 불가
+      - [X] 예약 조회) ID가 잘못된 경우 (float, string)
+      - [X] 예약 삭제) ID가 잘못된 경우 (float, string)
+      - [ ] 테마 생성) content-type이 application/json이 아닌 경우 값을 받지 않는다.
+      - [ ] 테마 생성) 값의 포맷이 맞지 않을 경우 생성 불가
+      - [ ] 테마 조회) ID가 잘못된 경우 (float, string)
+      - [ ] 테마 삭제) ID가 잘못된 경우 (float, string)
 - [X] **Service**
-  - [X] 예약 생성
-  - [X] 예약 조회
-  - [X] 예약 삭제
-  - [X] **테마 생성**
-  - [X] **테마 목록 조회**
-  - [X] **테마 삭제**
+  - [X] **기능 목록**
+    - [X] 예약 생성
+    - [X] 예약 조회
+    - [X] 예약 삭제
+    - [X] **테마 생성**
+    - [ ] **테마 조회**
+    - [X] **테마 목록 조회**
+    - [X] **테마 삭제**
+  - [ ] **예외 처리**
+    - [X] 예약 생성) 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
+    - [X] 예약 생성) 값이 포함되지 않았을 경우 예약 생설 불가
+    - [X] 예약 조회) ID가 없는 경우 조회 불가
+    - [X] 예약 삭제) ID가 없는 경우 삭제 불가
+    - [ ] 테마 생성) 같은 이름의 예약은 생성 불가
+    - [ ] 테마 조회) ID가 없는 경우 조회 불가
+    - [ ] 테마 삭제) 예약과 관계있는 테마 삭제 불가
 - [X] **DAO**
   - [X] Connection
     - [X] 예약 생성
@@ -121,8 +163,10 @@
     - [X] 예약 삭제
     - [X] **예약 존재 확인**
     - [X] **예약 아이디 존재 확인**
+    - [X] **예약에서 테마 아이디 존재 확인**
     - [X] **테마 생성**
     - [X] **테마 목록 조회**
+    - [ ] **테마 조회**
     - [X] **테마 삭제**
     - [X] **테마 존재 확인**
     - [X] **테마 아이디 존재 확인**
@@ -132,20 +176,15 @@
     - [X] 예약 삭제
     - [X] **예약 존재 확인**
     - [X] **예약 아이디 존재 확인**
+    - [X] **예약에서 테마 아이디 존재 확인**
     - [X] **테마 생성**
     - [X] **테마 목록 조회**
+    - [ ] **테마 조회**
     - [X] **테마 삭제**
     - [X] **테마 존재 확인**
     - [X] **테마 아이디 존재 확인**
-- [X] 예외 처리
-  - [X] 예약 생성) content-type이 application/json이 아닌 경우 값을 받지 않는다.
-  - [X] 예약 생성) 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
-  - [X] 예약 생성) 값이 포함되지 않았을 경우 예약 생설 불가
-  - [X] 예약 생성) 값의 포맷이 맞지 않을 경우 생성 불가
-  - [X] 예약 조회) ID가 없는 경우 조회 불가
-  - [X] 예약 조회) ID가 잘못된 경우 (float, string)
-  - [X] 예약 삭제) ID가 없는 경우 삭제 불가
-  - [X] 예약 삭제) ID가 잘못된 경우 (float, string)
+  - [ ] 예외처리
+    - [ ] 결과가 없는 경우 null 반환
 
 ## 프로그래밍 요구사항
 
