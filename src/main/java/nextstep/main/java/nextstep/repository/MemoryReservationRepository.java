@@ -5,11 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
@@ -25,6 +23,14 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> findOne(Long id) {
         return Optional.ofNullable(reservationMap.get(id));
+    }
+
+    @Override
+    public List<Reservation> findAllByThemeId(Long themeId) {
+        return reservationMap.values()
+                .stream()
+                .filter(reservation -> reservation.getThemeId()
+                        .equals(themeId)).collect(Collectors.toList());
     }
 
     @Override

@@ -59,8 +59,19 @@ public class JdbcReservationRepositoryTest {
                 .isTrue();
     }
 
-    @DisplayName("예약 단건 삭제 기능 테스트")
     @Test
+    @DisplayName("테마 아이디로 예약 조회 테스트")
+    void findAllByThemeIdTest(){
+        repository.save(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "reservation1", DEFAULT_THEME_ID));
+        repository.save(new Reservation(LocalDate.of(2025, 1, 9), LocalTime.of(1, 30), "reservation2", DEFAULT_THEME_ID));
+        assertThat(repository.findAllByThemeId(DEFAULT_THEME_ID)
+                .size()).isEqualTo(2);
+        assertThat(repository.findAllByThemeId(0L)
+                .size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("예약 단건 삭제 기능 테스트")
     public void deleteOneTest() {
         Reservation savedReservation = repository.save(new Reservation(LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", DEFAULT_THEME_ID));
         Long savedReservationId = savedReservation.getId();

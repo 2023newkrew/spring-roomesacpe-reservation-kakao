@@ -7,6 +7,7 @@ import nextstep.main.java.nextstep.repositoryUtil.CustomPreparedStatementCreator
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 public class ReservationDAO implements ReservationRepository {
@@ -44,6 +45,11 @@ public class ReservationDAO implements ReservationRepository {
         } finally {
             closeConnection();
         }
+    }
+
+    @Override
+    public List<Reservation> findAllByThemeId(Long themeId) {
+        return null;
     }
 
     @Override
