@@ -29,12 +29,9 @@ public class ReservationDAO {
                     return -1;
                 }
                 return rs.getLong(1);
-            } catch (SQLException e) {
-                System.err.println("반환 오류:" + e.getMessage());
-                e.printStackTrace();
             }
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            System.err.println("연결 혹은 반환 오류:" + e.getMessage());
             e.printStackTrace();
         }
         return -1;
@@ -51,7 +48,7 @@ public class ReservationDAO {
             System.out.println("정상적으로 연결되었습니다.");
             ps.setLong(1, id);
             try (
-                    ResultSet rs = ps.executeQuery();
+                    ResultSet rs = ps.executeQuery()
             ) {
                 if (!rs.next()) return null;
 
@@ -66,12 +63,9 @@ public class ReservationDAO {
                                 rs.getString("theme_desc"),
                                 rs.getInt("theme_price")))
                         .build();
-            } catch (SQLException e) {
-                System.err.println("반환 오류:" + e.getMessage());
-                e.printStackTrace();
             }
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            System.err.println("연결 혹은 반환 오류:" + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -89,7 +83,7 @@ public class ReservationDAO {
             System.out.println("정상적으로 연결되었습니다.");
             ps.setLong(1, themeId);
             try (
-                    ResultSet rs = ps.executeQuery();
+                    ResultSet rs = ps.executeQuery()
             ) {
                 while (rs.next()) {
                     result.add(Reservation.builder()
@@ -105,12 +99,9 @@ public class ReservationDAO {
                             .build());
                 }
                 return result;
-            } catch (SQLException e) {
-                System.err.println("반환 오류:" + e.getMessage());
-                e.printStackTrace();
             }
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            System.err.println("연결 혹은 반환 오류:" + e.getMessage());
             e.printStackTrace();
         }
         return result;
