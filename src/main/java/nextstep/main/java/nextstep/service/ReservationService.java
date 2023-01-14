@@ -20,6 +20,8 @@ public class ReservationService {
     }
 
     public Reservation save(ReservationCreateRequestDto request) {
+        themeRepository.findById(request.getThemeId())
+                .orElseThrow(NoSuchThemeException::new);
         validateThemeExist(request);
         if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
             throw new DuplicateReservationException();
