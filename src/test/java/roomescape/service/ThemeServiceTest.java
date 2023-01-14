@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
 import roomescape.service.theme.ThemeService;
@@ -32,11 +33,14 @@ public class ThemeServiceTest {
     private ThemeServiceInterface themeService;
 
     @Mock
+    private ReservationDAO reservationDAO;
+
+    @Mock
     private ThemeDAO themeDAO;
 
     @BeforeEach
     void setUp() {
-        themeService = new ThemeService(themeDAO);
+        themeService = new ThemeService(reservationDAO, themeDAO);
     }
 
     @DisplayName("테마 생성")
@@ -66,10 +70,12 @@ public class ThemeServiceTest {
     @DisplayName("테마 삭제")
     @Test
     void removeReservation() {
+        when(reservationDAO.existThemeId(ID_DATA)).thenReturn(false);
         when(themeDAO.existId(ID_DATA)).thenReturn(true);
         doNothing().when(themeDAO).remove(ID_DATA);
 
         themeService.remove(ID_DATA);
+        verify(reservationDAO, times(1)).existThemeId(ID_DATA);
         verify(themeDAO, times(1)).existId(ID_DATA);
         verify(themeDAO, times(1)).remove(ID_DATA);
     }

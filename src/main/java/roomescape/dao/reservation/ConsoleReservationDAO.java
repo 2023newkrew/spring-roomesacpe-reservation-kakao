@@ -4,6 +4,7 @@ import java.util.List;
 import roomescape.dao.ConnectionDAOManager;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
+import roomescape.dao.reservation.preparedstatementcreator.ExistReservationThemeIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.FindReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.InsertReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.RemoveReservationPreparedStatementCreator;
@@ -36,6 +37,14 @@ public class ConsoleReservationDAO implements ReservationDAO {
     public boolean existId(Long id) {
         List<Boolean> result = connectionDAOManager.query(
                 new ExistReservationIdPreparedStatementCreator(id), existRowMapper);
+        validateResult(result);
+        return result.get(0);
+    }
+
+    @Override
+    public boolean existThemeId(Long id) {
+        List<Boolean> result = connectionDAOManager.query(
+                new ExistReservationThemeIdPreparedStatementCreator(id), existRowMapper);
         validateResult(result);
         return result.get(0);
     }

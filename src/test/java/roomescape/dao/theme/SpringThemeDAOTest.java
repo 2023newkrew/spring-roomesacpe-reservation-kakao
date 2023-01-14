@@ -20,7 +20,8 @@ import roomescape.dto.Theme;
 public class SpringThemeDAOTest {
 
     private static final String NAME_DATA1 = "워너고홈";
-    private static final String NAME_DATA2 = "테스트 이름";
+    private static final String NAME_DATA2 = "테스트";
+    private static final String NAME_DATA3 = "테스트 이름";
     private static final String DESC_DATA = "병맛 어드벤처 회사 코믹물";
     private static final int PRICE_DATA = 29000;
 
@@ -36,23 +37,32 @@ public class SpringThemeDAOTest {
         themeDAO = new SpringThemeDAO(jdbcTemplate);
     }
 
+
+    private <T> T getCount(Class<T> tClass) {
+        return jdbcTemplate.queryForObject(COUNT_SQL, tClass);
+    }
+
     @DisplayName("테마 생성")
     @Test
-    void createTheme() {
-        Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
+    void createTheme()  {
+        long count = getCount(Long.class);
+
+        Theme theme = new Theme(NAME_DATA3, DESC_DATA, PRICE_DATA);
 
         themeDAO.create(theme);
 
-        Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
-        assertThat(count).isEqualTo(2L);
+        Long actual = getCount(Long.class);
+        assertThat(actual).isEqualTo(count + 1L);
     }
 
     @DisplayName("테마 목록 조회")
     @Test
     void listTheme() {
+        int count = getCount(Integer.class);
+
         List<Theme> theme = themeDAO.list();
 
-        assertThat(theme.size()).isEqualTo(1);
+        assertThat(theme.size()).isEqualTo(count);
         assertThat(theme.get(0).getName()).isEqualTo(NAME_DATA1);
         assertThat(theme.get(0).getDesc()).isEqualTo(DESC_DATA);
         assertThat(theme.get(0).getPrice()).isEqualTo(PRICE_DATA);
@@ -61,10 +71,12 @@ public class SpringThemeDAOTest {
     @DisplayName("테마 삭제")
     @Test
     void removeTheme() {
+        long count = getCount(Long.class);
+
         themeDAO.remove(1L);
 
-        Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
-        assertThat(count).isEqualTo(0L);
+        long actual = getCount(Long.class);
+        assertThat(actual).isEqualTo(count - 1L);
     }
 
     @DisplayName("테마 존재 확인")
@@ -72,15 +84,18 @@ public class SpringThemeDAOTest {
     void existTheme() {
         Theme theme1 = new Theme(NAME_DATA1, DESC_DATA, PRICE_DATA);
         Theme theme2 = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
+        Theme theme3 = new Theme(NAME_DATA3, DESC_DATA, PRICE_DATA);
 
         assertThat(themeDAO.exist(theme1)).isTrue();
-        assertThat(themeDAO.exist(theme2)).isFalse();
+        assertThat(themeDAO.exist(theme2)).isTrue();
+        assertThat(themeDAO.exist(theme3)).isFalse();
     }
 
     @DisplayName("테마 아이디 존재 확인")
     @Test
     void existReservationId() {
         assertThat(themeDAO.existId(1L)).isTrue();
-        assertThat(themeDAO.existId(2L)).isFalse();
+        assertThat(themeDAO.existId(2L)).isTrue();
+        assertThat(themeDAO.existId(3L)).isFalse();
     }
 }

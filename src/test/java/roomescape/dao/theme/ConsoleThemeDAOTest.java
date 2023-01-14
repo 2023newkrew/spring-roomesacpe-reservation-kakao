@@ -28,7 +28,8 @@ public class ConsoleThemeDAOTest {
     private static final String PASSWORD = "";
 
     private static final String NAME_DATA1 = "워너고홈";
-    private static final String NAME_DATA2 = "테스트 이름";
+    private static final String NAME_DATA2 = "테스트";
+    private static final String NAME_DATA3 = "테스트 이름";
     private static final String DESC_DATA = "병맛 어드벤처 회사 코믹물";
     private static final int PRICE_DATA = 29000;
 
@@ -49,24 +50,33 @@ public class ConsoleThemeDAOTest {
         }
     }
 
+    private <T> T getCount(Class<T> tClass) throws SQLException {
+        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
+        assertThat(resultSet.next()).isTrue();
+        return resultSet.getObject(1, tClass);
+    }
+
     @DisplayName("예약 생성")
     @Test
     void insertTheme() throws SQLException {
-        Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
+        long count = getCount(Long.class);
+
+        Theme theme = new Theme(NAME_DATA3, DESC_DATA, PRICE_DATA);
 
         themeDAO.create(theme);
 
-        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
-        assertThat(resultSet.next()).isTrue();
-        assertThat(resultSet.getInt(1)).isEqualTo(2);
+        long actual = getCount(Long.class);
+        assertThat(actual).isEqualTo(count + 1L);
     }
 
     @DisplayName("예약 조회")
     @Test
-    void listTheme() {
+    void listTheme() throws SQLException {
+        int count = getCount(Integer.class);
+
         List<Theme> theme = themeDAO.list();
 
-        assertThat(theme.size()).isEqualTo(1);
+        assertThat(theme.size()).isEqualTo(count);
         assertThat(theme.get(0).getName()).isEqualTo(NAME_DATA1);
         assertThat(theme.get(0).getDesc()).isEqualTo(DESC_DATA);
         assertThat(theme.get(0).getPrice()).isEqualTo(PRICE_DATA);
@@ -75,11 +85,12 @@ public class ConsoleThemeDAOTest {
     @DisplayName("예약 삭제")
     @Test
     void removeTheme() throws SQLException {
+        long count = getCount(Long.class);
+
         themeDAO.remove(1L);
 
-        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
-        assertThat(resultSet.next()).isTrue();
-        assertThat(resultSet.getInt(1)).isEqualTo(0);
+        long actual = getCount(Long.class);
+        assertThat(actual).isEqualTo(count - 1L);
     }
 
     @DisplayName("예약 존재 확인")
@@ -87,15 +98,18 @@ public class ConsoleThemeDAOTest {
     void existTheme() {
         Theme theme1 = new Theme(NAME_DATA1, DESC_DATA, PRICE_DATA);
         Theme theme2 = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
+        Theme theme3 = new Theme(NAME_DATA3, DESC_DATA, PRICE_DATA);
 
         assertThat(themeDAO.exist(theme1)).isTrue();
-        assertThat(themeDAO.exist(theme2)).isFalse();
+        assertThat(themeDAO.exist(theme2)).isTrue();
+        assertThat(themeDAO.exist(theme3)).isFalse();
     }
 
     @DisplayName("테마 아이디 존재 확인")
     @Test
     void existReservationId() {
         assertThat(themeDAO.existId(1L)).isTrue();
-        assertThat(themeDAO.existId(2L)).isFalse();
+        assertThat(themeDAO.existId(2L)).isTrue();
+        assertThat(themeDAO.existId(3L)).isFalse();
     }
 }

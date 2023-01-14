@@ -32,7 +32,7 @@ public class ConsoleReservationDAOTest {
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
     private static final String NAME_DATA = "test";
-    private static final Long THEME_ID_DATA = 1L;
+    private static final Long THEME_ID_DATA = 2L;
 
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
 
@@ -51,21 +51,30 @@ public class ConsoleReservationDAOTest {
         }
     }
 
+    private Long getCount() throws SQLException {
+        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
+        assertThat(resultSet.next()).isTrue();
+        return resultSet.getLong(1);
+    }
+
     @DisplayName("예약 생성")
     @Test
     void insertReservation() throws SQLException {
+        long count = getCount();
+
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         reservationDAO.create(reservation);
-        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
-        assertThat(resultSet.next()).isTrue();
-        assertThat(resultSet.getInt(1)).isEqualTo(2);
+
+        long actual = getCount();
+        assertThat(actual).isEqualTo(count + 1L);
     }
 
     @DisplayName("예약 조회")
     @Test
     void findReservation() {
         Reservation reservation = reservationDAO.find(1L);
+
         assertThat(reservation.getName()).isEqualTo(NAME_DATA);
         assertThat(reservation.getDate()).isEqualTo(DATE_DATA1);
         assertThat(reservation.getTime()).isEqualTo(TIME_DATA);
@@ -75,11 +84,12 @@ public class ConsoleReservationDAOTest {
     @DisplayName("예약 삭제")
     @Test
     void removeReservation() throws SQLException {
+        long count = getCount();
+
         reservationDAO.remove(1L);
 
-        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
-        assertThat(resultSet.next()).isTrue();
-        assertThat(resultSet.getInt(1)).isEqualTo(0);
+        long actual = getCount();
+        assertThat(actual).isEqualTo(count - 1L);
     }
 
     @DisplayName("예약 존재 확인")

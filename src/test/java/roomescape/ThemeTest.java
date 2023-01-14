@@ -57,7 +57,7 @@ public class ThemeTest {
                 .when().get(THEME_PATH)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1))
+                .body("size()", is(2))
                 .body("[0].name", is( NAME_DATA1))
                 .body("[0].desc", is(DESC_DATA))
                 .body("[0].price", is(PRICE_DATA));

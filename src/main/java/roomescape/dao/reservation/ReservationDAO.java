@@ -20,6 +20,7 @@ public interface ReservationDAO {
 
     boolean exist(Reservation reservation);
     boolean existId(Long id);
+    boolean existThemeId(Long id);
     Long create(Reservation reservation);
     Reservation find(Long id);
     void remove(Long id);

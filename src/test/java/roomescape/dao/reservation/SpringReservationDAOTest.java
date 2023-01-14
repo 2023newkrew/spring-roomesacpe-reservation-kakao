@@ -24,7 +24,7 @@ public class SpringReservationDAOTest {
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
     private static final String NAME_DATA = "test";
-    private static final Long THEME_ID_DATA = 1L;
+    private static final Long THEME_ID_DATA = 2L;
 
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
 
@@ -38,14 +38,20 @@ public class SpringReservationDAOTest {
         reservationDAO = new SpringReservationDAO(jdbcTemplate);
     }
 
+    private Long getCount() {
+        return jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
+    }
+
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
+        long count = getCount();
+
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
         reservationDAO.create(reservation);
 
-        Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
-        assertThat(count).isEqualTo(2L);
+        long actual = getCount();
+        assertThat(actual).isEqualTo(count + 1L);
     }
 
     @DisplayName("예약 조회")
@@ -62,10 +68,12 @@ public class SpringReservationDAOTest {
     @DisplayName("예약 삭제")
     @Test
     void removeReservation() {
+        long count = getCount();
+
         reservationDAO.remove(1L);
 
-        Long count = jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
-        assertThat(count).isEqualTo(0L);
+        long actual = getCount();
+        assertThat(actual).isEqualTo(count - 1L);
     }
 
     @DisplayName("예약 존재 확인")
