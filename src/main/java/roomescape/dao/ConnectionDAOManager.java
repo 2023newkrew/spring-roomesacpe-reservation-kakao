@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
-import roomescape.exception.BadRequestException;
 
 public class ConnectionDAOManager {
 
@@ -27,7 +26,7 @@ public class ConnectionDAOManager {
         try {
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            throw new BadRequestException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -36,7 +35,7 @@ public class ConnectionDAOManager {
             try {
                 con.close();
             } catch (SQLException e) {
-                throw new BadRequestException();
+                throw new RuntimeException(e);
             }
         }
     }

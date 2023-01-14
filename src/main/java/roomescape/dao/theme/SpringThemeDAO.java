@@ -25,41 +25,66 @@ public class SpringThemeDAO implements ThemeDAO {
 
     @Override
     public Boolean exist(Theme theme) {
-        List<Boolean> result = jdbcTemplate.query(
-                new ExistThemePreparedStatementCreator(theme), existRowMapper);
-        return DAOResult.getResult(result);
+        try {
+            List<Boolean> result = jdbcTemplate.query(
+                    new ExistThemePreparedStatementCreator(theme), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Boolean existId(long id) {
-        List<Boolean> result = jdbcTemplate.query(
-                new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
-        return DAOResult.getResult(result);
+        try {
+            List<Boolean> result = jdbcTemplate.query(
+                    new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Long create(Theme theme) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new InsertThemePreparedStatementCreator(theme), keyHolder);
-        return keyHolder.getKeyAs(Long.class);
+        try {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(
+                    new InsertThemePreparedStatementCreator(theme), keyHolder);
+            return keyHolder.getKeyAs(Long.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Theme> list() {
-        return jdbcTemplate.query(
-                new ListThemePreparedStatementCreator(), rowMapper);
+        try {
+            return jdbcTemplate.query(
+                    new ListThemePreparedStatementCreator(), rowMapper);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public void remove(long id) {
-        jdbcTemplate.update(
-                new RemoveThemePreparedStatementCreator(id));
+        try {
+            jdbcTemplate.update(
+                    new RemoveThemePreparedStatementCreator(id));
+        } catch (Exception ignored) {
+
+        }
     }
 
     @Override
     public Theme find(long id) {
-        List<Theme> result = jdbcTemplate.query(
-                new FindThemePreparedStatementCreator(id), rowMapper);
-        return DAOResult.getResult(result);
+        try {
+            List<Theme> result = jdbcTemplate.query(
+                    new FindThemePreparedStatementCreator(id), rowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

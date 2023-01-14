@@ -19,7 +19,9 @@ public class ReservationService implements ReservationServiceInterface {
     @Transactional
     public Long create(Reservation reservation) {
         validateCreateReservation(reservation);
-        return reservationDAO.create(reservation);
+        Long id = reservationDAO.create(reservation);
+        throwIfNull(id);
+        return id;
     }
 
     private void validateCreateReservation(Reservation reservation) {
@@ -43,7 +45,15 @@ public class ReservationService implements ReservationServiceInterface {
     @Override
     @Transactional
     public Reservation find(Long id) {
-        return reservationDAO.find(id);
+        Reservation reservation = reservationDAO.find(id);
+        throwIfNull(reservation);
+        return reservation;
+    }
+
+    private <T> void throwIfNull(T t) {
+        if (t == null) {
+            throw new BadRequestException();
+        }
     }
 
     @Override

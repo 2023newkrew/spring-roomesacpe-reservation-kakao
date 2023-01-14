@@ -1,6 +1,7 @@
 package roomescape.dao.reservation;
 
 import java.util.List;
+import org.springframework.lang.NonNull;
 import roomescape.dao.ConnectionDAOManager;
 import roomescape.dao.DAOResult;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
@@ -20,43 +21,67 @@ public class ConsoleReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public boolean exist(Reservation reservation) {
-        List<Boolean> result = connectionDAOManager.query(
-                new ExistReservationPreparedStatementCreator(reservation), existRowMapper);
-        return DAOResult.getResult(result);
+    public Boolean exist(@NonNull Reservation reservation) {
+        try {
+            List<Boolean> result = connectionDAOManager.query(
+                    new ExistReservationPreparedStatementCreator(reservation), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public boolean existId(Long id) {
-        List<Boolean> result = connectionDAOManager.query(
-                new ExistReservationIdPreparedStatementCreator(id), existRowMapper);
-        return DAOResult.getResult(result);
+    public Boolean existId(long id) {
+        try {
+            List<Boolean> result = connectionDAOManager.query(
+                    new ExistReservationIdPreparedStatementCreator(id), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public boolean existThemeId(Long id) {
-        List<Boolean> result = connectionDAOManager.query(
-                new ExistReservationThemeIdPreparedStatementCreator(id), existRowMapper);
-        return DAOResult.getResult(result);
+    public Boolean existThemeId(long id) {
+        try {
+            List<Boolean> result = connectionDAOManager.query(
+                    new ExistReservationThemeIdPreparedStatementCreator(id), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public Long create(Reservation reservation) {
-        List<Long> result = connectionDAOManager.updateAndGetKey(
-                new InsertReservationPreparedStatementCreator(reservation), "id", Long.class);
-        return DAOResult.getResult(result);
+    public Long create(@NonNull Reservation reservation) {
+        try {
+            List<Long> result = connectionDAOManager.updateAndGetKey(
+                    new InsertReservationPreparedStatementCreator(reservation), "id", Long.class);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public Reservation find(Long id) {
-        List<Reservation> result = connectionDAOManager.query(
-                new FindReservationPreparedStatementCreator(id), rowMapper);
-        return DAOResult.getResult(result);
+    public Reservation find(long id) {
+        try {
+            List<Reservation> result = connectionDAOManager.query(
+                    new FindReservationPreparedStatementCreator(id), rowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public void remove(Long id) {
-        connectionDAOManager.update(
-                new RemoveReservationPreparedStatementCreator(id));
+    public void remove(long id) {
+        try {
+            connectionDAOManager.update(
+                    new RemoveReservationPreparedStatementCreator(id));
+        } catch (Exception ignored) {
+
+        }
     }
 }

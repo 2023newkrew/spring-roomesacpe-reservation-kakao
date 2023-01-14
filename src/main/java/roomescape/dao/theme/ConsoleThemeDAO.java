@@ -21,41 +21,65 @@ public class ConsoleThemeDAO implements ThemeDAO {
 
     @Override
     public Boolean exist(Theme theme) {
-        List<Boolean> result = connectionDAOManager.query(
-                new ExistThemePreparedStatementCreator(theme), existRowMapper);
-        return DAOResult.getResult(result);
+        try {
+            List<Boolean> result = connectionDAOManager.query(
+                    new ExistThemePreparedStatementCreator(theme), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Boolean existId(long id) {
-        List<Boolean> result = connectionDAOManager.query(
-                new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
-        return DAOResult.getResult(result);
+        try {
+            List<Boolean> result = connectionDAOManager.query(
+                    new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Long create(Theme theme) {
-        List<Long> result = connectionDAOManager.updateAndGetKey(
-                new InsertThemePreparedStatementCreator(theme), "id", Long.class);
-        return DAOResult.getResult(result);
+        try {
+            List<Long> result = connectionDAOManager.updateAndGetKey(
+                    new InsertThemePreparedStatementCreator(theme), "id", Long.class);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public List<Theme> list() {
-        return connectionDAOManager.query(
-                new ListThemePreparedStatementCreator(), rowMapper);
+        try {
+            return connectionDAOManager.query(
+                    new ListThemePreparedStatementCreator(), rowMapper);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public void remove(long id) {
-        connectionDAOManager.update(
-                new RemoveThemePreparedStatementCreator(id));
+        try {
+            connectionDAOManager.update(
+                    new RemoveThemePreparedStatementCreator(id));
+        } catch (Exception ignored) {
+
+        }
     }
 
     @Override
     public Theme find(long id) {
-        List<Theme> result = connectionDAOManager.query(
-                new FindThemePreparedStatementCreator(id), rowMapper);
-        return DAOResult.getResult(result);
+        try {
+            List<Theme> result = connectionDAOManager.query(
+                    new FindThemePreparedStatementCreator(id), rowMapper);
+            return DAOResult.getResult(result);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

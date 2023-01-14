@@ -1,6 +1,7 @@
 package roomescape.dao.reservation;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import roomescape.dto.Reservation;
 
 public interface ReservationDAO {
@@ -18,10 +19,10 @@ public interface ReservationDAO {
     RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
             "result");
 
-    boolean exist(Reservation reservation);
-    boolean existId(Long id);
-    boolean existThemeId(Long id);
-    Long create(Reservation reservation);
-    Reservation find(Long id);
-    void remove(Long id);
+    Boolean exist(@NonNull Reservation reservation);
+    Boolean existId(long id);
+    Boolean existThemeId(long id);
+    Long create(@NonNull Reservation reservation);
+    Reservation find(long id);
+    void remove(long id);
 }
