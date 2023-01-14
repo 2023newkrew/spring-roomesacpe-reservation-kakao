@@ -2,6 +2,8 @@ package nextstep.reservation.repository;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Theme;
+import nextstep.reservation.exception.RoomEscapeException;
+import nextstep.reservation.exception.RoomEscapeExceptionCode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -54,6 +56,11 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public int deleteById(long id) {
+        String existsQuery = "select exists(select * from RESERVATION where theme_id = id)";
+        Boolean isExistInReservation = jdbcTemplate.queryForObject(existsQuery, Boolean.class, id);
+        if (isExistInReservation) {
+            throw new RoomEscapeException(RoomEscapeExceptionCode.RESERVATION_EXIST);
+        }
         String sql = "delete from THEME where id = ?";
         return jdbcTemplate.update(sql, id);
     }
