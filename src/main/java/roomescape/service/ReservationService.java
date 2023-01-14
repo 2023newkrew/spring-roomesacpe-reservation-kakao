@@ -34,8 +34,9 @@ public class ReservationService {
     public Long createReservation(ReservationRequest reservationRequest) {
         LocalDate requestedDate = reservationRequest.getDate();
         LocalTime requestedTime = reservationRequest.getTime();
+        Long themeId = reservationRequest.getTheme_id();
 
-        checkTimeDuplication(requestedDate, requestedTime);
+        checkTimeDuplication(requestedDate, requestedTime, themeId);
         checkThemeExistence(reservationRequest.getTheme_id());
 
         return reservationWebRepository.save(
@@ -43,8 +44,8 @@ public class ReservationService {
         );
     }
 
-    private void checkTimeDuplication(LocalDate date, LocalTime time) {
-        reservationWebRepository.findReservationByDateAndTime(date, time)
+    private void checkTimeDuplication(LocalDate date, LocalTime time, Long themeId) {
+        reservationWebRepository.findReservationByDateAndTimeAndTheme(date, time, themeId)
                 .ifPresent(reservation -> {
                     throw new RoomEscapeException(ErrorCode.DUPLICATED_RESERVATION);
                 });

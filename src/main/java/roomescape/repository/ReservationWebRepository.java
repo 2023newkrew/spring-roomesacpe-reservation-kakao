@@ -65,10 +65,10 @@ public class ReservationWebRepository implements CrudRepository<Reservation, Lon
         jdbcTemplate.update(sql, id);
     }
 
-    public Optional<Reservation> findReservationByDateAndTime(LocalDate date, LocalTime time){
-        String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?)";
+    public Optional<Reservation> findReservationByDateAndTimeAndTheme(LocalDate date, LocalTime time, Long themeId){
+        String sql = "SELECT * FROM reservation WHERE date = (?) and time = (?) and theme_id = (?)";
 
-        return jdbcTemplate.query(sql, reservationRowMapper, date, time)
+        return jdbcTemplate.query(sql, reservationRowMapper, date, time, themeId)
                 .stream()
                 .findAny();
     }
