@@ -5,7 +5,7 @@ import roomescape.domain.Reservation;
 
 
 public interface ReservationService {
-    String createReservation(Reservation reservation);
-    String lookUpReservation(Long reserveId);
+    Reservation createReservation(Reservation reservation);
+    Reservation lookUpReservation(Long reserveId);
     void deleteReservation(Long deleteId);
 }

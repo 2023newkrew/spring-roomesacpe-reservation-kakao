@@ -11,7 +11,8 @@ public class Theme {
 
     }
 
-    public Theme(String name, String desc, Integer price) {
+    public Theme(Long id, String name, String desc, Integer price) {
+        this.id = id;
         this.name = name;
         this.desc = desc;
         this.price = price;
@@ -33,7 +34,13 @@ public class Theme {
         return price;
     }
 
-    public String toMessage(){
-        return "Name: " + name + ", Desc: " + desc + ", Price: " + price;
+
+    public String createMessage(long themeId){
+        return "Location: /themes/" + themeId;
     }
+
+    public String toMessage(){
+        return "Id: " + id + "Name: " + name + ", Desc: " + desc + ", Price: " + price;
+    }
+
 }

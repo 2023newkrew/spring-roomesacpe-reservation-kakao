@@ -44,7 +44,7 @@ public class JdbcThemeRepository implements ThemeRepository{
                     String name = rs.getString("name");
                     String desc = rs.getString("price");
                     int price = rs.getInt("price");
-                    return new Theme(name, desc, price);
+                    return new Theme(themeId, name, desc, price);
                 });
         return Optional.ofNullable(theme);
     }

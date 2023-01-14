@@ -18,25 +18,27 @@ public class WebThemeService implements ThemeService {
     }
 
     @Override
-    public String createTheme(Theme theme) {
+    public Theme createTheme(Theme theme) {
         if (jdbcThemeRepository.findIdByDateAndTime(theme) == 1) {
             throw new DuplicateRequestException("요청한 이름/가격의 테마가 이미 등록되어 있습니다.");
         }
         Long themeId = jdbcThemeRepository.createTheme(theme);
         if (themeId > 0){
             System.out.println(theme.getName() + "님의 테마가 등록되었습니다.");
+            return new Theme(themeId, theme.getName(), theme.getDesc(), theme.getPrice());
         }
-        return "Location: /themes/" + themeId;
+        return new Theme();
     }
 
     @Override
-    public String lookUpTheme(Long themeId) {
+    public Theme lookUpTheme(Long themeId) {
         Optional<Theme> theme = jdbcThemeRepository.findById(themeId);
         if (theme.isPresent()) {
             // 객체 타입이 아닌, 특정 타입으로 wrapping 필요
-            return theme.get().toMessage();
+            return theme.get();
         }
-        return "NOT FOUND RESERVATION ID: " + themeId;
+        System.out.println(themeId + "NOT FOUND");
+        return new Theme();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package roomescape.service.Reservation;
 
 import com.sun.jdi.request.DuplicateRequestException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -11,31 +12,37 @@ import java.util.Optional;
 @Service
 @Qualifier("WebReservation")
 public class WebReservationService implements ReservationService{
-    JdbcReservationRepository jdbcReservationRepository;
+    final JdbcReservationRepository jdbcReservationRepository;
 
+    @Autowired
     public WebReservationService(JdbcReservationRepository jdbcReservationRepository) {
         this.jdbcReservationRepository = jdbcReservationRepository;
     }
 
     @Override
-    public String createReservation(Reservation reservation) {
+    public Reservation createReservation(Reservation reservation) {
         if (jdbcReservationRepository.findIdByDateAndTime(reservation) == 1) {
             throw new DuplicateRequestException("요청 날짜/시간에 이미 예약이 있습니다.");
         }
         Long reserveId = jdbcReservationRepository.createReservation(reservation);
         if (reserveId > 0){
             System.out.println(reservation.getName() + "님의 예약이 등록되었습니다.");
+            return new Reservation(reserveId, reservation.getDate(), reservation.getTime(),
+                    reservation.getName(), reservation.getThemeId());
         }
-        return "Location: /reservation/" + reserveId;
+        System.out.println("NOT REGISTERED");
+        return new Reservation();
     }
 
     @Override
-    public String lookUpReservation(Long reserveId) {
+    public Reservation lookUpReservation(Long reserveId) {
         Optional<Reservation> reservation = jdbcReservationRepository.findById(reserveId);
         if (reservation.isPresent()) {
-            return reservation.get().toMessage();
+            System.out.println("FOUND");
+            return reservation.get();
         }
-        return "NOT FOUND RESERVATION ID: " + reserveId;
+        System.out.println("NOT FOUND");
+        return new Reservation();
     }
 
     @Override
