@@ -44,7 +44,7 @@ public class ReservationService implements ReservationServiceInterface {
 
     @Override
     @Transactional
-    public Reservation find(Long id) {
+    public Reservation find(long id) {
         Reservation reservation = reservationDAO.find(id);
         throwIfNull(reservation);
         return reservation;
@@ -58,12 +58,12 @@ public class ReservationService implements ReservationServiceInterface {
 
     @Override
     @Transactional
-    public void remove(Long id) {
+    public void remove(long id) {
         throwIfNotExistId(id);
         reservationDAO.remove(id);
     }
 
-    private void throwIfNotExistId(Long id) {
+    private void throwIfNotExistId(long id) {
         if(!reservationDAO.existId(id)) {
             throw new BadRequestException();
         }

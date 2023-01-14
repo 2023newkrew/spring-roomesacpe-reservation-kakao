@@ -56,6 +56,20 @@ public class ThemeServiceTest {
         verify(themeDAO, times(1)).create(theme);
     }
 
+    @DisplayName("테마 조회")
+    @Test
+    void findTheme() {
+        Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
+
+        when(themeDAO.find(ID_DATA)).thenReturn(theme);
+
+        Theme actual = themeService.find(ID_DATA);
+        assertThat(actual.getName()).isEqualTo(NAME_DATA);
+        assertThat(actual.getDesc()).isEqualTo(DESC_DATA);
+        assertThat(actual.getPrice()).isEqualTo(PRICE_DATA);
+        verify(themeDAO, times(1)).find(ID_DATA);
+    }
+
     @DisplayName("테마 목록 조회")
     @Test
     void listTheme() {
