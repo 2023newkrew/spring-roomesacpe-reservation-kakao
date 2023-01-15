@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DisplayName("Reservation Controller 테스트")
+@DisplayName("Theme Controller 테스트")
 // 매 테스트 전 해당 경로의 스크립트 실행
 @Sql(scripts = {"classpath:recreate.sql"})
 public class ThemeControllerTest {

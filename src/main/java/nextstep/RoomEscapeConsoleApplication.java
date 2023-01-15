@@ -164,7 +164,7 @@ public class RoomEscapeConsoleApplication {
     }
 
     private static void insertReservation(String date, String time, String name) {
-        CreateReservationDto createReservationDto = new CreateReservationDto(date, time, name, 1l);
+        CreateReservationDto createReservationDto = CreateReservationDto.create(date, time, name, 1l);
         try {
             long id = reservationService.addReservation(createReservationDto);
             System.out.println("예약이 등록되었습니다.");

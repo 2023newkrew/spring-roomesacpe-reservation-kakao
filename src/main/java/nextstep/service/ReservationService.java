@@ -26,7 +26,7 @@ public class ReservationService {
 
     public long addReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = Reservation.createReservation(createReservationDto);
-        checkReservationTime(LocalTime.parse(createReservationDto.getTime()));
+        checkReservationTime(createReservationDto.getTime());
         checkDuplicateReservation(
                 createReservationDto.getThemeId(),
                 Date.valueOf(createReservationDto.getDate()),

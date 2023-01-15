@@ -27,9 +27,7 @@ public class ReservationController {
         try {
             long id = reservationService.addReservation(reservationDto);
             return ResponseEntity.created(URI.create("/reservations/" + id)).build();
-        } catch (DuplicateTimeReservationException ex) {
-            return ResponseEntity.badRequest().build();
-        } catch (IllegalReservationTimeException ex) {
+        } catch (DuplicateTimeReservationException | IllegalReservationTimeException ex) {
             return ResponseEntity.badRequest().build();
         }
     }
