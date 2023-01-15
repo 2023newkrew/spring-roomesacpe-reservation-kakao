@@ -2,7 +2,6 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.repository.reservation.JdbcReservationRepository;
 import nextstep.repository.theme.JdbcThemeRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

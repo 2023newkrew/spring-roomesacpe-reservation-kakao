@@ -39,7 +39,6 @@ class ReservationServiceTest {
 
     @BeforeEach
     void resetTable() {
-//        reservationService.resetTable();
         themeService.createTheme(theme);
 
         theme = themeService.findByTheme(theme);
