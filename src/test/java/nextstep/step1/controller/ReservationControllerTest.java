@@ -11,6 +11,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -81,9 +83,9 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .assertThat()
-                .body("time", equalTo(reservationDto.getTime()))
-                .body("name", equalTo(reservationDto.getName()))
-                .body("date", equalTo(reservationDto.getDate()));
+                .body("time", equalTo(reservationDto.getTime().toString()))
+                .body("date", equalTo(reservationDto.getDate().toString()))
+                .body("name", equalTo(reservationDto.getName()));
     }
 
     @Test
@@ -134,12 +136,24 @@ class ReservationControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @DisplayName("이름은 빈칸이 될 수 없다.")
+    @Test
+    void test9(){
+        ReservationDto reservationDto = new ReservationDto(LocalDate.parse(RESERVATION_DATE), LocalTime.parse("16:01"), "", null);
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationDto)
+                .when().post("/reservations")
+                .then().statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     ReservationDto makeRandomReservationDto(String date, String time){
         List<String> names = List.of("omin", "ethan", "java");
 
         int index = ThreadLocalRandom.current().nextInt(3);
 
-        return new ReservationDto(date, time, names.get(index), null);
+        return new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), names.get(index), null);
 
     }
 }

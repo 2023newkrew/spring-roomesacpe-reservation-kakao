@@ -7,6 +7,8 @@ import nextstep.step1.dto.ReservationDto;
 import nextstep.step1.service.ThemeReservationService;
 import nextstep.step1.service.ThemeReservationServiceImpl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RoomEscapeConsoleApplication {
@@ -36,7 +38,7 @@ public class RoomEscapeConsoleApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                ReservationDto reservationDto = new ReservationDto(date, time, name, null);
+                ReservationDto reservationDto = new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), name, null);
 
                 Long reservationId = themeReservationService.reserve(reservationDto);
                 ReservationDetail findReservation = themeReservationService.findById(reservationId);
