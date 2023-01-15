@@ -2,8 +2,8 @@ package nextstep.reservation.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import nextstep.reservation.dto.ThemeRequestDto;
-import nextstep.reservation.dto.ThemeResponseDto;
+import nextstep.reservation.dto.request.ThemeRequestDto;
+import nextstep.reservation.dto.response.ThemeResponseDto;
 import nextstep.reservation.service.ThemeService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
