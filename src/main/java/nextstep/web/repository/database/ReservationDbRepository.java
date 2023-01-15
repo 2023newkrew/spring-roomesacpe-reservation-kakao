@@ -4,8 +4,8 @@ import nextstep.domain.Reservation;
 import nextstep.web.exception.BusinessException;
 import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.repository.ReservationRepository;
-import nextstep.web.repository.database.rowmapper.ReservationMappingStrategy;
-import nextstep.web.repository.database.rowmapper.RowMappingStrategy;
+import nextstep.web.repository.database.mappingstrategy.ReservationMappingStrategy;
+import nextstep.web.repository.database.mappingstrategy.RowMappingStrategy;
 
 import java.sql.*;
 import java.util.NoSuchElementException;

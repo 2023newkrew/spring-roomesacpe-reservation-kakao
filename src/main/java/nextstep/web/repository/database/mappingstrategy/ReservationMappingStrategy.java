@@ -1,4 +1,4 @@
-package nextstep.web.repository.database.rowmapper;
+package nextstep.web.repository.database.mappingstrategy;
 
 import nextstep.domain.Reservation;
 

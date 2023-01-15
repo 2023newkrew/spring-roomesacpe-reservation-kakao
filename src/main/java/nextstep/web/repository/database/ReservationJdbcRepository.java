@@ -6,7 +6,7 @@ import nextstep.domain.Theme;
 import nextstep.web.exception.BusinessException;
 import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.repository.ReservationRepository;
-import nextstep.web.repository.database.rowmapper.ReservationMappingStrategy;
+import nextstep.web.repository.database.mappingstrategy.ReservationMappingStrategy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
