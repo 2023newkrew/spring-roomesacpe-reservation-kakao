@@ -1,5 +1,8 @@
 package nextstep.domain;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Theme {
     private String name;
     private String desc;
@@ -21,5 +24,11 @@ public class Theme {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public static Theme from(ResultSet resultSet) throws SQLException {
+        return new Theme(resultSet.getString("name"),
+                resultSet.getString("desc"),
+                resultSet.getInt("price"));
     }
 }
