@@ -25,7 +25,7 @@ public class RoomEscapeControllerAdvice {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(ReservationNotFoundException.class)
+    @ExceptionHandler(ThemeNotFoundException.class)
     public ResponseEntity<String> handleThemeNotFoundException(ThemeNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

@@ -7,7 +7,7 @@ public class Printer {
     public static void printGuideMessage() {
         System.out.println();
         System.out.println("### 명령어를 입력하세요. ###");
-        System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
+        System.out.println("- 예약하기: add {date},{time},{name},{themeId} ex) add 2022-08-11,13:00,류성현,1");
         System.out.println("- 예약조회: find {id} ex) find 1");
         System.out.println("- 예약취소: delete {id} ex) delete 1");
         System.out.println("- 종료: quit");

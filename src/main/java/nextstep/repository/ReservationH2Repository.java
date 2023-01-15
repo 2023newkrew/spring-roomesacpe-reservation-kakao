@@ -56,10 +56,10 @@ public class ReservationH2Repository implements ReservationRepository{
                 LocalDate reservationDate = rs.getDate(2).toLocalDate();
                 LocalTime reservationTime = rs.getTime(3).toLocalTime();
                 String reservationName = rs.getString(4);
-                Long themeId = rs.getLong(5);
-                String themeName = rs.getString(6);
-                String themeDesc = rs.getString(7);
-                Integer themePrice = rs.getInt(8);
+                Long themeId = rs.getLong(6);
+                String themeName = rs.getString(7);
+                String themeDesc = rs.getString(8);
+                Integer themePrice = rs.getInt(9);
                 Theme reservationTheme = new Theme(themeId, themeName, themeDesc, themePrice);
 
                 result = new Reservation(reservationId, reservationDate, reservationTime, reservationName, reservationTheme);

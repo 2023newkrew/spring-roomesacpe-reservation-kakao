@@ -27,16 +27,14 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public Reservation add(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             return ps;
         }, keyHolder);
 
@@ -46,7 +44,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public Reservation findById(Long id)  throws ReservationNotFoundException {
-        String sql = "SELECT * FROM reservation where id = ?";
+        String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
         try {
             return jdbcTemplate.queryForObject(
                     sql,
@@ -56,10 +54,10 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
                                 resultSet.getTime(3).toLocalTime(),
                                 resultSet.getString(4),
                                 new Theme(
-                                        resultSet.getLong(5),
-                                        resultSet.getString(6),
+                                        resultSet.getLong(6),
                                         resultSet.getString(7),
-                                        resultSet.getInt(8)
+                                        resultSet.getString(8),
+                                        resultSet.getInt(9)
                                 )
                         ),
                     id);

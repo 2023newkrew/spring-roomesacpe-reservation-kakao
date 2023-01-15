@@ -7,6 +7,8 @@ import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationH2Repository;
 import nextstep.repository.ReservationRepository;
+import nextstep.repository.ThemeH2Repository;
+import nextstep.repository.ThemeRepository;
 import nextstep.service.ReservationService;
 
 import java.util.Scanner;
@@ -20,9 +22,11 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationRepository repository = new ReservationH2Repository();
-        ReservationService reservationService = new ReservationService(repository);
+        ReservationRepository reservationRepository = new ReservationH2Repository();
+        ThemeRepository themeRepository = new ThemeH2Repository();
+        ReservationService reservationService = new ReservationService(reservationRepository, themeRepository);
 
+        themeRepository.add(ReservationService.DEFAULT_THEME);
         while (true) {
             Printer.printGuideMessage();
             String input = scanner.nextLine();
@@ -32,7 +36,8 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
-                ReservationCreateRequest reservationRequest = new ReservationCreateRequest(date, time, name);
+                String themeId = params.split(",")[3];
+                ReservationCreateRequest reservationRequest = new ReservationCreateRequest(date, time, name, Long.parseLong(themeId));
 
                 try {
                     Reservation reservation = reservationService.add(reservationRequest);

@@ -66,7 +66,7 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
 
     @Override
     public void update(Long id, Theme theme) {
-        String sql = "UPDATE theme SET name = ?, SET desc = ?, SET price = ? WHERE id = ?;";
+        String sql = "UPDATE theme SET name = ?, `desc` = ?, price = ? WHERE id = ?;";
         jdbcTemplate.update(
                 sql, theme.getName(), theme.getDesc(), theme.getPrice(), id
         );
