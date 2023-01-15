@@ -26,22 +26,12 @@ public class ReservationService {
 
     public long addReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = Reservation.createReservation(createReservationDto);
-        checkReservationTime(createReservationDto.getTime());
         checkDuplicateReservation(
                 createReservationDto.getThemeId(),
                 Date.valueOf(createReservationDto.getDate()),
                 Time.valueOf(createReservationDto.getTime())
         );
         return reservationRepository.add(reservation);
-    }
-
-    private void checkReservationTime(LocalTime time) {
-        if (time.getSecond() != 0) {
-            throw new IllegalReservationTimeException();
-        }
-        if (time.getMinute() != 30 && time.getMinute() != 0) {
-            throw new IllegalReservationTimeException();
-        }
     }
 
     private void checkDuplicateReservation(Long themId, Date date, Time time) {
