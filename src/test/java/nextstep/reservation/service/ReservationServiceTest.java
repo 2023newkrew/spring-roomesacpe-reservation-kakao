@@ -1,13 +1,13 @@
 package nextstep.reservation.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.reservation.dto.request.ReservationRequestDto;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.exceptions.exception.DuplicateReservationException;
+import nextstep.reservation.exceptions.exception.DuplicateReservationTimeException;
+import nextstep.reservation.exceptions.exception.DuplicateReservationNameException;
 import nextstep.reservation.repository.reservation.ReservationMemoryRepository;
 
 import nextstep.reservation.repository.theme.ThemeMemoryRepository;
@@ -42,15 +42,24 @@ class ReservationServiceTest {
     }
 
     @Test
-    void 원하는_시간에_예약이_되어있는지_확인할_수_있다() {
-        reservationService.addReservation(reservationRequestDto);
-        assertThat(reservationService.isDuplicatedReservation(reservationRequestDto)).isTrue();
-    }
-    @Test
     void 예약이_차있는_시간에_예약을_하게_되면_예외가_발생한다() {
         reservationService.addReservation(reservationRequestDto);
         assertThatThrownBy(() -> reservationService.addReservation(reservationRequestDto))
-                .isInstanceOf(DuplicateReservationException.class);
+                .isInstanceOf(DuplicateReservationTimeException.class);
+    }
+
+    @Test
+    void 이미_존재하는_이름의_예약을_하게_되면_예외가_발생한다() {
+        reservationService.addReservation(reservationRequestDto);
+        ReservationRequestDto sameNameReservationRequestDto = ReservationRequestDto.builder()
+                .date(LocalDate.of(1982, 2, 20))
+                .time(LocalTime.of(2, 2))
+                .name("name")
+                .themeId(1L)
+                .build();
+        assertThatThrownBy(() -> reservationService.addReservation(sameNameReservationRequestDto))
+                .isInstanceOf(DuplicateReservationNameException.class);
+
     }
 
 }

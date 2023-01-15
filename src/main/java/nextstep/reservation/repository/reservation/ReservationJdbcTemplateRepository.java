@@ -2,6 +2,8 @@ package nextstep.reservation.repository.reservation;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -20,6 +22,19 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository{
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum)
+            -> Reservation.builder()
+            .id(rs.getLong("id"))
+            .date(rs.getDate("date").toLocalDate())
+            .time(rs.getTime("time").toLocalTime())
+            .name(rs.getString("name"))
+            .theme(Theme.builder()
+                    .id(rs.getLong("theme.id"))
+                    .name(rs.getString("theme.name"))
+                    .desc(rs.getString("theme.desc"))
+                    .price(rs.getInt("theme.price"))
+                    .build())
+            .build();
 
 
     public ReservationJdbcTemplateRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
@@ -39,38 +54,44 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository{
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        return jdbcTemplate.query(
-                "SELECT * FROM reservation JOIN theme ON reservation.theme_id = theme.id WHERE reservation.id = ?",
-                reservationRowMapper,
-                id
-        ).stream().findAny();
+        String sql = "SELECT * FROM reservation" +
+                     "JOIN theme ON reservation.theme_id = theme.id" +
+                     "WHERE reservation.id = ?";
+        return jdbcTemplate.query(sql, reservationRowMapper, id)
+                .stream()
+                .findAny();
     }
-
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query(
-                "SELECT * FROM reservation JOIN theme ON reservation.theme_id = theme.id",
-                reservationRowMapper
-        );
+        String sql = "SELECT * FROM reservation" +
+                     "JOIN theme ON reservation.theme_id = theme.id";
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
-
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum)
-            -> Reservation.builder()
-            .id(rs.getLong("id"))
-            .date(rs.getDate("date").toLocalDate())
-            .time(rs.getTime("time").toLocalTime())
-            .name(rs.getString("name"))
-            .theme(Theme.builder()
-                    .id(rs.getLong("theme.id"))
-                    .name(rs.getString("theme.name"))
-                    .desc(rs.getString("theme.desc"))
-                    .price(rs.getInt("theme.price"))
-                    .build())
-            .build();
 
     @Override
     public boolean delete(final Long id) {
-        return jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id) == 1;
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        return jdbcTemplate.update(sql, id) == 1;
+    }
+
+    @Override
+    public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
+        String sql = "SELECT * FROM reservation" +
+                     "JOIN theme ON reservation.theme_id = theme.id" +
+                     "WHERE reservation.date = (?) and time = (?)";
+        return jdbcTemplate.query(sql, reservationRowMapper, date, time)
+                .stream()
+                .findAny();
+    }
+
+    @Override
+    public Optional<Reservation> getReservationByName(String name) {
+        String sql = "SELECT * FROM reservation" +
+                     "JOIN theme ON reservation.theme_id = theme.id" +
+                     "WHERE reservation.name = (?)";
+        return jdbcTemplate.query(sql, reservationRowMapper, name)
+                .stream()
+                .findAny();
     }
 }

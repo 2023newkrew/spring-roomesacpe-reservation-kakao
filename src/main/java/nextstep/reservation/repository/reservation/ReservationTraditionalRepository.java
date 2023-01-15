@@ -1,5 +1,7 @@
 package nextstep.reservation.repository.reservation;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +59,7 @@ public class ReservationTraditionalRepository implements ReservationRepository{
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             PreparedStatement pstmt = getFindReservationByIdPreparedStatement(id, connection);
             ResultSet rs = pstmt.executeQuery();
-            return rs.next() ? Optional.of(getReservationFromResultSet(rs)) : Optional.empty();
+            return getOptionalReservationFromResultSet(rs);
         }
         catch (SQLException e) {
             throw new CustomSqlException(e.getMessage());
@@ -72,6 +74,13 @@ public class ReservationTraditionalRepository implements ReservationRepository{
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setLong(1, id);
         return pstmt;
+    }
+
+    private static Optional<Reservation> getOptionalReservationFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            return Optional.of(getReservationFromResultSet(rs));
+        }
+        return Optional.empty();
     }
 
     private static Reservation getReservationFromResultSet(ResultSet rs) throws SQLException {
@@ -114,7 +123,7 @@ public class ReservationTraditionalRepository implements ReservationRepository{
     @Override
     public boolean delete(final Long id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement pstmt = getPreparedStatement(id, connection);
+            PreparedStatement pstmt = getDeleteReservationPreparedStatement(id, connection);
             return pstmt.executeUpdate() == 1;
         }
         catch (SQLException e) {
@@ -122,11 +131,57 @@ public class ReservationTraditionalRepository implements ReservationRepository{
         }
     }
 
-    private static PreparedStatement getPreparedStatement(Long id, Connection connection)
+    private static PreparedStatement getDeleteReservationPreparedStatement(Long id, Connection connection)
             throws SQLException {
         String sql = "DELETE FROM reservation WHERE id = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         pstmt.setLong(1, id);
         return pstmt;
     }
+    @Override
+    public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement pstmt = getGetReservationByDateAndTimePreparedStatement(
+                    date, time, connection);
+            ResultSet rs = pstmt.executeQuery();
+            return getOptionalReservationFromResultSet(rs);
+        } catch (SQLException e) {
+            throw new CustomSqlException(e.getMessage());
+        }
+    }
+
+    private static PreparedStatement getGetReservationByDateAndTimePreparedStatement(LocalDate date, LocalTime time, Connection connection)
+            throws SQLException {
+        String sql = "SELECT * FROM reservation" +
+                     "JOIN theme ON reservation.theme_id = theme.id" +
+                     "WHERE reservation.date = (?) and time = (?)";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setDate(1, Date.valueOf(date));
+        pstmt.setTime(2, Time.valueOf(time));
+        return pstmt;
+    }
+
+    @Override
+    public Optional<Reservation> getReservationByName(String name) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement pstmt = getGetReservationByNamePreparedStatement(name, connection);
+            ResultSet rs = pstmt.executeQuery();
+            return getOptionalReservationFromResultSet(rs);
+        } catch (SQLException e) {
+            throw new CustomSqlException(e.getMessage());
+        }
+    }
+
+    private static PreparedStatement getGetReservationByNamePreparedStatement(
+            String name,
+            Connection connection
+    ) throws SQLException {
+        String sql = "SELECT * FROM reservation" +
+                     "JOIN theme ON reservation.theme_id = theme.id" +
+                     "WHERE reservation.name = (?)";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, name);
+        return pstmt;
+    }
+
 }
