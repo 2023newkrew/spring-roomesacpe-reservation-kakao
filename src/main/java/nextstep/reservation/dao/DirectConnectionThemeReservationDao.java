@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DirectConnectionThemeReservationDao implements ThemeReservationDao {
@@ -69,7 +70,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
     }
 
     @Override
-    public Reservation findById(Long id){
+    public Optional<Reservation> findById(Long id){
         Connection con = null;
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
@@ -80,9 +81,10 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
             psmt.setLong(1, id);
             resultSet = psmt.executeQuery();
             List<Reservation> reservations = getReservation(id, resultSet);
-            return (reservations.size() > 0) ? reservations.get(0) : null;
+            return reservations.stream()
+                    .findFirst();
         }catch (SQLException sqlException){
-            return null;
+            return Optional.empty();
         }finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }

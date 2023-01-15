@@ -38,10 +38,9 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
 
     @Override
     public ReservationDetail findById(Long id) throws SQLException{
-        Reservation reservation = themeReservationDao.findById(id);
-        if (reservation == null) {
-            return null;
-        }
+        Reservation reservation = themeReservationDao.findById(id)
+                .orElseThrow(() -> new RuntimeException());
+
         Theme theme = themeDao.findById(reservation.getThemeId());
         if(theme == null){
             return null;

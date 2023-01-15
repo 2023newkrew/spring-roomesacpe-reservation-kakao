@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -52,7 +53,9 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     }
 
     @Override
-    public Reservation findById(Long id){
-        return jdbcTemplate.queryForObject(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper, id);
+    public Optional<Reservation> findById(Long id){
+        return jdbcTemplate.query(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper, id)
+                .stream()
+                .findFirst();
     }
 }
