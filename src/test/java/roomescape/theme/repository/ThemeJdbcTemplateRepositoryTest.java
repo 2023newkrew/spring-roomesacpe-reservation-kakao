@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,7 @@ class ThemeJdbcTemplateRepositoryTest {
         this.themeId = savedTheme.getId();
     }
 
+    @DisplayName("id로 테마를 가져온다")
     @Test
     void findById() {
         final Theme result = this.themeRepository.findById(themeId)
@@ -56,11 +58,13 @@ class ThemeJdbcTemplateRepositoryTest {
         assertThat(result.getPrice()).isEqualTo(expectedPrice);
     }
 
+    @DisplayName("id에 해당하는 테마가 없다면 empty 를 반환한다")
     @Test
     void cannotFindWithInvalidId() {
         assertThat(this.themeRepository.findById(invalidId)).isEmpty();
     }
 
+    @DisplayName("테마 이름으로 테마를 가져온다.")
     @Test
     void findByName() {
         final Theme result = this.themeRepository.findByName(expectedName)
@@ -72,11 +76,13 @@ class ThemeJdbcTemplateRepositoryTest {
         assertThat(result.getPrice()).isEqualTo(expectedPrice);
     }
 
+    @DisplayName("해당 테마 이름이 존재하지 않으면 empty 를 반환한다.")
     @Test
     void cannotFindWithInvalidName() {
         assertThat(this.themeRepository.findByName(invalidName)).isEmpty();
     }
 
+    @DisplayName("id로 테마를 취소한다")
     @Test
     @Order(1)
     void deleteById() {
@@ -85,6 +91,7 @@ class ThemeJdbcTemplateRepositoryTest {
         assertThat(deleted).isTrue();
     }
 
+    @DisplayName("id에 해당하는 테마가 없다면 false 를 반환한다")
     @Test
     @Order(2)
     void deleteWithInvalidId() {
@@ -93,6 +100,7 @@ class ThemeJdbcTemplateRepositoryTest {
         assertThat(deleted).isFalse();
     }
 
+    @DisplayName("전체 테마를 불러온다.")
     @Test
     void findAll() {
         List<Theme> themes = this.themeRepository.findAll();
