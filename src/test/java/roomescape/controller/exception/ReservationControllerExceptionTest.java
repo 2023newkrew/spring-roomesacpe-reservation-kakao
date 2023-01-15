@@ -87,7 +87,7 @@ public class ReservationControllerExceptionTest {
             "{\"date\": [2022,8,2],\"name\": \"test\",\"themeId\": 1}",
             "{\"date\": [2022,8,2],\"time\": [13,0],\"themeId\": 1}",
             "{\"date\": [2022,8,2],\"time\": [13,0],\"name\": \"test\"}"})
-    void isNotExistingValue(String body) {
+    void failToPostNotExistingValue(String body) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
                 .when().post(RESERVATIONS_PATH)
