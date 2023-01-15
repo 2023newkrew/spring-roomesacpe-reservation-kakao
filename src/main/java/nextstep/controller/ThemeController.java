@@ -22,13 +22,8 @@ public class ThemeController {
 
     @PostMapping()
     public ResponseEntity addTheme(@RequestBody CreateThemeDto createThemeDto) {
-        try {
-            long id = themeService.addTheme(createThemeDto);
-            return ResponseEntity.created(URI.create("/themes/" + id)).build();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+        long id = themeService.addTheme(createThemeDto);
+        return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
 
     @GetMapping("/all")
@@ -39,14 +34,12 @@ public class ThemeController {
     @PutMapping("/{id}")
     public ResponseEntity updateTheme(
             @PathVariable("id") Long id,
-            @RequestBody UpdateThemeDto updateThemeDto) {
-        try {
+            @RequestBody UpdateThemeDto updateThemeDto)
+    {
+
             themeService.updateTheme(updateThemeDto);
             return ResponseEntity.ok().build();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+
     }
 
     @DeleteMapping("/{id}")

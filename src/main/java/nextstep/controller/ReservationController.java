@@ -24,12 +24,9 @@ public class ReservationController {
 
     @PostMapping()
     public ResponseEntity createReservation(@RequestBody CreateReservationDto reservationDto) {
-        try {
-            long id = reservationService.addReservation(reservationDto);
-            return ResponseEntity.created(URI.create("/reservations/" + id)).build();
-        } catch (DuplicateTimeReservationException | IllegalReservationTimeException ex) {
-            return ResponseEntity.badRequest().build();
-        }
+        long id = reservationService.addReservation(reservationDto);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
