@@ -1,12 +1,14 @@
 package nextstep.step1.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import nextstep.step1.dto.ThemeDto;
 
 @ToString
 @Getter
 public class Theme {
+    @Setter
     private Long id;
     private String name;
     private String desc;

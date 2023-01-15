@@ -13,10 +13,6 @@ public class ThemeDto {
     private String desc;
     private Integer price;
 
-    public ThemeDto(String name, String desc, Integer price) {
-        this(0L, name, desc, price);
-    }
-
     public ThemeDto(Long id, String name, String desc, Integer price) {
         this.id = id;
         this.name = name;

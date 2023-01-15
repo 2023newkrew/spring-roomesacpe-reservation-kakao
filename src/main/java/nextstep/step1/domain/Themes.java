@@ -1,31 +1,30 @@
 package nextstep.step1.domain;
 
 
-import nextstep.step1.dto.ThemeDto;
 import nextstep.step1.entity.Theme;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Themes {
-    private final List<Theme> themes;
+    private final Map<Long, Theme> themes;
     private Long lastId;
 
     private static final Themes instance = new Themes();
 
     private Themes(){
         this.lastId = 1L;
-        this.themes = new LinkedList<>();
-        add(new ThemeDto("워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
+        this.themes = new ConcurrentHashMap<>();
+        add(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
     }
 
     public static Themes getInstance(){
         return instance;
     }
 
-    public void add(ThemeDto themeDto) {
-        themeDto.setId(getAutoIncrementId());
-        themes.add(new Theme(themeDto));
+    public void add(Theme theme) {
+        theme.setId(getAutoIncrementId());
+        themes.put(theme.getId(), theme);
     }
 
     private Long getAutoIncrementId(){
@@ -33,7 +32,7 @@ public class Themes {
     }
 
     public Theme findById(Long id) {
-        return themes.stream()
+        return themes.values().stream()
                 .filter(theme -> id.equals(theme.getId()))
                 .findFirst()
                 .orElse(null);
