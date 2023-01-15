@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationService {
-    public static final Theme DEFAULT_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    public static final Theme DEFAULT_THEME = new Theme(0L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     private final ReservationRepository reservationRepository;
 

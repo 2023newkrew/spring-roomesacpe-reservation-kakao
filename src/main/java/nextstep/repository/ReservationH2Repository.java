@@ -8,6 +8,9 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static nextstep.repository.ConnectionHandler.closeConnection;
+import static nextstep.repository.ConnectionHandler.getConnection;
+
 public class ReservationH2Repository implements ReservationRepository{
 
     @Override
@@ -15,14 +18,12 @@ public class ReservationH2Repository implements ReservationRepository{
         Connection con = getConnection();
 
         try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
 
@@ -42,10 +43,10 @@ public class ReservationH2Repository implements ReservationRepository{
     @Override
     public Reservation findById(Long id) throws ReservationNotFoundException {
         Connection con = getConnection();
-        Reservation result = null;
+        Reservation result;
 
         try {
-            String sql = "SELECT * FROM reservation WHERE id = ?";
+            String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -55,10 +56,11 @@ public class ReservationH2Repository implements ReservationRepository{
                 LocalDate reservationDate = rs.getDate(2).toLocalDate();
                 LocalTime reservationTime = rs.getTime(3).toLocalTime();
                 String reservationName = rs.getString(4);
-                String themeName = rs.getString(5);
-                String themeDesc = rs.getString(6);
-                Integer themePrice = rs.getInt(7);
-                Theme reservationTheme = new Theme(themeName, themeDesc, themePrice);
+                Long themeId = rs.getLong(5);
+                String themeName = rs.getString(6);
+                String themeDesc = rs.getString(7);
+                Integer themePrice = rs.getInt(8);
+                Theme reservationTheme = new Theme(themeId, themeName, themeDesc, themePrice);
 
                 result = new Reservation(reservationId, reservationDate, reservationTime, reservationName, reservationTheme);
             } else {
@@ -110,26 +112,4 @@ public class ReservationH2Repository implements ReservationRepository{
         }
     }
 
-    private Connection getConnection() {
-        Connection con = null;
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-        return con;
-    }
-
-    private void closeConnection(Connection con) {
-        try {
-            if (con != null)
-                con.close();
-        } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
-        }
-    }
 }

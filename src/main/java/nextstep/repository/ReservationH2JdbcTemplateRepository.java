@@ -56,9 +56,10 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
                                 resultSet.getTime(3).toLocalTime(),
                                 resultSet.getString(4),
                                 new Theme(
-                                        resultSet.getString(5),
+                                        resultSet.getLong(5),
                                         resultSet.getString(6),
-                                        resultSet.getInt(7)
+                                        resultSet.getString(7),
+                                        resultSet.getInt(8)
                                 )
                         ),
                     id);
