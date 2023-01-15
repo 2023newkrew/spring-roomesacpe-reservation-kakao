@@ -2,15 +2,20 @@ package roomescape.theme.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.theme.domain.Theme;
 
 @JdbcTest
+@TestMethodOrder(OrderAnnotation.class)
 class ThemeJdbcTemplateRepositoryTest {
 
     private final ThemeRepository themeRepository;
@@ -73,6 +78,7 @@ class ThemeJdbcTemplateRepositoryTest {
     }
 
     @Test
+    @Order(1)
     void deleteById() {
         final boolean deleted = this.themeRepository.deleteById(themeId);
 
@@ -80,9 +86,17 @@ class ThemeJdbcTemplateRepositoryTest {
     }
 
     @Test
+    @Order(2)
     void deleteWithInvalidId() {
         final boolean deleted = this.themeRepository.deleteById(invalidId);
 
         assertThat(deleted).isFalse();
+    }
+
+    @Test
+    void findAll() {
+        List<Theme> themes = this.themeRepository.findAll();
+
+        assertThat(themes.size()).isEqualTo(themeId - 2);
     }
 }

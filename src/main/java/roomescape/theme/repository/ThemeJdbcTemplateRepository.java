@@ -64,4 +64,11 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
 
         return rowNum > 0;
     }
+
+    @Override
+    public List<Theme> findAll() {
+        final String selectSql = "SELECT * FROM theme";
+
+        return jdbcTemplate.query(selectSql, (rs, rowNum) -> Theme.from(rs));
+    }
 }
