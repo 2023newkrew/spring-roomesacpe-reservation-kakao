@@ -3,7 +3,6 @@ package nextstep.repository.reservation;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.dto.FindReservation;
-import nextstep.repository.theme.ThemeRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -63,11 +62,17 @@ public interface ReservationRepository {
     }
 
     Reservation findById(Long id);
+
     List<FindReservation> findAll();
+
     void deleteById(Long id);
+
     void deleteByThemeId(Long themeId);
+
     Long save(LocalDate date, LocalTime time, String name, Theme theme);
+
     void createTable() throws SQLException;
+
     void dropTable() throws SQLException;
 
 }

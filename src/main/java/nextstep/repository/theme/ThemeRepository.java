@@ -2,7 +2,10 @@ package nextstep.repository.theme;
 
 import nextstep.domain.Theme;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ThemeRepository {
@@ -43,11 +46,16 @@ public interface ThemeRepository {
     }
 
     Theme findByThemeId(Long id);
+
     List<Theme> findAll();
+
     void deleteById(Long id) throws SQLException;
+
     Long save(Theme theme);
+
     Theme findByTheme(Theme theme);
 
     void dropThemeTable();
+
     void createThemeTable();
 }

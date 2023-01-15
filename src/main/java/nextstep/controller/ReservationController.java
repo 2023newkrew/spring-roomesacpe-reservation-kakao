@@ -19,6 +19,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final ThemeService themeService;
+
     @Autowired
     public ReservationController(ReservationService reservationService, ThemeService themeService) {
         this.reservationService = reservationService;
@@ -31,7 +32,7 @@ public class ReservationController {
             Theme theme = themeService.findById(request.themeId);
             Long id = reservationService.createReservation(request.toReservation());
             return ResponseEntity.created(URI.create("/reservations/" + id)).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .build();
         }
@@ -40,9 +41,9 @@ public class ReservationController {
     @GetMapping("/{id}")
     public ResponseEntity findReservationById(@PathVariable Long id) {
         try {
-             FindReservation reservation = reservationService.findById(id);
+            FindReservation reservation = reservationService.findById(id);
             return new ResponseEntity(reservation, HttpStatus.CREATED);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .build();
         }
@@ -53,7 +54,7 @@ public class ReservationController {
         try {
             List<FindReservation> reservation = reservationService.findAll();
             return new ResponseEntity(reservation, HttpStatus.CREATED);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .build();
         }
@@ -64,7 +65,7 @@ public class ReservationController {
         try {
             reservationService.deleteReservation(id);
             return ResponseEntity.noContent().build();
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .build();
         }

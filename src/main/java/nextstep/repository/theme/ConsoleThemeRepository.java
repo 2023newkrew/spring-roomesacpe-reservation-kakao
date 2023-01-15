@@ -35,7 +35,7 @@ public class ConsoleThemeRepository implements ThemeRepository {
             PreparedStatement ps = con.prepareStatement(findAllSql, new String[]{"id"});
             ResultSet resultSet = ps.executeQuery();
             List<Theme> themeList = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 themeList.add(from(resultSet));
             }
             return themeList;
@@ -51,7 +51,7 @@ public class ConsoleThemeRepository implements ThemeRepository {
             ps.setLong(1, id);
             int cnt = ps.executeUpdate();
             if (cnt == 0) throw new RuntimeException("해당 id의 테마는 존재하지 않습니다.");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("해당 id의 테마는 존재하지 않습니다.");
         }
     }
@@ -92,7 +92,7 @@ public class ConsoleThemeRepository implements ThemeRepository {
         try {
             Statement statement = con.createStatement();
             statement.execute(dropTableSql);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("테이블 삭제 오류");
         }
     }
@@ -102,7 +102,7 @@ public class ConsoleThemeRepository implements ThemeRepository {
         try {
             Statement statement = con.createStatement();
             statement.execute(createTableSql);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("테이블 생성 오류");
         }
     }

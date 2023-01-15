@@ -38,7 +38,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
             PreparedStatement ps = con.prepareStatement(findAllSql, new String[]{"id"});
             ResultSet resultSet = ps.executeQuery();
             List<FindReservation> reservationList = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 reservationList.add(allFrom(resultSet));
             }
             return reservationList;
@@ -105,14 +105,14 @@ public class ConsoleReservationRepository implements ReservationRepository {
         }
     }
 
-    private void delete(String sql, Long id){
+    private void delete(String sql, Long id) {
         try {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             int cnt = ps.executeUpdate();
 
             if (cnt == 0) throw new RuntimeException("해당 id의 예약은 존재하지 않습니다.");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("해당 id의 예약은 존재하지 않습니다.");
         }
     }
