@@ -20,8 +20,7 @@ import roomescape.dto.Theme;
 @Sql("classpath:/test.sql")
 public class ThemeControllerExceptionTest {
 
-    private static final String NAME_DATA1 = "워너고홈";
-//    private static final String NAME_DATA2 = "테스트 이름";
+    private static final String NAME_DATA = "워너고홈";
     private static final String DESC_DATA = "병맛 어드벤처 회사 코믹물";
     private static final int PRICE_DATA = 29000;
 
@@ -53,7 +52,7 @@ public class ThemeControllerExceptionTest {
     @DisplayName("테마 생성) 같은 이름의 예약은 생성 불가")
     @Test
     void failToPostThemeAlreadyExist() {
-        Theme theme = new Theme(NAME_DATA1, DESC_DATA, PRICE_DATA);
+        Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -102,13 +101,14 @@ public class ThemeControllerExceptionTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("테마 삭제) ID가 잘못된 경우 (float, string)")
+    @DisplayName("테마 삭제) ID가 없는 경우 조회 불가 및 ID가 잘못된 경우 또는 예약과 관계있는 테마 (float, string)")
     @ParameterizedTest
     @ValueSource(strings = {
             THEME_PATH + "/10",
             THEME_PATH + "/1.1",
-            THEME_PATH + "/test"})
-    void failToDeleteThemeIfNotExistIdAndInvalidId(String path) {
+            THEME_PATH + "/test",
+            THEME_PATH + "/2"})
+    void failToDeleteThemeIfNotExistIdAndInvalidIdAndReservationThemeId(String path) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(path)
