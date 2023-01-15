@@ -10,4 +10,5 @@ public interface ReservationRepository {
     Reservation findById(Long id) throws ReservationNotFoundException;
     void deleteById(Long id);
     boolean hasReservationAt(LocalDate date, int hour);
+    boolean existsByThemeId(Long themeId);
 }

@@ -3,6 +3,7 @@ package nextstep.controller;
 import nextstep.exception.DuplicateReservationException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.exception.ThemeNotFoundException;
+import nextstep.exception.ThemeReservedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,13 @@ public class RoomEscapeControllerAdvice {
 
     @ExceptionHandler(ThemeNotFoundException.class)
     public ResponseEntity<String> handleThemeNotFoundException(ThemeNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(ThemeReservedException.class)
+    public ResponseEntity<String> handleThemeReservedException(ThemeReservedException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());

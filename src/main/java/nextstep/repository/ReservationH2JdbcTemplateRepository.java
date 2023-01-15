@@ -78,4 +78,10 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
         int count = jdbcTemplate.queryForObject(sql, Integer.class, Date.valueOf(date), hour);
         return count >= 1;
     }
+
+    public boolean existsByThemeId(Long themeId) {
+        String sql = "SELECT count(*) AS cnt FROM reservation WHERE theme_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, themeId);
+        return count >= 1;
+    }
 }

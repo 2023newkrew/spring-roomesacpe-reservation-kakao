@@ -112,4 +112,23 @@ public class ReservationH2Repository implements ReservationRepository{
         }
     }
 
+    public boolean existsByThemeId(Long themeId) {
+        Connection con = getConnection();
+
+        try {
+            String sql = "SELECT count(*) AS cnt FROM reservation WHERE theme_id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            int cnt = rs.getInt("cnt");
+            return cnt >= 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
+        }
+    }
+
 }

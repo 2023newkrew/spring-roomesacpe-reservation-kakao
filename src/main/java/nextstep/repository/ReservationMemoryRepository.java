@@ -6,6 +6,7 @@ import nextstep.exception.ReservationNotFoundException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
@@ -24,6 +25,12 @@ public class ReservationMemoryRepository implements ReservationRepository {
     public boolean hasReservationAt(LocalDate date, int hour) {
         return reservations.values().stream()
                 .anyMatch(reservation -> reservation.startsAt(date, hour));
+    }
+
+    @Override
+    public boolean existsByThemeId(Long themeId) {
+        return reservations.values().stream()
+                .anyMatch(reservation -> Objects.equals(reservation.getTheme().getId(), themeId));
     }
 
     @Override
