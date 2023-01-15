@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import roomescape.reservation.dto.response.ErrorResponseDTO;
+import roomescape.common.dto.response.ErrorResponseDTO;
 import roomescape.reservation.exception.DuplicatedReservationException;
 import roomescape.reservation.exception.NoSuchReservationException;
 import roomescape.theme.exception.AlreadyReservedThemeException;
