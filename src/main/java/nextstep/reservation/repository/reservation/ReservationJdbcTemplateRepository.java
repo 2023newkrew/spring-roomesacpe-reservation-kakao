@@ -1,5 +1,7 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.reservation;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -8,7 +10,7 @@ import nextstep.reservation.entity.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -28,14 +30,17 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository{
     }
 
     public Long add(Reservation reservation) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
-        return jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+        SqlParameterSource params = new MapSqlParameterSource().addValue("name", reservation.getName())
+                .addValue("date", Date.valueOf(reservation.getDate()))
+                .addValue("time", Time.valueOf(reservation.getTime()))
+                .addValue("theme_id", reservation.getTheme().getId());
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
         return jdbcTemplate.query(
-                "SELECT * FROM reservation WHERE id = ?",
+                "SELECT * FROM reservation JOIN theme ON reservation.theme_id = theme.id WHERE reservation.id = ?",
                 reservationRowMapper,
                 id
         ).stream().findAny();
@@ -45,7 +50,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository{
     @Override
     public List<Reservation> findAll() {
         return jdbcTemplate.query(
-                "SELECT * FROM reservation",
+                "SELECT * FROM reservation JOIN theme ON reservation.theme_id = theme.id",
                 reservationRowMapper
         );
     }
@@ -57,9 +62,10 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository{
             .time(rs.getTime("time").toLocalTime())
             .name(rs.getString("name"))
             .theme(Theme.builder()
-                    .name(rs.getString("theme_name"))
-                    .desc(rs.getString("theme_desc"))
-                    .price(rs.getInt("theme_price"))
+                    .id(rs.getLong("theme.id"))
+                    .name(rs.getString("theme.name"))
+                    .desc(rs.getString("theme.desc"))
+                    .price(rs.getInt("theme.price"))
                     .build())
             .build();
 

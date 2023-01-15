@@ -1,4 +1,4 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +25,12 @@ public class ReservationTraditionalRepository implements ReservationRepository{
     public Long add(Reservation reservation) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
 
-            String sql = "INSERT INTO reservation SET date = ?, time = ?, name = ?, theme_name = ?, theme_desc = ?, theme_price = ?";
+            String sql = "INSERT INTO reservation SET date = ?, time = ?, name = ?, theme_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
             pstmt.setDate(1, Date.valueOf(reservation.getDate()));
             pstmt.setTime(2, Time.valueOf(reservation.getTime()));
             pstmt.setString(3, reservation.getName());
-            pstmt.setString(4, reservation.getTheme().getName());
-            pstmt.setString(5, reservation.getTheme().getDesc());
-            pstmt.setInt(6, reservation.getTheme().getPrice());
+            pstmt.setLong(4, reservation.getTheme().getId());
             pstmt.executeUpdate();
 
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -42,49 +40,34 @@ public class ReservationTraditionalRepository implements ReservationRepository{
             return -1L;
         }
         catch (SQLException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
     public Optional<Reservation> findById(Long id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "SELECT * FROM reservation WHERE id = ?";
+            String sql = "SELECT * FROM reservation JOIN theme ON reservation.theme_id = theme.id WHERE reservation.id = ?";
 
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(Reservation.builder()
-                        .id(rs.getLong("id"))
-                        .date(rs.getDate("date").toLocalDate())
-                        .time(rs.getTime("time").toLocalTime())
-                        .name(rs.getString("name"))
-                        .theme(Theme.builder()
-                                .name(rs.getString("theme_name"))
-                                .desc(rs.getString("theme_desc"))
-                                .price(rs.getInt("theme_price"))
-                                .build())
-                        .build()
-                );
-            }
-            return Optional.empty();
+            return rs.next() ? Optional.of(getReservationFromResultSet(rs)) : Optional.empty();
         }
         catch (SQLException e) {
-            throw new RuntimeException();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
     @Override
     public List<Reservation> findAll() {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "SELECT * FROM reservation";
+            String sql = "SELECT * FROM reservation JOIN theme ON reservation.theme_id = theme.id";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             return getReservationsFromResultSet(rs);
         }
         catch (SQLException e) {
-            throw new RuntimeException();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
@@ -103,9 +86,10 @@ public class ReservationTraditionalRepository implements ReservationRepository{
                 .time(rs.getTime("time").toLocalTime())
                 .name(rs.getString("name"))
                 .theme(Theme.builder()
-                        .name(rs.getString("theme_name"))
-                        .desc(rs.getString("theme_desc"))
-                        .price(rs.getInt("theme_price"))
+                        .id(rs.getLong("theme.id"))
+                        .name(rs.getString("theme.name"))
+                        .desc(rs.getString("theme.desc"))
+                        .price(rs.getInt("theme.price"))
                         .build())
                 .build();
     }
@@ -120,7 +104,7 @@ public class ReservationTraditionalRepository implements ReservationRepository{
             return pstmt.executeUpdate() == 1;
         }
         catch (SQLException e) {
-            throw new RuntimeException();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 }

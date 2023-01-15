@@ -1,14 +1,15 @@
 package nextstep;
 
-import nextstep.reservation.dto.ReservationRequestDto;
-import nextstep.reservation.dto.ReservationResponseDto;
+import nextstep.reservation.dto.request.ReservationRequestDto;
+import nextstep.reservation.dto.response.ReservationResponseDto;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.repository.ReservationTraditionalRepository;
+import nextstep.reservation.repository.reservation.ReservationTraditionalRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import nextstep.reservation.repository.theme.ThemeTraditionalRepository;
 import nextstep.reservation.service.ReservationService;
 
 
@@ -25,10 +26,12 @@ public class RoomEscapeConsoleApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationService reservationService = new ReservationService(
-                new ReservationTraditionalRepository(URL, USER, PASSWORD));
+                new ReservationTraditionalRepository(URL, USER, PASSWORD),
+                new ThemeTraditionalRepository(URL, USER, PASSWORD) // Todo : Config 깔끔하게 설정 할 방법 찾기
+        );
         long reservationIdIndex = 0L;
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();
@@ -46,13 +49,13 @@ public class RoomEscapeConsoleApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
+                Reservation reservation = Reservation.builder()
+                        .id(++reservationIdIndex)
+                        .date(LocalDate.parse(date))
+                        .time(LocalTime.parse(time + ":00"))
+                        .name(name)
+                        .theme(theme)
+                        .build();
                 ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
                         .date(LocalDate.parse(date))
                         .time(LocalTime.parse(time + ":00"))
@@ -75,9 +78,9 @@ public class RoomEscapeConsoleApplication {
                 System.out.println("예약 날짜: " + reservationResponseDto.getDate());
                 System.out.println("예약 시간: " + reservationResponseDto.getTime());
                 System.out.println("예약자 이름: " + reservationResponseDto.getName());
-                System.out.println("예약 테마 이름: " + reservationResponseDto.getThemeName());
-                System.out.println("예약 테마 설명: " + reservationResponseDto.getThemeDesc());
-                System.out.println("예약 테마 가격: " + reservationResponseDto.getThemePrice());
+                System.out.println("예약 테마 이름: " + reservationResponseDto.getTheme().getName());
+                System.out.println("예약 테마 설명: " + reservationResponseDto.getTheme().getDesc());
+                System.out.println("예약 테마 가격: " + reservationResponseDto.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {

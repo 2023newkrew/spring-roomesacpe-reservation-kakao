@@ -1,4 +1,4 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.reservation;
 
 import java.util.ArrayList;
 import java.util.HashMap;

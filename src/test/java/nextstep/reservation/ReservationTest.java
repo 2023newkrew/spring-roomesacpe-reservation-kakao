@@ -3,7 +3,7 @@ package nextstep.reservation;
 import io.restassured.RestAssured;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
-import nextstep.reservation.repository.ReservationJdbcTemplateRepository;
+import nextstep.reservation.repository.reservation.ReservationJdbcTemplateRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,12 @@ public class ReservationTest {
                         .date(LocalDate.of(1982,2,19))
                         .time(LocalTime.of(2, 2))
                         .name("name")
-                        .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+                        .theme(Theme.builder()
+                                .id(1L)
+                                .name("워너고홈")
+                                .desc("병맛 어드벤처 회사 코믹물")
+                                .price(29000)
+                                .build())
                         .build()
         );
     }

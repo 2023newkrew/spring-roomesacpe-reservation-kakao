@@ -1,4 +1,4 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.reservation;
 
 import java.util.List;
 import nextstep.reservation.entity.Reservation;
