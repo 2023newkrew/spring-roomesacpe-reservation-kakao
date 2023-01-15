@@ -37,7 +37,17 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
 
     @Override
     public Optional<Theme> findByName(final String themeName) {
-        return Optional.empty();
+
+        final String selectSql = "SELECT * FROM theme WHERE name = (?) LIMIT 1 ";
+
+        final List<Theme> themes = jdbcTemplate.query(selectSql, (rs, rowNum) -> Theme.from(rs),
+                themeName);
+
+        if (themes.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(themes.get(0));
     }
 
     @Override

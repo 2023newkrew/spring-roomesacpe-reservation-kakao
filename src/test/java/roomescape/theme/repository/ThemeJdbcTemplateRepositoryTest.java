@@ -52,10 +52,13 @@ class ThemeJdbcTemplateRepositoryTest {
 
     @Test
     void findByName() {
-    }
+        final Theme result = this.themeRepository.findByName(expectedName)
+                .orElseThrow(RuntimeException::new);
 
-    @Test
-    void save() {
+        assertThat(result.getId()).isEqualTo(themeId);
+        assertThat(result.getName()).isEqualTo(expectedName);
+        assertThat(result.getDesc()).isEqualTo(expectedDesc);
+        assertThat(result.getPrice()).isEqualTo(expectedPrice);
     }
 
     @Test
