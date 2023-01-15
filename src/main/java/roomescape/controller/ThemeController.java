@@ -36,6 +36,12 @@ public class ThemeController {
         return ResponseEntity.status(HttpStatus.OK).body(themeList);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Theme> findTheme(@PathVariable Long id) {
+        Theme theme = themeService.find(id);
+        return ResponseEntity.status(HttpStatus.OK).body(theme);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> removeTheme(@PathVariable Long id) {
         themeService.remove(id);

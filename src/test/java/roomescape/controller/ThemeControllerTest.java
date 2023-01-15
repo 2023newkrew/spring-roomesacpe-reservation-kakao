@@ -38,7 +38,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 생성")
     @Test
-    void createReservation() {
+    void createTheme() {
         Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
 
         RestAssured.given().log().all()
@@ -49,9 +49,9 @@ public class ThemeControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("테마 조회")
+    @DisplayName("테마 목록 조회")
     @Test
-    void showReservation() {
+    void listTheme() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(THEME_PATH)
@@ -63,9 +63,22 @@ public class ThemeControllerTest {
                 .body("[0].price", is(PRICE_DATA));
     }
 
+    @DisplayName("테마 조회")
+    @Test
+    void findTheme() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(FIRST_THEME_PATH)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", is( NAME_DATA1))
+                .body("desc", is(DESC_DATA))
+                .body("price", is(PRICE_DATA));
+    }
+
     @DisplayName("테마 취소")
     @Test
-    void deleteReservation() {
+    void removeTheme() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(FIRST_THEME_PATH)

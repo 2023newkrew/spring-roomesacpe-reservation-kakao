@@ -91,7 +91,7 @@
       HTTP/1.1 201 Created
       Location: /themes/1
       ```
-    - [ ] 테마 조회
+    - [X] 테마 조회
       ```
       GET /themes/1 HTTP/1.1
       ```
