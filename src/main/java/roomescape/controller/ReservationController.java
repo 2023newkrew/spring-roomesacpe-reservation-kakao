@@ -33,12 +33,16 @@ public class ReservationController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<Reservation> findReservation(@PathVariable Long id) {
         Reservation reservation = reservationService.find(id);
-        return ResponseEntity.status(HttpStatus.OK).body(reservation);
+        return ResponseEntity
+                .status(HttpStatus.OK).
+                        body(reservation);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> removeReservation(@PathVariable Long id) {
         reservationService.remove(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }
