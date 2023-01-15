@@ -63,12 +63,12 @@ public class ConsoleController {
         Reservation reservation = getReservation(input);
         long id = reservationService.create(reservation);
         Theme theme = themeService.find(reservation.getThemeId());
+
         ResultView.printCreateReservation(id, reservation, theme);
     }
 
     public static void findReservation(String input) {
         long id = getId(input);
-
         Reservation reservation = reservationService.find(id);
         Theme theme = themeService.find(reservation.getThemeId());
 
@@ -77,8 +77,8 @@ public class ConsoleController {
 
     public static void removeReservation(String input) {
         long id = getId(input);
-
         reservationService.remove(id);
+
         ResultView.printRemoveReservation();
     }
 
@@ -91,7 +91,6 @@ public class ConsoleController {
 
     public static void findTheme(String input) {
         long id = getId(input);
-
         Theme theme = themeService.find(id);
 
         ResultView.printThemeInformation(id, theme);
