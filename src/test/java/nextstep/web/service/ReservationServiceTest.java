@@ -4,6 +4,7 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.web.dto.ReservationRequestDto;
 import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.ThemeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,16 +26,21 @@ class ReservationServiceTest {
     @Mock
     ReservationRepository reservationRepository;
 
+    @Mock
+    ThemeRepository themeRepository;
+
     @InjectMocks
     ReservationService reservationService;
 
     Reservation reservation;
-    
+
     Theme theme;
+
+    ReservationRequestDto requestDto;
 
     @BeforeEach
     void setUp() {
-        theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        theme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         reservation = Reservation.builder()
                 .id(1L)
                 .date(LocalDate.of(2023, 1, 10))
@@ -42,15 +48,20 @@ class ReservationServiceTest {
                 .name("베인")
                 .theme(theme)
                 .build();
+        requestDto = new ReservationRequestDto(
+                LocalDate.of(2023, 1, 10),
+                LocalTime.of(13, 0),
+                "예약이름",
+                1L
+        );
     }
 
     @Test
     void 예약을_생성할_수_있다() {
-        ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.of(2023, 1, 10), LocalTime.of(13, 0), "reservation1"
-        );
         when(reservationRepository.save(any()))
                 .thenReturn(1L);
+        when(themeRepository.findById(1L))
+                .thenReturn(any(Theme.class));
 
         Assertions.assertThat(reservationService.createReservation(requestDto))
                 .isEqualTo(1L);
