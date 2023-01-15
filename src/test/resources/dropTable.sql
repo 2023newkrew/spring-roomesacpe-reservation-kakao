@@ -1,1 +1,2 @@
 DROP TABLE reservation IF EXISTS;
+DROP TABLE theme IF EXISTS;
