@@ -1,6 +1,7 @@
 package nextstep.service;
 
 import nextstep.RoomEscapeWebApplication;
+import nextstep.exception.EntityNotFoundException;
 import nextstep.reservation.dto.ReservationDetail;
 import nextstep.reservation.dto.ReservationDto;
 import nextstep.reservation.service.ThemeReservationService;
@@ -42,7 +43,8 @@ class ThemeReservationServiceTest {
         Long reservationId = themeReservationService.reserve(reservationDto);
 
         themeReservationService.cancelById(reservationId);
-        assertThat(themeReservationService.findById(reservationId)).isEmpty();
+        Assertions.assertThatThrownBy(() -> themeReservationService.findById(reservationId))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -55,9 +57,8 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("예약되지 않은 방을 조회한다.")
     void test5(){
-        Optional<ReservationDetail> findReservation = themeReservationService.findById(100L);
-
-        assertThat(findReservation).isEmpty();
+        Assertions.assertThatThrownBy(() -> themeReservationService.findById(100L))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
