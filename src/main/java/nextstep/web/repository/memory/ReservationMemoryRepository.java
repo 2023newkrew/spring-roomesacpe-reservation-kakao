@@ -1,8 +1,9 @@
-package nextstep.web.repository;
+package nextstep.web.repository.memory;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import nextstep.domain.Reservation;
+import nextstep.web.repository.ReservationRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     private Long reservationIdIndex = 1L;
 
+    @Override
     public Reservation findById(Long id) {
         return reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
@@ -24,13 +26,15 @@ public class ReservationMemoryRepository implements ReservationRepository {
                 .orElseThrow(RuntimeException::new);
     }
 
+    @Override
     public Long save(Reservation reservation) {
         reservationIdIndex++;
         reservations.add(reservation);
-        
+
         return reservationIdIndex;
     }
 
+    @Override
     public void deleteById(Long id) {
         reservations.removeIf(it -> Objects.equals(it.getId(), id));
     }

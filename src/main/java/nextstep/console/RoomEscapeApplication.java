@@ -2,8 +2,8 @@ package nextstep.console;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.web.repository.ReservationDbRepository;
 import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.database.ReservationDbRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

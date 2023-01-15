@@ -1,8 +1,9 @@
-package nextstep.web.repository;
+package nextstep.web.repository.database;
 
 import nextstep.domain.Reservation;
 import nextstep.web.exception.BusinessException;
 import nextstep.web.exception.CommonErrorCode;
+import nextstep.web.repository.ReservationRepository;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
