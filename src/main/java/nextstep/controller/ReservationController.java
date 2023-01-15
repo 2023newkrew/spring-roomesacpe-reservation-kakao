@@ -1,6 +1,5 @@
 package nextstep.controller;
 
-import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservation;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
@@ -41,6 +41,17 @@ public class ReservationController {
     public ResponseEntity findReservationById(@PathVariable Long id) {
         try {
              FindReservation reservation = reservationService.findById(id);
+            return new ResponseEntity(reservation, HttpStatus.CREATED);
+        } catch (Exception e){
+            return ResponseEntity.badRequest()
+                    .build();
+        }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity findAllReservation() {
+        try {
+            List<FindReservation> reservation = reservationService.findAll();
             return new ResponseEntity(reservation, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest()

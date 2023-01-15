@@ -3,6 +3,8 @@ package nextstep.dto;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

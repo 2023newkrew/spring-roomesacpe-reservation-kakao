@@ -3,10 +3,13 @@ package nextstep.repository.reservation;
 import nextstep.ConsoleConnectDB;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.dto.FindReservation;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConsoleReservationRepository implements ReservationRepository {
 
@@ -26,6 +29,21 @@ public class ConsoleReservationRepository implements ReservationRepository {
             return from(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("예약 내역을 찾을 수 없습니다.");
+        }
+    }
+
+    @Override
+    public List<FindReservation> findAll() {
+        try {
+            PreparedStatement ps = con.prepareStatement(findAllSql, new String[]{"id"});
+            ResultSet resultSet = ps.executeQuery();
+            List<FindReservation> reservationList = new ArrayList<>();
+            while (resultSet.next()){
+                reservationList.add(allFrom(resultSet));
+            }
+            return reservationList;
+        } catch (Exception e) {
+            throw new RuntimeException("예약을 찾을 수 없습니다.");
         }
     }
 

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class ReservationService {
@@ -30,6 +31,10 @@ public class ReservationService {
         Theme theme = themeRepository.findByThemeId(reservation.getThemeId());
 
         return FindReservation.from(reservation, theme);
+    }
+
+    public List<FindReservation> findAll(){
+        return reservationRepository.findAll();
     }
 
     public void deleteReservation(Long id) {

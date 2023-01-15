@@ -2,6 +2,7 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.dto.FindReservation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -28,6 +30,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Reservation findById(Long id) {
         return jdbcTemplate.queryForObject(findByIdSql, reservationActorRowMapper, id);
+    }
+
+    @Override
+    public List<FindReservation> findAll() {
+        return jdbcTemplate.query(
+                findAllSql,
+                (resultSet, rowNum) -> allFrom(resultSet));
     }
 
     @Override

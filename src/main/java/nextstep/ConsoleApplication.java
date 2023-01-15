@@ -35,6 +35,7 @@ public class ConsoleApplication {
             System.out.println("### 명령어를 입력하세요. ###");
             System.out.println("- 예약하기: add {date},{time},{themeId},{name} ex) add 2022-08-11,13:00,1,류성현");
             System.out.println("- 예약조회: find {id} ex) find 1");
+            System.out.println("- 모든 예약조회: find list ex) find list");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 테마 관리: theme");
             System.out.println("- 종료: quit");
@@ -42,14 +43,14 @@ public class ConsoleApplication {
 
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
-                String params = input.split(" ")[1];
-
-                String date = params.split(",")[0];
-                String time = params.split(",")[1];
-                String name = params.split(",")[2];
-                Long themeId = Long.valueOf(params.split(",")[3]);
-
                 try {
+                    String params = input.split(" ")[1];
+
+                    String date = params.split(",")[0];
+                    String time = params.split(",")[1];
+                    Long themeId = Long.valueOf(params.split(",")[2]);
+                    String name = params.split(",")[3];
+
                     theme = themeService.findById(themeId);
                     Long id = reservationService.createReservation(new Reservation(LocalDate.parse(date), LocalTime.parse(time), name, themeId));
                     FindReservation reservation = reservationService.findById(id);
@@ -66,6 +67,21 @@ public class ConsoleApplication {
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
+                if(params.equals(LIST)){
+                    reservationService.findAll();
+
+                    for (FindReservation reservation : reservationService.findAll()) {
+                        System.out.println("예약 번호: " + reservation.getId());
+                        System.out.println("예약 날짜: " + reservation.getDate());
+                        System.out.println("예약 시간: " + reservation.getTime());
+                        System.out.println("예약자 이름: " + reservation.getName());
+                        System.out.println("예약 테마 이름: " + reservation.getThemeName());
+                        System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+                        System.out.println("예약 테마 가격: " + reservation.getThemePrice());
+                    }
+                    continue;
+                }
+
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
@@ -99,13 +115,13 @@ public class ConsoleApplication {
             if (input.startsWith(THEME)) {
                 System.out.println("- 테마목록 조회: find list ex) find list");
                 System.out.println("- 테마 조회: find list ex) find 1");
-                System.out.println("- 테마 생성: add {name},{desc},{price} ex) add 워너고홈, 병맛 어드벤처 회사 코믹물, 29000");
+                System.out.println("- 테마 생성: add {name},{desc},{price} ex) add 워너고홈,병맛 어드벤처 회사 코믹물,29000");
                 System.out.println("- 테마 삭제: delete {id} ex) delete 1");
                 System.out.println("- 테마 종료: quit");
                 input = scanner.nextLine();
 
                 if (input.startsWith(ADD)) {
-                    String params = input.split(" ")[1];
+                    String params = input.substring(3).trim();
 
                     String name = params.split(",")[0];
                     String desc = params.split(",")[1];
@@ -128,7 +144,7 @@ public class ConsoleApplication {
 
                 if (input.startsWith(FIND)) {
                     String params = input.split(" ")[1];
-                    if(params.equals(LIST)){
+                    if (params.equals(LIST)) {
                         try {
                             for (Theme one : themeService.findAll()) {
                                 System.out.println("테마 번호: " + one.getId());
@@ -138,7 +154,7 @@ public class ConsoleApplication {
                                 System.out.println();
                             }
                             continue;
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
                     }
