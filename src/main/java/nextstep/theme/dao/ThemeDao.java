@@ -5,8 +5,7 @@ import nextstep.theme.entity.Theme;
 import java.sql.SQLException;
 
 public interface ThemeDao {
-    Theme findById(Long id) throws SQLException;
+    Theme findById(Long id);
 
-    int insert(Theme theme) throws SQLException;
-
+    int insert(Theme theme);
 }

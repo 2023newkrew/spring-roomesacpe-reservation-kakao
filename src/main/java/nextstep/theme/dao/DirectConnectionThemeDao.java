@@ -17,11 +17,13 @@ public class DirectConnectionThemeDao implements ThemeDao {
     private final DataSource dataSource;
 
     @Override
-    public Theme findById(Long id) throws SQLException{
-        Connection con = dataSource.getConnection();
+    public Theme findById(Long id){
+        Connection con = null;
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
+
         try{
+            con = dataSource.getConnection();
             psmt = con.prepareStatement(FIND_BY_ID_SQL);
             psmt.setLong(1, id);
             resultSet = psmt.executeQuery();
@@ -35,13 +37,15 @@ public class DirectConnectionThemeDao implements ThemeDao {
     }
 
     @Override
-    public int insert(Theme theme) throws SQLException{
-        Connection con = dataSource.getConnection();
+    public int insert(Theme theme){
+        Connection con = null;
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
         Long themeId = 0L;
         int insertCount = 0;
+
         try{
+            con = dataSource.getConnection();
             int parameterIndex = 1;
             psmt = con.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             psmt.setString(parameterIndex++, theme.getName());
@@ -56,7 +60,7 @@ public class DirectConnectionThemeDao implements ThemeDao {
             }
             theme.setId(themeId);
         }catch (SQLException sqlException){
-            throw sqlException;
+
         }finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }

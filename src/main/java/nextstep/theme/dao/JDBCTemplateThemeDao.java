@@ -30,16 +30,12 @@ public class JDBCTemplateThemeDao implements ThemeDao {
             );
 
     @Override
-    public Theme findById(Long id) throws SQLException {
-        try{
-            return jdbcTemplate.queryForObject(SELECT_BY_THEME_ID_SQL, themeRowMapper, id);
-        }catch(EmptyResultDataAccessException err){
-            return null;
-        }
+    public Theme findById(Long id){
+        return jdbcTemplate.queryForObject(SELECT_BY_THEME_ID_SQL, themeRowMapper, id);
     }
 
     @Override
-    public int insert(Theme theme) throws SQLException {
+    public int insert(Theme theme){
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         int insertCount = jdbcTemplate.update((Connection con) -> {
