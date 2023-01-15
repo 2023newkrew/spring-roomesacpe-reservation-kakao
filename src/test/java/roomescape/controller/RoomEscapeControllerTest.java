@@ -81,7 +81,7 @@ public class RoomEscapeControllerTest {
      */
     @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")
     @Test
-    void lookUpReservation() {
+    void findReservationById() {
         createReservation();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

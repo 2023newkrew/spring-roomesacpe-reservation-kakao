@@ -30,4 +30,8 @@ public class ReservationService {
             ResponseEntity.badRequest().body("같은 시간에 이미 예약이 있습니다!");
         }
     }
+
+    public Reservation findById(String reservationId){
+        return reservationRepository.findById(reservationId);
+    }
 }

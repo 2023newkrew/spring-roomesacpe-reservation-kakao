@@ -44,21 +44,8 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<Reservation> lookUpReservation(@PathVariable("id") String reservationId) {
-        Reservation reservation = jdbcTemplate.queryForObject(
-                LOOKUP_QUERY,
-                (lookUpRs, rowNum) -> {
-                    Long id = lookUpRs.getLong(INDEX_ID);
-                    LocalDate date = LocalDate.parse(lookUpRs.getString(INDEX_DATE));
-                    LocalTime time = LocalTime.parse(lookUpRs.getString(INDEX_TIME));
-                    String name = lookUpRs.getString(INDEX_NAME);
-                    String themeName = lookUpRs.getString(INDEX_THEME_NAME);
-                    String themeDesc = lookUpRs.getString(INDEX_THEME_DESC);
-                    Integer themePrice = lookUpRs.getInt(INDEX_THEME_PRICE);
-                    Theme theme = new Theme(themeName, themeDesc, themePrice);
-                    return new Reservation(id, date, time, name, theme);
-                },
-                Long.parseLong(reservationId));
+    public ResponseEntity<Reservation> findReservationById(@PathVariable("id") String reservationId) {
+        Reservation reservation = reservationService.findById(reservationId);
         return ResponseEntity.ok().body(reservation);
     }
 
