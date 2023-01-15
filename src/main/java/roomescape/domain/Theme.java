@@ -40,7 +40,7 @@ public class Theme {
     }
 
     public String toMessage(){
-        return "Id: " + id + "Name: " + name + ", Desc: " + desc + ", Price: " + price;
+        return "Id: " + id + ", Name: " + name + ", Desc: " + desc + ", Price: " + price;
     }
 
 }

@@ -46,6 +46,6 @@ public class Reservation {
     }
 
     public String toMessage(){
-        return "Id: " + id + "Date: " + date + ",Time: " + time + " ,Name: " + name + " ,ThemeId: " + themeId;
+        return "Id: " + id + ", Date: " + date + ", Time: " + time + " , Name: " + name + ", ThemeId: " + themeId;
     }
 }

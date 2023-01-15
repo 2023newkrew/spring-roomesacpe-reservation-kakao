@@ -11,7 +11,7 @@ import java.util.Properties;
 public class AppConfig {
     public DataSource getDataSource() throws ClassNotFoundException {
         YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
-        yamlFactory.setResources(new ClassPathResource("application.yaml"));
+        yamlFactory.setResources(new ClassPathResource("application.yml"));
         Properties props = yamlFactory.getObject();
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         String url = Objects.requireNonNull(props).getProperty("spring.datasource.url");
