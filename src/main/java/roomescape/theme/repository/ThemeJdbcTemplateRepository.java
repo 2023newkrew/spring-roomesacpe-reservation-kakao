@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.theme.domain.Theme;
@@ -12,6 +14,7 @@ import roomescape.theme.domain.Theme;
 public class ThemeJdbcTemplateRepository implements ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
     private final SimpleJdbcInsert insertActor;
 
     public ThemeJdbcTemplateRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
@@ -52,7 +55,8 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
 
     @Override
     public Theme save(final Theme theme) {
-        Long themeId = this.insertActor.executeAndReturnKey(theme.buildParams()).longValue();
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(theme);
+        Long themeId = this.insertActor.executeAndReturnKey(params).longValue();
         theme.setId(themeId);
         return theme;
     }

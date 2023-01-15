@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
@@ -16,6 +18,7 @@ import roomescape.reservation.domain.Reservation;
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
     private final SimpleJdbcInsert insertActor;
 
     public ReservationJdbcTemplateRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
@@ -27,7 +30,9 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public Long save(final Reservation reservation) {
-        Long newReservationId = this.insertActor.executeAndReturnKey(reservation.buildParams()).longValue();
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
+
+        Long newReservationId = this.insertActor.executeAndReturnKey(params).longValue();
 
         return newReservationId;
     }

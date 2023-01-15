@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +13,13 @@ import lombok.Builder;
 public class Reservation {
 
     private Long id;
+
     private LocalDate date;
+
     private LocalTime time;
+
     private String name;
+
     private Long themeId;
 
     public Long getId() {
@@ -38,16 +40,6 @@ public class Reservation {
 
     public Long getThemeId() {
         return themeId;
-    }
-
-    public Map<String, Object> buildParams() {
-        final Map<String, Object> params = new HashMap<>();
-        params.put("date", this.date);
-        params.put("time", this.time);
-        params.put("name", this.name);
-        params.put("theme_id", this.themeId);
-
-        return params;
     }
 
     public static Reservation from(ResultSet rs) throws SQLException {
