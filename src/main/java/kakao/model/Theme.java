@@ -1,4 +1,4 @@
-package kakao.model.response;
+package kakao.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package kakao.model.response;
+package kakao.controller.response;
 
-import kakao.model.entity.Reservation;
+import kakao.model.Reservation;
+import kakao.model.Theme;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

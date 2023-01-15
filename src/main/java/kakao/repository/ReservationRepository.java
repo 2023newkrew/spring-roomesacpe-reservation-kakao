@@ -1,8 +1,8 @@
 package kakao.repository;
 
-import kakao.model.request.ReservationRequest;
-import kakao.model.response.ReservationResponse;
-import kakao.model.response.Theme;
+import kakao.controller.request.ReservationRequest;
+import kakao.controller.response.ReservationResponse;
+import kakao.model.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

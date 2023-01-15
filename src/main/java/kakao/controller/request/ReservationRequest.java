@@ -1,4 +1,4 @@
-package kakao.model.request;
+package kakao.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

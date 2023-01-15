@@ -2,8 +2,8 @@ package kakao.service;
 
 import kakao.exception.DuplicatedReservationException;
 import kakao.exception.ReservationNotFoundException;
-import kakao.model.request.ReservationRequest;
-import kakao.model.response.ReservationResponse;
+import kakao.controller.request.ReservationRequest;
+import kakao.controller.response.ReservationResponse;
 import kakao.repository.ReservationRepository;
 import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;

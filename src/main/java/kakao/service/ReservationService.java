@@ -1,7 +1,7 @@
 package kakao.service;
 
-import kakao.model.request.ReservationRequest;
-import kakao.model.response.ReservationResponse;
+import kakao.controller.request.ReservationRequest;
+import kakao.controller.response.ReservationResponse;
 
 public interface ReservationService {
     public Long book(ReservationRequest reservationRequest);

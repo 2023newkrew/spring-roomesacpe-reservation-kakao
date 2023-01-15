@@ -1,13 +1,10 @@
-package kakao.model.entity;
+package kakao.model;
 
-import kakao.model.response.Theme;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
