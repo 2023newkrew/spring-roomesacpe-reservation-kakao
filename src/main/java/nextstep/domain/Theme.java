@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Theme {
+    private Long id;
     private String name;
     private String desc;
     private Integer price;

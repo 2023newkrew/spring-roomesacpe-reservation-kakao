@@ -9,6 +9,7 @@ public class ThemeMappingStrategy implements RowMappingStrategy<Theme> {
     @Override
     public Theme map(ResultSet rs) throws SQLException {
         return Theme.builder()
+                .id(rs.getLong("theme_id"))
                 .name(rs.getString("theme_name"))
                 .desc(rs.getString("theme_desc"))
                 .price(rs.getInt("theme_price"))
