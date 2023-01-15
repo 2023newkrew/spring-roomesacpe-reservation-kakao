@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import nextstep.reservation.dto.ThemeRequestDto;
-import nextstep.reservation.dto.ThemeResponseDto;
-import nextstep.reservation.exceptions.exception.NotObjectFoundException;
-import nextstep.reservation.repository.ThemeMemoryRepository;
+import nextstep.reservation.dto.request.ThemeRequestDto;
+import nextstep.reservation.dto.response.ThemeResponseDto;
+import nextstep.reservation.exceptions.exception.NotFoundObjectException;
+import nextstep.reservation.repository.theme.ThemeMemoryRepository;
 import org.junit.jupiter.api.Test;
 
 public class ThemeServiceTest {
@@ -31,20 +31,20 @@ public class ThemeServiceTest {
     @Test
     void 없는_테마를_가져올_시_예외_발생한다() {
         assertThatThrownBy(() -> service.getTheme(1L))
-                .isInstanceOf(NotObjectFoundException.class);
+                .isInstanceOf(NotFoundObjectException.class);
     }
 
     @Test
     void 테마를_삭제할_수_있다() {
         Long id = service.addTheme(new ThemeRequestDto());
         assertDoesNotThrow(() -> service.deleteTheme(id));
-        assertThatThrownBy(() -> service.getTheme(id)).isInstanceOf(NotObjectFoundException.class);
+        assertThatThrownBy(() -> service.getTheme(id)).isInstanceOf(NotFoundObjectException.class);
     }
 
     @Test
     void 없는_테마를_삭제할_시_예외가_발생한다() {
         assertThatThrownBy(() -> service.deleteTheme(1L))
-                .isInstanceOf(NotObjectFoundException.class);
+                .isInstanceOf(NotFoundObjectException.class);
     }
 
     @Test

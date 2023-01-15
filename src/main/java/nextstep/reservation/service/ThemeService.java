@@ -3,39 +3,39 @@ package nextstep.reservation.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import nextstep.reservation.dto.ThemeRequestDto;
-import nextstep.reservation.dto.ThemeResponseDto;
-import nextstep.reservation.exceptions.exception.NotObjectFoundException;
-import nextstep.reservation.repository.ThemeRepository;
+import nextstep.reservation.dto.request.ThemeRequestDto;
+import nextstep.reservation.dto.response.ThemeResponseDto;
+import nextstep.reservation.exceptions.exception.NotFoundObjectException;
+import nextstep.reservation.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ThemeService {
 
-    private final ThemeRepository repository;
+    private final ThemeRepository themeRepository;
 
     public Long addTheme(ThemeRequestDto themeRequestDto) {
-        return repository.add(themeRequestDto.toEntity());
+        return themeRepository.add(themeRequestDto.toEntity());
     }
 
     public ThemeResponseDto getTheme(Long id) {
         return new ThemeResponseDto(
-                repository.findById(id).orElseThrow(NotObjectFoundException::new)
+                themeRepository.findById(id).orElseThrow(NotFoundObjectException::new)
         );
     }
 
     public List<ThemeResponseDto> getAllTheme() {
-        return repository.findAll()
+        return themeRepository.findAll()
                 .stream()
                 .map(ThemeResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     public void deleteTheme(Long id) {
-        boolean result = repository.delete(id);
+        boolean result = themeRepository.delete(id);
         if (!result) {
-            throw new NotObjectFoundException();
+            throw new NotFoundObjectException();
         }
     }
 
