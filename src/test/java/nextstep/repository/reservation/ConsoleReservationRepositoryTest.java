@@ -2,7 +2,7 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.repository.reservation.ConsoleReservationRepository;
+import nextstep.repository.theme.ConsoleThemeRepository;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class ConsoleReservationRepositoryTest {
 
     ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
+    ConsoleThemeRepository consoleThemeRepository = new ConsoleThemeRepository();
     static Theme theme;
 
     @BeforeAll
@@ -23,26 +24,35 @@ class ConsoleReservationRepositoryTest {
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
     }
 
+    @BeforeEach
+    void setUp() throws SQLException {
+        consoleReservationRepository.dropTable();
+        consoleReservationRepository.createTable();
+        consoleThemeRepository.save(theme);
+
+        theme = consoleThemeRepository.findByTheme(theme);
+    }
+
     @AfterEach
     void setUpTable() throws Exception {
         consoleReservationRepository.dropTable();
         consoleReservationRepository.createTable();
+
+        consoleThemeRepository.dropThemeTable();
+        consoleThemeRepository.createThemeTable();
     }
 
     @Test
     void 예약을_저장할_수_있다() {
         //given
         Reservation reservation = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         //when, then
         assertDoesNotThrow(() -> consoleReservationRepository.save(reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                new Theme(
-                        reservation.getTheme().getName(),
-                        reservation.getTheme().getDesc(),
-                        reservation.getTheme().getPrice())
+                theme
         ));
     }
 
@@ -50,43 +60,35 @@ class ConsoleReservationRepositoryTest {
     void 중복된_일시에_예약할_수_없다() {
         //given
         Reservation reservation = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
         Reservation duplicatedReservation = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         consoleReservationRepository.save(reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                new Theme(
-                        reservation.getTheme().getName(),
-                        reservation.getTheme().getDesc(),
-                        reservation.getTheme().getPrice())
+                theme
         );
         //when, then
-        assertThatThrownBy(() -> consoleReservationRepository.save(duplicatedReservation.getDate(),
-                duplicatedReservation.getTime(),
-                duplicatedReservation.getName(),
-                new Theme(
-                        duplicatedReservation.getTheme().getName(),
-                        duplicatedReservation.getTheme().getDesc(),
-                        duplicatedReservation.getTheme().getPrice())
+        assertThatThrownBy(() -> consoleReservationRepository.save(reservation.getDate(),
+                reservation.getTime(),
+                reservation.getName(),
+                theme
         )).isInstanceOf(RuntimeException.class)
                 .hasMessage("이미 예약이 존재합니다.");
 
     }
+
     @Test
     void 예약을_조회할_수_있다() {
         //given
         Reservation reservation = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         Long savedId = consoleReservationRepository.save(reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                new Theme(
-                        reservation.getTheme().getName(),
-                        reservation.getTheme().getDesc(),
-                        reservation.getTheme().getPrice())
+                theme
         );
 
         //when
@@ -95,22 +97,18 @@ class ConsoleReservationRepositoryTest {
         //then
         assertThat(reservation.getName()).isEqualTo(reservation2.getName());
         assertThat(reservation.getDate()).isEqualTo(reservation2.getDate());
-        assertThat(reservation.getTheme().getName()).isEqualTo(reservation2.getTheme().getName());
     }
 
     @Test
     void 예약을_삭제할_수_있다() {
         //given
         Reservation reservation = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         Long savedId = consoleReservationRepository.save(reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                new Theme(
-                        reservation.getTheme().getName(),
-                        reservation.getTheme().getDesc(),
-                        reservation.getTheme().getPrice())
+                theme
         );
 
         //when

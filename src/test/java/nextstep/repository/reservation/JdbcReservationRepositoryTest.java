@@ -3,6 +3,7 @@ package nextstep.repository.reservation;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.repository.reservation.JdbcReservationRepository;
+import nextstep.repository.theme.JdbcThemeRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,8 @@ class JdbcReservationRepositoryTest {
 
     @Autowired
     JdbcReservationRepository jdbcReservationRepository;
+    @Autowired
+    JdbcThemeRepository jdbcThemeRepository;
 
     static Theme theme;
 
@@ -29,25 +32,33 @@ class JdbcReservationRepositoryTest {
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
     }
 
-    @AfterEach
-    void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         jdbcReservationRepository.dropTable();
         jdbcReservationRepository.createTable();
+        jdbcThemeRepository.save(theme);
+
+        theme = jdbcThemeRepository.findByTheme(theme);
+    }
+
+    @AfterEach
+    void setUpTable() {
+        jdbcReservationRepository.dropTable();
+        jdbcReservationRepository.createTable();
+        jdbcThemeRepository.dropThemeTable();
+        jdbcThemeRepository.createThemeTable();
     }
 
     @DisplayName("예약을 저장할 수 있다.")
     @Test
     void jdbcAddReservationTest() {
         Reservation actual = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         assertDoesNotThrow(() -> jdbcReservationRepository.save(actual.getDate(),
                 actual.getTime(),
                 actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
+                theme
         ));
     }
 
@@ -55,25 +66,21 @@ class JdbcReservationRepositoryTest {
     @Test
     void jdbcAddReservationExceptionTest() {
         Reservation actual = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         assertDoesNotThrow(() -> jdbcReservationRepository.save(actual.getDate(),
-                actual.getTime(),
-                actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
-        ));
+                        actual.getTime(),
+                        actual.getName(),
+                        theme
+                )
+        );
 
         assertThatExceptionOfType(Exception.class).isThrownBy(() ->
                 jdbcReservationRepository.save(actual.getDate(),
                         actual.getTime(),
                         actual.getName(),
-                        new Theme(
-                                actual.getTheme().getName(),
-                                actual.getTheme().getDesc(),
-                                actual.getTheme().getPrice()))
+                        theme
+                )
         );
     }
 
@@ -82,15 +89,12 @@ class JdbcReservationRepositoryTest {
     void jdbcFindReservationTest() {
         //given
         Reservation actual = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         Long saveId = jdbcReservationRepository.save(actual.getDate(),
                 actual.getTime(),
                 actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
+                theme
         );
 
         //when
@@ -99,7 +103,6 @@ class JdbcReservationRepositoryTest {
         //then
         assertThat(actual.getName()).isEqualTo(reservation2.getName());
         assertThat(actual.getDate()).isEqualTo(reservation2.getDate());
-        assertThat(actual.getTheme().getName()).isEqualTo(reservation2.getTheme().getName());
     }
 
     @DisplayName("예약을 삭제할 수 있다.")
@@ -107,15 +110,12 @@ class JdbcReservationRepositoryTest {
     void jdbcDeleteReservationTest() {
         //given
         Reservation actual = new Reservation(
-                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+                1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
         Long saveId = jdbcReservationRepository.save(actual.getDate(),
                 actual.getTime(),
                 actual.getName(),
-                new Theme(
-                        actual.getTheme().getName(),
-                        actual.getTheme().getDesc(),
-                        actual.getTheme().getPrice())
+                theme
         );
 
         assertDoesNotThrow(() ->
