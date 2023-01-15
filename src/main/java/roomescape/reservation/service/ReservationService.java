@@ -8,6 +8,9 @@ import roomescape.reservation.dto.response.ReservationResponseDTO;
 import roomescape.reservation.exception.DuplicatedReservationException;
 import roomescape.reservation.exception.NoSuchReservationException;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.theme.domain.Theme;
+import roomescape.theme.exception.NoSuchThemeException;
+import roomescape.theme.repository.ThemeRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -15,8 +18,13 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
+    private final ThemeRepository themeRepository;
+
     public Long save(final ReservationRequestDTO reservationRequestDTO) {
-        final Reservation reservation = reservationRequestDTO.toEntity(2L);
+        final Theme theme = this.themeRepository.findByName(reservationRequestDTO.getThemeName())
+                .orElseThrow(NoSuchThemeException::new);
+
+        final Reservation reservation = reservationRequestDTO.toEntity(theme.getId());
 
         this.reservationRepository.findByDateTimeAndThemeId(reservation.getDate(), reservation.getTime(),
                         reservation.getId())
