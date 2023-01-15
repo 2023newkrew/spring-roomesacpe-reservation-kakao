@@ -59,7 +59,7 @@ public class ConsoleReservationDAOTest {
 
     @DisplayName("예약 생성")
     @Test
-    void insertReservation() throws SQLException {
+    void createReservation() throws SQLException {
         long count = getCount();
 
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);

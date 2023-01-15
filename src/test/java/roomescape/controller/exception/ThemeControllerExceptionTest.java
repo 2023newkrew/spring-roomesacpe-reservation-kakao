@@ -40,7 +40,7 @@ public class ThemeControllerExceptionTest {
             MediaType.TEXT_HTML_VALUE,
             MediaType.TEXT_XML_VALUE,
             MediaType.APPLICATION_XML_VALUE})
-    void failToPostIfNotJson(String contentType) {
+    void failToPostNotJson(String contentType) {
         RestAssured.given().log().all()
                 .contentType(contentType)
                 .body("")
@@ -51,7 +51,7 @@ public class ThemeControllerExceptionTest {
 
     @DisplayName("테마 생성) 같은 이름의 예약은 생성 불가")
     @Test
-    void failToPostThemeAlreadyExist() {
+    void failToPostAlreadyExist() {
         Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
 
         RestAssured.given().log().all()
@@ -66,7 +66,7 @@ public class ThemeControllerExceptionTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "{\"name\": \"TEST\",\"desc\": \"DESC\",\"price\": \"TEST\"}"})
-    void failToPostIfInvalidFormat(String body) {
+    void failToPostInvalidFormat(String body) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
                 .when().post(THEME_PATH)
@@ -80,7 +80,7 @@ public class ThemeControllerExceptionTest {
             "{\"desc\": \"DESC\",\"price\": 10000}",
             "{\"name\": \"TEST\"\"price\": 10000}",
             "{\"name\": \"TEST\",\"desc\": \"DESC\"}"})
-    void failToPostIfNotExistValue(String body) {
+    void failToPostNotExistingValue(String body) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
                 .when().post(THEME_PATH)
@@ -94,7 +94,7 @@ public class ThemeControllerExceptionTest {
             THEME_PATH + "/10",
             THEME_PATH + "/1.1",
             THEME_PATH + "/test"})
-    void failToGetThemeIfNotExistIdAndInvalidId(String path) {
+    void failToGetNotExistingIdAndInvalidId(String path) {
         RestAssured.given().log().all()
                 .when().get(path)
                 .then().log().all()
@@ -108,7 +108,7 @@ public class ThemeControllerExceptionTest {
             THEME_PATH + "/1.1",
             THEME_PATH + "/test",
             THEME_PATH + "/2"})
-    void failToDeleteThemeIfNotExistIdAndInvalidIdAndReservationThemeId(String path) {
+    void failToDeleteNotExistingIdAndInvalidIdAndReservationThemeId(String path) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(path)

@@ -31,7 +31,7 @@ public class SpringThemeDAOExceptionTest {
 
     @DisplayName("테마 조회) 아이디가 존재하지 않는 경우 null")
     @Test
-    void findTheme() {
+    void returnNullWhenFindNotExistingId() {
         assertThat(themeDAO.find(10L)).isNull();
     }
 }

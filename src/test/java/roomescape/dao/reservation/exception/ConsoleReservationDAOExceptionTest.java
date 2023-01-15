@@ -28,7 +28,7 @@ public class ConsoleReservationDAOExceptionTest {
 
     @DisplayName("예약 조회) ID가 존재하지 않는 경우 null 리턴")
     @Test
-    void findReservation() {
+    void returnNullWhenFindNotExistingId() {
         Reservation reservation = reservationDAO.find(10L);
         assertThat(reservation).isNull();
     }

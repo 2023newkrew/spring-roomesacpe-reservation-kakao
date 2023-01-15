@@ -45,7 +45,7 @@ public class ReservationControllerExceptionTest {
             MediaType.TEXT_HTML_VALUE,
             MediaType.TEXT_XML_VALUE,
             MediaType.APPLICATION_XML_VALUE})
-    void failToPostIfNotJson(String contentType) {
+    void failToPostNotJson(String contentType) {
         RestAssured.given().log().all()
                 .contentType(contentType).body("")
                 .when().post(RESERVATIONS_PATH)
@@ -55,7 +55,7 @@ public class ReservationControllerExceptionTest {
 
     @DisplayName("예약 생성) 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.")
     @Test
-    void failToCreateReservationAlreadyExist() {
+    void failToPostAlreadyExist() {
         Reservation reservation = new Reservation(DATE_DATA1, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         RestAssured.given().log().all()
@@ -72,7 +72,7 @@ public class ReservationControllerExceptionTest {
             "{\"date\": [2022,8],\"time\": [13,0],\"name\": \"test\",\"themeId\": 1}",
             "{\"date\": [2022,8,2],\"time\": [13],\"name\": \"test\",\"themeId\": 1}",
             "{\"date\": [2022,8,2],\"time\": [13,0],\"name\": \"test\",\"themeId\": \"test\"}"})
-    void isInValidFormat(String body) {
+    void failToPostInvalidFormat(String body) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
                 .when().post(RESERVATIONS_PATH)
@@ -97,7 +97,7 @@ public class ReservationControllerExceptionTest {
 
     @DisplayName("예약 생성) 존재하지 않는 테마를 지정할 경우 생성 불가")
     @Test
-    void createReservation() {
+    void failToPostNotExistingThemeId() {
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, 3L);
 
         RestAssured.given().log().all()
@@ -114,7 +114,7 @@ public class ReservationControllerExceptionTest {
             RESERVATIONS_PATH + "/10",
             RESERVATIONS_PATH + "/1.1",
             RESERVATIONS_PATH + "/test"})
-    void notExistID(String path) {
+    void failToGetNotExistingIdAndInvalidId(String path) {
         RestAssured.given().log().all()
                 .when().get(path)
                 .then().log().all()
@@ -127,7 +127,7 @@ public class ReservationControllerExceptionTest {
             RESERVATIONS_PATH + "/10",
             RESERVATIONS_PATH + "/1.1",
             RESERVATIONS_PATH + "/test"})
-    void failToDeleteWithInvalidId(String path) {
+    void failToDeleteNotExistingIdAndInvalidId(String path) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(path)

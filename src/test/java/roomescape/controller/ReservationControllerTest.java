@@ -44,7 +44,7 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 생성")
     @Test
-    void createReservation() {
+    void postReservation() {
         Reservation reservation = new Reservation(DATE_DATA2, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         RestAssured.given().log().all()
@@ -57,7 +57,7 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 조회")
     @Test
-    void showReservation() {
+    void getReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(FIRST_RESERVATION_PATH)

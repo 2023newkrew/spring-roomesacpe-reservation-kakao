@@ -49,7 +49,7 @@ public class ReservationServiceExceptionTest {
 
     @DisplayName("예약 생성) 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.")
     @Test
-    void failToCreateReservationSameDateAndSameTime() {
+    void failToCreateSameDateAndSameTime() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         when(reservationDAO.exist(reservation)).thenReturn(true);
@@ -60,13 +60,13 @@ public class ReservationServiceExceptionTest {
 
     @DisplayName("예약 생성) 값이 포함되지 않았을 경우 예약 생설 불가")
     @ParameterizedTest
-    @MethodSource("getFailToCreateReservationInvalidValueDate")
-    void failToCreateReservationInvalidValue(Reservation reservation) {
+    @MethodSource("getFailToCreateInvalidValueDate")
+    void failToCreateInvalidValue(Reservation reservation) {
         assertThatThrownBy(() -> reservationService.create(reservation))
                 .isInstanceOf(BadRequestException.class);
     }
 
-    private static Stream<Arguments> getFailToCreateReservationInvalidValueDate() {
+    private static Stream<Arguments> getFailToCreateInvalidValueDate() {
         return Stream.of(
                 Arguments.arguments(new Reservation(null, TIME_DATA, NAME_DATA, THEME_ID_DATA)),
                 Arguments.arguments(new Reservation(DATE_DATA, null, NAME_DATA, THEME_ID_DATA)),
@@ -77,7 +77,7 @@ public class ReservationServiceExceptionTest {
 
     @DisplayName("예약 생성) 존재하지 않는 테마를 지정할 경우 생성 불가")
     @Test
-    void failToCreateReservationInvalidThemeId() {
+    void failToCreateInvalidThemeId() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         when(reservationDAO.exist(reservation)).thenReturn(false);
@@ -89,7 +89,7 @@ public class ReservationServiceExceptionTest {
 
     @DisplayName("예약 조회) ID가 없는 경우 조회 불가")
     @Test
-    void failToFindReservationNotExist() {
+    void failToFindNotExistingId() {
         when(reservationDAO.find(ID_DATA)).thenReturn(null);
 
         assertThatThrownBy(() -> reservationService.find(ID_DATA))
@@ -98,7 +98,7 @@ public class ReservationServiceExceptionTest {
 
     @DisplayName("예약 삭제) ID가 없는 경우 삭제 불가")
     @Test
-    void removeReservation() {
+    void failToRemoveNotExistingId() {
         when(reservationDAO.existId(ID_DATA)).thenReturn(false);
 
         assertThatThrownBy(() -> reservationService.remove(ID_DATA))

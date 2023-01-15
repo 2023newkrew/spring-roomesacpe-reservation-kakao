@@ -14,7 +14,7 @@ import roomescape.dao.theme.SpringThemeDAO;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
 
-@DisplayName("JDBC 데이터베이스 접근 예외처리 테이블")
+@DisplayName("JDBC 데이터베이스 접근 - 테마 테이블이 존재하지 않을 경우 null 리턴")
 @JdbcTest
 @ActiveProfiles("test")
 @Sql(value = "classpath:/drop.sql")
@@ -34,35 +34,35 @@ public class SpringThemeDAONoTableExceptionTest {
         themeDAO = new SpringThemeDAO(jdbcTemplate);
     }
 
-    @DisplayName("테마 생성")
+    @DisplayName("테마 생성) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void insertTheme() {
+    void returnNullWhenCreateIfNotExistingTable() {
         Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
         assertThat(themeDAO.create(theme)).isNull();
     }
 
-    @DisplayName("테마 조회")
+    @DisplayName("테마 조회) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void findTheme() {
+    void returnNullWhenFindIfNotExistingTable() {
         assertThat(themeDAO.find(1L)).isNull();
     }
 
-    @DisplayName("테마 목록 조회")
+    @DisplayName("테마 목록 조회) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void listTheme() {
+    void returnNullWhenListIfNotExistingTable() {
         assertThat(themeDAO.list()).isNull();
     }
 
-    @DisplayName("테마 존재 확인")
+    @DisplayName("테마 존재 확인) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void existTheme() {
+    void returnNullWhenExistIfNotExistingTable() {
         Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
         assertThat(themeDAO.exist(theme)).isNull();
     }
 
-    @DisplayName("테마 아이디 존재 확인")
+    @DisplayName("테마 아이디 존재 확인) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void existReservationId() {
+    void returnNullWhenExistIdIfNotExistingTable() {
         assertThat(themeDAO.existId(1L)).isNull();
     }
 }

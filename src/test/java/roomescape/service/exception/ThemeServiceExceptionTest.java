@@ -47,7 +47,7 @@ public class ThemeServiceExceptionTest {
 
     @DisplayName("테마 생성) 같은 이름의 예약은 생성 불가")
     @Test
-    void failToCreateThemeSameName() {
+    void failToCreateSameName() {
         Theme theme = new Theme(NAME_DATA, DESC_DATA, PRICE_DATA);
 
         when(themeDAO.exist(theme)).thenReturn(true);
@@ -59,14 +59,14 @@ public class ThemeServiceExceptionTest {
 
     @DisplayName("테마 생성) 값이 포함되지 않았을 경우 생설 불가")
     @ParameterizedTest
-    @MethodSource("getFailToCreateInvalidThemeDate")
-    void failToCreateInvalidTheme(Theme theme) {
+    @MethodSource("getFailToCreateInvalidValueData")
+    void failToCreateInvalidValue(Theme theme) {
         assertThrows(
                 BadRequestException.class,
                 () -> themeService.create(theme));
     }
 
-    private static Stream<Arguments> getFailToCreateInvalidThemeDate() {
+    private static Stream<Arguments> getFailToCreateInvalidValueData() {
         return Stream.of(
                 Arguments.arguments(new Theme(null, DESC_DATA, PRICE_DATA)),
                 Arguments.arguments(new Theme(NAME_DATA, null, PRICE_DATA)),
@@ -76,7 +76,7 @@ public class ThemeServiceExceptionTest {
 
     @DisplayName("테마 조회) ID가 없는 경우 조회 불가")
     @Test
-    void failToFindThemeNotExist() {
+    void failToFindNotExistingId() {
         when(themeDAO.find(ID_DATA)).thenReturn(null);
 
         assertThatThrownBy(() -> themeService.find(ID_DATA))
@@ -85,7 +85,7 @@ public class ThemeServiceExceptionTest {
 
     @DisplayName("테마 삭제) 예약과 관계있는 테마 삭제 불가")
     @Test
-    void failToRemoveUsedTheme() {
+    void failToRemoveAlreadyUsed() {
         when(reservationDAO.existThemeId(ID_DATA)).thenReturn(true);
         when(themeDAO.existId(ID_DATA)).thenReturn(true);
 
@@ -95,7 +95,7 @@ public class ThemeServiceExceptionTest {
 
     @DisplayName("테마 삭제) ID가 없는 경우 삭제 불가")
     @Test
-    void failToRemoveThemeNotExist() {
+    void failToRemoveNotExistingId() {
         when(themeDAO.existId(ID_DATA)).thenReturn(false);
 
         assertThatThrownBy(() -> themeService.remove(ID_DATA))

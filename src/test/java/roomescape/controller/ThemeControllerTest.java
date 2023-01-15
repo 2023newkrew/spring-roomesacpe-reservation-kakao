@@ -38,7 +38,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 생성")
     @Test
-    void createTheme() {
+    void postTheme() {
         Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
 
         RestAssured.given().log().all()
@@ -51,7 +51,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 목록 조회")
     @Test
-    void listTheme() {
+    void getThemeList() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(THEME_PATH)
@@ -65,7 +65,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 조회")
     @Test
-    void findTheme() {
+    void getTheme() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(FIRST_THEME_PATH)
@@ -78,7 +78,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 취소")
     @Test
-    void removeTheme() {
+    void deleteTheme() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(FIRST_THEME_PATH)

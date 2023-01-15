@@ -58,7 +58,7 @@ public class ConsoleThemeDAOTest {
 
     @DisplayName("테마 생성")
     @Test
-    void insertTheme() throws SQLException {
+    void createTheme() throws SQLException {
         long count = getCount(Long.class);
 
         Theme theme = new Theme(NAME_DATA3, DESC_DATA, PRICE_DATA);

@@ -15,7 +15,7 @@ import roomescape.dao.reservation.ConsoleReservationDAO;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dto.Reservation;
 
-@DisplayName("콘솔용 데이터베이스 접근 예외처리 테이블")
+@DisplayName("콘솔용 데이터베이스 접근 - 예약 테이블이 존재하지 않을 경우 null 리턴")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Transactional
 @ActiveProfiles("test")
@@ -35,33 +35,33 @@ public class ConsoleReservationDAONoTableExceptionTest {
 
     @DisplayName("예약 생성) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void insertReservation() {
+    void returnNullWhenCreateIfNotExistingTable() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
         assertThat(reservationDAO.create(reservation)).isNull();
     }
 
     @DisplayName("예약 조회) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void findReservation() {
+    void returnNullWhenFindIfNotExistingTable() {
         assertThat(reservationDAO.find(1L)).isNull();
     }
 
     @DisplayName("예약 존재 확인) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void existReservation() {
+    void returnNullWhenExistIfNotExistingTable() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
         assertThat(reservationDAO.exist(reservation)).isNull();
     }
 
     @DisplayName("예약 아이디 존재 확인) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void existReservationId() {
+    void returnNullWhenExistIdIfNotExistingTable() {
         assertThat(reservationDAO.existId(1L)).isNull();
     }
 
     @DisplayName("예약에서 테마 아이디 존재 확인) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
-    void existReservationThemeId() {
+    void returnNullWhenExistThemeIdIfNotExistingTable() {
         assertThat(reservationDAO.existThemeId(1L)).isNull();
     }
 }
