@@ -42,6 +42,6 @@ public class ConsoleControllerMapper {
     }
 
     public static boolean isRepeat(String input) {
-        return input.equals(QUIT);
+        return !input.equals(QUIT);
     }
 }

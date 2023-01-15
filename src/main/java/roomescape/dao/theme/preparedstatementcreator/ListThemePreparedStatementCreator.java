@@ -8,10 +8,10 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 public class ListThemePreparedStatementCreator implements PreparedStatementCreator {
 
     private static final String SQL =
-            "SELECT * FROM theme";
+            "SELECT * FROM THEME;";
 
     @Override
     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-        return con.prepareStatement(SQL, new String[]{"id"});
+        return con.prepareStatement(SQL);
     }
 }

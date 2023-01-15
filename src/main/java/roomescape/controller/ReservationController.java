@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.Reservation;
-import roomescape.service.reservation.ReservationService;
+import roomescape.service.reservation.ReservationServiceInterface;
 
 
 @RestController
@@ -19,7 +19,7 @@ import roomescape.service.reservation.ReservationService;
 public class ReservationController {
 
     @Autowired
-    private ReservationService reservationService;
+    private ReservationServiceInterface reservationService;
 
     @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {

@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.Theme;
-import roomescape.service.theme.ThemeService;
+import roomescape.service.theme.ThemeServiceInterface;
 
 @RestController
 @RequestMapping("/theme")
 public class ThemeController {
 
     @Autowired
-    private ThemeService themeService;
+    private ThemeServiceInterface themeService;
 
     @PostMapping
     public ResponseEntity<Object> createTheme(@RequestBody Theme theme) {

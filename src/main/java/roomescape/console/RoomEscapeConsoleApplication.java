@@ -10,17 +10,13 @@ import roomescape.controller.ConsoleControllerMapper;
 @Component
 public class RoomEscapeConsoleApplication implements CommandLineRunner {
 
-    public static void main(String[] args) {
+    @Override
+    public void run(String... args) {
         boolean repeat = true;
         while (repeat) {
             String input = InputView.getCommand();
             ConsoleControllerMapper.executeCommand(input);
             repeat = ConsoleControllerMapper.isRepeat(input);
         }
-    }
-
-    @Override
-    public void run(String... args) {
-        main(args);
     }
 }

@@ -10,7 +10,9 @@ import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Reservation;
 import roomescape.dto.Theme;
 import roomescape.service.reservation.ReservationService;
+import roomescape.service.reservation.ReservationServiceInterface;
 import roomescape.service.theme.ThemeService;
+import roomescape.service.theme.ThemeServiceInterface;
 
 public class ConsoleController {
 
@@ -23,9 +25,9 @@ public class ConsoleController {
     private static final ThemeDAO THEME_DAO
             = new ConsoleThemeDAO(URL, USER, PASSWORD);
 
-    private static final ReservationService reservationService
+    private static final ReservationServiceInterface reservationService
             = new ReservationService(RESERVATION_DAO, THEME_DAO);
-    private static final ThemeService themeService
+    private static final ThemeServiceInterface themeService
             = new ThemeService(RESERVATION_DAO, THEME_DAO);
 
     private static long getId(String input) {
