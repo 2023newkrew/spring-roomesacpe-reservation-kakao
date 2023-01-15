@@ -24,9 +24,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             pstmt.setDate(1, Date.valueOf(reservation.getDate()));
             pstmt.setTime(2, Time.valueOf(reservation.getTime()));
             pstmt.setString(3, reservation.getName());
-            pstmt.setString(4, reservation.getTheme().getName());
-            pstmt.setString(5, reservation.getTheme().getDesc());
-            pstmt.setInt(6, reservation.getTheme().getPrice());
+            pstmt.setLong(4, reservation.getTheme().getId());
             pstmt.executeUpdate();
 
             return new Reservation(getGeneratedKey(pstmt), reservation);
@@ -41,14 +39,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
             if (rs.next()) {
                 return Optional.of(new Reservation(
-                        rs.getLong("id"),
+                        rs.getLong("r_id"),
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
-                        rs.getString("name"),
+                        rs.getString("r_name"),
                         new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
+                                rs.getString("t_name"),
+                                rs.getString("desc"),
+                                rs.getInt("price")
                         )
                 ));
             }
@@ -58,19 +56,29 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return execute(SELECT_COUNT_BY_DATE_AND_TIME, (pstmt, rs) -> {
-            pstmt.setDate(1, Date.valueOf(date));
-            pstmt.setTime(2, Time.valueOf(time));
+    public Boolean existsByThemeId(Long themeId) {
+        return execute(SELECT_ONE_BY_THEME_ID, (pstmt, rs) -> {
+            pstmt.setLong(1, themeId);
             rs = pstmt.executeQuery();
 
-            rs.next();
-            return rs.getInt(1) > 0;
+            return rs.next();
         });
     }
 
     @Override
-    public boolean deleteById(Long reservationId) {
+    public Boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return execute(SELECT_ONE_BY_THEME_ID_AND_DATE_AND_TIME, (pstmt, rs) -> {
+            pstmt.setLong(1, themeId);
+            pstmt.setDate(2, Date.valueOf(date));
+            pstmt.setTime(3, Time.valueOf(time));
+            rs = pstmt.executeQuery();
+
+            return rs.next();
+        });
+    }
+
+    @Override
+    public Boolean deleteById(Long reservationId) {
         return execute(DELETE_BY_ID, pstmt -> {
             pstmt.setLong(1, reservationId);
 

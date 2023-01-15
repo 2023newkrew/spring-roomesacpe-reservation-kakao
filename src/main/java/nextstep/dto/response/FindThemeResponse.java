@@ -1,24 +1,24 @@
-package nextstep.domain.theme;
+package nextstep.dto.response;
 
-import nextstep.domain.JdbcEntity;
+import nextstep.domain.theme.Theme;
 
-@JdbcEntity
-public class Theme {
+public class FindThemeResponse {
 
     private Long id;
     private String name;
     private String desc;
     private Integer price;
 
-    public Theme(String name, String desc, Integer price) {
-        this(null, name, desc, price);
+    public static FindThemeResponse from(Theme theme) {
+        return new FindThemeResponse(
+                theme.getId(),
+                theme.getName(),
+                theme.getDesc(),
+                theme.getPrice()
+        );
     }
 
-    public Theme(Long id, Theme theme) {
-        this(id, theme.name, theme.desc, theme.price);
-    }
-
-    public Theme(Long id, String name, String desc, Integer price) {
+    private FindThemeResponse(Long id, String name, String desc, Integer price) {
         this.id = id;
         this.name = name;
         this.desc = desc;

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nextstep.dto.request.CreateReservationRequest;
 import nextstep.error.ApplicationException;
 import nextstep.error.ErrorType;
-import nextstep.service.ReservationService;
+import nextstep.service.ReservationReadService;
+import nextstep.service.ReservationWriteService;
 import nextstep.utils.ReservationRequestValidator;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@WebMvcTest(ReservationController.class)
-public class ReservationControllerTest {
+@WebMvcTest(ReservationWriteController.class)
+public class ReservationWriteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +34,10 @@ public class ReservationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ReservationService reservationService;
+    private ReservationReadService reservationReadService;
+
+    @MockBean
+    private ReservationWriteService reservationWriteService;
 
     @MockBean
     private ReservationRequestValidator reservationRequestValidator;
@@ -42,11 +46,11 @@ public class ReservationControllerTest {
     void 예약_생성에_성공한다() throws Exception {
         // given
         Long reservationId = 20L;
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", "13:00", "eddie");
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", "13:00", "eddie", "테마 이름");
 
         doNothing().when(reservationRequestValidator)
                         .validateCreateRequest(any(CreateReservationRequest.class));
-        given(reservationService.createReservation(any(CreateReservationRequest.class)))
+        given(reservationWriteService.createReservation(any(CreateReservationRequest.class)))
                 .willReturn(reservationId);
 
         // when
@@ -64,7 +68,7 @@ public class ReservationControllerTest {
     @Test
     void 예약_정보_부족으로_예약에_실패한다() throws Exception {
         // given
-        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", null, "eddie");
+        CreateReservationRequest createReservationRequest = new CreateReservationRequest("2023-01-10", null, "eddie", "테마 이름");
 
         doThrow(new ApplicationException(ErrorType.INVALID_RESERVATION_REQUEST_DATA))
                 .when(reservationRequestValidator)
@@ -77,7 +81,7 @@ public class ReservationControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest());
-        verify(reservationService, times(0)).createReservation(any(CreateReservationRequest.class));
+        verify(reservationWriteService, times(0)).createReservation(any(CreateReservationRequest.class));
     }
 
 }

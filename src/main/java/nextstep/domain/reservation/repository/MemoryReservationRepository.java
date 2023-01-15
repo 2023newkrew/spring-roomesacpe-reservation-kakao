@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Deprecated
-public class MemoryReservationRepository implements ReservationRepository {
+public class MemoryReservationRepository {
 
     private final List<Reservation> reservations;
     private final AtomicLong id;
@@ -20,27 +20,23 @@ public class MemoryReservationRepository implements ReservationRepository {
         id = new AtomicLong(1L);
     }
 
-    @Override
     public Reservation save(Reservation reservation) {
         reservation.setId(id.getAndAdd(1L));
         reservations.add(reservation);
         return reservation;
     }
 
-    @Override
     public Optional<Reservation> findById(Long reservationId) {
         return reservations.stream()
                 .filter(reservation -> reservation.isSameId(reservationId))
                 .findAny();
     }
 
-    @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+    public boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
         return reservations.stream()
-                .anyMatch(reservation -> reservation.isSameDateAndTime(date, time));
+                .anyMatch(reservation -> reservation.isSameThemeAndDateAndTime(themeId, date, time));
     }
 
-    @Override
     public boolean deleteById(Long reservationId) {
         return reservations.removeIf(reservation -> reservation.isSameId(reservationId));
     }

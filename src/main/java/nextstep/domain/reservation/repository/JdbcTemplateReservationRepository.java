@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,14 +25,14 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
-            rs.getLong("id"),
+            rs.getLong("r_id"),
             LocalDate.parse(rs.getString("date")),
             LocalTime.parse(rs.getString("time")),
-            rs.getString("name"),
+            rs.getString("r_name"),
             new Theme(
-                    rs.getString("theme_name"),
-                    rs.getString("theme_desc"),
-                    rs.getInt("theme_price")
+                    rs.getString("t_name"),
+                    rs.getString("desc"),
+                    rs.getInt("price")
             )
     );
 
@@ -48,9 +49,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 .addValue("date", reservation.getDate())
                 .addValue("time", reservation.getTime())
                 .addValue("name", reservation.getName())
-                .addValue("theme_name", reservation.getTheme().getName())
-                .addValue("theme_desc", reservation.getTheme().getDesc())
-                .addValue("theme_price", reservation.getTheme().getPrice());
+                .addValue("theme_id", reservation.getTheme().getId());
         Long reservationId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
 
         return new Reservation(reservationId, reservation);
@@ -66,12 +65,20 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        return jdbcTemplate.queryForObject(SELECT_COUNT_BY_DATE_AND_TIME, Integer.class, Date.valueOf(date), Time.valueOf(time)) > 0;
+    public Boolean existsByThemeId(Long themeId) {
+        return jdbcTemplate.query(SELECT_ONE_BY_THEME_ID, ResultSet::next, themeId);
     }
 
     @Override
-    public boolean deleteById(Long reservationId) {
+    public Boolean existsByThemeIdAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return jdbcTemplate.query(
+                SELECT_ONE_BY_THEME_ID_AND_DATE_AND_TIME,
+                ResultSet::next,
+                themeId, Date.valueOf(date), Time.valueOf(time));
+    }
+
+    @Override
+    public Boolean deleteById(Long reservationId) {
         return jdbcTemplate.update(DELETE_BY_ID, reservationId) > 0;
     }
 

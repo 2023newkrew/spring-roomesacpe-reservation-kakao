@@ -1,11 +1,13 @@
 package nextstep.domain.reservation;
 
+import nextstep.domain.JdbcEntity;
 import nextstep.domain.theme.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+@JdbcEntity
 public class Reservation {
     private Long id;
     private LocalDate date;
@@ -18,7 +20,7 @@ public class Reservation {
     }
 
     public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        this(id, reservation.date, reservation.time, reservation.name, reservation.theme);
     }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
@@ -30,8 +32,8 @@ public class Reservation {
     }
 
     @Deprecated
-    public boolean isSameDateAndTime(LocalDate date, LocalTime time) {
-        return this.date.equals(date) && this.time.equals(time);
+    public boolean isSameThemeAndDateAndTime(Long themeId, LocalDate date, LocalTime time) {
+        return Objects.equals(theme.getId(), themeId) && this.date.equals(date) && this.time.equals(time);
     }
 
     @Deprecated
