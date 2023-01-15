@@ -1,10 +1,10 @@
-package roomescape.dto.response;
+package roomescape.reservation.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 @Getter
 @Builder

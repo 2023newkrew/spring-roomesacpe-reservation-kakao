@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.reservation.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,7 +10,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public class ReservationJdbcRepository implements ReservationRepository {
 

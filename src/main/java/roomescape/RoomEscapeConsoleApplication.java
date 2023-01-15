@@ -3,10 +3,10 @@ package roomescape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
-import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
-import roomescape.exception.NoSuchReservationException;
-import roomescape.repository.ReservationJdbcRepository;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.reservation.repository.ReservationJdbcRepository;
+import roomescape.theme.domain.Theme;
 
 public class RoomEscapeConsoleApplication {
 

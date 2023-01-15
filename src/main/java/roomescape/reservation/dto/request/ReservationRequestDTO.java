@@ -1,11 +1,11 @@
-package roomescape.dto.request;
+package roomescape.reservation.dto.request;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 @Getter
 @RequiredArgsConstructor

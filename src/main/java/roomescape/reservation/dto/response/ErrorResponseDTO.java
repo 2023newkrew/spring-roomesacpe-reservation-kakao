@@ -1,4 +1,4 @@
-package roomescape.dto.response;
+package roomescape.reservation.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

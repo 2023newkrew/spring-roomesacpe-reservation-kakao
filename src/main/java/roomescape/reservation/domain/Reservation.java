@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

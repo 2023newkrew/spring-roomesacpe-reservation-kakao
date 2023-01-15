@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,11 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import roomescape.domain.Reservation;
-import roomescape.dto.request.ReservationRequestDTO;
-import roomescape.exception.DuplicatedReservationException;
-import roomescape.exception.NoSuchReservationException;
-import roomescape.repository.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.request.ReservationRequestDTO;
+import roomescape.reservation.exception.DuplicatedReservationException;
+import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.reservation.repository.ReservationRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {

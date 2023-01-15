@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import static org.hamcrest.core.Is.is;
 
@@ -14,9 +14,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import roomescape.dto.request.ReservationRequestDTO;
-import roomescape.exception.DuplicatedReservationException;
-import roomescape.exception.NoSuchReservationException;
+import roomescape.reservation.dto.request.ReservationRequestDTO;
+import roomescape.reservation.exception.DuplicatedReservationException;
+import roomescape.reservation.exception.NoSuchReservationException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
