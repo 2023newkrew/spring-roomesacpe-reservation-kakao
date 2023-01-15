@@ -1,6 +1,7 @@
 package roomescape.theme.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,5 +57,16 @@ class ThemeControllerTest {
                 .as(ThemeResponseDTO.class);
 
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    @Order(2)
+    void getAll() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 }
