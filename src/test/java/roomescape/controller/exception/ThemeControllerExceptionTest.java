@@ -101,4 +101,18 @@ public class ThemeControllerExceptionTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @DisplayName("테마 삭제) ID가 잘못된 경우 (float, string)")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            THEME_PATH + "/10",
+            THEME_PATH + "/1.1",
+            THEME_PATH + "/test"})
+    void failToDeleteThemeIfNotExistIdAndInvalidId(String path) {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete(path)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
