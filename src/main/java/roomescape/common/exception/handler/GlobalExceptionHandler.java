@@ -1,4 +1,4 @@
-package roomescape.reservation.exception;
+package roomescape.common.exception.handler;
 
 import java.time.DateTimeException;
 import org.springframework.http.HttpStatus;
@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import roomescape.reservation.dto.response.ErrorResponseDTO;
+import roomescape.reservation.exception.DuplicatedReservationException;
+import roomescape.reservation.exception.NoSuchReservationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
