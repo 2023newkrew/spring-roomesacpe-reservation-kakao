@@ -1,10 +1,11 @@
 package nextstep.reservation;
 
 import nextstep.reservation.dto.ReservationRequest;
-import nextstep.reservation.entity.Theme;
+import nextstep.reservation.dto.ThemeRequest;
+import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.exception.RoomEscapeException;
-import nextstep.reservation.repository.ThemeRepository;
 import nextstep.reservation.service.ReservationService;
+import nextstep.reservation.service.ThemeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,19 +26,20 @@ class ReservationServiceTest {
     @Autowired
     private ReservationService reservationService;
     @Autowired
-    private ThemeRepository themeRepository;
+    private ThemeService themeService;
     private ReservationRequest reservation;
 
     @BeforeEach
     void setUp() {
-        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme savedTheme = themeRepository.save(theme);
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
 
-        this.reservation = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+        ThemeResponse themeResponse = themeService.registerTheme(themeRequest);
+
+        this.reservation = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", themeResponse.getId());
     }
 
     @Test
-    @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생")
+    @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생한다.")
     void duplicate_time_Reservation_Exception() {
         //given
         ReservationRequest reservationDuplicated = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", reservation.getThemeId());
@@ -51,7 +53,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("생성되지 않은 예약의 ID를 입력할 때 예약 발생")
+    @DisplayName("생성되지 않은 예약의 ID로 예약 조회할 때 에외 발생한다.")
     void find_have_never_registered_Reservation_by_id_Exception() {
         //given
         //when

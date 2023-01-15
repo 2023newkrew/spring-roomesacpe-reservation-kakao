@@ -50,7 +50,7 @@ public class ReservationControllerTest {
         themeService.clear();
     }
 
-    @DisplayName("예약 등록")
+    @DisplayName("예약 등록시 201이 반환되며 /reservations/{id}로 이동한다.")
     @Test
     void registerReservation() {
 
@@ -62,7 +62,7 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("이미 예약이 존재하는 시간에 예약 등록 시도할 때 예외 발생")
+    @DisplayName("이미 예약이 존재하는 시간에 예약 등록 시도할 때 예외 발생한다.")
     @Test
     void registerReservationDuplicate() {
         Reservation reservationDuplicated = new Reservation(null, reservation.getDate(), reservation.getTime(), "name2", reservation.getThemeId());
@@ -76,7 +76,7 @@ public class ReservationControllerTest {
                 .body(is(DUPLICATE_TIME_RESERVATION.getMessage()));
     }
 
-    @DisplayName("예약 조회")
+    @DisplayName("예약 조회시 body에 예약 정보가 정해진 형식으로 주어진다.")
     @Test
     void showReservation() {
         Response createResponse = registerReservation(reservation);
@@ -91,7 +91,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("id를 통한 예약 삭제")
+    @DisplayName("id를 통한 예약 삭제시 204를 반환한다.")
     void deleteReservation() {
         Response response = registerReservation(reservation);
         String id = response.getHeader("Location").split("/")[2]; // Redirect 주소: /reservations/id
@@ -103,7 +103,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약 전체 삭제")
+    @DisplayName("예약 전체 삭제시 204를 반환한다.")
     void clearAll() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

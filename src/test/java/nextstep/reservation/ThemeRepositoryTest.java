@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class JdbcThemeRepositoryTest {
+class ThemeRepositoryTest {
 
     @Autowired
     private JdbcThemeRepository jdbcThemeRepository;
@@ -29,7 +29,7 @@ class JdbcThemeRepositoryTest {
     }
 
     @Test
-    @DisplayName("생성")
+    @DisplayName("테마 생성")
     void create() {
         //given
 
@@ -56,7 +56,7 @@ class JdbcThemeRepositoryTest {
 
 
     @Test
-    @DisplayName("전체 조회")
+    @DisplayName("전체 조회시 리스트로 반환")
     void findAll() {
         //given
         Theme created = jdbcThemeRepository.save(theme);
@@ -70,7 +70,7 @@ class JdbcThemeRepositoryTest {
     }
 
     @Test
-    @DisplayName("id를 통한 삭제")
+    @DisplayName("id를 통한 삭제 성공")
     void deleteById() {
         //given
         Theme created = jdbcThemeRepository.save(theme);
@@ -98,7 +98,7 @@ class JdbcThemeRepositoryTest {
 
     }
 
-    private boolean themeTestEquals(Theme a, Theme b) {
+    private boolean themeTestEquals(Theme a, Theme b) { //id를 제외한 Content 비교
         return a.getName().equals(b.getName()) &&
                 a.getDesc().equals(b.getDesc()) &&
                 a.getPrice().equals(b.getPrice());

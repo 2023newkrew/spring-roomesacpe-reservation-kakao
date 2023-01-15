@@ -37,17 +37,28 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("예약 삽입")
+    @DisplayName("예약 삽입 성공")
     void createReservationTest() {
+
+        //given
+
+        //when
         Reservation created = reservationRepository.save(reservation);
+
+        //then
         assertThat(reservationDataEquals(created, reservation)).isTrue();
     }
 
     @Test
-    @DisplayName("예약 ID로 조회")
+    @DisplayName("예약 ID로 조회 성공")
     void findByIdTest() {
+        //given
         Reservation created = reservationRepository.save(reservation);
+
+        //when
         Optional<Reservation> result = reservationRepository.findById(created.getId());
+
+        //then
         assertThat(result.isPresent()).isTrue();
         assertThat(result.get()).isEqualTo(created);
     }
@@ -55,23 +66,39 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 있을 때)")
     void findByDateTimeTest() {
+        //given
         reservationRepository.save(reservation);
+
+        //when
         List<Reservation> result = reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime());
+
+        //then
         assertThat(reservationDataEquals(reservation, result.get(0))).isTrue();
     }
 
     @Test
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 없을 때")
     void findByDateTimeEmptyTest() {
+        //given
+
+        //when
         List<Reservation> result = reservationRepository.findByDateAndTime(LocalDate.parse("2022-08-14"), LocalTime.parse("13:00"));
+
+        //then
         assertThat(result).isEqualTo(List.of());
     }
 
     @Test
-    @DisplayName("예약 삭제")
+    @DisplayName("예약 삭제 성공")
     void deleteReservation() {
+
+        //given
         Reservation created = reservationRepository.save(reservation);
+
+        //when
         int result = reservationRepository.deleteById(created.getId());
+
+        //then
         assertThat(result).isEqualTo(1);
 
         Optional<Reservation> deletedReservationOptional = reservationRepository.findById(created.getId());

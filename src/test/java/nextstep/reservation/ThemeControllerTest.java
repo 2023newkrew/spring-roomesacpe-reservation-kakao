@@ -38,7 +38,7 @@ public class ThemeControllerTest {
     }
 
     @Test
-    @DisplayName("생성")
+    @DisplayName("테마 생성 성공시 201 반환한다.")
     void create() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -49,14 +49,12 @@ public class ThemeControllerTest {
     }
 
     @Test
-    @DisplayName("전체 테마 조회")
+    @DisplayName("전체 테마 조회시 body에 JSON 배열 형태로 반환된다.")
     void findAll() {
-        //given
         themeService.registerTheme(themeRequest);
         ThemeRequest themeRequest2 = new ThemeRequest("ad", "cd", 2000);
         themeService.registerTheme(themeRequest2);
 
-        //when
         List<ThemeResponse> themeList = RestAssured.given().log().all()
                 .when().get("/themes")
                 .then().log().all()
@@ -64,25 +62,22 @@ public class ThemeControllerTest {
                 .extract().response().jsonPath()
                 .getList("", ThemeResponse.class);
 
-        //then
         Assertions.assertThat(themeTestEquals(themeRequest, themeList.get(0))).isTrue();
         Assertions.assertThat(themeTestEquals(themeRequest2, themeList.get(1))).isTrue();
     }
 
     @Test
-    @DisplayName("테마 id로 삭제")
+    @DisplayName("테마 id로 삭제시 204 반환된다.")
     void deleteById() {
-        //given
         ThemeResponse created = themeService.registerTheme(themeRequest);
 
-        //when
         RestAssured.given().log().all()
                 .when().delete("/themes/" + created.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private boolean themeTestEquals(ThemeRequest a, ThemeResponse b) {
+    private boolean themeTestEquals(ThemeRequest a, ThemeResponse b) { //id를 제외한 Content 비교
         return a.getName().equals(b.getName()) &&
                 a.getDesc().equals(b.getDesc()) &&
                 a.getPrice().equals(b.getPrice());
