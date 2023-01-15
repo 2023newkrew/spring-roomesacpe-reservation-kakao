@@ -1,9 +1,9 @@
-package nextstep.step3.controller;
+package nextstep.step3.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.step3.dto.ReservationDetail;
-import nextstep.step3.dto.ReservationDto;
-import nextstep.step3.service.ThemeReservationService;
+import nextstep.step3.reservation.dto.ReservationDetail;
+import nextstep.step3.reservation.dto.ReservationDto;
+import nextstep.step3.reservation.service.ThemeReservationService;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;

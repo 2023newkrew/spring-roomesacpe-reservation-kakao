@@ -1,4 +1,4 @@
-package nextstep.step3.dao;
+package nextstep.step3.util;
 
 public class DatabaseUtil {
     public static void close(AutoCloseable... closeables){

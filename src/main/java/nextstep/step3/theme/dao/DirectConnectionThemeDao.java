@@ -1,7 +1,8 @@
-package nextstep.step3.dao;
+package nextstep.step3.theme.dao;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.step3.entity.Theme;
+import nextstep.step3.theme.entity.Theme;
+import nextstep.step3.util.DatabaseUtil;
 
 import javax.sql.DataSource;
 import java.sql.*;

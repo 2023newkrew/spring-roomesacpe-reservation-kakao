@@ -1,12 +1,12 @@
-package nextstep.step3.service;
+package nextstep.step3.reservation.service;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.step3.dao.ThemeDao;
-import nextstep.step3.dao.ThemeReservationDao;
-import nextstep.step3.dto.ReservationDetail;
-import nextstep.step3.dto.ReservationDto;
-import nextstep.step3.entity.Reservation;
-import nextstep.step3.entity.Theme;
+import nextstep.step3.theme.dao.ThemeDao;
+import nextstep.step3.reservation.dao.ThemeReservationDao;
+import nextstep.step3.reservation.dto.ReservationDetail;
+import nextstep.step3.reservation.dto.ReservationDto;
+import nextstep.step3.reservation.entity.Reservation;
+import nextstep.step3.theme.entity.Theme;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;

@@ -1,6 +1,6 @@
-package nextstep.step3.dao;
+package nextstep.step3.reservation.dao;
 
-import nextstep.step3.entity.Reservation;
+import nextstep.step3.reservation.entity.Reservation;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;

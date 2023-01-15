@@ -1,7 +1,7 @@
-package nextstep.step3.service;
+package nextstep.step3.reservation.service;
 
-import nextstep.step3.dto.ReservationDetail;
-import nextstep.step3.dto.ReservationDto;
+import nextstep.step3.reservation.dto.ReservationDetail;
+import nextstep.step3.reservation.dto.ReservationDto;
 
 import java.sql.SQLException;
 

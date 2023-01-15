@@ -1,6 +1,6 @@
 package nextstep.step3;
 
-import nextstep.step3.controller.ThemeReservationConsoleController;
+import nextstep.step3.reservation.controller.ThemeReservationConsoleController;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;

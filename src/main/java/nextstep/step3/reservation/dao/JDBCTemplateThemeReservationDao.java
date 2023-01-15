@@ -1,7 +1,7 @@
-package nextstep.step3.dao;
+package nextstep.step3.reservation.dao;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.step3.entity.Reservation;
+import nextstep.step3.reservation.entity.Reservation;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

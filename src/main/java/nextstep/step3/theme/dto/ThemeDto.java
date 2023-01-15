@@ -1,4 +1,4 @@
-package nextstep.step3.dto;
+package nextstep.step3.theme.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

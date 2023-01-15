@@ -1,7 +1,8 @@
-package nextstep.step3.dao;
+package nextstep.step3.reservation.dao;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.step3.entity.Reservation;
+import nextstep.step3.reservation.entity.Reservation;
+import nextstep.step3.util.DatabaseUtil;
 
 import javax.sql.DataSource;
 import java.sql.*;

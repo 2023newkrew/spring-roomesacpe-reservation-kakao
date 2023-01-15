@@ -1,10 +1,10 @@
-package nextstep.step3.entity;
+package nextstep.step3.theme.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nextstep.step3.dto.ThemeDto;
+import nextstep.step3.theme.dto.ThemeDto;
 
 @ToString
 @Getter

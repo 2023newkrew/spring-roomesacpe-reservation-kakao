@@ -1,7 +1,7 @@
-package nextstep.step3.dao;
+package nextstep.step3.theme.dao;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.step3.entity.Theme;
+import nextstep.step3.theme.entity.Theme;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

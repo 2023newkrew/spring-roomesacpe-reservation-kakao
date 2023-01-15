@@ -1,12 +1,12 @@
-package nextstep.step3.dto;
+package nextstep.step3.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import nextstep.step3.entity.Reservation;
-import nextstep.step3.entity.Theme;
+import nextstep.step3.reservation.entity.Reservation;
+import nextstep.step3.theme.entity.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

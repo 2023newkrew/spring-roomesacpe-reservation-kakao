@@ -1,4 +1,4 @@
-package nextstep.step3.entity;
+package nextstep.step3.reservation.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package nextstep.step3.dto;
+package nextstep.step3.reservation.dto;
 
 import lombok.*;
-import nextstep.step3.entity.Reservation;
+import nextstep.step3.reservation.entity.Reservation;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
