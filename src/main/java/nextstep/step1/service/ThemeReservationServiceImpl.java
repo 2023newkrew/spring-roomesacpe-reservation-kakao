@@ -21,7 +21,7 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     @Override
     public Long reserve(ReservationDto reservationDto) {
         reservationDto.setThemeId(DEFAULT_THEME_ID);
-        return themeReservationDao.createReservation(ReservationDto.from(reservationDto));
+        return themeReservationDao.createReservation(reservationDto.toEntity());
     }
 
     @Override

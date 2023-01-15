@@ -37,7 +37,12 @@ public class ReservationDto {
         return LocalTime.parse(this.time, DateTimeFormatter.ISO_LOCAL_TIME);
     }
 
-    public static Reservation from(ReservationDto reservationDto) {
+    public Reservation toEntity() {
+        return new Reservation(this.parseToLocalDate(), this.parseToLocalTime()
+                , this.name, this.themeId);
+    }
+
+    public static Reservation toEntity(ReservationDto reservationDto) {
         return new Reservation(reservationDto.parseToLocalDate(), reservationDto.parseToLocalTime()
                 , reservationDto.getName(), reservationDto.getThemeId());
     }
