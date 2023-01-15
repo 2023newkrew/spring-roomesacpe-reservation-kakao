@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -33,5 +31,9 @@ public class ReservationService {
 
     public Reservation findById(String reservationId){
         return reservationRepository.findById(reservationId);
+    }
+
+    public void deleteById(String reservationId){
+        reservationRepository.deleteById(reservationId);
     }
 }
