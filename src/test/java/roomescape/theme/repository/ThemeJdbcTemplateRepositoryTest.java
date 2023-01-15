@@ -71,4 +71,18 @@ class ThemeJdbcTemplateRepositoryTest {
     void cannotFindWithInvalidName() {
         assertThat(this.themeRepository.findByName(invalidName)).isEmpty();
     }
+
+    @Test
+    void deleteById() {
+        final boolean deleted = this.themeRepository.deleteById(themeId);
+
+        assertThat(deleted).isTrue();
+    }
+
+    @Test
+    void deleteWithInvalidId() {
+        final boolean deleted = this.themeRepository.deleteById(invalidId);
+
+        assertThat(deleted).isFalse();
+    }
 }
