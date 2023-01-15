@@ -108,4 +108,12 @@ public class ConsoleReservationDAOTest {
         assertThat(reservationDAO.existId(1L)).isTrue();
         assertThat(reservationDAO.existId(2L)).isFalse();
     }
+
+    @DisplayName("예약에서 테마 아이디 존재 확인")
+    @Test
+    void existReservationThemeId() {
+        assertThat(reservationDAO.existThemeId(1L)).isFalse();
+        assertThat(reservationDAO.existThemeId(2L)).isTrue();
+        assertThat(reservationDAO.existThemeId(3L)).isFalse();
+    }
 }
