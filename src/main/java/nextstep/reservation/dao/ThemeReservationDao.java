@@ -9,6 +9,6 @@ import java.sql.SQLException;
 @Repository
 public interface ThemeReservationDao {
     int insert(Reservation reservation) throws SQLException;
-    int deleteReservation(Long id) throws SQLException;
+    int delete(Long id) throws SQLException;
     Reservation findById(Long id) throws SQLException;
 }

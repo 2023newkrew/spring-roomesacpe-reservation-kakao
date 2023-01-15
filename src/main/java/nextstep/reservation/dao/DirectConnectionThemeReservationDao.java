@@ -50,7 +50,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
     }
 
     @Override
-    public int deleteReservation(Long id) throws SQLException {
+    public int delete(Long id) throws SQLException {
         Connection con = dataSource.getConnection();
         PreparedStatement psmt = null;
         int deleteCount = 0;

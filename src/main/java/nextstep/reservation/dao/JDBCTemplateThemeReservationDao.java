@@ -49,7 +49,7 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     }
 
     @Override
-    public int deleteReservation(Long id) throws SQLException {
+    public int delete(Long id) throws SQLException {
         return jdbcTemplate.update(DELETE_BY_RESERVATION_ID_SQL, id);
     }
 

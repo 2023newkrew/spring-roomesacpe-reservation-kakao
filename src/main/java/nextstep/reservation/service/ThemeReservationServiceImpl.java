@@ -30,7 +30,7 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
 
     @Override
     public void cancelById(Long id) throws SQLException{
-        int deleteCount = themeReservationDao.deleteReservation(id);
+        int deleteCount = themeReservationDao.delete(id);
         if(deleteCount == 0){
             throw new SQLException();
         }

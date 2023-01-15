@@ -49,7 +49,7 @@ class ThemeReservationDaoTest {
         themeReservationDao.insert(reservation);
 
         System.out.println("reservation.getId() = " + reservation.getId());
-        themeReservationDao.deleteReservation(reservation.getId());
+        themeReservationDao.delete(reservation.getId());
         System.out.println("asd" + themeReservationDao.findById(reservation.getId()));
         assertThat(themeReservationDao.findById(reservation.getId())).isNull();
     }
@@ -57,7 +57,7 @@ class ThemeReservationDaoTest {
     @Test
     @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
     void test3() throws SQLException{
-        assertThat(themeReservationDao.deleteReservation(NOT_EXIST_RESERVATION_ID)).isZero();
+        assertThat(themeReservationDao.delete(NOT_EXIST_RESERVATION_ID)).isZero();
     }
 
     @Test
