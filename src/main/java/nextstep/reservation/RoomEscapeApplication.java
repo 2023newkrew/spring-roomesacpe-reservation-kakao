@@ -65,7 +65,6 @@ public class RoomEscapeApplication {
                         System.out.println("예약 날짜: " + createdReservation.getDate());
                         System.out.println("예약 시간: " + createdReservation.getTime());
                         System.out.println("예약자 이름: " + createdReservation.getName());
-                        System.out.println("테마 번호: " + createdReservation.getThemeId());
                         System.out.println("테마 이름: " + createdReservation.getThemeName());
                         System.out.println("테마 설명: " + createdReservation.getThemeDesc());
                         System.out.println("테마 가격: " + createdReservation.getThemePrice());
@@ -110,7 +109,6 @@ public class RoomEscapeApplication {
                     System.out.println("예약 날짜: " + reservationResponse.getDate());
                     System.out.println("예약 시간: " + reservationResponse.getTime());
                     System.out.println("예약자 이름: " + reservationResponse.getName());
-                    System.out.println("예약 테마 ID: " + reservationResponse.getThemeId());
                     System.out.println("예약 테마 이름: " + reservationResponse.getThemeName());
                     System.out.println("예약 테마 설명: " + reservationResponse.getThemeDesc());
                     System.out.println("예약 테마 가격: " + reservationResponse.getThemePrice());
