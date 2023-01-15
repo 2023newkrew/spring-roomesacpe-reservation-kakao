@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Repository
@@ -18,6 +20,7 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     private static final String INSERT_SQL = "INSERT INTO RESERVATION(`DATE`, `TIME`, `NAME`, `THEME_ID`) VALUES (?, ?, ?, ?)";
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT `ID`, `DATE`, `TIME`, `NAME`, `THEME_ID`  FROM RESERVATION WHERE `ID` = ?";
+    private static final String SELECT_BY_DATE_TIME_SQL = "SELECT * FROM `RESERVATION` WHERE `date` = ? AND `time` = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -55,6 +58,13 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     @Override
     public Optional<Reservation> findById(Long id){
         return jdbcTemplate.query(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper, id)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Reservation> findByDatetime(LocalDate date, LocalTime time) {
+        return jdbcTemplate.query(SELECT_BY_DATE_TIME_SQL, reservationRowMapper, date, time)
                 .stream()
                 .findFirst();
     }
