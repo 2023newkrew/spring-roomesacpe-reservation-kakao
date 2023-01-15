@@ -2,22 +2,24 @@ package roomescape.theme.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.theme.domain.Theme;
 import roomescape.theme.dto.request.ThemeRequestDTO;
 import roomescape.theme.dto.response.ThemeResponseDTO;
+import roomescape.theme.exception.AlreadyReservedThemeException;
 import roomescape.theme.exception.DuplicatedThemeException;
 import roomescape.theme.exception.NoSuchThemeException;
 import roomescape.theme.repository.ThemeRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ThemeService {
 
     private final ThemeRepository themeRepository;
 
-    public ThemeService(final ThemeRepository themeRepository) {
-        this.themeRepository = themeRepository;
-    }
+    private final ReservationRepository reservationRepository;
 
     public ThemeResponseDTO save(final ThemeRequestDTO themeRequestDTO) {
         this.themeRepository.findByName(themeRequestDTO.getName())
@@ -39,6 +41,11 @@ public class ThemeService {
     }
 
     public void deleteById(Long id) {
+        this.reservationRepository.findByThemeId(id)
+                .ifPresent((e) -> {
+                    throw new AlreadyReservedThemeException();
+                });
+
         boolean deleted = this.themeRepository.deleteById(id);
 
         if (!deleted) {
