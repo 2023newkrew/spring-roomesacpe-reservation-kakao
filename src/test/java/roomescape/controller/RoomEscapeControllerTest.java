@@ -13,8 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
+import roomescape.reservation.domain.Reservation;
+import roomescape.theme.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -1,19 +1,18 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
+import roomescape.reservation.domain.Reservation;
+import roomescape.theme.domain.Theme;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 @RestController
 public class RoomEscapeController {
@@ -30,8 +29,11 @@ public class RoomEscapeController {
     private static final String LOOKUP_QUERY = "SELECT * FROM RESERVATION WHERE id = ?;";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public RoomEscapeController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @PostMapping("/reservations")
     public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation) {
@@ -58,7 +60,6 @@ public class RoomEscapeController {
     public ResponseEntity<Reservation> lookUpReservation(@PathVariable("id") String reservationId) {
         Reservation reservation = jdbcTemplate.queryForObject(
                 LOOKUP_QUERY,
-                new Object[]{reservationId},
                 (lookUpRs, rowNum) -> {
                     Long id = lookUpRs.getLong(INDEX_ID);
                     LocalDate date = LocalDate.parse(lookUpRs.getString(INDEX_DATE));
@@ -69,7 +70,8 @@ public class RoomEscapeController {
                     Integer themePrice = lookUpRs.getInt(INDEX_THEME_PRICE);
                     Theme theme = new Theme(themeName, themeDesc, themePrice);
                     return new Reservation(id, date, time, name, theme);
-                });
+                },
+                Long.parseLong(reservationId));
         return ResponseEntity.ok().body(reservation);
     }
 
