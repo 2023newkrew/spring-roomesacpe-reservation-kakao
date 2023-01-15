@@ -2,7 +2,6 @@ package nextstep.reservation.dao;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Reservation;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,7 +30,7 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     };
 
     @Override
-    public int insert(Reservation reservation) throws SQLException {
+    public int insert(Reservation reservation){
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         int insertCount = jdbcTemplate.update((Connection con) -> {
                 PreparedStatement psmt = con.prepareStatement(INSERT_SQL, new String[] {"id"});
@@ -49,16 +47,12 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     }
 
     @Override
-    public int delete(Long id) throws SQLException {
+    public int delete(Long id){
         return jdbcTemplate.update(DELETE_BY_RESERVATION_ID_SQL, id);
     }
 
     @Override
-    public Reservation findById(Long id) throws SQLException {
-        try{
-            return jdbcTemplate.queryForObject(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper, id);
-        }catch(EmptyResultDataAccessException err){
-            return null;
-        }
+    public Reservation findById(Long id){
+        return jdbcTemplate.queryForObject(SELECT_BY_RESERVATION_ID_SQL, reservationRowMapper, id);
     }
 }
