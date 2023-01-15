@@ -4,6 +4,8 @@ import nextstep.domain.Reservation;
 import nextstep.web.exception.BusinessException;
 import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.database.rowmapper.ReservationMappingStrategy;
+import nextstep.web.repository.database.rowmapper.RowMappingStrategy;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
@@ -13,6 +15,8 @@ public class ReservationDbRepository implements ReservationRepository {
     public static final String JDBC_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     public static final String JDBC_USER = "sa";
     public static final String JDBC_PASSWORD = "";
+
+    private final RowMappingStrategy<Reservation> reservationRowMappingStrategy = new ReservationMappingStrategy();
 
     public ReservationDbRepository() {
     }
@@ -47,9 +51,9 @@ public class ReservationDbRepository implements ReservationRepository {
             String sql = "SELECT * FROM reservation WHERE ID = ?;";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
-            ResultSet resultSet = ps.executeQuery();
-            validateFindResult(resultSet);
-            return Reservation.from(resultSet);
+            ResultSet rs = ps.executeQuery();
+            validateFindResult(rs);
+            return reservationRowMappingStrategy.map(rs);
         } catch (SQLException e) {
             throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
