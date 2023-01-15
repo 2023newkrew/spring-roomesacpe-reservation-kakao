@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.mapper.ReservationRowMapper;
 
 @Repository
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
@@ -39,7 +40,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public Optional<Reservation> findById(final Long reservationId) {
         String selectSql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
 
-        List<Reservation> reservations = jdbcTemplate.query(selectSql, (rs, rowNum) -> Reservation.from(rs),
+        List<Reservation> reservations = jdbcTemplate.query(selectSql, new ReservationRowMapper(),
                 reservationId);
 
         if (reservations.isEmpty()) {
@@ -60,8 +61,8 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public Optional<Reservation> findByDateTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
         String selectSql = "SELECT * FROM reservation WHERE date = (?) AND time = (?) AND theme_id = (?) LIMIT 1";
 
-        List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
-                Reservation.from(rs)), Date.valueOf(date), Time.valueOf(time), themeId);
+        List<Reservation> reservations = jdbcTemplate.query(selectSql, new ReservationRowMapper(), Date.valueOf(date),
+                Time.valueOf(time), themeId);
 
         if (reservations.isEmpty()) {
             return Optional.empty();
@@ -74,8 +75,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public Optional<Reservation> findByThemeId(final Long themeId) {
         String selectSql = "SELECT * FROM reservation WHERE theme_id = (?) LIMIT 1";
 
-        List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
-                Reservation.from(rs)), themeId);
+        List<Reservation> reservations = jdbcTemplate.query(selectSql, new ReservationRowMapper(), themeId);
 
         if (reservations.isEmpty()) {
             return Optional.empty();

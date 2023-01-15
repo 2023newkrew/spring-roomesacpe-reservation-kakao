@@ -1,7 +1,5 @@
 package roomescape.reservation.entity;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.AccessLevel;
@@ -40,15 +38,5 @@ public class Reservation {
 
     public Long getThemeId() {
         return themeId;
-    }
-
-    public static Reservation from(ResultSet rs) throws SQLException {
-        return Reservation.builder()
-                .id(rs.getLong("id"))
-                .date(rs.getDate("date").toLocalDate())
-                .time(rs.getTime("time").toLocalTime())
-                .name(rs.getString("name"))
-                .themeId(rs.getLong("theme_id"))
-                .build();
     }
 }

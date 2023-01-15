@@ -10,9 +10,13 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
+import org.springframework.jdbc.core.RowMapper;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.mapper.ReservationRowMapper;
 
 public class ReservationJdbcRepository implements ReservationRepository {
+
+    private final RowMapper<Reservation> rowMapper = new ReservationRowMapper();
 
     @Override
     public Long save(Reservation reservation) {
@@ -53,7 +57,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 return Optional.empty();
             }
 
-            final Reservation reservation = Reservation.from(rs);
+            final Reservation reservation = rowMapper.mapRow(rs, 1);
             return Optional.of(reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -75,7 +79,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 return Optional.empty();
             }
 
-            final Reservation reservation = Reservation.from(rs);
+            final Reservation reservation = rowMapper.mapRow(rs, 1);
             return Optional.of(reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -98,7 +102,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 return Optional.empty();
             }
 
-            final Reservation reservation = Reservation.from(rs);
+            final Reservation reservation = rowMapper.mapRow(rs, 1);
 
             return Optional.of(reservation);
         } catch (SQLException e) {

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.theme.entity.Theme;
+import roomescape.theme.mapper.ThemeRowMapper;
 
 @Repository
 public class ThemeJdbcTemplateRepository implements ThemeRepository {
@@ -28,7 +29,7 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
     public Optional<Theme> findById(final Long id) {
         final String selectSql = "SELECT * FROM theme WHERE id = (?) LIMIT 1 ";
 
-        final List<Theme> themes = jdbcTemplate.query(selectSql, (rs, rowNum) -> Theme.from(rs),
+        final List<Theme> themes = jdbcTemplate.query(selectSql, new ThemeRowMapper(),
                 id);
 
         if (themes.isEmpty()) {
@@ -43,7 +44,7 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
 
         final String selectSql = "SELECT * FROM theme WHERE name = (?) LIMIT 1 ";
 
-        final List<Theme> themes = jdbcTemplate.query(selectSql, (rs, rowNum) -> Theme.from(rs),
+        final List<Theme> themes = jdbcTemplate.query(selectSql, new ThemeRowMapper(),
                 themeName);
 
         if (themes.isEmpty()) {
@@ -73,6 +74,6 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
     public List<Theme> findAll() {
         final String selectSql = "SELECT * FROM theme";
 
-        return jdbcTemplate.query(selectSql, (rs, rowNum) -> Theme.from(rs));
+        return jdbcTemplate.query(selectSql, new ThemeRowMapper());
     }
 }
