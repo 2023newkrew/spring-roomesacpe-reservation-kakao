@@ -3,16 +3,24 @@ package roomescape.reservation.controller;
 import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
+import java.sql.Connection;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
 import roomescape.reservation.dto.request.ReservationRequestDTO;
 import roomescape.reservation.exception.DuplicatedReservationException;
@@ -21,6 +29,7 @@ import roomescape.reservation.exception.NoSuchReservationException;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
+@TestInstance(Lifecycle.PER_CLASS)
 public class ReservationControllerTest {
 
     @LocalServerPort
@@ -28,6 +37,17 @@ public class ReservationControllerTest {
 
     private static final ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00",
             "name", "theme");
+
+    @Autowired
+    private DataSource dataSource;
+
+    @BeforeAll
+    public void beforeAll() throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn,
+                    new ClassPathResource("/test-reservation-default-theme.sql"));
+        }
+    }
 
     @BeforeEach
     void setUp() {
@@ -50,9 +70,12 @@ public class ReservationControllerTest {
     @DisplayName("유효하지 않은 Reservation 생성은 400을 반환한다.")
     @Test
     void invalidDateTimeReservation() {
+        final ReservationRequestDTO invalidRequest = new ReservationRequestDTO("2022-13-11", "13:00",
+                "name", "theme");
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequestDTO)
+                .body(invalidRequest)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -88,9 +111,7 @@ public class ReservationControllerTest {
                 .body("date", is("2022-08-11"))
                 .body("time", is("13:00"))
                 .body("name", is("name"))
-                .body("themeName", is("워너고홈"))
-                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
-                .body("themePrice", is(29000));
+                .body("themeId", is(1));
     }
 
     @DisplayName("없는 Reservation 조회 시 404를 반환한다.")
