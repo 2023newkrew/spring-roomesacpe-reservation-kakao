@@ -1,5 +1,6 @@
 package nextstep.repository.theme;
 
+import nextstep.ConsoleConnectDB;
 import nextstep.domain.Theme;
 
 import java.sql.*;
@@ -11,19 +12,10 @@ public class ConsoleThemeRepository implements ThemeRepository {
     private Connection con = null;
 
     public ConsoleThemeRepository() {
-        connect();
+        con = ConsoleConnectDB.getConnect();
     }
 
-    private void connect() {
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+
     @Override
     public Theme findByThemeId(Long id) {
         try {

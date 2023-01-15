@@ -1,5 +1,6 @@
 package nextstep.repository.reservation;
 
+import nextstep.ConsoleConnectDB;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
@@ -12,18 +13,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
     private Connection con = null;
 
     public ConsoleReservationRepository() {
-        connect();
-    }
-
-    private void connect() {
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        con = ConsoleConnectDB.getConnect();
     }
 
     @Override

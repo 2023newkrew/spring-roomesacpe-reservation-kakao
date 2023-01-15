@@ -78,6 +78,6 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     private void validateTheme(Theme theme) {
         Integer count = jdbcTemplate.queryForObject(checkDuplicationSql, Integer.class, theme.getName());
-        if (count > 0) throw new IllegalArgumentException("이름이 같은 테마가 이미 존재합니다.");
+        if (count > 0) throw new RuntimeException("이름이 같은 테마가 이미 존재합니다.");
     }
 }
