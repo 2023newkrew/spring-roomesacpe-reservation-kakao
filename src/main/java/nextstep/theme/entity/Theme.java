@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nextstep.theme.dto.ThemeDto;
 
 @ToString
 @Getter
@@ -16,17 +15,14 @@ public class Theme {
     private final String desc;
     private final Integer price;
 
+    public Theme(String name, String desc, Integer price) {
+        this(0L, name, desc, price);
+    }
+
     public Theme(Long id, String name, String desc, Integer price) {
         this.id = id;
         this.name = name;
         this.desc = desc;
         this.price = price;
-    }
-
-    public Theme(ThemeDto themeDto){
-        this.id = themeDto.getId();
-        this.name = themeDto.getName();
-        this.desc = themeDto.getDesc();
-        this.price = themeDto.getPrice();
     }
 }

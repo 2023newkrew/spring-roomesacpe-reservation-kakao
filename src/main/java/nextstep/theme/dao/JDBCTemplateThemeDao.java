@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +18,9 @@ public class JDBCTemplateThemeDao implements ThemeDao {
 
     private static final String SELECT_BY_THEME_ID_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM THEME WHERE `ID` = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`NAME`, `DESC`, `PRICE`) VALUES (?, ?, ?)";
+    private static final String SELECT_ALL_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM `THEME`";
+    private static final String UPDATE_SQL = "UPDATE `THEME` SET `NAME` = ?, `DESC` = ?, `PRICE` = ? WHERE `ID` = ?";
+    private static final String DELETE_BY_ID_SQL = "DELETE FROM `THEME` WHERE `ID` = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -50,5 +54,24 @@ public class JDBCTemplateThemeDao implements ThemeDao {
         theme.setId(keyHolder.getKey().longValue());
 
         return insertCount;
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        return jdbcTemplate.query(SELECT_ALL_SQL, themeRowMapper);
+    }
+
+    @Override
+    public int update(Theme theme) {
+        return jdbcTemplate.update(UPDATE_SQL
+                , theme.getName()
+                , theme.getDesc()
+                , theme.getPrice()
+                , theme.getId());
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return jdbcTemplate.update(DELETE_BY_ID_SQL, id);
     }
 }

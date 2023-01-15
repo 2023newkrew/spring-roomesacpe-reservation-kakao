@@ -12,7 +12,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DirectConnectionThemeDao implements ThemeDao {
-    private static final String FIND_BY_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
+    private static final String SELECT_BY_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
+    private static final String SELECT_ALL_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM `THEME`";
+    private static final String UPDATE_SQL = "UPDATE `THEME` SET `NAME` = ?, `DESC` = ?, `PRICE` = ? WHERE `ID` = ?";
+    private static final String DELETE_BY_ID_SQL = "DELETE FROM `THEME` WHERE `ID` = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
 
     private final DataSource dataSource;
@@ -25,12 +28,12 @@ public class DirectConnectionThemeDao implements ThemeDao {
 
         try{
             con = dataSource.getConnection();
-            psmt = con.prepareStatement(FIND_BY_ID_SQL);
-            psmt.setLong(1, id);
+            psmt = con.prepareStatement(SELECT_BY_ID_SQL);
+            setTheme(id, psmt);
+
             resultSet = psmt.executeQuery();
-            List<Theme> themes = getTheme(id, resultSet);
-            return themes.stream()
-                    .findFirst();
+            List<Theme> themes = getTheme(resultSet);
+            return themes.stream().findFirst();
         }catch (SQLException sqlException){
             return Optional.empty();
         }finally {
@@ -48,19 +51,14 @@ public class DirectConnectionThemeDao implements ThemeDao {
 
         try{
             con = dataSource.getConnection();
-            int parameterIndex = 1;
             psmt = con.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
-            psmt.setString(parameterIndex++, theme.getName());
-            psmt.setString(parameterIndex++, theme.getDesc());
-            psmt.setInt(parameterIndex++, theme.getPrice());
+
+            setTheme(theme, psmt);
 
             insertCount = psmt.executeUpdate();
             resultSet = psmt.getGeneratedKeys();
 
-            while (resultSet.next()) {
-                themeId = resultSet.getLong(1);
-            }
-            theme.setId(themeId);
+            theme.setId(getThemeId(resultSet));
         }catch (SQLException sqlException){
 
         }finally {
@@ -69,9 +67,85 @@ public class DirectConnectionThemeDao implements ThemeDao {
         return insertCount;
     }
 
-    private static List<Theme> getTheme(Long id, ResultSet resultSet) throws SQLException {
+    @Override
+    public List<Theme> findAll() {
+        Connection con = null;
+        PreparedStatement psmt = null;
+        ResultSet resultSet = null;
+
+        try{
+            con = dataSource.getConnection();
+            psmt = con.prepareStatement(SELECT_ALL_SQL);
+            resultSet = psmt.executeQuery();
+            return getTheme(resultSet);
+        }catch (SQLException sqlException){
+            return List.of();
+        }finally {
+            DatabaseUtil.close(con, psmt, resultSet);
+        }
+    }
+
+    @Override
+    public int update(Theme theme) {
+        Connection con = null;
+        PreparedStatement psmt = null;
+        int updateCount = 0;
+
+        try{
+            con = dataSource.getConnection();
+            psmt = con.prepareStatement(UPDATE_SQL);
+
+            setTheme(theme, psmt);
+            updateCount = psmt.executeUpdate();
+        }catch (SQLException sqlException){
+
+        }finally {
+            DatabaseUtil.close(con, psmt);
+        }
+        return updateCount;
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        Connection con = null;
+        PreparedStatement psmt = null;
+        int deleteCount = 0;
+
+        try{
+            con = dataSource.getConnection();
+            psmt = con.prepareStatement(DELETE_BY_ID_SQL);
+            psmt.setLong(1, id);
+            deleteCount = psmt.executeUpdate();
+        }catch (SQLException sqlException){
+
+        }finally {
+            DatabaseUtil.close(con, psmt);
+        }
+        return deleteCount;
+    }
+
+    private static void setTheme(Long id, PreparedStatement psmt) throws SQLException {
+        psmt.setLong(1, id);
+    }
+
+    private static void setTheme(Theme theme, PreparedStatement psmt) throws SQLException {
+        int parameterIndex = 1;
+        psmt.setString(parameterIndex++, theme.getName());
+        psmt.setString(parameterIndex++, theme.getDesc());
+        psmt.setInt(parameterIndex++, theme.getPrice());
+    }
+
+    private static Long getThemeId(ResultSet resultSet) throws SQLException {
+        if (resultSet.next()) {
+            return resultSet.getLong(1);
+        }
+        return null;
+    }
+
+    private static List<Theme> getTheme(ResultSet resultSet) throws SQLException {
         List<Theme> themes = new ArrayList<>();
         while(resultSet.next()){
+            Long id  = resultSet.getLong("ID");
             String name = resultSet.getString("NAME");
             String desc = resultSet.getString("DESC");
             Integer price = resultSet.getInt("PRICE");
