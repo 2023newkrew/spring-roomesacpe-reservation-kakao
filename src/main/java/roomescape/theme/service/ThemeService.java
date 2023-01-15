@@ -7,6 +7,7 @@ import roomescape.theme.domain.Theme;
 import roomescape.theme.dto.request.ThemeRequestDTO;
 import roomescape.theme.dto.response.ThemeResponseDTO;
 import roomescape.theme.exception.DuplicatedThemeException;
+import roomescape.theme.exception.NoSuchThemeException;
 import roomescape.theme.repository.ThemeRepository;
 
 @Service
@@ -35,5 +36,13 @@ public class ThemeService {
         return this.themeRepository.findAll().stream()
                 .map(ThemeResponseDTO::from)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long id) {
+        boolean deleted = this.themeRepository.deleteById(id);
+
+        if (!deleted) {
+            throw new NoSuchThemeException();
+        }
     }
 }
