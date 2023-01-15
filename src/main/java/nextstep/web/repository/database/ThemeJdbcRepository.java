@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ThemeJdbcRepository implements ThemeRepository {
 
-    public static final String TABLE_NAME = "reservation";
+    public static final String TABLE_NAME = "theme";
 
     public static final String KEY_COLUMN_NAME = "id";
 
@@ -41,7 +41,7 @@ public class ThemeJdbcRepository implements ThemeRepository {
     @Override
     public List<Theme> findAll() {
         String sql = "SELECT * FROM theme";
-        
+
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
@@ -55,7 +55,6 @@ public class ThemeJdbcRepository implements ThemeRepository {
 
     private Map<String, Object> prepareParams(Theme theme) {
         return Map.of(
-                "id", theme.getId(),
                 "name", theme.getName(),
                 "desc", theme.getDesc(),
                 "price", theme.getPrice()
