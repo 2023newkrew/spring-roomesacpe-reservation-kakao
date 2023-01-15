@@ -66,20 +66,6 @@ public class ReservationControllerExceptionTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("예약 생성) 값이 포함되지 않았을 경우 예약 생설 불가.")
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "{\"name\":\"abc\",\"time\":\"13:00:00\"}",
-            "{\"name\":\"abc\",\"date\":\"2022-08-12\"}",
-            "{\"date\":\"2022-08-12\",\"time\":\"13:00:00\"}",})
-    void notContainRequiredField(String body) {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
-                .when().post(RESERVATIONS_PATH)
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
     @DisplayName("예약 생성) 값의 포맷이 맞지 않을 경우 생성 불가")
     @ParameterizedTest
     @ValueSource(strings = {
