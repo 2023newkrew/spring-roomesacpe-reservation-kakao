@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 
-public class ConnectionDAOManager {
+public class DAOManager {
 
     private final String url;
     private final String user;
     private final String password;
 
-    public ConnectionDAOManager(String url, String user, String password) {
+    public DAOManager(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;

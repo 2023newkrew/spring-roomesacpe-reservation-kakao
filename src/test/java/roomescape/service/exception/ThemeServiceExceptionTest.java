@@ -1,5 +1,6 @@
 package roomescape.service.exception;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -78,9 +79,8 @@ public class ThemeServiceExceptionTest {
     void failToFindThemeNotExist() {
         when(themeDAO.find(ID_DATA)).thenReturn(null);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> themeService.find(ID_DATA));
+        assertThatThrownBy(() -> themeService.find(ID_DATA))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @DisplayName("테마 삭제) 예약과 관계있는 테마 삭제 불가")
@@ -89,9 +89,8 @@ public class ThemeServiceExceptionTest {
         when(reservationDAO.existThemeId(ID_DATA)).thenReturn(true);
         when(themeDAO.existId(ID_DATA)).thenReturn(true);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> themeService.remove(ID_DATA));
+        assertThatThrownBy(() -> themeService.remove(ID_DATA))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @DisplayName("테마 삭제) ID가 없는 경우 삭제 불가")
@@ -99,8 +98,7 @@ public class ThemeServiceExceptionTest {
     void failToRemoveThemeNotExist() {
         when(themeDAO.existId(ID_DATA)).thenReturn(false);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> themeService.remove(ID_DATA));
+        assertThatThrownBy(() -> themeService.remove(ID_DATA))
+                .isInstanceOf(BadRequestException.class);
     }
 }

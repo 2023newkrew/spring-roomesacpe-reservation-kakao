@@ -1,6 +1,6 @@
 package roomescape.service.exception;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -54,18 +54,16 @@ public class ReservationServiceExceptionTest {
 
         when(reservationDAO.exist(reservation)).thenReturn(true);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> reservationService.create(reservation));
+        assertThatThrownBy(() -> reservationService.create(reservation))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @DisplayName("예약 생성) 값이 포함되지 않았을 경우 예약 생설 불가")
     @ParameterizedTest
     @MethodSource("getFailToCreateReservationInvalidValueDate")
     void failToCreateReservationInvalidValue(Reservation reservation) {
-        assertThrows(
-                BadRequestException.class,
-                () -> reservationService.create(reservation));
+        assertThatThrownBy(() -> reservationService.create(reservation))
+                .isInstanceOf(BadRequestException.class);
     }
 
     private static Stream<Arguments> getFailToCreateReservationInvalidValueDate() {
@@ -85,9 +83,8 @@ public class ReservationServiceExceptionTest {
         when(reservationDAO.exist(reservation)).thenReturn(false);
         when(themeDAO.existId(THEME_ID_DATA)).thenReturn(false);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> reservationService.create(reservation));
+        assertThatThrownBy(() -> reservationService.create(reservation))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @DisplayName("예약 조회) ID가 없는 경우 조회 불가")
@@ -95,9 +92,8 @@ public class ReservationServiceExceptionTest {
     void failToFindReservationNotExist() {
         when(reservationDAO.find(ID_DATA)).thenReturn(null);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> reservationService.find(ID_DATA));
+        assertThatThrownBy(() -> reservationService.find(ID_DATA))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @DisplayName("예약 삭제) ID가 없는 경우 삭제 불가")
@@ -105,8 +101,7 @@ public class ReservationServiceExceptionTest {
     void removeReservation() {
         when(reservationDAO.existId(ID_DATA)).thenReturn(false);
 
-        assertThrows(
-                BadRequestException.class,
-                () -> reservationService.remove(ID_DATA));
+        assertThatThrownBy(() -> reservationService.remove(ID_DATA))
+                .isInstanceOf(BadRequestException.class);
     }
 }
