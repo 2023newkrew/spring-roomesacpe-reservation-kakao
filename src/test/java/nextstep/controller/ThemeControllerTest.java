@@ -54,7 +54,7 @@ public class ThemeControllerTest {
         CreateThemeDto newTheme = new CreateThemeDto(
                 "카페 라떼",
                 "LIH 바이러스 위기에서 탈출",
-                -10000
+                -1
         );
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

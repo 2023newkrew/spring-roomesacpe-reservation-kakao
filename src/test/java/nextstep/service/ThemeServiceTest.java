@@ -41,7 +41,7 @@ public class ThemeServiceTest {
         CreateThemeDto newTheme = new CreateThemeDto(
                 "카페 라떼",
                 "LIH 바이러스 위기에서 탈출",
-                -32000
+                -1
         );
         assertThatThrownBy(() -> themeService.addTheme(newTheme))
                 .isInstanceOf(NegativeThemePriceException.class);
