@@ -88,4 +88,17 @@ public class ThemeControllerExceptionTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @DisplayName("테마 조회) ID가 없는 경우 조회 불가 및 ID가 잘못된 경우 (float, string)")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            THEME_PATH + "/10",
+            THEME_PATH + "/1.1",
+            THEME_PATH + "/test"})
+    void failToGetThemeIfNotExistIdAndInvalidId(String path) {
+        RestAssured.given().log().all()
+                .when().get(path)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
