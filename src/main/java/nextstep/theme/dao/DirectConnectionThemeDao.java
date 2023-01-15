@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DirectConnectionThemeDao implements ThemeDao {
@@ -17,7 +18,7 @@ public class DirectConnectionThemeDao implements ThemeDao {
     private final DataSource dataSource;
 
     @Override
-    public Theme findById(Long id){
+    public Optional<Theme> findById(Long id){
         Connection con = null;
         PreparedStatement psmt = null;
         ResultSet resultSet = null;
@@ -28,9 +29,10 @@ public class DirectConnectionThemeDao implements ThemeDao {
             psmt.setLong(1, id);
             resultSet = psmt.executeQuery();
             List<Theme> themes = getTheme(id, resultSet);
-            return (themes.size() > 0) ? themes.get(0) : null;
+            return themes.stream()
+                    .findFirst();
         }catch (SQLException sqlException){
-            return null;
+            return Optional.empty();
         }finally {
             DatabaseUtil.close(con, psmt, resultSet);
         }

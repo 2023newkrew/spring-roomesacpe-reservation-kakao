@@ -2,7 +2,6 @@ package nextstep.theme.dao;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.theme.entity.Theme;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,8 +29,10 @@ public class JDBCTemplateThemeDao implements ThemeDao {
             );
 
     @Override
-    public Theme findById(Long id){
-        return jdbcTemplate.queryForObject(SELECT_BY_THEME_ID_SQL, themeRowMapper, id);
+    public Optional<Theme> findById(Long id){
+        return jdbcTemplate.query(SELECT_BY_THEME_ID_SQL, themeRowMapper, id)
+                .stream()
+                .findFirst();
     }
 
     @Override

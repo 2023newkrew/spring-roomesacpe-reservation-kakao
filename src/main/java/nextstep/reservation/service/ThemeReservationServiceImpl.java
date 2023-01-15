@@ -41,10 +41,9 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
         Reservation reservation = themeReservationDao.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
-        Theme theme = themeDao.findById(reservation.getThemeId());
-        if(theme == null){
-            return null;
-        }
+        Theme theme = themeDao.findById(reservation.getThemeId())
+                .orElseThrow(() -> new RuntimeException());
+
         return new ReservationDetail(reservation, theme);
     }
 }

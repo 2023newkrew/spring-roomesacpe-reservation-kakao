@@ -2,10 +2,10 @@ package nextstep.theme.dao;
 
 import nextstep.theme.entity.Theme;
 
-import java.sql.SQLException;
+import java.util.Optional;
 
 public interface ThemeDao {
-    Theme findById(Long id);
+    Optional<Theme> findById(Long id);
 
     int insert(Theme theme);
 }
