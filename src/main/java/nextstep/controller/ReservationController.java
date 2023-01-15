@@ -29,8 +29,7 @@ public class ReservationController {
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
         try {
             Theme theme = themeService.findById(request.themeId);
-            Long id = reservationService.createReservation(request.getDate(),
-                    request.getTime(), request.getName(), theme);
+            Long id = reservationService.createReservation(request.toReservation());
             return ResponseEntity.created(URI.create("/reservations/" + id)).build();
         } catch (Exception e){
             return ResponseEntity.badRequest()
@@ -41,7 +40,7 @@ public class ReservationController {
     @GetMapping("/{id}")
     public ResponseEntity findReservationById(@PathVariable Long id) {
         try {
-            Reservation reservation = reservationService.findById(id);
+             FindReservation reservation = reservationService.findById(id);
             return new ResponseEntity(reservation, HttpStatus.CREATED);
         } catch (Exception e){
             return ResponseEntity.badRequest()

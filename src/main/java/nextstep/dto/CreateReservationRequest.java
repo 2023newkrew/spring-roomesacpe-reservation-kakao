@@ -1,5 +1,7 @@
 package nextstep.dto;
 
+import nextstep.domain.Reservation;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -30,5 +32,9 @@ public class CreateReservationRequest {
 
     public Long getThemeId() {
         return themeId;
+    }
+
+    public Reservation toReservation() {
+        return new Reservation(date, time, name, themeId);
     }
 }

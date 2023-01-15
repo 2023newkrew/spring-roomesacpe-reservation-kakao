@@ -58,6 +58,24 @@ public class JdbcThemeRepository implements ThemeRepository {
         }
     }
 
+    @Override
+    public void dropThemeTable() {
+        try {
+            jdbcTemplate.execute(dropTableSql);
+        } catch (Exception e){
+            throw new RuntimeException("테이블 삭제 오류");
+        }
+    }
+
+    @Override
+    public void createThemeTable() {
+        try {
+            jdbcTemplate.execute(createTableSql);
+        } catch (Exception e){
+            throw new RuntimeException("테이블 생성 오류");
+        }
+    }
+
     private void validateTheme(Theme theme) {
         Integer count = jdbcTemplate.queryForObject(checkDuplicationSql, Integer.class, theme.getName());
         if (count > 0) throw new IllegalArgumentException("이름이 같은 테마가 이미 존재합니다.");

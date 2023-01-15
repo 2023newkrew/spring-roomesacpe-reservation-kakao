@@ -13,8 +13,8 @@ public interface ReservationRepository {
     String findByIdSql = "select * from reservation where id = ?";
     String deleteByIdSql = "delete from reservation where id = ?";
     String deleteByThemeIdSql = "delete from reservation where theme_id = ?";
-    String saveSql = "INSERT INTO reservation (date, time, name, theme_id, theme_name, theme_desc, theme_price)" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?);";
+    String saveSql = "INSERT INTO reservation (date, time, name, theme_id)" +
+            "VALUES (?, ?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from reservation where date = ? and time = ?";
 
     String createTableSql = "create table reservation (\n" +
@@ -22,9 +22,7 @@ public interface ReservationRepository {
             "  date date,\n" +
             "  time time,\n" +
             "  name varchar(20),\n" +
-            "  theme_name varchar(20),\n" +
-            "  theme_desc varchar(255),\n" +
-            "  theme_price int,\n" +
+            "  theme_id bigint,\n" +
             "  primary key (id)\n" +
             ");";
     String dropTableSql = "drop table reservation if exists";
@@ -36,9 +34,6 @@ public interface ReservationRepository {
         ps.setTime(2, Time.valueOf(time));
         ps.setString(3, name);
         ps.setLong(4, theme.getId());
-        ps.setString(5, theme.getName());
-        ps.setString(6, theme.getDesc());
-        ps.setInt(7, theme.getPrice());
         return ps;
     }
 
@@ -47,23 +42,15 @@ public interface ReservationRepository {
                 resultSet.getDate("DATE").toLocalDate(),
                 resultSet.getTime("TIME").toLocalTime(),
                 resultSet.getString("NAME"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
+                resultSet.getLong("THEME_ID")
         );
     }
 
     Reservation findById(Long id);
-
     void deleteById(Long id);
     void deleteByThemeId(Long themeId);
-
     Long save(LocalDate date, LocalTime time, String name, Theme theme);
-
     void createTable() throws SQLException;
-
     void dropTable() throws SQLException;
 
 }

@@ -19,6 +19,10 @@ public class Theme {
         this.price = price;
     }
 
+    public Theme(long theme_id) {
+        this.id = theme_id;
+    }
+
     public Long getId() {
         return id;
     }

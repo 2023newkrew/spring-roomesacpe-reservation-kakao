@@ -1,6 +1,7 @@
 package nextstep.dto;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -52,15 +53,15 @@ public class FindReservation {
         return themePrice;
     }
 
-    public static FindReservation from(Reservation reservation) {
+    public static FindReservation from(Reservation reservation, Theme theme) {
         return new FindReservation(
                 reservation.getId(),
                 reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
+                theme.getName(),
+                theme.getDesc(),
+                theme.getPrice()
         );
     }
 }

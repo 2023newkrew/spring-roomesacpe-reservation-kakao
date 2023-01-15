@@ -3,8 +3,6 @@ package nextstep.repository.theme;
 import nextstep.domain.Theme;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface ThemeRepository {
@@ -18,8 +16,15 @@ public interface ThemeRepository {
             "VALUES (?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from theme where name = ?";
 
-    String createTableSql = "";
-    String dropTableSql = "";
+    String createTableSql = "CREATE TABLE theme\n" +
+            "(\n" +
+            "    id    bigint not null auto_increment,\n" +
+            "    name  varchar(20),\n" +
+            "    desc  varchar(255),\n" +
+            "    price int,\n" +
+            "    primary key (id)\n" +
+            ");";
+    String dropTableSql = "drop table theme";
 
     default PreparedStatement getReservationPreparedStatement(Connection con, Theme theme) throws SQLException {
         PreparedStatement ps = con.prepareStatement(saveSql, new String[]{"id"});
@@ -40,8 +45,9 @@ public interface ThemeRepository {
     Theme findByThemeId(Long id);
     List<Theme> findAll();
     void deleteById(Long id) throws SQLException;
-
     Long save(Theme theme);
-
     Theme findByTheme(Theme theme);
+
+    void dropThemeTable();
+    void createThemeTable();
 }

@@ -2,11 +2,13 @@ package nextstep;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.dto.FindReservation;
 import nextstep.repository.reservation.ConsoleReservationRepository;
 import nextstep.repository.theme.ConsoleThemeRepository;
 import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -49,9 +51,8 @@ public class ConsoleApplication {
 
                 try {
                     theme = themeService.findById(themeId);
-                    Long id = reservationService.createReservation(LocalDate.parse(date),
-                            LocalTime.parse(time + ":00"), name, theme);
-                    Reservation reservation = reservationService.findById(id);
+                    Long id = reservationService.createReservation(new Reservation(LocalDate.parse(date), LocalTime.parse(time), name, themeId));
+                    FindReservation reservation = reservationService.findById(id);
 
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + reservation.getId());
@@ -68,15 +69,15 @@ public class ConsoleApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
-                    Reservation reservation = reservationService.findById(id);
+                    FindReservation reservation = reservationService.findById(id);
 
                     System.out.println("예약 번호: " + reservation.getId());
                     System.out.println("예약 날짜: " + reservation.getDate());
                     System.out.println("예약 시간: " + reservation.getTime());
                     System.out.println("예약자 이름: " + reservation.getName());
-                    System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                    System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                    System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                    System.out.println("예약 테마 이름: " + reservation.getThemeName());
+                    System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+                    System.out.println("예약 테마 가격: " + reservation.getThemePrice());
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
