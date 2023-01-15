@@ -67,19 +67,23 @@ public class ConsoleApplication {
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-                if(params.equals(LIST)){
-                    reservationService.findAll();
+                if (params.equals(LIST)) {
+                    try {
 
-                    for (FindReservation reservation : reservationService.findAll()) {
-                        System.out.println("예약 번호: " + reservation.getId());
-                        System.out.println("예약 날짜: " + reservation.getDate());
-                        System.out.println("예약 시간: " + reservation.getTime());
-                        System.out.println("예약자 이름: " + reservation.getName());
-                        System.out.println("예약 테마 이름: " + reservation.getThemeName());
-                        System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
-                        System.out.println("예약 테마 가격: " + reservation.getThemePrice());
+                        for (FindReservation reservation : reservationService.findAll()) {
+                            System.out.println("예약 번호: " + reservation.getId());
+                            System.out.println("예약 날짜: " + reservation.getDate());
+                            System.out.println("예약 시간: " + reservation.getTime());
+                            System.out.println("예약자 이름: " + reservation.getName());
+                            System.out.println("예약 테마 이름: " + reservation.getThemeName());
+                            System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+                            System.out.println("예약 테마 가격: " + reservation.getThemePrice());
+                        }
+
+                        continue;
+                    } catch (Exception e){
+                        throw new RuntimeException("예약이 없습니다.");
                     }
-                    continue;
                 }
 
                 Long id = Long.parseLong(params.split(",")[0]);
