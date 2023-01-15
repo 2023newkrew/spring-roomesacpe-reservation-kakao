@@ -15,7 +15,6 @@ import static nextstep.repository.ConnectionHandler.getConnection;
 
 public class ThemeH2Repository implements ThemeRepository {
 
-
     @Override
     public void add(Theme theme) {
         Connection con = getConnection();
@@ -90,7 +89,7 @@ public class ThemeH2Repository implements ThemeRepository {
     }
 
     @Override
-    public void update(Theme theme) {
+    public void update(Long id, Theme theme) {
         Connection con = getConnection();
 
         try {
@@ -99,7 +98,7 @@ public class ThemeH2Repository implements ThemeRepository {
             ps.setString(1, theme.getName());
             ps.setString(2, theme.getDesc());
             ps.setInt(3, theme.getPrice());
-            ps.setLong(4, theme.getId());
+            ps.setLong(4, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

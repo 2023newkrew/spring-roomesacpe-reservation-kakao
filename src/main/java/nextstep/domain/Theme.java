@@ -13,6 +13,10 @@ public class Theme {
         this.price = price;
     }
 
+    public Theme(String name, String desc, Integer price) {
+        this(null, name, desc, price);
+    }
+
     public Long getId() {
         return id;
     }
