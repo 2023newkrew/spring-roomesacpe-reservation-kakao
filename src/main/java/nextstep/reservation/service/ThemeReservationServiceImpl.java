@@ -33,8 +33,8 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
         if(isExistSameDatetimeReservation(reservationDto)){
             throw new ConstraintViolationException(ThemeReservationErrorCode.CANNOT_RESERVE_FOR_SAME_DATETIME);
         }
-        Reservation reservation = ReservationDto.from(reservationDto);
 
+        Reservation reservation = reservationDto.toEntity();
         themeReservationDao.insert(reservation);
         return reservation.getId();
     }

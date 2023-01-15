@@ -88,6 +88,6 @@ class ThemeReservationDaoTest {
 
         int index = ThreadLocalRandom.current().nextInt(3);
 
-        return ReservationDto.from(new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), names.get(index), themeId));
+        return new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), names.get(index), themeId).toEntity();
     }
 }

@@ -26,8 +26,7 @@ public class ReservationDto {
     @Setter
     private Long themeId;
 
-    public static Reservation from(ReservationDto reservationDto) {
-        return new Reservation(reservationDto.getDate(), reservationDto.getTime()
-                , reservationDto.getName(), reservationDto.getThemeId());
+    public Reservation toEntity(){
+        return new Reservation(this.date, this.time, this.name, this.themeId);
     }
 }
