@@ -25,6 +25,7 @@ class ThemeJdbcTemplateRepositoryTest {
     private static final String expectedDesc = "desc";
     private static final int expectedPrice = 1000;
     private static final Long invalidId = -1L;
+    private static final String invalidName = "invalid";
     private Long themeId;
 
     @BeforeEach
@@ -51,6 +52,11 @@ class ThemeJdbcTemplateRepositoryTest {
     }
 
     @Test
+    void cannotFindWithInvalidId() {
+        assertThat(this.themeRepository.findById(invalidId)).isEmpty();
+    }
+
+    @Test
     void findByName() {
         final Theme result = this.themeRepository.findByName(expectedName)
                 .orElseThrow(RuntimeException::new);
@@ -62,6 +68,7 @@ class ThemeJdbcTemplateRepositoryTest {
     }
 
     @Test
-    void deleteById() {
+    void cannotFindWithInvalidName() {
+        assertThat(this.themeRepository.findByName(invalidName)).isEmpty();
     }
 }
