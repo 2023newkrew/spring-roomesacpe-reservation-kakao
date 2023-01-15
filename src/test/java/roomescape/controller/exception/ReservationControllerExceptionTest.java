@@ -45,10 +45,10 @@ public class ReservationControllerExceptionTest {
             MediaType.TEXT_HTML_VALUE,
             MediaType.TEXT_XML_VALUE,
             MediaType.APPLICATION_XML_VALUE})
-    void notJson(String contentType) {
+    void failToPostIfNotJson(String contentType) {
         RestAssured.given().log().all()
                 .contentType(contentType).body("")
-                .when().post("/reservations")
+                .when().post(RESERVATIONS_PATH)
                 .then().log().all()
                 .statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
     }
