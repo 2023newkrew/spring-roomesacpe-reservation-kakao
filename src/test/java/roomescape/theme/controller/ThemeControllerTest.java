@@ -69,4 +69,21 @@ class ThemeControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
     }
+
+    @Test
+    @Order(3)
+    void deleteTheme() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(0));
+    }
 }
