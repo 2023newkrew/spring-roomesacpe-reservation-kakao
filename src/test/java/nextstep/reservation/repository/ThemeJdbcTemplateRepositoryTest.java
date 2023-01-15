@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.sql.DataSource;
 import nextstep.reservation.entity.Theme;
+import nextstep.reservation.repository.theme.ThemeJdbcTemplateRepository;
+import nextstep.reservation.repository.theme.ThemeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

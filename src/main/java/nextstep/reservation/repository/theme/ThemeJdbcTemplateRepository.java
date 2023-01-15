@@ -1,4 +1,4 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.theme;
 
 import java.util.List;
 import java.util.Optional;
