@@ -16,3 +16,14 @@ spring:
   sql:
     init:
       mode: always
+
+logging:
+  pattern:
+    file: "%-5level %d{yyyy-MM-dd HH:mm:ss} [%thread] %logger[%method:%line] - %msg%n"
+  logback:
+    rolling policy:
+      file-name-pattern: "${LOG_FILE}.%d{yyyy-MM-dd}_%i.zip"
+  file:
+    name: log/roomEscape
+  level:
+    root: INFO

@@ -42,7 +42,7 @@ public class JdbcReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public Optional<Reservation> findById(long reservationId) {
+    public Optional<Reservation> findReservationById(long reservationId) {
         String sql = "select date, time, name, theme_id, from RESERVATION where id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql,
                 new Object[]{reservationId},

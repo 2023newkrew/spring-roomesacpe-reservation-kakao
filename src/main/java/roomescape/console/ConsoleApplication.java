@@ -20,7 +20,7 @@ public class ConsoleApplication {
         );
         InputParsing inputParsing = new InputParsing();
         Scanner scanner = new Scanner(System.in);
-        long reservationIndex = 0L; // 마지막 ID 값 가져오기
+        long reservationIndex = 0L; // 등록시 Auto Increment 적용
         while (true) {
             System.out.println();
             System.out.println(CONSOLE_DESCRIPTION.getMessage());
@@ -38,7 +38,7 @@ public class ConsoleApplication {
             }
             if (input.startsWith(DELETE)) {
                 long deleteId = inputParsing.getFindId(input);
-                boolean b = consoleReservationController.deleteReservation(deleteId);
+                consoleReservationController.deleteReservation(deleteId);
                 System.out.println(RESERVATION_CANCEL.getMessage());
             }
             if (input.equals(QUIT)) {
