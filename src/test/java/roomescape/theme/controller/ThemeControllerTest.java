@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import roomescape.theme.dto.request.ThemeRequestDTO;
 import roomescape.theme.dto.response.ThemeResponseDTO;
+import roomescape.theme.exception.DuplicatedThemeException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
@@ -61,6 +62,29 @@ class ThemeControllerTest {
 
     @Test
     @Order(2)
+    void createDuplicateTheme() {
+        final String expectedName = "name";
+        final String expectedDesc = "desc";
+        final int expectedPrice = 1000;
+        final DuplicatedThemeException e = new DuplicatedThemeException();
+
+        final ThemeRequestDTO themeRequestDTO = ThemeRequestDTO.builder()
+                .name(expectedName)
+                .desc(expectedDesc)
+                .price(expectedPrice)
+                .build();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeRequestDTO)
+                .when().post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .body("message", is(e.getMessage()));
+    }
+
+    @Test
+    @Order(2)
     void getAll() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,5 +109,14 @@ class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
+    }
+
+    @Test
+    void deleteInvalidTheme() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/-1")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

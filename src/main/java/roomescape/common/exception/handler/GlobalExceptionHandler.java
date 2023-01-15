@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import roomescape.reservation.dto.response.ErrorResponseDTO;
 import roomescape.reservation.exception.DuplicatedReservationException;
 import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.theme.exception.DuplicatedThemeException;
+import roomescape.theme.exception.NoSuchThemeException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,5 +36,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(e.getBindingResult().getFieldErrors());
+    }
+
+    @ExceptionHandler(DuplicatedThemeException.class)
+    public ResponseEntity<ErrorResponseDTO> handleDuplicatedThemeException(DuplicatedThemeException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ErrorResponseDTO.from(e.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchThemeException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoSuchThemeException(NoSuchThemeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponseDTO.from(e.getMessage()));
     }
 }
