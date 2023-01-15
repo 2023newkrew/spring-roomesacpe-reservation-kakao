@@ -14,6 +14,6 @@ public class NotFoundObjectException extends RestAPIException {
 
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.NOT_FOUND;
     }
 }

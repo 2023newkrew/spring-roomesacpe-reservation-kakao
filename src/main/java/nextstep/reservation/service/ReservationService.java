@@ -7,6 +7,7 @@ import nextstep.reservation.dto.request.ReservationRequestDto;
 import nextstep.reservation.dto.response.ReservationResponseDto;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
+import nextstep.reservation.exceptions.exception.DoesNotCreateDataException;
 import nextstep.reservation.exceptions.exception.DuplicateReservationException;
 import nextstep.reservation.exceptions.exception.NotFoundObjectException;
 import nextstep.reservation.repository.reservation.ReservationRepository;
@@ -28,14 +29,17 @@ public class ReservationService {
         }
         Theme theme = themeRepository.findById(requestDto.getThemeId()).orElseThrow(
                 NotFoundObjectException::new);
-        return reservationRepository.add(
+        Long id = reservationRepository.add(
                 Reservation.builder()
                         .date(requestDto.getDate())
                         .time(requestDto.getTime())
                         .name(requestDto.getName())
                         .theme(theme)
-                        .build()
-        );
+                        .build());
+        if (id == -1L) {
+            throw new DoesNotCreateDataException();
+        }
+        return id;
     }
 
     public ReservationResponseDto getReservation(final Long id) {

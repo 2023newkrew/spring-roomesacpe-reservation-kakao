@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import nextstep.reservation.entity.Theme;
+import nextstep.reservation.exceptions.exception.CustomSqlException;
 
 public class ThemeTraditionalRepository implements ThemeRepository{
 
@@ -25,32 +26,50 @@ public class ThemeTraditionalRepository implements ThemeRepository{
     @Override
     public Long add(Theme theme) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "INSERT INTO theme SET name = ?, desc = ?, price = ?";
-            PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
-            pstmt.setString(1, theme.getName());
-            pstmt.setString(2, theme.getDesc());
-            pstmt.setInt(3, theme.getPrice());
+            PreparedStatement pstmt = getAddThemePreparedStatement(theme, connection);
             pstmt.executeUpdate();
-
             ResultSet rs = pstmt.getGeneratedKeys();
-            return rs.next() ? rs.getLong("id") : -1L;
+            return getIdFromResultSet(rs);
         }
         catch (SQLException e) {
-            throw new IllegalStateException(e);
+            throw new CustomSqlException(e.getMessage());
         }
+    }
+
+    private static long getIdFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            return rs.getLong("id");
+        }
+        return -1L;
+    }
+
+    private static PreparedStatement getAddThemePreparedStatement(Theme theme, Connection connection)
+            throws SQLException {
+        String sql = "INSERT INTO theme SET name = ?, desc = ?, price = ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
+        pstmt.setString(1, theme.getName());
+        pstmt.setString(2, theme.getDesc());
+        pstmt.setInt(3, theme.getPrice());
+        return pstmt;
     }
 
     @Override
     public Optional<Theme> findById(Long id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "SELECT * FROM theme WHERE id = ?";
-            PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
-            pstmt.setLong(1, id);
+            PreparedStatement pstmt = getFindThemeByIdPreparedStatement(id, connection);
             ResultSet rs = pstmt.executeQuery();
             return rs.next() ? Optional.of(getThemeFromResultSet(rs)) : Optional.empty();
         } catch (SQLException e) {
-            throw new IllegalStateException(e);
+            throw new CustomSqlException(e.getMessage());
         }
+    }
+
+    private static PreparedStatement getFindThemeByIdPreparedStatement(Long id, Connection connection)
+            throws SQLException {
+        String sql = "SELECT * FROM theme WHERE id = ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
+        pstmt.setLong(1, id);
+        return pstmt;
     }
 
     private static Theme getThemeFromResultSet(ResultSet rs) throws SQLException {
@@ -70,7 +89,7 @@ public class ThemeTraditionalRepository implements ThemeRepository{
             ResultSet rs = pstmt.executeQuery();
             return getThemesFromResultSet(rs);
         } catch (SQLException e) {
-            throw new IllegalStateException(e);
+            throw new CustomSqlException(e.getMessage());
         }
     }
 
@@ -85,12 +104,18 @@ public class ThemeTraditionalRepository implements ThemeRepository{
     @Override
     public boolean delete(Long id) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "DELETE FROM theme WHERE id=  ?";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setLong(1, id);
+            PreparedStatement pstmt = getDeleteThemePreparedStatement(id, connection);
             return pstmt.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new IllegalStateException(e);
+            throw new CustomSqlException(e.getMessage());
         }
+    }
+
+    private static PreparedStatement getDeleteThemePreparedStatement(Long id, Connection connection)
+            throws SQLException {
+        String sql = "DELETE FROM theme WHERE id=  ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setLong(1, id);
+        return pstmt;
     }
 }

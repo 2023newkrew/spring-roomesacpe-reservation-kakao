@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.dto.request.ThemeRequestDto;
 import nextstep.reservation.dto.response.ThemeResponseDto;
+import nextstep.reservation.exceptions.exception.DoesNotCreateDataException;
 import nextstep.reservation.exceptions.exception.NotFoundObjectException;
 import nextstep.reservation.repository.theme.ThemeRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,11 @@ public class ThemeService {
     private final ThemeRepository themeRepository;
 
     public Long addTheme(ThemeRequestDto themeRequestDto) {
-        return themeRepository.add(themeRequestDto.toEntity());
+        Long id = themeRepository.add(themeRequestDto.toEntity());
+        if (id == -1L) {
+            throw new DoesNotCreateDataException();
+        }
+        return id;
     }
 
     public ThemeResponseDto getTheme(Long id) {

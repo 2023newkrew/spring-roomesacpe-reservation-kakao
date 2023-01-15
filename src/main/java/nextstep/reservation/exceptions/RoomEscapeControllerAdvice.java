@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice(assignableTypes = {ReservationController.class, ThemeController.class})
-public class ReservationControllerAdvice {
+public class RoomEscapeControllerAdvice {
     @ExceptionHandler(RestAPIException.class)
     public ResponseEntity<String> handleDuplicatedReservation(RestAPIException e) {
         return ResponseEntity

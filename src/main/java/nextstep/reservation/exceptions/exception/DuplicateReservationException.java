@@ -13,6 +13,6 @@ public class DuplicateReservationException extends RestAPIException {
 
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.CONFLICT;
     }
 }
