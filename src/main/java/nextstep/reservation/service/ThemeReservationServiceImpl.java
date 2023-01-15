@@ -21,7 +21,7 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     private static final Long DEFAULT_THEME_ID = 1L;
 
     @Override
-    public Long reserve(ReservationDto reservationDto) throws SQLException {
+    public Long reserve(ReservationDto reservationDto){
         reservationDto.setThemeId(DEFAULT_THEME_ID);
         Reservation reservation = ReservationDto.from(reservationDto);
         themeReservationDao.insert(reservation);
@@ -29,15 +29,12 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     }
 
     @Override
-    public void cancelById(Long id) throws SQLException{
-        int deleteCount = themeReservationDao.delete(id);
-        if(deleteCount == 0){
-            throw new SQLException();
-        }
+    public void cancelById(Long id){
+        themeReservationDao.delete(id);
     }
 
     @Override
-    public ReservationDetail findById(Long id) throws SQLException{
+    public ReservationDetail findById(Long id){
         Reservation reservation = themeReservationDao.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 

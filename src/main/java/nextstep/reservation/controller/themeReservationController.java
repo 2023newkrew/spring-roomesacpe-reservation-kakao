@@ -36,11 +36,7 @@ public class themeReservationController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Object> cancelReservation(@NonNull @PathVariable("id") Long id){
-        try{
-            themeReservationService.cancelById(id);
-            return ResponseEntity.noContent().build();
-        }catch (SQLException sqlException){
-            return ResponseEntity.notFound().build();
-        }
+        themeReservationService.cancelById(id);
+        return ResponseEntity.noContent().build();
     }
 }
