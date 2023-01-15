@@ -1,10 +1,10 @@
-package nextstep;
+package nextstep.console;
 
-import nextstep.repository.ConsoleReservationDAO;
+import nextstep.console.repository.ReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exceptions.ErrorCode;
-import nextstep.exceptions.ReservationException;
+import nextstep.web.exceptions.ErrorCode;
+import nextstep.web.exceptions.ReservationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +19,7 @@ public class ConsoleRoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ConsoleReservationDAO reservationDAO = new ConsoleReservationDAO();
+        ReservationDAO reservationDAO = new ReservationDAO();
 
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
@@ -46,7 +46,7 @@ public class ConsoleRoomEscapeApplication {
                         theme
                 );
 
-                List<Reservation> reservationsByDateAndTime = reservationDAO.findReservationByDateAndTime(
+                List<Reservation> reservationsByDateAndTime = reservationDAO.findByDateAndTime(
                         reservation.getDate(), reservation.getTime());
                 if (reservationsByDateAndTime.size() > 0) {
                     throw new ReservationException(ErrorCode.ALREADY_RESERVATION_EXISTS);
@@ -66,7 +66,7 @@ public class ConsoleRoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findReservation(id);
+                Reservation reservation = reservationDAO.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -82,7 +82,7 @@ public class ConsoleRoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationDAO.deleteReservation(id)) {
+                if (reservationDAO.delete(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }

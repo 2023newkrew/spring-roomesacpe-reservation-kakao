@@ -1,13 +1,11 @@
-package nextstep.web;
+package nextstep.web.repository;
 
-import nextstep.repository.WebReservationDAO;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import org.junit.jupiter.api.AfterEach;
+import nextstep.web.repository.ReservationDAOImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,15 +19,15 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class WebReservationDAOTest {
-    private WebReservationDAO webReservationDAO;
+class ReservationDAOImplTest {
+    private ReservationDAOImpl reservationDAOImpl;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        webReservationDAO = new WebReservationDAO(jdbcTemplate);
+        reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE RESERVATION("
@@ -58,7 +56,7 @@ class WebReservationDAOTest {
     @Test
     @DisplayName("ID를 통해 예약 정보를 잘 받아오는지 테스트")
     void findByIdTest() {
-        Reservation reservation = webReservationDAO.findById(2L);
+        Reservation reservation = reservationDAOImpl.findById(2L);
 
         assertThat(reservation).isNotNull();
         assertThat(reservation.getName()).isEqualTo("name2");
@@ -67,7 +65,7 @@ class WebReservationDAOTest {
     @Test
     @DisplayName("예약 날짜와 시간이 일치하는 예약 정보를 잘 받아오는지 테스트")
     void findByDateAndTimeTest() {
-        List<Reservation> reservations = webReservationDAO.findByDateAndTime(
+        List<Reservation> reservations = reservationDAOImpl.findByDateAndTime(
                 LocalDate.of(2022, 8, 11),
                 LocalTime.of(13, 0)
         );
@@ -89,11 +87,11 @@ class WebReservationDAOTest {
                         29000
                 )
         );
-        Long id = webReservationDAO.insertWithKeyHolder(reservation);
+        Long id = reservationDAOImpl.insertWithKeyHolder(reservation);
 
         assertThat(id).isNotNull();
 
-        Reservation reservationById = webReservationDAO.findById(id);
+        Reservation reservationById = reservationDAOImpl.findById(id);
         assertThat(reservationById).isNotNull();
         assertThat(reservationById.getName()).isEqualTo("name3");
     }
@@ -102,7 +100,7 @@ class WebReservationDAOTest {
     @Test
     @DisplayName("ID가 일치하는 예약을 잘 삭제하는지 테스트")
     void deleteTest() {
-        int rowNum = webReservationDAO.delete(1L);
+        int rowNum = reservationDAOImpl.delete(1L);
 
         assertThat(rowNum).isEqualTo(1);
     }

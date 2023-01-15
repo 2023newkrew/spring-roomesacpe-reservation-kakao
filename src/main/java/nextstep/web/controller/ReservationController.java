@@ -1,9 +1,10 @@
-package nextstep.controller;
+package nextstep.web.controller;
 
 import java.net.URI;
 import nextstep.domain.Reservation;
-import nextstep.domain.ReservationInfo;
-import nextstep.service.ReservationService;
+import nextstep.web.VO.ReservationRequestVO;
+import nextstep.web.service.ReservationService;
+import nextstep.util.ReservationInfoConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,20 +24,22 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationService.createReservation(reservation);
+    public ResponseEntity createReservation(@RequestBody ReservationRequestVO reservationRequestVO) {
+        Long id = reservationService.createReservation(reservationRequestVO);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity lookupReservation(@PathVariable Long id) {
-        ReservationInfo reservationInfo = reservationService.lookupReservation(id);
-        return ResponseEntity.ok().body(reservationInfo);
+        Reservation reservation = reservationService.lookupReservation(id);
+        String reservationJSONString = ReservationInfoConverter.convertReservationToJSONString(reservation);
+        return ResponseEntity.ok().body(reservationJSONString);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity cancelReservation(@PathVariable Long id) {
-        ReservationInfo reservationInfo = reservationService.deleteReservation(id);
-        return ResponseEntity.ok().body(reservationInfo);
+        Reservation reservation = reservationService.deleteReservation(id);
+        String reservationJSONString = ReservationInfoConverter.convertReservationToJSONString(reservation);
+        return ResponseEntity.ok().body(reservationJSONString);
     }
 }
