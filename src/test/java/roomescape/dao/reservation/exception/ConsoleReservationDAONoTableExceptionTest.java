@@ -53,6 +53,12 @@ public class ConsoleReservationDAONoTableExceptionTest {
         assertThat(reservationDAO.find(1L)).isNull();
     }
 
+    @DisplayName("예약 삭제")
+    @Test
+    void removeReservation() {
+        reservationDAO.remove(1L);
+    }
+
     @DisplayName("예약 존재 확인) 테이블이 존재하지 않을 경우 null 리턴")
     @Test
     void existReservation() {

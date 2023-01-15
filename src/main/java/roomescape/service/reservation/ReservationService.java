@@ -3,6 +3,7 @@ package roomescape.service.reservation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.reservation.ReservationDAO;
+import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Reservation;
 import roomescape.exception.BadRequestException;
 
@@ -10,9 +11,11 @@ import roomescape.exception.BadRequestException;
 public class ReservationService implements ReservationServiceInterface {
 
     private final ReservationDAO reservationDAO;
+    private final ThemeDAO themeDAO;
 
-    public ReservationService(ReservationDAO reservationDAO) {
+    public ReservationService(ReservationDAO reservationDAO, ThemeDAO themeDAO) {
         this.reservationDAO = reservationDAO;
+        this.themeDAO = themeDAO;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class ReservationService implements ReservationServiceInterface {
     private void validateCreateReservation(Reservation reservation) {
         throwIfInvalidReservation(reservation);
         throwIfExistReservation(reservation);
+        throwIfInvalidReservationThemeId(reservation);
     }
 
     private void throwIfExistReservation(Reservation reservation) {
@@ -37,7 +41,13 @@ public class ReservationService implements ReservationServiceInterface {
 
     private void throwIfInvalidReservation(Reservation reservation) {
         if (reservation.getDate() == null || reservation.getTime() == null
-                || reservation.getName() == null) {
+                || reservation.getName() == null || reservation.getThemeId() == null) {
+            throw new BadRequestException();
+        }
+    }
+
+    private void throwIfInvalidReservationThemeId(Reservation reservation) {
+        if (!themeDAO.existId(reservation.getThemeId())) {
             throw new BadRequestException();
         }
     }

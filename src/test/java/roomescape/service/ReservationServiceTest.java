@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import roomescape.dao.reservation.ReservationDAO;
+import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Reservation;
 import roomescape.service.reservation.ReservationService;
 import roomescape.service.reservation.ReservationServiceInterface;
@@ -36,9 +37,12 @@ public class ReservationServiceTest {
     @Mock
     private ReservationDAO reservationDAO;
 
+    @Mock
+    private ThemeDAO themeDAO;
+
     @BeforeEach
     void setUp() {
-        reservationService = new ReservationService(reservationDAO);
+        reservationService = new ReservationService(reservationDAO, themeDAO);
     }
 
     @DisplayName("예약 생성")
@@ -47,6 +51,7 @@ public class ReservationServiceTest {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         when(reservationDAO.exist(reservation)).thenReturn(false);
+        when(themeDAO.existId(THEME_ID_DATA)).thenReturn(true);
         when(reservationDAO.create(reservation)).thenReturn(ID_DATA);
 
         assertThat(reservationService.create(reservation)).isEqualTo(ID_DATA);
@@ -56,7 +61,7 @@ public class ReservationServiceTest {
 
     @DisplayName("예약 조회")
     @Test
-    void listReservation() {
+    void findReservation() {
         Reservation reservation = new Reservation(DATE_DATA, TIME_DATA, NAME_DATA, THEME_ID_DATA);
 
         when(reservationDAO.find(ID_DATA)).thenReturn(reservation);

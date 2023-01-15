@@ -9,10 +9,6 @@ public class Theme {
 
     public Theme() {}
 
-    public Theme(Long id) {
-        this(id, null, null, null);
-    }
-
     public Theme(String name, String desc, Integer price) {
         this(null, name, desc, price);
     }

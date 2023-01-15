@@ -32,7 +32,7 @@ public class ThemeService implements ThemeServiceInterface {
     }
 
     private void throwIfInvalidTheme(Theme theme) {
-        if (theme.getName() == null || theme.getDesc() == null) {
+        if (theme.getName() == null || theme.getDesc() == null || theme.getPrice() == null) {
             throw new BadRequestException();
         }
     }
