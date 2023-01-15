@@ -24,10 +24,10 @@ public abstract class ReservationRepository {
             "  theme_price int,\n" +
             "  primary key (id)\n" +
             ");";
-    protected String DROP_TABLE_SQL = "drop table reservation if exists";
+    protected String DROP_TABLE_SQL = "drop table reservation if exists cascade";
 
     protected PreparedStatement getReservationPreparedStatement(Connection con, LocalDate date, LocalTime time,
-                                                              String name, Theme theme) throws SQLException {
+                                                                String name, Theme theme) throws SQLException {
         PreparedStatement ps = con.prepareStatement(SAVE_SQL, new String[]{"id"});
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));
