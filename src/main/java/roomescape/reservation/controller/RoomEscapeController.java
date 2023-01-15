@@ -16,24 +16,9 @@ import java.time.LocalTime;
 
 @RestController
 public class RoomEscapeController {
-
-    private static final int INDEX_ID = 1;
-    private static final int INDEX_DATE = 2;
-    private static final int INDEX_TIME = 3;
-    private static final int INDEX_NAME = 4;
-    private static final int INDEX_THEME_NAME = 5;
-    private static final int INDEX_THEME_DESC = 6;
-    private static final int INDEX_THEME_PRICE = 7;
-    private static final String CHECK_DUP_QUERY = "SELECT EXISTS(SELECT * FROM RESERVATION WHERE date = ? AND time = ?);";
-    private static final String INSERT_QUERY = "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
-    private static final String LOOKUP_QUERY = "SELECT * FROM RESERVATION WHERE id = ?;";
-    private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
-
-    private final JdbcTemplate jdbcTemplate;
     private final ReservationService reservationService;
 
-    public RoomEscapeController(JdbcTemplate jdbcTemplate, ReservationService reservationService) {
-        this.jdbcTemplate = jdbcTemplate;
+    public RoomEscapeController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
@@ -50,8 +35,8 @@ public class RoomEscapeController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable("id") String id) {
-        jdbcTemplate.update(DELETE_QUERY, id);
+    public ResponseEntity<String> deleteReservation(@PathVariable("id") String reservationId) {
+        reservationService.deleteById(reservationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
