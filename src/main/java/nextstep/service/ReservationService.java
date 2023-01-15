@@ -34,8 +34,8 @@ public class ReservationService {
         return reservationRepository.add(reservation);
     }
 
-    private void checkDuplicateReservation(Long themId, Date date, Time time) {
-        int duplicatedCount = reservationRepository.countByDateAndTime(themId, date, time);
+    private void checkDuplicateReservation(Long themeId, Date date, Time time) {
+        int duplicatedCount = reservationRepository.countByDateAndTime(themeId, date, time);
         if (duplicatedCount > 0) {
             throw new DuplicateTimeReservationException();
         }

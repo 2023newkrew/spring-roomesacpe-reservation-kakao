@@ -96,4 +96,4 @@
 - [x] CreateReservationDto 멤버 변수 타입 수정
 - [x] 코드 주석 처리한 부분 제거
 - [x] 가격 음수 체크 경계값 테스트로 수정
-- [ ] themeId 오타 수정
+- [x] themeId 오타 수정
