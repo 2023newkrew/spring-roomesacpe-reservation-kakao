@@ -27,7 +27,7 @@ public class ReservationService {
         final Reservation reservation = reservationRequestDTO.toEntity(theme.getId());
 
         this.reservationRepository.findByDateTimeAndThemeId(reservation.getDate(), reservation.getTime(),
-                        reservation.getId())
+                        reservation.getThemeId())
                 .ifPresent((e) -> {
                     throw new DuplicatedReservationException();
                 });
