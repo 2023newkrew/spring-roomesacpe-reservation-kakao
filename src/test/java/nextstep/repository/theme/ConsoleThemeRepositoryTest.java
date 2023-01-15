@@ -52,4 +52,11 @@ public class ConsoleThemeRepositoryTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> consoleThemeRepository.save(theme));
     }
+
+    @DisplayName("전체 테마를 조회 할 수 있다.")
+    @Test
+    void findAllThemeTest() {
+        consoleThemeRepository.save(theme);
+        assertDoesNotThrow(() -> consoleThemeRepository.findAll());
+    }
 }

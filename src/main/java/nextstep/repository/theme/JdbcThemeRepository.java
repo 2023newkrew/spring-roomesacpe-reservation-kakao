@@ -30,7 +30,7 @@ public class JdbcThemeRepository implements ThemeRepository {
     public List<Theme> findAll() {
         return jdbcTemplate.query(
                 findAllSql,
-                (resultSet, rowNum) -> from(resultSet));
+                themeActorRowMapper);
     }
 
     @Override

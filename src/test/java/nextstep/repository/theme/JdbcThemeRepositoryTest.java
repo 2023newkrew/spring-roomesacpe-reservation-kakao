@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -56,5 +57,12 @@ public class JdbcThemeRepositoryTest {
         jdbcThemeRepository.save(theme);
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> jdbcThemeRepository.save(theme));
+    }
+
+    @DisplayName("전체 테마를 조회 할 수 있다.")
+    @Test
+    void findAllThemeTest() {
+        jdbcThemeRepository.save(theme);
+        assertThat(jdbcThemeRepository.findAll().size()).isEqualTo(1);
     }
 }

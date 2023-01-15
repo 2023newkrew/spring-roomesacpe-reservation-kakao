@@ -48,7 +48,7 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity findAllReservation() {
         try {
             List<FindReservation> reservation = reservationService.findAll();

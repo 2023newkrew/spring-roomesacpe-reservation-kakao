@@ -29,7 +29,7 @@ public class ThemeController {
                 .build();
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity findAll() {
         try {
             List<Theme> themeList = themeService.findAll();
