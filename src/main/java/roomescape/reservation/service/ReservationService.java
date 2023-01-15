@@ -2,13 +2,13 @@ package roomescape.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.request.ReservationRequestDTO;
 import roomescape.reservation.dto.response.ReservationResponseDTO;
+import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.exception.DuplicatedReservationException;
 import roomescape.reservation.exception.NoSuchReservationException;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.theme.domain.Theme;
+import roomescape.theme.entity.Theme;
 import roomescape.theme.exception.NoSuchThemeException;
 import roomescape.theme.repository.ThemeRepository;
 

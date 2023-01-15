@@ -10,7 +10,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.Reservation;
 
 public class ReservationJdbcRepository implements ReservationRepository {
 

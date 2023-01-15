@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.theme.domain.Theme;
+import roomescape.theme.entity.Theme;
 
 @Getter
 @Builder
@@ -13,8 +13,10 @@ public class ThemeRequestDTO {
 
     @NotNull
     private final String name;
+
     @NotNull
     private final String desc;
+
     @NotNull
     private final int price;
 

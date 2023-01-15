@@ -3,17 +3,21 @@ package roomescape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.exception.NoSuchReservationException;
 import roomescape.reservation.repository.ReservationJdbcRepository;
-import roomescape.theme.domain.Theme;
+import roomescape.theme.entity.Theme;
 
 public class RoomEscapeConsoleApplication {
 
     private static final String ADD = "add";
+
     private static final String FIND = "find";
+
     private static final String DELETE = "delete";
+
     private static final String QUIT = "quit";
+
     private static final ReservationJdbcRepository RESERVATION_JDBC_REPOSITORY = new ReservationJdbcRepository();
 
     public static void main(String[] args) {

@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.Reservation;
 
 @Getter
 @RequiredArgsConstructor

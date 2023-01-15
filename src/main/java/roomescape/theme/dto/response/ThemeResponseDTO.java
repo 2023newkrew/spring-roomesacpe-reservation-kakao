@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.theme.domain.Theme;
+import roomescape.theme.entity.Theme;
 
 @Getter
 @Builder

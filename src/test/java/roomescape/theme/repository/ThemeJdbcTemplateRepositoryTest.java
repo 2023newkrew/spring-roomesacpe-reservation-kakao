@@ -13,7 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.theme.domain.Theme;
+import roomescape.theme.entity.Theme;
 
 @JdbcTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -28,10 +28,15 @@ class ThemeJdbcTemplateRepositoryTest {
     }
 
     private static final String expectedName = "name";
+
     private static final String expectedDesc = "desc";
+
     private static final int expectedPrice = 1000;
+
     private static final Long invalidId = -1L;
+
     private static final String invalidName = "invalid";
+
     private Long themeId;
 
     @BeforeEach

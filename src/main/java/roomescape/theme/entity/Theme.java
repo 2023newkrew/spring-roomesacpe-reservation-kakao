@@ -1,4 +1,4 @@
-package roomescape.theme.domain;
+package roomescape.theme.entity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

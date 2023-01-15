@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.Reservation;
 
 @Getter
 @Builder
@@ -12,9 +12,13 @@ import roomescape.reservation.domain.Reservation;
 public class ReservationResponseDTO {
 
     private final Long id;
+
     private final String date;
+
     private final String time;
+
     private final String name;
+
     private final Long themeId;
 
     public static ReservationResponseDTO from(Reservation reservation) {
