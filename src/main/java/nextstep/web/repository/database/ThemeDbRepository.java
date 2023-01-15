@@ -56,6 +56,20 @@ public class ThemeDbRepository implements ThemeRepository {
     }
 
     @Override
+    public Theme findById(Long id) {
+        try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return themeRowMappingStrategy.map(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void deleteById(Long id) {
         try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             String sql = "DELETE FROM theme WHERE ID = ?;";

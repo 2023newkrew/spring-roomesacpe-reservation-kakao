@@ -46,6 +46,17 @@ public class ThemeJdbcRepository implements ThemeRepository {
     }
 
     @Override
+    public Theme findById(Long id) {
+        String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?";
+        List<Theme> themes = jdbcTemplate.query(sql, actorRowMapper, id);
+        if (themes.isEmpty()) {
+            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+        }
+
+        return themes.get(0);
+    }
+
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM theme WHERE ID = ?;";
         if (jdbcTemplate.update(sql, id) == 0) {
