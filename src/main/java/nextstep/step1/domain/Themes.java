@@ -5,16 +5,18 @@ import nextstep.step1.entity.Theme;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Themes {
+    public static final Long THEME_ID_INITIAL_VALUE = 1L;
     private final Map<Long, Theme> themes;
-    private Long lastId;
+    private final AtomicLong idAtomicLong;
 
     private static final Themes instance = new Themes();
 
     private Themes(){
-        this.lastId = 1L;
         this.themes = new ConcurrentHashMap<>();
+        this.idAtomicLong = new AtomicLong(THEME_ID_INITIAL_VALUE);
         add(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
     }
 
@@ -28,7 +30,7 @@ public class Themes {
     }
 
     private Long getAutoIncrementId(){
-        return lastId++;
+        return idAtomicLong.getAndIncrement();
     }
 
     public Theme findById(Long id) {
