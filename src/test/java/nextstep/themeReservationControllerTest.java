@@ -49,13 +49,13 @@ class themeReservationControllerTest {
     }
 
     @Test
-    @DisplayName("이미 예약된 날짜/시간에 예약하는 경우, 상태 코드는 INTERNAL_SERVER_ERROR이다.")
+    @DisplayName("이미 예약된 날짜/시간에 예약하는 경우, 상태 코드는 BAD_REQUEST이다.")
     void test2(){
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:02");
         sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL);
 
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
