@@ -3,7 +3,7 @@ package nextstep.web.repository.database;
 import lombok.RequiredArgsConstructor;
 import nextstep.domain.Theme;
 import nextstep.web.exception.BusinessException;
-import nextstep.web.exception.CommonErrorCode;
+import nextstep.web.exception.ThemeErrorCode;
 import nextstep.web.repository.ThemeRepository;
 import nextstep.web.repository.database.mappingstrategy.ThemeMappingStrategy;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,7 +50,7 @@ public class ThemeJdbcRepository implements ThemeRepository {
         String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?";
         List<Theme> themes = jdbcTemplate.query(sql, actorRowMapper, id);
         if (themes.isEmpty()) {
-            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+            throw new BusinessException(ThemeErrorCode.THEME_NOT_FOUND);
         }
 
         return themes.get(0);
@@ -60,7 +60,7 @@ public class ThemeJdbcRepository implements ThemeRepository {
     public void deleteById(Long id) {
         String sql = "DELETE FROM theme WHERE ID = ?;";
         if (jdbcTemplate.update(sql, id) == 0) {
-            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+            throw new BusinessException(ThemeErrorCode.THEME_NOT_FOUND);
         }
     }
 

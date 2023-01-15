@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.web.exception.BusinessException;
-import nextstep.web.exception.CommonErrorCode;
+import nextstep.web.exception.ReservationErrorCode;
 import nextstep.web.repository.ReservationRepository;
 import nextstep.web.repository.database.mappingstrategy.ReservationMappingStrategy;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -46,17 +47,28 @@ public class ReservationJdbcRepository implements ReservationRepository {
         String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id = ?;";
         List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper, id);
         if (reservations.isEmpty()) {
-            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+            throw new BusinessException(ReservationErrorCode.RESERVATION_NOT_FOUND);
         }
 
         return reservations.get(0);
     }
 
     @Override
+    public Optional<Reservation> findByThemeId(Long themeId) {
+        String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE theme_id = ?;";
+        List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper, themeId);
+        if (reservations.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(reservations.get(0));
+    }
+
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE ID = ?;";
         if (jdbcTemplate.update(sql, id) == 0) {
-            throw new BusinessException(CommonErrorCode.RESOURCE_NOT_FOUND);
+            throw new BusinessException(ReservationErrorCode.RESERVATION_NOT_FOUND);
         }
     }
 

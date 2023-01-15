@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +25,14 @@ public class ReservationMemoryRepository implements ReservationRepository {
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public Optional<Reservation> findByThemeId(Long themeId) {
+        return reservations.stream()
+                .filter(it -> Objects.equals(it.getTheme()
+                        .getId(), themeId))
+                .findFirst();
     }
 
     @Override

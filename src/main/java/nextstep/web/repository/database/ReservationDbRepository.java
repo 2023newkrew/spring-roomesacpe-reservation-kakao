@@ -9,6 +9,7 @@ import nextstep.web.repository.database.mappingstrategy.RowMappingStrategy;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class ReservationDbRepository implements ReservationRepository {
 
@@ -48,12 +49,28 @@ public class ReservationDbRepository implements ReservationRepository {
     @Override
     public Reservation findById(Long id) {
         try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String sql = "SELECT * FROM reservation WHERE ID = ?;";
+            String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id = ?;";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             validateFindResult(rs);
             return reservationRowMappingStrategy.map(rs);
+        } catch (SQLException e) {
+            throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
+        }
+    }
+
+    @Override
+    public Optional<Reservation> findByThemeId(Long themeId) {
+        try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+            return Optional.of(reservationRowMappingStrategy.map(rs));
         } catch (SQLException e) {
             throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
