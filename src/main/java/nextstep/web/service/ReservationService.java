@@ -5,6 +5,7 @@ import nextstep.domain.Theme;
 import nextstep.web.dto.ReservationRequestDto;
 import nextstep.web.dto.ReservationResponseDto;
 import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -14,17 +15,25 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
+    private final ThemeRepository themeRepository;
+
     @Autowired
-    public ReservationService(@Qualifier("reservationJdbcRepository") ReservationRepository reservationRepository) {
+    public ReservationService(
+            @Qualifier("reservationJdbcRepository") ReservationRepository reservationRepository,
+            @Qualifier("themeJdbcRepository") ThemeRepository themeRepository
+    ) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
     public Long createReservation(ReservationRequestDto requestDto) {
+        Theme theme = themeRepository.findById(requestDto.getThemeId());
+
         Reservation reservation = new Reservation(
                 requestDto.getDate(),
                 requestDto.getTime(),
                 requestDto.getName(),
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
+                theme
         );
 
         return reservationRepository.save(reservation);

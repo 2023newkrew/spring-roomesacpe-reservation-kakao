@@ -1,13 +1,12 @@
 package nextstep.web.repository.database.mappingstrategy;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ReservationMappingStrategy implements RowMappingStrategy<Reservation> {
-
-    private final ThemeMappingStrategy themeMappingStrategy = new ThemeMappingStrategy();
 
     @Override
     public Reservation map(ResultSet rs) throws SQLException {
@@ -18,7 +17,14 @@ public class ReservationMappingStrategy implements RowMappingStrategy<Reservatio
                 .time(rs.getTime("time")
                         .toLocalTime())
                 .name(rs.getString("name"))
-                .theme(themeMappingStrategy.map(rs))
+                .theme(
+                        Theme.builder()
+                                .id(rs.getLong("theme_id"))
+                                .name(rs.getString("theme.name"))
+                                .desc(rs.getString("theme.desc"))
+                                .price(rs.getInt("theme.price"))
+                                .build()
+                )
                 .build();
     }
 }
