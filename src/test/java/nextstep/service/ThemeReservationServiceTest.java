@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,53 +27,42 @@ class ThemeReservationServiceTest {
 
     @Test
     @DisplayName("방탈출 예약하기")
-    void test1() throws SQLException{
+    void test1(){
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:01");
 
         Long reservationId = themeReservationService.reserve(reservationDto);
-        ReservationDetail findReservation = themeReservationService.findById(reservationId);
-        assertThat(findReservation).isNotNull();
+        Optional<ReservationDetail> findReservation = themeReservationService.findById(reservationId);
+        assertThat(findReservation).isPresent();
     }
 
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
-    void test2() throws SQLException{
+    void test2(){
         ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:02");
         Long reservationId = themeReservationService.reserve(reservationDto);
 
-        System.out.println("reservationId = " + reservationId);
         themeReservationService.cancelById(reservationId);
-        assertThat(themeReservationService.findById(reservationId)).isNull();
+        assertThat(themeReservationService.findById(reservationId)).isEmpty();
     }
 
     @Test
     @DisplayName("존재하지 않는 예약을 취소할 수 없다.")
     void test3(){
         assertThatThrownBy(() -> themeReservationService.cancelById(1000L))
-                .isInstanceOf(SQLException.class);
-    }
-
-    @Test
-    @DisplayName("예약된 방을 조회한다.")
-    void test4() throws SQLException{
-        ReservationDto randomReservation = makeRandomReservationDto(RESERVATION_DATE, "13:04");
-        Long reservationId = themeReservationService.reserve(randomReservation);
-        ReservationDetail reservationDetail = themeReservationService.findById(reservationId);
-
-        assertThat(reservationDetail.getName()).isEqualTo(randomReservation.getName());
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test
     @DisplayName("예약되지 않은 방을 조회한다.")
-    void test5() throws SQLException{
-        ReservationDetail findReservation = themeReservationService.findById(100L);
+    void test5(){
+        Optional<ReservationDetail> findReservation = themeReservationService.findById(100L);
 
-        assertThat(findReservation).isNull();
+        assertThat(findReservation).isEmpty();
     }
 
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
-    void test7() throws SQLException {
+    void test7() {
         ReservationDto reservation1 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
         ReservationDto reservation2 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
 

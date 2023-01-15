@@ -9,7 +9,7 @@ import nextstep.theme.dao.ThemeDao;
 import nextstep.theme.entity.Theme;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +34,13 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     }
 
     @Override
-    public ReservationDetail findById(Long id){
+    public Optional<ReservationDetail> findById(Long id){
         Reservation reservation = themeReservationDao.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
         Theme theme = themeDao.findById(reservation.getThemeId())
                 .orElseThrow(() -> new RuntimeException());
 
-        return new ReservationDetail(reservation, theme);
+        return Optional.of(new ReservationDetail(reservation, theme));
     }
 }

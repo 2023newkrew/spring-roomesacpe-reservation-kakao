@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.sql.SQLException;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,16 +19,14 @@ public class themeReservationController {
     private final ThemeReservationService themeReservationService;
 
     @GetMapping("/{id}")
-    ResponseEntity<ReservationDetail> getReservations(@NonNull @PathVariable("id") Long id) throws SQLException{
-        ReservationDetail reservationDetail = themeReservationService.findById(id);
-        if(reservationDetail == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(reservationDetail);
+    ResponseEntity<ReservationDetail> getReservations(@NonNull @PathVariable("id") Long id){
+        return themeReservationService.findById(id)
+                .map((reservationDetail) -> ResponseEntity.ok().body(reservationDetail))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    ResponseEntity<ReservationDetail> createReservation(@Valid @RequestBody ReservationDto reservationDto) throws SQLException{
+    ResponseEntity<ReservationDetail> createReservation(@Valid @RequestBody ReservationDto reservationDto){
         Long reservationId = themeReservationService.reserve(reservationDto);
         return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
