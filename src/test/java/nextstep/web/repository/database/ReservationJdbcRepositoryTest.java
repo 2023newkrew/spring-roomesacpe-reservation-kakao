@@ -1,10 +1,9 @@
-package nextstep.web.repository;
+package nextstep.web.repository.database;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.web.exception.BusinessException;
-import nextstep.web.repository.database.ReservationJdbcRepository;
-import nextstep.web.repository.database.ThemeJdbcRepository;
+import nextstep.web.repository.ThemeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
