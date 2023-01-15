@@ -52,7 +52,7 @@ public class ThemeControllerExceptionTest {
 
     @DisplayName("테마 생성) 같은 이름의 예약은 생성 불가")
     @Test
-    void failToCreateReservationAlreadyExist() {
+    void failToPostThemeAlreadyExist() {
         Theme theme = new Theme(NAME_DATA1, DESC_DATA, PRICE_DATA);
 
         RestAssured.given().log().all()
@@ -67,7 +67,21 @@ public class ThemeControllerExceptionTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "{\"name\": \"TEST\",\"desc\": \"DESC\",\"price\": \"TEST\"}"})
-    void notContainRequiredField(String body) {
+    void failToPostIfInvalidFormat(String body) {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
+                .when().post(THEME_PATH)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("테마 생성) 값이 포함되지 않았을 경우 생설 불가")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "{\"desc\": \"DESC\",\"price\": 10000}",
+            "{\"name\": \"TEST\"\"price\": 10000}",
+            "{\"name\": \"TEST\",\"desc\": \"DESC\"}"})
+    void failToPostIfNotExistValue(String body) {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
                 .when().post(THEME_PATH)
