@@ -69,4 +69,18 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
         return Optional.of(reservations.get(0));
     }
+
+    @Override
+    public Optional<Reservation> findByThemeId(final Long themeId) {
+        String selectSql = "SELECT * FROM reservation WHERE theme_id = (?) LIMIT 1";
+
+        List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
+                Reservation.from(rs)), themeId);
+
+        if (reservations.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(reservations.get(0));
+    }
 }

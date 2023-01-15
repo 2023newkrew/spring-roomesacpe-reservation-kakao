@@ -41,11 +41,34 @@ public class ReservationJdbcRepository implements ReservationRepository {
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
             System.out.println("정상적으로 연결되었습니다.");
 
-            String sql = "SELECT * FROM reservation WHERE date = (?) AND time = (?) LIMIT 1";
+            String sql = "SELECT * FROM reservation WHERE date = (?) AND time = (?) AND theme_id = (?) LIMIT 1";
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
+            ps.setLong(3, themeId);
+
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+
+            final Reservation reservation = Reservation.from(rs);
+            return Optional.of(reservation);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Optional<Reservation> findByThemeId(final Long themeId) {
+        try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
+            System.out.println("정상적으로 연결되었습니다.");
+
+            String sql = "SELECT * FROM reservation WHERE theme_id = (?) LIMIT 1";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, themeId);
 
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
