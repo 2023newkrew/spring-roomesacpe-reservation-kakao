@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 import io.restassured.RestAssured;
 import java.sql.Connection;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,14 @@ public class ReservationControllerTest {
         try (Connection conn = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(conn,
                     new ClassPathResource("/test-reservation-default-theme.sql"));
+        }
+    }
+
+    @AfterAll
+    public void afterAll() throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn,
+                    new ClassPathResource("/test-reservation-clear-data.sql"));
         }
     }
 
