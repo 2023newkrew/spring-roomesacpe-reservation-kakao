@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
 import static org.hamcrest.core.Is.is;
@@ -88,7 +87,7 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("date", is(reservation.getDate().toString()))
-                .body("time", is(reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+                .body("time", is(reservation.getTime().toString()));
     }
 
     @Test
