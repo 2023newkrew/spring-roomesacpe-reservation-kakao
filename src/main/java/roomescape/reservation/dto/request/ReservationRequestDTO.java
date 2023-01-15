@@ -20,6 +20,9 @@ public class ReservationRequestDTO {
     @NotNull
     private final String name;
 
+    @NotNull
+    private final String themeName;
+
     public Reservation toEntity(Long themeId) {
         return Reservation.builder()
                 .date(LocalDate.parse(this.date))

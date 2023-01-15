@@ -13,5 +13,5 @@ public interface ReservationRepository {
 
     boolean deleteById(Long reservationId);
 
-    Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
+    Optional<Reservation> findByDateTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
 }

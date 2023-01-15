@@ -26,6 +26,9 @@ public class ReservationControllerTest {
     @LocalServerPort
     int port;
 
+    private static final ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00",
+            "name", "theme");
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -35,8 +38,6 @@ public class ReservationControllerTest {
     @Test
     @Order(1)
     void createReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationRequestDTO)
@@ -49,8 +50,6 @@ public class ReservationControllerTest {
     @DisplayName("유효하지 않은 Reservation 생성은 400을 반환한다.")
     @Test
     void invalidDateTimeReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "name");
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationRequestDTO)
@@ -64,7 +63,6 @@ public class ReservationControllerTest {
     @Test
     @Order(3)
     void duplicateDateTimeReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name");
         final DuplicatedReservationException e = new DuplicatedReservationException();
 
         RestAssured.given().log().all()

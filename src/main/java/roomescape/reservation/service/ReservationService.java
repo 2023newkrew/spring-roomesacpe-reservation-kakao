@@ -18,7 +18,8 @@ public class ReservationService {
     public Long save(final ReservationRequestDTO reservationRequestDTO) {
         final Reservation reservation = reservationRequestDTO.toEntity(2L);
 
-        this.reservationRepository.findByDateAndTime(reservation.getDate(), reservation.getTime())
+        this.reservationRepository.findByDateTimeAndThemeId(reservation.getDate(), reservation.getTime(),
+                        reservation.getId())
                 .ifPresent((e) -> {
                     throw new DuplicatedReservationException();
                 });

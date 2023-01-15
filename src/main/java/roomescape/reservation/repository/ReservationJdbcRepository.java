@@ -37,7 +37,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByDateAndTime(final LocalDate date, final LocalTime time) {
+    public Optional<Reservation> findByDateTimeAndThemeId(final LocalDate date, final LocalTime time, Long themeId) {
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
             System.out.println("정상적으로 연결되었습니다.");
 

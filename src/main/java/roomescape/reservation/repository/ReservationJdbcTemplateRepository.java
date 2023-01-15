@@ -32,9 +32,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public Long save(final Reservation reservation) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
 
-        Long newReservationId = this.insertActor.executeAndReturnKey(params).longValue();
-
-        return newReservationId;
+        return this.insertActor.executeAndReturnKey(params).longValue();
     }
 
     @Override
@@ -59,11 +57,11 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         return rowNum > 0;
     }
 
-    public Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
-        String selectSql = "SELECT * FROM reservation WHERE date = (?) AND time = (?) LIMIT 1";
+    public Optional<Reservation> findByDateTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
+        String selectSql = "SELECT * FROM reservation WHERE date = (?) AND time = (?) AND theme_id = (?) LIMIT 1";
 
         List<Reservation> reservations = jdbcTemplate.query(selectSql, ((rs, rowNum) ->
-                Reservation.from(rs)), Date.valueOf(date), Time.valueOf(time));
+                Reservation.from(rs)), Date.valueOf(date), Time.valueOf(time), themeId);
 
         if (reservations.isEmpty()) {
             return Optional.empty();

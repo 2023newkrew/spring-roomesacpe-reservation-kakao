@@ -26,10 +26,17 @@ public class ReservationJdbcTemplateRepositoryTest {
     }
 
     private static final String expectedName = "name";
+
     private static final LocalDate expectedDate = LocalDate.parse("2022-08-11");
+
     private static final LocalTime expectedTime = LocalTime.parse("13:00:00");
+
+    private static final Long expectedThemeId = 1L;
+
     private static final Long invalidId = -1L;
+
     private static final Long themeId = 1L;
+
     private Long reservationId;
 
     @BeforeEach
@@ -60,12 +67,14 @@ public class ReservationJdbcTemplateRepositoryTest {
     @DisplayName("예약 일시 및 시간으로 예약을 검색한다")
     @Test
     void findByDateAndTime() {
-        final Reservation result = reservationRepository.findByDateAndTime(expectedDate, expectedTime)
+        final Reservation result = reservationRepository.findByDateTimeAndThemeId(expectedDate, expectedTime,
+                        expectedThemeId)
                 .orElseThrow(NoSuchReservationException::new);
 
         assertThat(result.getName()).isEqualTo(expectedName);
         assertThat(result.getDate()).isEqualTo(expectedDate);
         assertThat(result.getTime()).isEqualTo(expectedTime);
+        assertThat(result.getThemeId()).isEqualTo(expectedThemeId);
     }
 
     @DisplayName("id로 예약을 취소한다")

@@ -29,15 +29,15 @@ class ReservationServiceTest {
     private ReservationRepository reservationRepository;
 
     private final ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00",
-            "name");
+            "name", "theme");
 
     private final Reservation mockedReservation = Reservation.builder().build();
 
     @DisplayName("겹치는 시간대의 예약이 존재할 경우 예외가 발생한다.")
     @Test
     void saveWhenDuplicate() {
-        when(reservationRepository.findByDateAndTime(any(LocalDate.class), any(LocalTime.class))).thenReturn(
-                Optional.of(mockedReservation));
+        when(reservationRepository.findByDateTimeAndThemeId(any(LocalDate.class), any(LocalTime.class),
+                any(Long.class))).thenReturn(Optional.of(mockedReservation));
 
         assertThatThrownBy(() -> reservationService.save(reservationRequestDTO)).isInstanceOf(
                 DuplicatedReservationException.class);
