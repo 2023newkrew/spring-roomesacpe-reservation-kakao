@@ -62,4 +62,16 @@ public class ThemeControllerExceptionTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @DisplayName("테마 생성) 값의 포맷이 맞지 않을 경우 생성 불가")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "{\"name\": \"TEST\",\"desc\": \"DESC\",\"price\": \"TEST\"}"})
+    void notContainRequiredField(String body) {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE).body(body)
+                .when().post(THEME_PATH)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
