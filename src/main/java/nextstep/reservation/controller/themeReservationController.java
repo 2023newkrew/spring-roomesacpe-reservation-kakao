@@ -23,7 +23,7 @@ public class themeReservationController {
     ResponseEntity<ReservationDetail> getReservations(@NonNull @PathVariable("id") Long id) throws SQLException{
         ReservationDetail reservationDetail = themeReservationService.findById(id);
         if(reservationDetail == null){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(reservationDetail);
     }

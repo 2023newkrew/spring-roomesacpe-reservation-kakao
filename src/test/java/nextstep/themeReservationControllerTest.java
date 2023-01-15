@@ -74,9 +74,8 @@ class themeReservationControllerTest {
     }
 
     @Test
-    @DisplayName("존재하지 않은 예약 정보를 요청할 경우 상태 코드는 NO_CONTENT이다.")
+    @DisplayName("존재하지 않은 예약 정보를 요청할 경우 상태 코드는 NOT_FOUND이다.")
     void test4(){
-        System.out.println("asdasdas");
         getValidationResponse(EMPTY_BODY, HttpMethod.GET, RESERVATION_URL + "/" + NOT_EXIST_RESERVATION_ID)
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -99,7 +98,7 @@ class themeReservationControllerTest {
         sendRequest(EMPTY_BODY, HttpMethod.DELETE, location);
 
         getValidationResponse(EMPTY_BODY, HttpMethod.GET, location)
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @ParameterizedTest
