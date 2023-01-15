@@ -1,11 +1,11 @@
 package roomescape.reservation.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.service.ReservationService;
 import roomescape.theme.domain.Theme;
 
 import javax.validation.Valid;
@@ -30,30 +30,17 @@ public class RoomEscapeController {
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final ReservationService reservationService;
 
-    public RoomEscapeController(JdbcTemplate jdbcTemplate) {
+    public RoomEscapeController(JdbcTemplate jdbcTemplate, ReservationService reservationService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.reservationService = reservationService;
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation) {
-        boolean exists = Boolean.TRUE.equals(jdbcTemplate.queryForObject(CHECK_DUP_QUERY, Boolean.class,
-                reservation.getDate(),
-                reservation.getTime()
-        ));
-        if (exists) {
-            return ResponseEntity.badRequest().body("같은 시간에 이미 예약이 있습니다!");
-        }
-        jdbcTemplate.update(
-                INSERT_QUERY,
-                Date.valueOf(reservation.getDate()),
-                Time.valueOf(reservation.getTime()),
-                reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
-        );
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
+        Long reservationId = reservationService.createReservation(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 
     @GetMapping("/reservations/{id}")
