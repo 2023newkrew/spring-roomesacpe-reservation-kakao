@@ -26,6 +26,14 @@ public class ThemeMemoryRepository implements ThemeRepository{
     }
 
     @Override
+    public Optional<Theme> findByName(String name) {
+        return repository.values()
+                .stream()
+                .filter(theme -> theme.getName().equals(name))
+                .findAny();
+    }
+
+    @Override
     public List<Theme> findAll() {
         return new ArrayList<>(repository.values());
     }

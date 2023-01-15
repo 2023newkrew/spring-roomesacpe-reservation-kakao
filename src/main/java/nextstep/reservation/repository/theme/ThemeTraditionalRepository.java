@@ -58,7 +58,7 @@ public class ThemeTraditionalRepository implements ThemeRepository{
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             PreparedStatement pstmt = getFindThemeByIdPreparedStatement(id, connection);
             ResultSet rs = pstmt.executeQuery();
-            return rs.next() ? Optional.of(getThemeFromResultSet(rs)) : Optional.empty();
+            return getOptionalThemeFromResultSet(rs);
         } catch (SQLException e) {
             throw new CustomSqlException(e.getMessage());
         }
@@ -72,6 +72,13 @@ public class ThemeTraditionalRepository implements ThemeRepository{
         return pstmt;
     }
 
+    private static Optional<Theme> getOptionalThemeFromResultSet(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            return Optional.of(getThemeFromResultSet(rs));
+        }
+        return Optional.empty();
+    }
+
     private static Theme getThemeFromResultSet(ResultSet rs) throws SQLException {
         return Theme.builder()
                 .id(rs.getLong("id"))
@@ -80,6 +87,27 @@ public class ThemeTraditionalRepository implements ThemeRepository{
                 .price(rs.getInt("price"))
                 .build();
     }
+
+    @Override
+    public Optional<Theme> findByName(String name) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement pstmt = getFindByNamePreparedStatement(name, connection);
+            ResultSet rs = pstmt.executeQuery();
+            return getOptionalThemeFromResultSet(rs);
+
+        } catch (SQLException e) {
+            throw new CustomSqlException(e.getMessage());
+        }
+    }
+
+    private static PreparedStatement getFindByNamePreparedStatement(String name, Connection connection)
+            throws SQLException {
+        String sql = "SELECT * FROM theme WHERE name = (?)";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, name);
+        return pstmt;
+    }
+
 
     @Override
     public List<Theme> findAll() {

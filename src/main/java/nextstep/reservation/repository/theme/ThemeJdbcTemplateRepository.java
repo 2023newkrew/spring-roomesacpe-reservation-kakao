@@ -39,18 +39,29 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository{
 
     @Override
     public Optional<Theme> findById(Long id) {
-        return jdbcTemplate.query("SELECT * FROM theme WHERE id = ?", themeRowMapper, id)
+        String sql = "SELECT * FROM theme WHERE id = (?)";
+        return jdbcTemplate.query(sql, themeRowMapper, id)
+                .stream()
+                .findAny();
+    }
+
+    @Override
+    public Optional<Theme> findByName(String name) {
+        String sql = "SELECT * FROM theme WHERE name = (?)";
+        return jdbcTemplate.query(sql, themeRowMapper, name)
                 .stream()
                 .findAny();
     }
 
     @Override
     public List<Theme> findAll() {
-        return jdbcTemplate.query("SELECT * FROM theme", themeRowMapper);
+        String sql = "SELECT * FROM theme";
+        return jdbcTemplate.query(sql, themeRowMapper);
     }
 
     @Override
     public boolean delete(Long id) {
-        return jdbcTemplate.update("DELETE FROM theme WHERE id = ?", id) == 1;
+        String sql = "DELETE FROM theme WHERE id = (?)";
+        return jdbcTemplate.update(sql, id) == 1;
     }
 }
