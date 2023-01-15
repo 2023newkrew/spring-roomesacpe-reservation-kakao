@@ -18,7 +18,7 @@ import java.util.Map;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-public class ReservationDao implements ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     public static final String TABLE_NAME = "reservation";
     public static final String KEY_COLUMN_NAME = "id";
@@ -26,6 +26,7 @@ public class ReservationDao implements ReservationRepository {
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> Reservation.from(resultSet);
 
+    @Override
     public Long save(Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TABLE_NAME)
@@ -37,6 +38,7 @@ public class ReservationDao implements ReservationRepository {
     }
 
 
+    @Override
     public Reservation findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE ID = ?;";
         List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper, id);
@@ -47,6 +49,7 @@ public class ReservationDao implements ReservationRepository {
         return reservations.get(0);
     }
 
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE ID = ?;";
         if (jdbcTemplate.update(sql, id) == 0) {

@@ -15,7 +15,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ReservationService(@Qualifier("reservationDao") ReservationRepository reservationRepository) {
+    public ReservationService(@Qualifier("reservationJdbcRepository") ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -26,7 +26,7 @@ public class ReservationService {
                 requestDto.getName(),
                 new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
         );
-        
+
         return reservationRepository.save(reservation);
     }
 

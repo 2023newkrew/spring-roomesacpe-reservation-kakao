@@ -14,10 +14,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @SpringBootTest
-class ReservationDaoTest {
+class ReservationJdbcRepositoryTest {
 
     @Autowired
-    ReservationDao reservationDao;
+    ReservationJdbcRepository reservationJdbcRepository;
 
     Reservation reservation;
 
@@ -37,12 +37,12 @@ class ReservationDaoTest {
     @Test
     @Transactional
     void 예약을_저장후_조회할_수_있다() {
-        Long createdId = reservationDao.save(reservation);
+        Long createdId = reservationJdbcRepository.save(reservation);
 
-        Assertions.assertThat(reservationDao.findById(createdId)
+        Assertions.assertThat(reservationJdbcRepository.findById(createdId)
                         .getId())
                 .isEqualTo(createdId);
-        Assertions.assertThat(reservationDao.findById(createdId)
+        Assertions.assertThat(reservationJdbcRepository.findById(createdId)
                         .getName())
                 .isEqualTo(reservation.getName());
     }
@@ -50,17 +50,17 @@ class ReservationDaoTest {
     @Test
     @Transactional
     void 예약후_취소할_수_있다() {
-        Long createdId = reservationDao.save(reservation);
-        reservationDao.deleteById(createdId);
+        Long createdId = reservationJdbcRepository.save(reservation);
+        reservationJdbcRepository.deleteById(createdId);
 
-        Assertions.assertThatThrownBy(() -> reservationDao.findById(createdId))
+        Assertions.assertThatThrownBy(() -> reservationJdbcRepository.findById(createdId))
                 .isInstanceOf(BusinessException.class);
     }
 
     @Test
     @Transactional
     void 없는_예약을_취소하면_예외가_발생한다() {
-        Assertions.assertThatThrownBy(() -> reservationDao.deleteById(1L))
+        Assertions.assertThatThrownBy(() -> reservationJdbcRepository.deleteById(1L))
                 .isInstanceOf(BusinessException.class);
     }
 }

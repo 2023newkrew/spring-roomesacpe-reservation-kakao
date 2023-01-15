@@ -1,8 +1,8 @@
 package nextstep.console;
 
-import nextstep.console.dao.ReservationDao;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.web.repository.ReservationDbRepository;
 import nextstep.web.repository.ReservationRepository;
 
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class RoomEscapeApplication {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    private static final ReservationRepository reservationDao = new ReservationDao();
+    private static final ReservationRepository reservationDao = new ReservationDbRepository();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -65,9 +65,12 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마 이름: " + reservation.getTheme()
+                        .getName());
+                System.out.println("예약 테마 설명: " + reservation.getTheme()
+                        .getDesc());
+                System.out.println("예약 테마 가격: " + reservation.getTheme()
+                        .getPrice());
             }
 
             if (input.startsWith(DELETE)) {
