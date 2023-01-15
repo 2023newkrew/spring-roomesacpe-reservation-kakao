@@ -56,7 +56,7 @@ public class JdbcThemeRepository implements ThemeRepository {
 
     @Override
     public int deleteById(long id) {
-        String existsQuery = "select exists(select * from RESERVATION where theme_id = id)";
+        String existsQuery = "select exists(select * from RESERVATION where theme_id = ?)";
         Boolean isExistInReservation = jdbcTemplate.queryForObject(existsQuery, Boolean.class, id);
         if (isExistInReservation) {
             throw new RoomEscapeException(RoomEscapeExceptionCode.RESERVATION_EXIST);
