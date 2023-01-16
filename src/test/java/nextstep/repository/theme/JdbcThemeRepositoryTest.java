@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static nextstep.exception.ErrorCode.DUPLICATED_THEME_EXISTS;
 import static nextstep.exception.ErrorCode.THEME_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +24,8 @@ class JdbcThemeRepositoryTest {
     @Autowired
     JdbcThemeRepository jdbcThemeRepository;
 
+    Theme theme = new Theme(4L, "테스트 테마", "테스트용 테마임", 1234);
+
     @AfterEach
     void setUp() {
         jdbcThemeRepository.dropTable();
@@ -30,18 +34,11 @@ class JdbcThemeRepositoryTest {
 
     @Test
     void 테마를_저장할_수_있다() {
-        //given
-        Theme theme = new Theme("Bryan's Theme", "This is Bryan's Theme. Enjoy the game.", 10000);
-
-        //when, then
         assertDoesNotThrow(() -> jdbcThemeRepository.save(theme));
     }
 
     @Test
     void 중복된_이름으로_테마를_만들_수_없다() {
-        //given
-        Theme theme = new Theme("Bryan's Theme", "This is Bryan's Theme. Enjoy the game.", 10000);
-
         //when, then
         ReservationException e = assertThrows(ReservationException.class,
                 () -> {
@@ -55,10 +52,7 @@ class JdbcThemeRepositoryTest {
     @Test
     void 테마를_조회할_수_있다() {
         //given
-        Theme theme = new Theme("Bryan's Theme", "This is Bryan's Theme. Enjoy the game.", 10000);
-
         Long saveId = jdbcThemeRepository.save(theme);
-        System.out.println("saveId = " + saveId);
 
         //when
         Theme foundTheme = jdbcThemeRepository.findById(saveId);
@@ -67,6 +61,26 @@ class JdbcThemeRepositoryTest {
         assertThat(theme.getName()).isEqualTo(foundTheme.getName());
         assertThat(theme.getDesc()).isEqualTo(foundTheme.getDesc());
         assertThat(theme.getPrice()).isEqualTo(foundTheme.getPrice());
+    }
+
+    @Test
+    void 모든_테마들을_조회할_수_있다() {
+        //given
+        Theme theme2 = new Theme(5L, "test", "test theme", 30000);
+        jdbcThemeRepository.save(theme);
+        jdbcThemeRepository.save(theme2);
+
+        //when
+        List<Theme> themes = jdbcThemeRepository.findAll();
+
+        //then
+        assertThat(themes.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 테마가_없을_때_모든_테마들을_조회할_수_없다() {
+        ReservationException e = assertThrows(ReservationException.class, () -> jdbcThemeRepository.findAll());
+        assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }
 
     @Test
@@ -83,8 +97,6 @@ class JdbcThemeRepositoryTest {
     @Test
     void 테마를_삭제할_수_있다() {
         //given
-        Theme theme = new Theme("Bryan's Theme", "This is Bryan's Theme. Enjoy the game.", 10000);
-
         Long saveId = jdbcThemeRepository.save(theme);
 
         //when, then
