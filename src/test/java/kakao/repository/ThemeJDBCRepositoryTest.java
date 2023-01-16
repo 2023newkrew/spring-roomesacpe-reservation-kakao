@@ -82,7 +82,7 @@ class ThemeJDBCRepositoryTest {
                 .build();
 
         themeJDBCRepository.save(themeModel);
-        Assertions.assertThat(themeJDBCRepository.update(request.getUpdateSQL())).isOne();
+        Assertions.assertThat(themeJDBCRepository.update(request.name, request.desc, request.price, request.id)).isOne();
 
         Theme cp = themeJDBCRepository.findById(1L);
         Assertions.assertThat(cp.getName()).isEqualTo("updatedName");

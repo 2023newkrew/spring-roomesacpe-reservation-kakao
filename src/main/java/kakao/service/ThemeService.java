@@ -48,7 +48,7 @@ public class ThemeService {
     public ThemeResponse updateTheme(UpdateThemeRequest updateRequest) {
         validator.validateForUsingTheme(reservationJDBCRepository.findByRequestId(updateRequest.id));
 
-        themeJDBCRepository.update(updateRequest.getUpdateSQL());
+        themeJDBCRepository.update(updateRequest.name, updateRequest.desc, updateRequest.price, updateRequest.id);
         return getTheme(updateRequest.id);
     }
 
