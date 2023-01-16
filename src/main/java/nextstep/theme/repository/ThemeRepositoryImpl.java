@@ -52,8 +52,10 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public Theme update(Theme theme) throws DuplicateKeyException {
-        return null;
+    public boolean update(Long id, Theme theme) throws DuplicateKeyException {
+        int updateRow = jdbcTemplate.update(connection -> statementCreator.createUpdate(connection, id, theme));
+
+        return updateRow > 0;
     }
 
     @Override

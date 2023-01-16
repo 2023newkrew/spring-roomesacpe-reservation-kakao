@@ -13,7 +13,7 @@ public interface ThemeRepository {
 
     List<Theme> getAll();
 
-    Theme update(Theme theme) throws DuplicateKeyException;
+    boolean update(Long id, Theme theme) throws DuplicateKeyException;
 
     boolean delete(Long id);
 }

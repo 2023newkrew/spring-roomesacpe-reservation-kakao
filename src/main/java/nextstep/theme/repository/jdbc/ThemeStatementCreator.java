@@ -15,6 +15,13 @@ public class ThemeStatementCreator {
 
     private static final String SELECT_ALL_SQL = "SELECT * FROM theme";
 
+    private static final String UPDATE_SQL =
+            "UPDATE theme " +
+                    "SET name = ?," +
+                    "    desc = ?," +
+                    "    price = ?" +
+                    "WHERE id = ?";
+
     private static final String DELETE_BY_ID_SQL = "DELETE FROM theme WHERE id = ?";
 
 
@@ -47,6 +54,14 @@ public class ThemeStatementCreator {
 
     public PreparedStatement createSelectAll(Connection connection) throws SQLException {
         return connection.prepareStatement(SELECT_ALL_SQL);
+    }
+
+    public PreparedStatement createUpdate(Connection connection, Long id, Theme theme) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
+        setTheme(ps, theme);
+        ps.setLong(4, id);
+
+        return ps;
     }
 
     public PreparedStatement createDeleteById(Connection connection, Long id) throws SQLException {

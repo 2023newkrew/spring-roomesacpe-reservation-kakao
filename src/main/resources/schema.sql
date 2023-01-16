@@ -12,7 +12,7 @@ CREATE TABLE reservation
 CREATE TABLE theme
 (
     id    BIGINT NOT NULL AUTO_INCREMENT,
-    name  VARCHAR(20) UNIQUE,
+    name  VARCHAR(20) NOT NULL UNIQUE,
     desc  VARCHAR(255),
     price INT,
     PRIMARY KEY (id)

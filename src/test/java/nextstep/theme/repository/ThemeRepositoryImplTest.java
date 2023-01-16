@@ -8,6 +8,7 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -51,8 +52,8 @@ class ThemeRepositoryImplTest {
         @DisplayName("호출 횟수만큼 ID가 증가하는지 확인")
         @Test
         void should_increaseId_when_insertTwice() {
-            var theme1 = new Theme(null, "theme1", "desc", 1000);
-            var theme2 = new Theme(null, "theme2", "desc", 1000);
+            Theme theme1 = new Theme(null, "theme1", "desc", 1000);
+            Theme theme2 = new Theme(null, "theme2", "desc", 1000);
 
             Long id1 = repository.insert(theme1)
                     .getId();
@@ -66,7 +67,7 @@ class ThemeRepositoryImplTest {
         @DisplayName("이름이 중복될 경우 예외 발생")
         @Test
         void should_throwException_when_nameDuplicated() {
-            var theme = new Theme(null, "theme", "desc", 1000);
+            Theme theme = new Theme(null, "theme", "desc", 1000);
             repository.insert(theme);
 
             Assertions.assertThatThrownBy(() -> repository.insert(theme))
@@ -85,7 +86,7 @@ class ThemeRepositoryImplTest {
                     new Theme(null, "theme2", "theme2", 2000),
                     new Theme(null, "theme3", "theme3", 3000)
             );
-            insertTestThemes(themes);
+            themes.forEach(ThemeRepositoryImplTest.this::insertTestTheme);
         }
 
         @DisplayName("ID와 일치하는 예약 확인")
@@ -131,7 +132,7 @@ class ThemeRepositoryImplTest {
                     new Theme(null, "theme2", "theme2", 2000),
                     new Theme(null, "theme3", "theme3", 3000)
             );
-            insertTestThemes(themes);
+            themes.forEach(ThemeRepositoryImplTest.this::insertTestTheme);
 
             List<Theme> actual = repository.getAll();
 
@@ -149,15 +150,71 @@ class ThemeRepositoryImplTest {
         );
     }
 
-    boolean equals(Theme expected, Theme actual) {
-        return Objects.equals(expected.getName(), actual.getName()) &&
-                Objects.equals(expected.getDesc(), actual.getDesc()) &&
-                Objects.equals(expected.getPrice(), actual.getPrice());
-    }
-
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class update {
+
+        @BeforeEach
+        void setUp() {
+            List<Theme> themes = List.of(
+                    new Theme(null, "theme1", "theme1", 1000),
+                    new Theme(null, "theme2", "theme2", 2000)
+            );
+            themes.forEach(ThemeRepositoryImplTest.this::insertTestTheme);
+        }
+
+        @DisplayName("수정 내용이 db에 반영되는지 확인")
+        @ParameterizedTest
+        @MethodSource
+        void should_updateTheme_when_givenIdAndTheme(Long id, Theme theme) {
+            repository.update(id, theme);
+
+            Theme actual = getThemeById(id);
+
+            Assertions.assertThat(actual)
+                    .extracting(
+                            Theme::getId,
+                            Theme::getName,
+                            Theme::getDesc,
+                            Theme::getPrice
+                    )
+                    .contains(
+                            id,
+                            theme.getName(),
+                            theme.getDesc(),
+                            theme.getPrice()
+                    );
+        }
+
+        List<Arguments> should_updateTheme_when_givenIdAndTheme() {
+            return List.of(
+                    Arguments.of(1L, new Theme(null, "updated1", "updated", 1000)),
+                    Arguments.of(1L, new Theme(null, "updated2", null, 2000)),
+                    Arguments.of(2L, new Theme(null, "updated3", "updated", 3000)),
+                    Arguments.of(2L, new Theme(null, "updated4", null, 3000))
+            );
+        }
+
+        @DisplayName("수정 성공 여부 확인")
+        @ParameterizedTest
+        @CsvSource(value = {"0,false", "1, true", "2, true", "3, false"})
+        void should_updateTheme_when_givenIdAndTheme(Long id, boolean updated) {
+            Theme theme = new Theme(null, "updated", "updated", 0);
+
+            boolean actual = repository.update(id, theme);
+
+            Assertions.assertThat(actual)
+                    .isEqualTo(updated);
+        }
+
+        @DisplayName("이름이 중복될 경우 예외 발생")
+        @Test
+        void should_throwException_when_nameDuplicated() {
+            Theme theme = new Theme(null, "theme2", "theme2", 2000);
+
+            Assertions.assertThatThrownBy(() -> repository.update(1L, theme))
+                    .isInstanceOf(DuplicateKeyException.class);
+        }
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -165,9 +222,20 @@ class ThemeRepositoryImplTest {
     class delete {
     }
 
-    private void insertTestThemes(List<Theme> themes) {
-        themes.forEach(theme -> {
-            jdbcTemplate.update(connection -> statementCreator.createInsert(connection, theme));
-        });
+    private void insertTestTheme(Theme theme) {
+        jdbcTemplate.update(connection -> statementCreator.createInsert(connection, theme));
+    }
+
+    private Theme getThemeById(Long id) {
+        return jdbcTemplate.query(
+                connection -> statementCreator.createSelectById(connection, id),
+                resultSetParser::parseSingleTheme
+        );
+    }
+
+    boolean equals(Theme expected, Theme actual) {
+        return Objects.equals(expected.getName(), actual.getName()) &&
+                Objects.equals(expected.getDesc(), actual.getDesc()) &&
+                Objects.equals(expected.getPrice(), actual.getPrice());
     }
 }
