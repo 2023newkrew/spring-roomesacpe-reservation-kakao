@@ -8,14 +8,14 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long theme_id;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long theme_id) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.theme_id = theme_id;
     }
 
     public Long getId() {
@@ -34,7 +34,7 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Long getTheme_id() {
+        return theme_id;
     }
 }
