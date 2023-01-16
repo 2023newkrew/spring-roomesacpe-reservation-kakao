@@ -1,24 +1,24 @@
-package nextstep;
+package roomescape;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.dao.ReservationDaoConsole;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationDto;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
-public class RoomEscapeApplication {
+public class ConsoleApplication {
     private static final String ADD = "add";
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        List<Reservation> reservations = new ArrayList<>();
-        Long reservationIdIndex = 0L;
+    private static ReservationDaoConsole reservationDAO = new ReservationDaoConsole();
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.println();
@@ -29,39 +29,38 @@ public class RoomEscapeApplication {
             System.out.println("- 종료: quit");
 
             String input = scanner.nextLine();
+
             if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
-
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                
+                if (reservationDAO.findReservationByDateAndTime(date, time).size() > 0) {
+                    System.out.println("이미 예약된 시간입니다.");
+                    continue;
+                }
 
-                Reservation reservation = new Reservation(
-                        ++reservationIdIndex,
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme
-                );
-
-                reservations.add(reservation);
-
+                Reservation reservation = reservationDAO.addReservation(new Reservation(new ReservationDto(date, time, name)));
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
+
             }
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservations.stream()
-                        .filter(it -> Objects.equals(it.getId(), id))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                Reservation reservation;
+                try {
+                    reservation = reservationDAO.findReservationById(id).get(0);
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("해당 예약은 없는 예약입니다.");
+                    continue;
+                }
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -74,12 +73,11 @@ public class RoomEscapeApplication {
 
             if (input.startsWith(DELETE)) {
                 String params = input.split(" ")[1];
-
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservations.removeIf(it -> Objects.equals(it.getId(), id))) {
-                    System.out.println("예약이 취소되었습니다.");
-                }
+                reservationDAO.removeReservation(id);
+
+                System.out.println("예약이 취소되었습니다.");
             }
 
             if (input.equals(QUIT)) {
