@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ThemeMemRepository implements ThemeRepository {
-    public static final Theme theme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
     private final Map<Long, Theme> themes = new TreeMap<>();
 
     long id = 0;
