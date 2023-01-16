@@ -3,7 +3,6 @@ package roomescape.reservation.service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.repository.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
 
 import java.time.LocalDate;
@@ -13,14 +12,14 @@ import java.util.Optional;
 @Service
 public class ReservationService {
 
-    private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
 
     public ReservationService(ReservationRepository reservationRepository){
         this.reservationRepository = reservationRepository;
     }
 
     public Long createReservation(Reservation reservation){
-        checkDuplicatedDateAndTime(reservation.getDate(), reservation.getTime());
+        //checkDuplicatedDateAndTime(reservation.getDate(), reservation.getTime());
         return reservationRepository.save(reservation);
     }
 

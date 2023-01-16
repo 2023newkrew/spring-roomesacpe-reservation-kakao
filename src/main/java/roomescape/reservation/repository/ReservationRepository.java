@@ -20,9 +20,7 @@ public class ReservationRepository {
     private static final int INDEX_DATE = 1;
     private static final int INDEX_TIME = 2;
     private static final int INDEX_NAME = 3;
-    private static final int INDEX_THEME_NAME = 4;
-    private static final int INDEX_THEME_DESC = 5;
-    private static final int INDEX_THEME_PRICE = 6;
+    private static final int INDEX_THEME_ID = 4;
     final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper =
             (resultSet, rowNum) -> ReservationMapper.mapToReservation(resultSet);
@@ -32,16 +30,14 @@ public class ReservationRepository {
     }
 
     public Long save(Reservation reservation) {
-        String sql = "INSERT INTO RESERVATION (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO RESERVATION (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(INDEX_DATE, Date.valueOf(reservation.getDate()));
             ps.setTime(INDEX_TIME, Time.valueOf(reservation.getTime()));
             ps.setString(INDEX_NAME, reservation.getName());
-            ps.setString(INDEX_THEME_NAME, reservation.getTheme().getName());
-            ps.setString(INDEX_THEME_DESC, reservation.getTheme().getDesc());
-            ps.setInt(INDEX_THEME_PRICE, reservation.getTheme().getPrice());
+            ps.setLong(INDEX_THEME_ID, reservation.getThemeId());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();

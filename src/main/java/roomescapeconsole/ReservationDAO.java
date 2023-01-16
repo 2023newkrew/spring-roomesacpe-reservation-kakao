@@ -15,9 +15,7 @@ public class ReservationDAO {
     private static final int INDEX_DATE = 2;
     private static final int INDEX_TIME = 3;
     private static final int INDEX_NAME = 4;
-    private static final int INDEX_THEME_NAME = 5;
-    private static final int INDEX_THEME_DESC = 6;
-    private static final int INDEX_THEME_PRICE = 7;
+    private static final int INDEX_THEME_ID = 5;
     private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private static final String DATABASE_USERNAME = "sa";
     private static final String DATABASE_PASSWORD = "";
@@ -59,9 +57,7 @@ public class ReservationDAO {
             addPs.setDate(INDEX_DATE, Date.valueOf(reservation.getDate()));
             addPs.setTime(INDEX_TIME, Time.valueOf(reservation.getTime()));
             addPs.setString(INDEX_NAME, reservation.getName());
-            addPs.setString(INDEX_THEME_NAME, reservation.getTheme().getName());
-            addPs.setString(INDEX_THEME_DESC, reservation.getTheme().getDesc());
-            addPs.setInt(INDEX_THEME_PRICE, reservation.getTheme().getPrice());
+            addPs.setLong(INDEX_THEME_ID, reservation.getThemeId());
             addPs.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -78,11 +74,8 @@ public class ReservationDAO {
                 LocalDate date = LocalDate.parse(lookUpRs.getString(INDEX_DATE));
                 LocalTime time = LocalTime.parse(lookUpRs.getString(INDEX_TIME));
                 String name = lookUpRs.getString(INDEX_NAME);
-                String themeName = lookUpRs.getString(INDEX_THEME_NAME);
-                String themeDesc = lookUpRs.getString(INDEX_THEME_DESC);
-                Integer themePrice = lookUpRs.getInt(INDEX_THEME_PRICE);
-                Theme theme = new Theme(themeName, themeDesc, themePrice);
-                return new Reservation(id, date, time, name, theme);
+                Long themeId = lookUpRs.getLong(INDEX_THEME_ID);
+                return new Reservation(id, date, time, name, themeId);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
