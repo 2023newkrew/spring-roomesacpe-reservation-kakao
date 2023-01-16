@@ -22,8 +22,8 @@ public class RoomEscapeApplication {
     }
 
     @Bean
-    public RoomEscapeService roomEscapeService(ReservationRepository reservationRepository) {
-        return new RoomEscapeService(reservationRepository);
+    public RoomEscapeService roomEscapeService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
+        return new RoomEscapeService(reservationRepository, themeRepository);
     }
 
     @Bean
