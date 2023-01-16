@@ -2,13 +2,9 @@ package nextstep.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import nextstep.model.Reservation;
-import nextstep.model.Theme;
 
 public class ReservationConverter {
     public static void set(PreparedStatement ps, Reservation reservation) throws SQLException {

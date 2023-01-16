@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateReservationRepository implements ReservationRepository {
+public class WebReservationRepository implements ReservationRepository {
     private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
         Long id = rs.getLong("reservation_id");
         LocalDate date = rs.getDate("reservation_date").toLocalDate();
@@ -31,7 +31,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     };
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
+    public WebReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -74,13 +74,6 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT count(*) FROM reservation WHERE date=? AND time=?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, time);
-        return count > 0;
     }
 
     @Override

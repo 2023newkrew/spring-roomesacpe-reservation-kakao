@@ -10,22 +10,18 @@ import nextstep.exception.ReservationNotFoundException;
 import nextstep.exception.ThemeNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
-import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
+import nextstep.repository.WebThemeRepository;
 import nextstep.service.RoomEscapeService;
 import nextstep.service.ThemeService;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ThemeRequest;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
 class RoomEscapeServiceTest {

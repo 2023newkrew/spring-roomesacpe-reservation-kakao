@@ -8,20 +8,14 @@ import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
 import nextstep.web.dto.ReservationRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomEscapeService {
 
     private final ReservationRepository reservationRepository;
-    private ThemeRepository themeRepository;
+    private final ThemeRepository themeRepository;
 
-    public RoomEscapeService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
-    @Autowired
     public RoomEscapeService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
         this.themeRepository = themeRepository;

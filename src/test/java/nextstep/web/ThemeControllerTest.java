@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.tuple;
 import java.util.List;
 import nextstep.model.Theme;
 import nextstep.repository.ThemeRepository;
+import nextstep.repository.WebThemeRepository;
 import nextstep.web.dto.ThemeResponse;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,8 @@ public class ThemeControllerTest extends AbstractControllerTest {
         List<ThemeResponse> actual = 테마를_조회한다();
 
         assertThat(actual)
-                .extracting(ThemeResponse::getId, ThemeResponse::getName, ThemeResponse::getDesc, ThemeResponse::getPrice)
+                .extracting(ThemeResponse::getId, ThemeResponse::getName, ThemeResponse::getDesc,
+                        ThemeResponse::getPrice)
                 .hasSize(2)
                 .contains(
                         tuple(id1, "name1", "desc1", 10000),

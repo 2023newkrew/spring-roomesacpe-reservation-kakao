@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.List;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
+import nextstep.repository.WebThemeRepository;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
 import nextstep.web.dto.ThemeRequest;

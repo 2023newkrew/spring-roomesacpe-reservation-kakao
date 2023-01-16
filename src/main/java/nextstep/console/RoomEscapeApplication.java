@@ -11,8 +11,10 @@ import java.util.Scanner;
 import javax.sql.DataSource;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
-import nextstep.repository.JdbcReservationRepository;
+import nextstep.repository.ConsoleReservationRepository;
+import nextstep.repository.ConsoleThemeRepository;
 import nextstep.repository.ReservationRepository;
+import nextstep.repository.ThemeRepository;
 import nextstep.service.RoomEscapeService;
 import nextstep.web.dto.ReservationRequest;
 
@@ -30,14 +32,17 @@ public class RoomEscapeApplication {
         DataSource dataSource = createHikariDataSource();
         createDataBaseTables(dataSource);
 
-        ReservationRepository reservationRepository = new JdbcReservationRepository(dataSource);
-        service = new RoomEscapeService(reservationRepository);
+        ThemeRepository themeRepository = new ConsoleThemeRepository();
+        Theme theme = themeRepository.save(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
+
+        ReservationRepository reservationRepository = new ConsoleReservationRepository(dataSource);
+        service = new RoomEscapeService(reservationRepository, themeRepository);
 
         while (true) {
             String input = getInput(scanner);
             try {
                 if (input.startsWith(ADD)) {
-                    Reservation reservation = addReservation(input);
+                    Reservation reservation = addReservation(input, theme);
                     printReservation(reservation);
                 }
                 if (input.startsWith(FIND)) {
@@ -97,14 +102,14 @@ public class RoomEscapeApplication {
         return scanner.nextLine();
     }
 
-    public static Reservation addReservation(String input) {
+    public static Reservation addReservation(String input, Theme theme) {
         String params = input.split(" ")[1];
         String date = params.split(",")[0];
         String time = params.split(",")[1];
         String name = params.split(",")[2];
 
         Reservation reservation = service.createReservation(
-                new ReservationRequest(name, LocalDate.parse(date), LocalTime.parse(time), null));
+                new ReservationRequest(name, LocalDate.parse(date), LocalTime.parse(time), theme.getId()));
 
         System.out.println("예약이 등록되었습니다.");
         return reservation;

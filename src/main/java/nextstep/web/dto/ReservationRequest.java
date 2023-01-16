@@ -1,6 +1,5 @@
 package nextstep.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

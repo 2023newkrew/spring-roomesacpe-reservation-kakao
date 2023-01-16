@@ -11,23 +11,24 @@ import java.time.LocalTime;
 import java.util.Optional;
 import javax.sql.DataSource;
 import nextstep.model.Reservation;
+import nextstep.model.Theme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class JdbcReservationRepository implements ReservationRepository {
+public class ConsoleReservationRepository implements ReservationRepository {
 
     private final DataSource dataSource;
     private final Logger logger;
 
-    public JdbcReservationRepository(DataSource dataSource) {
+    public ConsoleReservationRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.logger = LoggerFactory.getLogger(JdbcReservationRepository.class);
+        this.logger = LoggerFactory.getLogger(ConsoleReservationRepository.class);
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price, theme_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
@@ -46,7 +47,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price, theme_id FROM reservation WHERE id = ?";
+        String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -60,8 +61,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                 String themeName = rs.getString("theme_name");
                 String themeDesc = rs.getString("theme_desc");
                 Integer themePrice = rs.getInt("theme_price");
-                Long themeId = rs.getObject("theme_id", Long.class);
-                Reservation reservation = new Reservation(id, date, time, name, null);
+                Reservation reservation = new Reservation(id, date, time, name,
+                        new Theme(themeName, themeDesc, themePrice));
                 return Optional.of(reservation);
             }
         } catch (SQLException e) {
@@ -71,7 +72,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+    public boolean existsByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
         String sql = "SELECT count(*) as count FROM reservation WHERE date=? AND time=?";
 
         try (Connection con = createConnection();
@@ -84,11 +85,6 @@ public class JdbcReservationRepository implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public boolean existsByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
-        return existsByDateAndTime(date, time);
     }
 
     @Override
