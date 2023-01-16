@@ -27,7 +27,7 @@ class ReservationControllerTest {
 
     @Test
     void createReservation() {
-        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation).when().post("/reservations").
@@ -37,7 +37,7 @@ class ReservationControllerTest {
 
     @Test
     void getReservation() {
-        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all().
@@ -55,7 +55,7 @@ class ReservationControllerTest {
 
     @Test
     void deleteReservation() {
-        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all()
@@ -66,7 +66,7 @@ class ReservationControllerTest {
 
     @Test
     void duplicateReservation() {
-        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all()

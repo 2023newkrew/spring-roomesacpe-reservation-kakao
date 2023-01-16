@@ -41,9 +41,6 @@ public class RoomEscapeConsoleApplication {
                 String name = params.split(",")[2];
 
                 ReservationRequest reservationRequest = new ReservationRequest(
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name
                 );
 
                 Reservation reservation = service.newReservation(reservationRequest);

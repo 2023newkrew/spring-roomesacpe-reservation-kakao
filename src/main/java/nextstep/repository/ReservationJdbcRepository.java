@@ -1,7 +1,6 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,16 +25,14 @@ public class ReservationJdbcRepository implements ReservationRepository{
 
     @Override
     public Reservation create(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getThemeId());
             return ps;
         }, keyHolder);
         reservation.setId(keyHolder.getKey().longValue());
@@ -67,17 +64,12 @@ public class ReservationJdbcRepository implements ReservationRepository{
     }
 
     private RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
-        Theme theme = new Theme(
-                rs.getString("theme_name"),
-                rs.getString("theme_desc"),
-                rs.getInt("theme_price")
-        );
         return new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
-                theme
+                rs.getLong("theme_id")
         );
     };
 }
