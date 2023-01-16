@@ -1,5 +1,6 @@
 package nextstep.theme;
 
+import nextstep.theme.dto.ThemeDto;
 import nextstep.theme.entity.Theme;
 
 import java.util.List;
@@ -8,6 +9,22 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ThemeMock {
+    public static List<ThemeDto> makeRandomThemeDto(int count, String[] names){
+        return makeRandomTheme(count, names).stream()
+                .map(Theme::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public static ThemeDto makeRandomThemeDto(){
+        return makeRandomTheme(1, getRandomNames(1))
+                .get(0)
+                .toDto();
+    }
+
+    public static ThemeDto makeRandomThemeDto(String name){
+        return makeRandomTheme(name).toDto();
+    }
+
     public static List<Theme> makeRandomTheme(int count, String[] names){
         return IntStream.range(0, count)
                 .mapToObj((index) -> makeRandomTheme(names[index]))
