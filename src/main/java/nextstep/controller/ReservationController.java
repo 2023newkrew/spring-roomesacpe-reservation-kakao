@@ -1,8 +1,10 @@
 package nextstep.controller;
 
-import nextstep.domain.dto.GetReservationDTO;
-import nextstep.domain.dto.CreateReservationDTO;
-import nextstep.service.WebAppReservationService;
+import nextstep.domain.dto.reservation.GetReservationDto;
+import nextstep.domain.dto.reservation.CreateReservationDto;
+import nextstep.exception.DuplicateTimeReservationException;
+import nextstep.exception.IllegalReservationTimeException;
+import nextstep.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,33 +15,28 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+    private final ReservationService reservationService;
+
     @Autowired
-    private WebAppReservationService webAppReservationService;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @PostMapping()
-    public ResponseEntity createReservation(@RequestBody CreateReservationDTO reservationDto) {
-        long id = webAppReservationService.addReservation(reservationDto);
-        if (id == -1) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity createReservation(@RequestBody CreateReservationDto reservationDto) {
+        long id = reservationService.addReservation(reservationDto);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(webAppReservationService.getReservation(id));
+    public ResponseEntity<GetReservationDto> getReservation(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(new GetReservationDto(reservationService.getReservation(id)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
-        webAppReservationService.deleteReservation(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
-
-    @DeleteMapping("/all")
-    public ResponseEntity deleteAllReservations() {
-        webAppReservationService.deleteAllReservations();
-        return ResponseEntity.noContent().build();
-    }
-
 }
