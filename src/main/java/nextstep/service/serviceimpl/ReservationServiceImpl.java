@@ -10,16 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
-
-    private final Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     private final ReservationRepository repository;
 
     @Override
@@ -27,7 +22,8 @@ public class ReservationServiceImpl implements ReservationService {
         LocalDate date = LocalDate.parse(request.getDate());
         LocalTime time = LocalTime.parse(request.getTime() + ":00");
         String name = request.getName();
-        Reservation reservation = new Reservation(null, date, time, name, theme);
+        Long theme_id = request.getTheme_id();
+        Reservation reservation = new Reservation(null, date, time, name, theme_id);
         Long id = repository.insertIfNotExistsDateTime(reservation);
         if(Objects.isNull(id)){
             throw new IllegalArgumentException("해당 시간에 이미 예약이 존재합니다.");
