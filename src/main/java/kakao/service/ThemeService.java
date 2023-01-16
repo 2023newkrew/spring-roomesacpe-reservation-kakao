@@ -1,6 +1,6 @@
 package kakao.service;
 
-import domain.ThemeFactory;
+import domain.Theme;
 import domain.ThemeValidator;
 import kakao.dto.request.CreateThemeRequest;
 import kakao.dto.request.UpdateThemeRequest;
@@ -16,18 +16,20 @@ import java.util.stream.Collectors;
 public class ThemeService {
 
     private final ThemeJDBCRepository themeJDBCRepository;
-    private final ThemeFactory themeFactory;
     private final ThemeValidator validator;
 
     public ThemeService(ThemeJDBCRepository themeJDBCRepository, ReservationJDBCRepository reservationJDBCRepository) {
         this.themeJDBCRepository = themeJDBCRepository;
-        this.themeFactory = new ThemeFactory();
         this.validator = new ThemeValidator(themeJDBCRepository, reservationJDBCRepository);
     }
 
     public long createTheme(CreateThemeRequest request) {
         validator.validateForCreate(request);
-        return themeJDBCRepository.save(themeFactory.create(request));
+        return themeJDBCRepository.save(new Theme(
+                request.name,
+                request.desc,
+                request.price
+        ));
     }
 
     public List<ThemeResponse> getThemes() {
