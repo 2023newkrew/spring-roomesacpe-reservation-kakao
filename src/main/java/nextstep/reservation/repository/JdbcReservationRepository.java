@@ -32,7 +32,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private PreparedStatementCreator getExistsByTimetableStatementCreator(Reservation reservation) {
-        return connection -> statementCreator.createSelectByTimetableStatement(connection, reservation);
+        return connection -> statementCreator.createSelectByTimetable(connection, reservation);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private PreparedStatementCreator getInsertStatementCreator(Reservation reservation) {
-        return connection -> statementCreator.createInsertStatement(connection, reservation);
+        return connection -> statementCreator.createInsert(connection, reservation);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private PreparedStatementCreator getSelectByIdStatementCreator(Long id) {
-        return connection -> statementCreator.createSelectByIdStatement(connection, id);
+        return connection -> statementCreator.createSelectById(connection, id);
     }
 
     @Override
@@ -68,6 +68,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private PreparedStatementCreator getDeleteByIdStatementCreator(Long id) {
-        return connection -> statementCreator.createDeleteByIdStatement(connection, id);
+        return connection -> statementCreator.createDeleteById(connection, id);
     }
 }

@@ -29,7 +29,7 @@ public class ReservationStatementCreator {
 
     private static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
-    public PreparedStatement createSelectByTimetableStatement(
+    public PreparedStatement createSelectByTimetable(
             Connection connection, Reservation reservation) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(SELECT_BY_DATE_AND_TIME_SQL);
         LocalDate date = reservation.getDate();
@@ -41,7 +41,7 @@ public class ReservationStatementCreator {
         return ps;
     }
 
-    public PreparedStatement createInsertStatement(
+    public PreparedStatement createInsert(
             Connection connection, Reservation reservation) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
         setReservation(ps, reservation);
@@ -60,14 +60,14 @@ public class ReservationStatementCreator {
         );
     }
 
-    public PreparedStatement createSelectByIdStatement(Connection connection, Long id) throws SQLException {
+    public PreparedStatement createSelectById(Connection connection, Long id) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(SELECT_BY_ID_SQL);
         ps.setLong(1, id);
 
         return ps;
     }
 
-    public PreparedStatement createDeleteByIdStatement(Connection connection, Long id) throws SQLException {
+    public PreparedStatement createDeleteById(Connection connection, Long id) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(DELETE_BY_ID_SQL);
         ps.setLong(1, id);
 

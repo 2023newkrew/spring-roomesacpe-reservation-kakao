@@ -262,7 +262,7 @@ class JdbcReservationRepositoryTest {
     }
 
     void insertReservation(Reservation reservation) {
-        jdbcTemplate.update(conn -> reservationStatementCreator.createInsertStatement(conn, reservation));
+        jdbcTemplate.update(conn -> reservationStatementCreator.createInsert(conn, reservation));
     }
 
     void insertTheme(Theme theme) {

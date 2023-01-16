@@ -47,7 +47,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createSelectByTimetableStatement(
+            PreparedStatement ps = statementCreator.createSelectByTimetable(
                     connection,
                     reservation
             );
@@ -65,7 +65,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Reservation> getInsertQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createInsertStatement(connection, reservation);
+            PreparedStatement ps = statementCreator.createInsert(connection, reservation);
             ps.executeUpdate();
             ResultSet keyHolder = ps.getGeneratedKeys();
             reservation.setId(resultSetParser.parseKey(keyHolder));
@@ -81,7 +81,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Reservation> getSelectByIdQuery(Long id) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createSelectByIdStatement(connection, id);
+            PreparedStatement ps = statementCreator.createSelectById(connection, id);
             ResultSet rs = ps.executeQuery();
 
             return resultSetParser.parseReservation(rs);
@@ -95,7 +95,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getDeleteByIdQuery(Long id) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createDeleteByIdStatement(connection, id);
+            PreparedStatement ps = statementCreator.createDeleteById(connection, id);
             int deletedRow = ps.executeUpdate();
 
             return deletedRow > 0;
