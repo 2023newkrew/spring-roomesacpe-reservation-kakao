@@ -20,10 +20,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationRequestDTO request) {
-        URI location = URI.create(RESERVATION_PATH + "/" + service.create(request));
+        try {
+            URI location = URI.create(RESERVATION_PATH + "/" + service.create(request));
 
-        return ResponseEntity.created(location)
-                .build();
+            return ResponseEntity.created(location)
+                    .build();
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body("reservation already exists on that time");
+        }
     }
 
     @GetMapping("/{reservation_id}")
