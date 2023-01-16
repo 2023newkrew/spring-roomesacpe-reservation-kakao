@@ -1,13 +1,13 @@
 package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static nextstep.exception.ErrorCode.DUPLICATED_RESERVATION_EXISTS;
 import static nextstep.exception.ErrorCode.RESERVATION_NOT_FOUND;
@@ -18,9 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ConsoleReservationRepositoryTest {
 
     ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
-    Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
     Reservation reservation = new Reservation(
-            1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+            1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", 1L);
 
     @AfterEach
     void setUpTable() throws Exception {
@@ -48,12 +47,27 @@ class ConsoleReservationRepositoryTest {
         Long savedId = consoleReservationRepository.save(reservation);
 
         //when
-        Reservation foundReservation = consoleReservationRepository.findById(savedId);
+        Reservation savedReservation = consoleReservationRepository.findById(savedId);
 
         //then
-        assertThat(reservation.getName()).isEqualTo(foundReservation.getName());
-        assertThat(reservation.getDate()).isEqualTo(foundReservation.getDate());
-        assertThat(reservation.getTheme().getName()).isEqualTo(foundReservation.getTheme().getName());
+        assertThat(reservation.getName()).isEqualTo(savedReservation.getName());
+        assertThat(reservation.getDate()).isEqualTo(savedReservation.getDate());
+        assertThat(reservation.getThemeId()).isEqualTo(savedReservation.getThemeId());
+    }
+
+    @Test
+    void 특정_테마ID를_가진_예약들을_조회할_수_있다() {
+        //given
+        Reservation reservation2 = new Reservation(
+                2L, LocalDate.parse("2022-01-03"), LocalTime.parse("13:00"), "bryan", 1L);
+        consoleReservationRepository.save(reservation);
+        consoleReservationRepository.save(reservation2);
+
+        //when
+        List<Reservation> reservations = consoleReservationRepository.findByThemeId(1L);
+
+        //then
+        assertThat(reservations.size()).isEqualTo(2);
     }
 
     @Test
