@@ -24,7 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationResponse create(ReservationRequest request) {
         Reservation reservation = mapper.fromRequest(request);
-        if (repository.existsByDateAndTime(reservation)) {
+        if (repository.existsByTimetable(reservation)) {
             throw new ReservationException(ErrorMessage.RESERVATION_CONFLICT);
         }
         reservation = repository.insert(reservation);

@@ -12,7 +12,7 @@ public class ReservationStatementCreator {
 
     private static final String
             SELECT_BY_DATE_AND_TIME_SQL =
-            "SELECT * FROM reservation WHERE date = ? AND time = ? LIMIT 1";
+            "SELECT * FROM reservation WHERE date = ? AND time = ? AND theme_id = ? LIMIT 1";
 
     private static final String INSERT_SQL = "INSERT INTO reservation(date, time, name, theme_id) VALUES(?, ?, ?, ?)";
 
@@ -29,13 +29,14 @@ public class ReservationStatementCreator {
 
     private static final String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
-    public PreparedStatement createSelectByDateAndTimeStatement(
+    public PreparedStatement createSelectByTimetableStatement(
             Connection connection, Reservation reservation) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(SELECT_BY_DATE_AND_TIME_SQL);
         LocalDate date = reservation.getDate();
         LocalTime time = reservation.getTime();
         ps.setDate(1, Date.valueOf(date));
         ps.setTime(2, Time.valueOf(time));
+        ps.setLong(3, reservation.getThemeId());
 
         return ps;
     }

@@ -4,7 +4,7 @@ import nextstep.reservation.domain.Reservation;
 
 public interface ReservationRepository {
 
-    boolean existsByDateAndTime(Reservation reservation);
+    boolean existsByTimetable(Reservation reservation);
 
     Reservation insert(Reservation reservation);
 

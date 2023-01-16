@@ -23,16 +23,16 @@ public class JdbcReservationRepository implements ReservationRepository {
     private final ReservationResultSetParser resultSetParser;
 
     @Override
-    public boolean existsByDateAndTime(Reservation reservation) {
+    public boolean existsByTimetable(Reservation reservation) {
         return Boolean.TRUE.equals(
                 jdbcTemplate.query(
-                        getExistsByDateAndTimeStatementCreator(reservation),
+                        getExistsByTimetableStatementCreator(reservation),
                         ResultSet::next
                 ));
     }
 
-    private PreparedStatementCreator getExistsByDateAndTimeStatementCreator(Reservation reservation) {
-        return connection -> statementCreator.createSelectByDateAndTimeStatement(connection, reservation);
+    private PreparedStatementCreator getExistsByTimetableStatementCreator(Reservation reservation) {
+        return connection -> statementCreator.createSelectByTimetableStatement(connection, reservation);
     }
 
     @Override

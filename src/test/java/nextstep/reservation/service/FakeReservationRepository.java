@@ -15,11 +15,12 @@ public class FakeReservationRepository implements ReservationRepository {
 
 
     @Override
-    public boolean existsByDateAndTime(Reservation reservation) {
+    public boolean existsByTimetable(Reservation reservation) {
         return reservations.values()
                 .stream()
                 .anyMatch(r -> Objects.equals(reservation.getDate(), r.getDate()) &&
-                        Objects.equals(reservation.getTime(), r.getTime()));
+                        Objects.equals(reservation.getTime(), r.getTime()) &&
+                        Objects.equals(reservation.getThemeId(), r.getThemeId()));
     }
 
     @Override

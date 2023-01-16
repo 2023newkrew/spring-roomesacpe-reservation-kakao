@@ -7,6 +7,7 @@ import nextstep.theme.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @AllArgsConstructor
 public class Reservation {
@@ -26,4 +27,12 @@ public class Reservation {
 
     @Getter
     private final Theme theme;
+
+    public Long getThemeId() {
+        if (Objects.isNull(theme)) {
+            return null;
+        }
+
+        return theme.getId();
+    }
 }

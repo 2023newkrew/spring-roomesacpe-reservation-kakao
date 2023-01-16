@@ -26,7 +26,7 @@ public class SimpleReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByDateAndTime(Reservation reservation) {
+    public boolean existsByTimetable(Reservation reservation) {
         return tryQuery(getExistsByDateAndTimeQuery(reservation));
     }
 
@@ -47,7 +47,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createSelectByDateAndTimeStatement(
+            PreparedStatement ps = statementCreator.createSelectByTimetableStatement(
                     connection,
                     reservation
             );

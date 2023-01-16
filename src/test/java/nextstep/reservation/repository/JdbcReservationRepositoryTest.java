@@ -5,6 +5,8 @@ import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.jdbc.ReservationResultSetParser;
 import nextstep.reservation.repository.jdbc.ReservationStatementCreator;
+import nextstep.theme.domain.Theme;
+import nextstep.theme.repository.jdbc.ThemeStatementCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,17 +34,23 @@ class JdbcReservationRepositoryTest {
 
     final JdbcTemplate jdbcTemplate;
 
-    final ReservationStatementCreator statementCreator;
+    final ReservationStatementCreator reservationStatementCreator;
+
+    final ThemeStatementCreator themeStatementCreator;
+
     final ReservationResultSetParser resultSetParser;
+
     final ReservationRepository repository;
+
     final ReservationMapper mapper;
 
     @Autowired
     public JdbcReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.statementCreator = new ReservationStatementCreator();
+        this.reservationStatementCreator = new ReservationStatementCreator();
+        this.themeStatementCreator = new ThemeStatementCreator();
         this.resultSetParser = new ReservationResultSetParser();
-        this.repository = new JdbcReservationRepository(jdbcTemplate, statementCreator, resultSetParser);
+        this.repository = new JdbcReservationRepository(jdbcTemplate, reservationStatementCreator, resultSetParser);
         this.mapper = Mappers.getMapper(ReservationMapper.class);
     }
 
@@ -57,14 +65,15 @@ class JdbcReservationRepositoryTest {
                     new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
                     new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
-            insertTestReservations(requests);
+            requests.forEach(request -> insertReservation(mapper.fromRequest(request)));
+            insertTheme(new Theme(null, "test", "test", 1000));
         }
 
         @DisplayName("date와 time이 같은 예약이 존재하는지 확인")
         @ParameterizedTest
         @MethodSource
         void should_returnExists_when_givenRequest(ReservationRequest request, boolean exists) {
-            boolean actual = repository.existsByDateAndTime(mapper.fromRequest(request));
+            boolean actual = repository.existsByTimetable(mapper.fromRequest(request));
 
             Assertions.assertThat(actual)
                     .isEqualTo(exists);
@@ -85,9 +94,9 @@ class JdbcReservationRepositoryTest {
         void should_returnFalse_when_afterInsert(ReservationRequest request) {
             Reservation reservation = mapper.fromRequest(request);
 
-            boolean before = repository.existsByDateAndTime(reservation);
-            insertTestReservations(List.of(request));
-            boolean after = repository.existsByDateAndTime(reservation);
+            boolean before = repository.existsByTimetable(reservation);
+            insertReservation(mapper.fromRequest(request));
+            boolean after = repository.existsByTimetable(reservation);
 
             Assertions.assertThat(before)
                     .isFalse();
@@ -102,6 +111,18 @@ class JdbcReservationRepositoryTest {
                     Arguments.of(new ReservationRequest("2023-08-11", "16:00", "류성현", 1L), 3L),
                     Arguments.of(new ReservationRequest("2023-08-13", "13:00", "pluto", 1L), 4L)
             );
+        }
+
+        @DisplayName("테마가 다를 경우 삽입 가능")
+        @Test
+        void should_returnFalse_when_diffTheme() {
+            ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "pluto", 2L);
+            Reservation reservation = mapper.fromRequest(request);
+
+            boolean actual = repository.existsByTimetable(reservation);
+
+            Assertions.assertThat(actual)
+                    .isFalse();
         }
     }
 
@@ -166,7 +187,7 @@ class JdbcReservationRepositoryTest {
                     new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
                     new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
-            insertTestReservations(requests);
+            requests.forEach(request -> insertReservation(mapper.fromRequest(request)));
         }
 
         @DisplayName("ID와 일치하는 예약 확인")
@@ -213,7 +234,7 @@ class JdbcReservationRepositoryTest {
                     new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
                     new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
-            insertTestReservations(requests);
+            requests.forEach(request -> insertReservation(mapper.fromRequest(request)));
         }
 
         @DisplayName("예약이 존재하면 제거하고 결과 반환")
@@ -240,12 +261,12 @@ class JdbcReservationRepositoryTest {
         }
     }
 
-    private void insertTestReservations(List<ReservationRequest> requests) {
-        requests.forEach(req -> {
-            Reservation reservation = mapper.fromRequest(req);
-            jdbcTemplate.update(conn -> statementCreator.createInsertStatement(conn, reservation));
-        });
+    void insertReservation(Reservation reservation) {
+        jdbcTemplate.update(conn -> reservationStatementCreator.createInsertStatement(conn, reservation));
     }
 
+    void insertTheme(Theme theme) {
+        jdbcTemplate.update(conn -> themeStatementCreator.createInsert(conn, theme));
+    }
 }
 
