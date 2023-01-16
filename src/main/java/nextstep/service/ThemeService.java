@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,12 +43,12 @@ public class ThemeService {
     }
 
     public ThemeResponse retrieveOne(Long id) {
+        validateId(id);
         return new ThemeResponse(getThemeById(id));
     }
 
     private Theme getThemeById(Long id) {
-        Optional<Theme> themeFound = themeDao.findById(id);
-        return themeFound.orElseThrow(() -> {
+        return themeDao.findById(id).orElseThrow(() -> {
             throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
         });
     }
