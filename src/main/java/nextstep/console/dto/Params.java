@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class Params {
 
+    private static final long THEME_ID = 1L;
+
     private final List<String> params;
 
     public Params() {
@@ -30,7 +32,7 @@ public class Params {
         String time = params.get(1);
         String name = params.get(2);
 
-        return new ReservationRequest(date, time, name);
+        return new ReservationRequest(date, time, name, THEME_ID);
     }
 
     public Long getLong() {

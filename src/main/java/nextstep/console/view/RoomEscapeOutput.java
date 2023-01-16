@@ -1,7 +1,7 @@
 package nextstep.console.view;
 
 import nextstep.reservation.dto.ReservationResponse;
-import nextstep.reservation.dto.ThemeResponse;
+import nextstep.theme.dto.ThemeResponse;
 
 import java.util.Objects;
 

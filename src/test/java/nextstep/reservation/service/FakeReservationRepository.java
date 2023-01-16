@@ -1,7 +1,6 @@
 package nextstep.reservation.service;
 
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
 import nextstep.reservation.repository.ReservationRepository;
 
 import java.util.HashMap;
@@ -11,8 +10,6 @@ import java.util.Objects;
 public class FakeReservationRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
-
-    private final Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
     private Long reservationIdIndex = 0L;
 
@@ -32,7 +29,7 @@ public class FakeReservationRepository implements ReservationRepository {
                 reservation.getDate(),
                 reservation.getTime(),
                 reservation.getName(),
-                theme
+                reservation.getTheme()
         );
         reservations.put(reservationIdIndex, reservation);
 

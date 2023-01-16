@@ -44,9 +44,9 @@ class ReservationServiceTest {
 
         List<Arguments> should_idIs1_when_created() {
             return List.of(
-                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-11", "13:00", "pluto"))
+                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-11", "13:00", "pluto", 1L))
             );
         }
 
@@ -63,9 +63,9 @@ class ReservationServiceTest {
 
         List<Arguments> should_throwException_when_givenSameDateAndTime() {
             return List.of(
-                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-11", "13:00", "pluto"))
+                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-11", "13:00", "pluto", 1L))
             );
         }
 
@@ -73,7 +73,7 @@ class ReservationServiceTest {
         @ParameterizedTest
         @MethodSource
         void should_idIs2_when_givenDiffDateOrTime(ReservationRequest anotherRequest) {
-            ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현");
+            ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현", 1L);
             service.create(request);
 
             ReservationResponse reservation = service.create(anotherRequest);
@@ -84,8 +84,8 @@ class ReservationServiceTest {
 
         List<Arguments> should_idIs2_when_givenDiffDateOrTime() {
             return List.of(
-                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현"))
+                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현", 1L))
             );
         }
     }
@@ -98,7 +98,7 @@ class ReservationServiceTest {
         @ParameterizedTest
         @ValueSource(longs = {0L, 2L, 3L})
         void should_returnNull_when_notFondId(Long id) {
-            ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현");
+            ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "류성현", 1L);
             service.create(request);
 
             ReservationResponse reservationResponse = service.getById(id);
@@ -112,9 +112,9 @@ class ReservationServiceTest {
         @MethodSource
         void should_nameIs_when_givenId(Long id, String reserverName) {
             List<ReservationRequest> requests = List.of(
-                    new ReservationRequest("2022-08-12", "13:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "14:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "13:00", "pluto")
+                    new ReservationRequest("2022-08-12", "13:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
             requests.forEach(service::create);
 
@@ -126,9 +126,9 @@ class ReservationServiceTest {
 
         List<Arguments> should_nameIs_when_givenId() {
             return List.of(
-                    Arguments.of(1L, "류성현"),
-                    Arguments.of(2L, "류성현"),
-                    Arguments.of(3L, "pluto")
+                    Arguments.of(1L, "류성현", 1L),
+                    Arguments.of(2L, "류성현", 1L),
+                    Arguments.of(3L, "pluto", 1L)
             );
         }
     }
@@ -178,6 +178,6 @@ class ReservationServiceTest {
     }
 
     private static ReservationRequest getTestRequest() {
-        return new ReservationRequest("2022-08-12", "13:00", "류성현");
+        return new ReservationRequest("2022-08-12", "13:00", "류성현", 1L);
     }
 }

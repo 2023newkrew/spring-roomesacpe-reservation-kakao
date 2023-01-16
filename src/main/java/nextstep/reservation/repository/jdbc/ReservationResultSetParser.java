@@ -2,7 +2,7 @@ package nextstep.reservation.repository.jdbc;
 
 import nextstep.etc.jdbc.ResultSetParser;
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
+import nextstep.theme.domain.Theme;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -32,6 +32,7 @@ public class ReservationResultSetParser extends ResultSetParser {
 
     private Theme parseTheme(ResultSet resultSet) throws SQLException {
         return new Theme(
+                resultSet.getLong("theme_id"),
                 resultSet.getString("theme_name"),
                 resultSet.getString("theme_desc"),
                 resultSet.getInt("theme_price")

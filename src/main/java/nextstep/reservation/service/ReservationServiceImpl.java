@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import nextstep.etc.exception.ErrorMessage;
 import nextstep.etc.exception.ReservationException;
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
@@ -17,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     private final ReservationRepository repository;
 
     private final ReservationMapper mapper;
@@ -26,7 +23,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     @Override
     public ReservationResponse create(ReservationRequest request) {
-        Reservation reservation = mapper.fromRequest(request, THEME);
+        Reservation reservation = mapper.fromRequest(request);
         if (repository.existsByDateAndTime(reservation)) {
             throw new ReservationException(ErrorMessage.RESERVATION_CONFLICT);
         }
