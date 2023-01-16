@@ -202,5 +202,13 @@ class ThemeServiceImplTest {
             Assertions.assertThat(actual)
                     .isEqualTo(deleted);
         }
+
+        @DisplayName("예약이 존재하는 테마를 제거할 경우 예외 발생")
+        @Test
+        void should_throwException_when_reservationExists() {
+            Assertions.assertThatThrownBy(() -> service.deleteById(-1L))
+                    .isInstanceOf(ThemeException.class)
+                    .hasMessage(ErrorMessage.THEME_RESERVATION_EXISTS.getErrorMessage());
+        }
     }
 }

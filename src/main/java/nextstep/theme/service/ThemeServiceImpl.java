@@ -8,6 +8,7 @@ import nextstep.theme.dto.ThemeRequest;
 import nextstep.theme.dto.ThemeResponse;
 import nextstep.theme.mapper.ThemeMapper;
 import nextstep.theme.repository.ThemeRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +75,11 @@ public class ThemeServiceImpl implements ThemeService {
     @Transactional
     @Override
     public boolean deleteById(Long id) {
-        return repository.delete(id);
+        try {
+            return repository.delete(id);
+        }
+        catch (DataIntegrityViolationException ignore) {
+            throw new ThemeException(ErrorMessage.THEME_RESERVATION_EXISTS);
+        }
     }
 }

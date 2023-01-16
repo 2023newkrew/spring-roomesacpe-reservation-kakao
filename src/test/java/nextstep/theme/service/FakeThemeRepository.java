@@ -2,6 +2,7 @@ package nextstep.theme.service;
 
 import nextstep.theme.domain.Theme;
 import nextstep.theme.repository.ThemeRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.*;
@@ -59,6 +60,9 @@ public class FakeThemeRepository implements ThemeRepository {
 
     @Override
     public boolean delete(Long id) {
+        if (id == -1L) {
+            throw new DataIntegrityViolationException("");
+        }
         return themes.keySet()
                 .removeIf(id::equals);
     }
