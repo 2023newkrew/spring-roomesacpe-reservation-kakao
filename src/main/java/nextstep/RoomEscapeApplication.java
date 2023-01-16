@@ -1,13 +1,14 @@
 package nextstep;
 
 import domain.Reservation;
+import domain.ReservationValidator;
 import domain.Theme;
-import kakao.dto.request.CreateReservationRequest;
-import kakao.dto.request.UpdateThemeRequest;
+import domain.ThemeValidator;
+import kakao.repository.ReservationRepository;
+import kakao.repository.ThemeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class RoomEscapeApplication {
@@ -22,8 +23,11 @@ public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ReservationDAO reservationDAO = new ReservationDAO();
-        ThemeDAO themeDAO = new ThemeDAO();
+        ReservationRepository reservationRepository = new ReservationConsoleRepository();
+        ReservationValidator reservationValidator = new ReservationValidator(reservationRepository);
+
+        ThemeRepository themeRepository = new ThemeConsoleRepository();
+        ThemeValidator themeValidator = new ThemeValidator(themeRepository, reservationRepository);
 
 
         while (true) {
@@ -32,9 +36,9 @@ public class RoomEscapeApplication {
             System.out.println("- 예약하기: add {date},{time},{name},{theme_id} ex) add 2022-08-11,13:00,류성현,1");
             System.out.println("- 예약조회: find {id} ex) find 1");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
-            System.out.println("- 테마 생성하기: addTheme {name},{desc},{price} ex) addTheme themeName, themeDesc, 2000");
+            System.out.println("- 테마 생성하기: addTheme {name},{desc},{price} ex) addTheme themeName,themeDesc,2000");
             System.out.println("- 테마 조회하기: findTheme {id} ex) findTheme 1");
-            System.out.println("- 테마 수정하기: updateTheme {id},{name},{desc},{price} ex) updateTheme 1, themeName, themeDesc, 2000");
+            System.out.println("- 테마 수정하기: updateTheme {id},{name},{desc},{price} ex) updateTheme 1,themeName,themeDesc,2000");
             System.out.println("- 테마 삭제하기: deleteTheme {id} ex) deleteTheme 1");
             System.out.println("- 종료: quit");
 
@@ -46,29 +50,29 @@ public class RoomEscapeApplication {
                 String desc = params.split(",")[1];
                 Integer price = Integer.parseInt(params.split(",")[2]);
 
-                themeDAO.save(new Theme(name, desc, price));
+                themeRepository.save(new Theme(name, desc, price));
             } else if (input.startsWith(ADD)) {
                 String params = input.split(" ")[1];
 
-                String date = params.split(",")[0];
-                String time = params.split(",")[1];
+                LocalDate date = LocalDate.parse(params.split(",")[0]);
+                LocalTime time = LocalTime.parse(params.split(",")[1]);
                 String name = params.split(",")[2];
                 Long theme_id = Long.parseLong(params.split(",")[3]);
 
-                CreateReservationRequest reservationRequest = new CreateReservationRequest(
-                        LocalDate.parse(date),
-                        LocalTime.parse(time + ":00"),
-                        name,
-                        theme_id
-                );
+                reservationValidator.validateForCreate(date, time);
+                long reservationId = reservationRepository.save(Reservation.builder()
+                        .name(name)
+                        .date(date)
+                        .time(time)
+                        .theme(themeRepository.findById(theme_id))
+                        .build());
 
-                long reservationId = reservationDAO.addReservation(reservationRequest);
                 if (reservationId >= 0) {
                     System.out.println("예약이 등록되었습니다.");
                     System.out.println("예약 번호: " + reservationId);
-                    System.out.println("예약 날짜: " + reservationRequest.date);
-                    System.out.println("예약 시간: " + reservationRequest.time);
-                    System.out.println("예약자 이름: " + reservationRequest.name);
+                    System.out.println("예약 날짜: " + date);
+                    System.out.println("예약 시간: " + time);
+                    System.out.println("예약자 이름: " + name);
                 }
             }
 
@@ -77,8 +81,7 @@ public class RoomEscapeApplication {
 
                 long id = Long.parseLong(params.split(",")[0]);
 
-                Theme theme = themeDAO.findById(id);
-                if (Objects.isNull(theme)) throw new RuntimeException("해당 ID의 테마가 존재하지 않습니다");
+                Theme theme = themeRepository.findById(id);
 
                 System.out.println("테마 id: " + theme.getId());
                 System.out.println("테마 이름: " + theme.getName());
@@ -90,9 +93,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = reservationDAO.findById(id);
-                if (Objects.isNull(reservation)) throw new RuntimeException("해당 ID의 예약이 존재하지 않습니다.");
-
+                Reservation reservation = reservationRepository.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -111,8 +112,8 @@ public class RoomEscapeApplication {
                 String desc = params.split(",")[2];
                 Integer price = Integer.parseInt(params.split(",")[3]);
 
-                if (!reservationDAO.findByThemeId(id).isEmpty()) throw new RuntimeException("해당 테마는 이미 예약되어 있습니다");
-                themeDAO.update(new UpdateThemeRequest(id, name, desc, price));
+                themeValidator.validateForUsingTheme(id);
+                themeRepository.update(name, desc, price, id);
             }
 
             if (input.startsWith(DELETE_THEME)) {
@@ -120,7 +121,7 @@ public class RoomEscapeApplication {
 
                 long id = Long.parseLong(params.split(",")[0]);
 
-                if (themeDAO.delete(id) > 0)
+                if (themeRepository.delete(id) > 0)
                     System.out.println("테마가 삭제되었습니다");
 
             } else if (input.startsWith(DELETE)) {
@@ -128,7 +129,7 @@ public class RoomEscapeApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                if (reservationDAO.delete(id) > 0) {
+                if (reservationRepository.delete(id) > 0) {
                     System.out.println("예약이 취소되었습니다.");
                 }
             }
