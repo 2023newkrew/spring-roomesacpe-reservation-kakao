@@ -3,12 +3,18 @@ package nextstep.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.springframework.beans.factory.annotation.Value;
 
 public class DatabaseUtil {
 
-    private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/prod;AUTO_SERVER=true";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    @Value("${spring.datasource.url}")
+    private static String DATABASE_URL;
+
+    @Value("${spring.datasource.username}")
+    private static String USERNAME ;
+
+    @Value("${spring.datasource.password}")
+    private static String PASSWORD;
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);

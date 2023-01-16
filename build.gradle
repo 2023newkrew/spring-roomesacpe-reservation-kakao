@@ -21,7 +21,8 @@ dependencies {
 //    implementation 'mysql:mysql-connector-java'
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
     implementation group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.9.0'
-    annotationProcessor('org.projectlombok:lombok:1.18.12')
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'junit:junit:4.13.1'
