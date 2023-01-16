@@ -18,6 +18,5 @@ CREATE TABLE RESERVATION
     time        time,
     name        varchar(20),
     theme_id    bigint,
-    foreign key (theme_id) references theme(id) on delete cascade,
     primary key (id)
 );
