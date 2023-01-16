@@ -41,6 +41,16 @@ class JdbcTemplateThemeRepositoryTest {
         assertThat(found).isEqualTo(theme);
     }
 
+    @DisplayName("이름으로 테마를 조회한다")
+    @Test
+    void findByName() {
+        Theme theme = repository.save(new Theme(null, "테마 이름", "테마 설명 내용", 32000));
+
+        Theme found = repository.findByName(theme.getName()).orElseThrow();
+
+        assertThat(found).isEqualTo(theme);
+    }
+
     @DisplayName("존재하지 않는 id로 테마를 조회한다")
     @Test
     void findById_Empty() {

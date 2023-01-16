@@ -68,6 +68,28 @@ public class ThemeControllerTest {
         assertThat(theme.getPrice()).isEqualTo(request.getPrice());
     }
 
+    @DisplayName("중복된 테마 생성시 예외 응답을 반환한다")
+    @Test
+    void createDuplicateTheme() {
+        String name = "name_duplicated";
+        String desc = "desc_";
+        int price = 32000;
+        테마_생성_후_번호를_반환한다(name, desc, price);
+
+        ThemeRequest request = new ThemeRequest(name, desc, price);
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/themes")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(response.body()).isNotNull();
+    }
+
     @DisplayName("테마를 조회한다")
     @Test
     void getTheme() {
@@ -123,7 +145,7 @@ public class ThemeControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("해당 테마에 예약이 존재하면 테마 삭제 요청시 예외가 발생한다")
+    @DisplayName("해당 테마에 예약이 존재하면 테마 삭제시 예외 응답을 반환한다")
     @Test
     void deleteReservationExistsTheme() {
         Long id = 테마_생성_후_번호를_반환한다("방탈출 테마 new", "새롭게 생겨난 테마!", 20000);
