@@ -2,6 +2,7 @@ package nextstep.main.java.nextstep.controller;
 
 import nextstep.main.java.nextstep.domain.Reservation;
 import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
+import nextstep.main.java.nextstep.message.ControllerMessage;
 import nextstep.main.java.nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody ReservationCreateRequestDto request) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequestDto request) {
         Reservation createdReservation = reservationService.save(request);
         return ResponseEntity.created(URI.create("/reservations/" + createdReservation.getId()))
                 .build();
@@ -31,9 +32,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         reservationService.deleteOneById(id);
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.ok(ControllerMessage.DELETE_RESERVATION_SUCCESS_MESSAGE);
     }
 }

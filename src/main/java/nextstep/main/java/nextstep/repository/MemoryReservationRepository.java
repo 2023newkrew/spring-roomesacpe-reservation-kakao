@@ -5,25 +5,33 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
     public static Map<Long, Reservation> reservationMap = new HashMap<>();
-    private static Long count = 1L;
+    private static AtomicLong id = new AtomicLong(1L);
 
     @Override
     public Reservation save(Reservation reservation) {
-        reservationMap.put(count, reservation);
-        return new Reservation(count++, reservation);
+        reservationMap.put(id.get(), reservation);
+        return new Reservation(id.getAndIncrement(), reservation);
     }
 
     @Override
     public Optional<Reservation> findOne(Long id) {
         return Optional.ofNullable(reservationMap.get(id));
+    }
+
+    @Override
+    public List<Reservation> findAllByThemeId(Long themeId) {
+        return reservationMap.values()
+                .stream()
+                .filter(reservation -> reservation.getThemeId()
+                        .equals(themeId))
+                .collect(Collectors.toList());
     }
 
     @Override

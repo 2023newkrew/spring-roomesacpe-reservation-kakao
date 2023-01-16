@@ -21,6 +21,7 @@ public class RoomEscapeApplication {
         ConsoleView consoleView = new ConsoleView();
         ReservationDAO reservationDAO = new ReservationDAO();
         Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Long default_theme_id = 1L;
 
         while (true) {
             consoleView.printCommand();
@@ -37,7 +38,7 @@ public class RoomEscapeApplication {
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        default_theme_id
                 );
 
                 if (reservationDAO.existsByDateAndTime(LocalDate.parse(date), LocalTime.parse(time))) {

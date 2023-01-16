@@ -1,7 +1,7 @@
 package nextstep.main.java.nextstep.repository;
 
 import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.repositoryUtil.ReservationPreparedStatementCreator;
+import nextstep.main.java.nextstep.repositoryUtil.CustomPreparedStatementCreator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,7 +33,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update((connection) ->
-                        ReservationPreparedStatementCreator.insertReservationPreparedStatement(connection, reservation)
+                        CustomPreparedStatementCreator.insertReservationPreparedStatement(connection, reservation)
                 , keyHolder);
         return new Reservation(keyHolder.getKey()
                 .longValue(), reservation);
@@ -50,6 +51,12 @@ public class JdbcReservationRepository implements ReservationRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Reservation> findAllByThemeId(Long themeId) {
+        String sql = "SELECT * FROM reservation WHERE theme_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> Reservation.of(rs), themeId);
     }
 
     @Override

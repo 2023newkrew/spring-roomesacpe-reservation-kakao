@@ -1,35 +1,28 @@
 package nextstep.main.java.nextstep.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final Theme theme;
+    private final Long themeId;
     private Long id;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
-
     public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
-    }
-
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
+        this(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
     }
 
     public static Reservation of(ResultSet resultSet) throws SQLException {
@@ -39,55 +32,7 @@ public class Reservation {
                 resultSet.getTime("time")
                         .toLocalTime(),
                 resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
+                resultSet.getLong("theme_id")
         );
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Theme getTheme() {
-        return theme;
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", date=" + date +
-                ", time=" + time +
-                ", name='" + name + '\'' +
-                ", theme=" + theme +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
-        return date.equals(that.date) && time.equals(that.time) && name.equals(that.name) && theme.equals(that.theme) && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(date, time, name, theme, id);
     }
 }

@@ -1,10 +1,9 @@
 package nextstep.main.java.nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.main.java.nextstep.domain.Reservation;
-import nextstep.main.java.nextstep.domain.ReservationCreateRequestDto;
-import nextstep.main.java.nextstep.service.ReservationService;
-import org.hamcrest.Matchers;
+import nextstep.main.java.nextstep.domain.Theme;
+import nextstep.main.java.nextstep.domain.ThemeCreateRequestDto;
+import nextstep.main.java.nextstep.service.ThemeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,76 +13,73 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationControllerTest {
+public class ThemeControllerTest {
     @LocalServerPort
     int port;
-    ReservationCreateRequestDto request = new ReservationCreateRequestDto(
-            LocalDate.of(2023, 1, 9),
-            LocalTime.of(1, 30),
-            "name", 1L
-    );
-
     @MockBean
-    private ReservationService reservationService;
+    private ThemeService themeService;
 
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
     }
 
-    @DisplayName("예약 생성 테스트")
     @Test
-    void createReservation() {
-        when(reservationService.save(any(ReservationCreateRequestDto.class))).
-                thenReturn(new Reservation(1L, request.getDate(), request.getTime(), request.getName(), request.getThemeId()));
+    @DisplayName("테마 생성 POST method 테스트")
+    void createThemeTest() {
+        ThemeCreateRequestDto themeCreateRequestDto = new ThemeCreateRequestDto("name", "desc", 22000);
+        Theme expectedTheme = new Theme(1L, themeCreateRequestDto.getName(), themeCreateRequestDto.getDesc(), themeCreateRequestDto.getPrice());
+        when(themeService.createTheme(themeCreateRequestDto))
+                .thenReturn(expectedTheme);
 
         RestAssured.given()
                 .log()
                 .all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
+                .body(themeCreateRequestDto)
                 .when()
-                .post("/reservations")
+                .post("/themes")
                 .then()
                 .log()
                 .all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .header("location", "/themes/1");
     }
 
-    @DisplayName("예약 조회 테스트")
     @Test
-    void findOneReservationTest() {
-        when(reservationService.findOneById(1L))
-                .thenReturn(new Reservation(1L, LocalDate.of(2023, 1, 9), LocalTime.of(1, 30), "name", null));
+    @DisplayName("테마 목록 조회 GET method 테스트")
+    void findAllThemeTest() {
+        List<Theme> themes = List.of(new Theme(1L, "theme1", "desc1", 1000),
+                new Theme(2L, "theme2", "desc2", 2000),
+                new Theme(3L, "theme3", "desc3", 3000));
+        when(themeService.findAllTheme()).thenReturn(themes);
 
         RestAssured.given()
                 .log()
                 .all()
                 .when()
-                .get("/reservations/1")
+                .get("themes")
                 .then()
                 .log()
                 .all()
                 .statusCode(HttpStatus.OK.value())
-                .body("id", Matchers.equalTo(1));
+                .body("size()", is(themes.size()));
     }
 
-    @DisplayName("예약 삭제 테스트")
     @Test
-    void deleteOneReservationTest() {
+    @DisplayName("테마 삭제 DELETE method 테스트")
+    void deleteThemeByIdTest() {
         RestAssured.given()
                 .log()
                 .all()
                 .when()
-                .delete("/reservations/1")
+                .delete("themes/1")
                 .then()
                 .log()
                 .all()
