@@ -21,13 +21,9 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
     private final ThemeReservationDao themeReservationDao;
     private final ThemeDao themeDao;
 
-    private static final Long DEFAULT_THEME_ID = 1L;
-
     @Override
     @Transactional(readOnly = false)
     public Long reserve(ReservationDto reservationDto){
-        reservationDto.setThemeId(DEFAULT_THEME_ID);
-
         if(isExistSameDatetimeReservation(reservationDto)){
             throw new ConstraintViolationException(ThemeReservationErrorCode.CANNOT_RESERVE_FOR_SAME_DATETIME);
         }
