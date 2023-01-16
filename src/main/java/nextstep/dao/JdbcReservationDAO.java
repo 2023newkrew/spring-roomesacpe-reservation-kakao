@@ -19,11 +19,6 @@ public class JdbcReservationDAO implements ReservationDAO {
 
     private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
             (resultSet, rowNum) -> {
-                ThemeDTO theme = new ThemeDTO(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                );
                 return new ReservationDTO(
                         resultSet.getLong("id"),
                         resultSet.getDate("date")
@@ -31,7 +26,7 @@ public class JdbcReservationDAO implements ReservationDAO {
                         resultSet.getTime("time")
                                 .toLocalTime(),
                         resultSet.getString("name"),
-                        theme
+                        resultSet.getLong("theme_id")
                 );
             };
 
@@ -60,13 +55,11 @@ public class JdbcReservationDAO implements ReservationDAO {
         var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
         Date date = Date.valueOf(dto.getDate());
         Time time = Time.valueOf(dto.getTime());
-        ThemeDTO theme = dto.getTheme();
+
         ps.setDate(1, date);
         ps.setTime(2, time);
         ps.setString(3, dto.getName());
-        ps.setString(4, theme.getName());
-        ps.setString(5, theme.getDesc());
-        ps.setInt(6, theme.getPrice());
+        ps.setLong(4, dto.getTheme_id());
         return ps;
     }
 

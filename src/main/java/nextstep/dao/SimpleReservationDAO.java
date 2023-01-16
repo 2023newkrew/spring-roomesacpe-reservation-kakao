@@ -13,17 +13,12 @@ public class SimpleReservationDAO implements ReservationDAO {
                 if (!resultSet.next()) {
                     return null;
                 }
-                ThemeDTO theme = new ThemeDTO(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                );
                 return new ReservationDTO(
                         resultSet.getLong("id"),
                         resultSet.getDate("date").toLocalDate(),
                         resultSet.getTime("time").toLocalTime(),
                         resultSet.getString("name"),
-                        theme
+                        resultSet.getLong("theme_id")
                 );
             };
 
@@ -50,13 +45,10 @@ public class SimpleReservationDAO implements ReservationDAO {
             var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
             Date date = Date.valueOf(dto.getDate());
             Time time = Time.valueOf(dto.getTime());
-            ThemeDTO theme = dto.getTheme();
             ps.setDate(1, date);
             ps.setTime(2, time);
             ps.setString(3, dto.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
+            ps.setLong(4, dto.getTheme_id());
             ps.executeUpdate();
             var rs = ps.getGeneratedKeys();
             rs.next();
