@@ -54,7 +54,7 @@ public class SimpleReservationRepository implements ReservationRepository {
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
 
-            return resultSetParser.existsRow(rs);
+            return rs.next();
         };
     }
 

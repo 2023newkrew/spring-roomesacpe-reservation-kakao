@@ -14,7 +14,7 @@ import java.sql.Time;
 public class ReservationResultSetParser extends ResultSetParser {
 
     public Reservation parseReservation(ResultSet resultSet) throws SQLException {
-        if (getRows(resultSet) == 0) {
+        if (!resultSet.next()) {
             return null;
         }
 

@@ -10,6 +10,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+
 @RequiredArgsConstructor
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -25,7 +27,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         return Boolean.TRUE.equals(
                 jdbcTemplate.query(
                         getExistsByDateAndTimeStatementCreator(reservation),
-                        resultSetParser::existsRow
+                        ResultSet::next
                 ));
     }
 

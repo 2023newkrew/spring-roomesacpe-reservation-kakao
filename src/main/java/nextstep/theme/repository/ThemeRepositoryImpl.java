@@ -5,7 +5,6 @@ import nextstep.theme.domain.Theme;
 import nextstep.theme.repository.jdbc.ThemeResultSetParser;
 import nextstep.theme.repository.jdbc.ThemeStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -26,31 +25,29 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     @Override
     public Theme insert(Theme theme) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(getInsertStatementCreator(theme), keyHolder);
+        jdbcTemplate.update(
+                connection -> statementCreator.createInsert(connection, theme),
+                keyHolder
+        );
         theme.setId(keyHolder.getKeyAs(Long.class));
 
         return theme;
     }
 
-    private PreparedStatementCreator getInsertStatementCreator(Theme theme) {
-        return connection -> statementCreator.createInsert(connection, theme);
-    }
-
     @Override
     public Theme getById(Long id) {
         return jdbcTemplate.query(
-                getSelectByIdStatementCreator(id),
-                resultSetParser::parseTheme
+                connection -> statementCreator.createSelectById(connection, id),
+                resultSetParser::parseSingleTheme
         );
-    }
-
-    private PreparedStatementCreator getSelectByIdStatementCreator(Long id) {
-        return connection -> statementCreator.createSelectById(connection, id);
     }
 
     @Override
     public List<Theme> getAll() {
-        return null;
+        return jdbcTemplate.query(
+                statementCreator::createSelectAll,
+                resultSetParser::parseAllThemes
+        );
     }
 
     @Override

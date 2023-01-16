@@ -4,6 +4,7 @@ import nextstep.theme.domain.Theme;
 import nextstep.theme.repository.jdbc.ThemeResultSetParser;
 import nextstep.theme.repository.jdbc.ThemeStatementCreator;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.util.List;
+import java.util.Objects;
 
 @SqlGroup(
         {
@@ -108,6 +110,37 @@ class ThemeRepositoryImplTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class getAll {
+
+        @DisplayName("테마 목록을 전부 불러오는지 확인")
+        @Test
+        void should_returnAllThemes_when_givenThemes() {
+            List<Theme> themes = List.of(
+                    new Theme(null, "theme1", "theme1", 1000),
+                    new Theme(null, "theme2", "theme2", 2000),
+                    new Theme(null, "theme3", "theme3", 3000)
+            );
+            insertTestThemes(themes);
+
+            List<Theme> actual = repository.getAll();
+
+            Assertions.assertThatCollection(actual)
+                    .allSatisfy(theme -> Assertions.assertThat(theme)
+                            .is(containsTo(themes)));
+        }
+    }
+
+    Condition<Theme> containsTo(List<Theme> themes) {
+        return new Condition<>(
+                actual -> themes.stream()
+                        .anyMatch(theme -> equals(theme, actual)),
+                "containsTo"
+        );
+    }
+
+    boolean equals(Theme expected, Theme actual) {
+        return Objects.equals(expected.getName(), actual.getName()) &&
+                Objects.equals(expected.getDesc(), actual.getDesc()) &&
+                Objects.equals(expected.getPrice(), actual.getPrice());
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
