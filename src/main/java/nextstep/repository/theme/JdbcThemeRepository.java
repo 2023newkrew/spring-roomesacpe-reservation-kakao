@@ -10,6 +10,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static nextstep.exception.ErrorCode.DUPLICATED_THEME_EXISTS;
 import static nextstep.exception.ErrorCode.THEME_NOT_FOUND;
 
@@ -44,6 +46,15 @@ public class JdbcThemeRepository extends ThemeRepository {
     @Override
     public Long save(Theme theme) {
         return this.save(theme.getName(), theme.getDesc(), theme.getPrice());
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        List<Theme> themes = jdbcTemplate.query(FIND_ALL_SQL, actorRowMapper);
+        if (themes.size() == 0) {
+            throw new ReservationException(THEME_NOT_FOUND);
+        }
+        return themes;
     }
 
     @Override
