@@ -1,11 +1,13 @@
-package nextstep;
+package roomescape.dto;
 
-public class Theme {
+public class ThemeUpdateRequestDto {
     private String name;
     private String desc;
     private Integer price;
 
-    public Theme(String name, String desc, Integer price) {
+    public ThemeUpdateRequestDto() {}
+
+    public ThemeUpdateRequestDto(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;

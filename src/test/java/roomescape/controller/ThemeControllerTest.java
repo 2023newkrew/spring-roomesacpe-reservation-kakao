@@ -1,9 +1,7 @@
 package roomescape.controller;
 
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ThemeRequestDto;
+import roomescape.dto.ThemeUpdateRequestDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +18,7 @@ import static org.hamcrest.core.Is.is;
 
 @Sql("/pretest.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationControllerTest {
+public class ThemeControllerTest {
 
     @LocalServerPort
     int port;
@@ -44,52 +43,81 @@ public class ReservationControllerTest {
                 .post("/reservations");
     }
 
-    @DisplayName("예약 생성 성공 테스트")
+    @DisplayName("테마 생성 성공 테스트")
     @Test
-    void reservationSuccessTest() {
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(LocalDate.now(), LocalTime.now(), "tester", 1L);
+    void themeCreateSuccessTest() {
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("테마마", "기타등등", 20000);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequestDto)
-                .when().post("/reservations")
+                .body(themeRequestDto)
+                .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("이미 있는 일정 예약시 생성 실패 테스트")
+    @DisplayName("동일 이름 테마 생성 실패 테스트")
     @Test
-    void reservationFailTest() {
-        LocalDate date = LocalDate.parse("2023-01-01");
-        LocalTime time = LocalTime.parse("11:00:00");
-        String name = "tester";
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(date, time, name, 1L);
+    void themeCreateFailTest() {
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto("Test Theme", "기타등등", 20000);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationRequestDto)
-                .when().post("/reservations")
+                .body(themeRequestDto)
+                .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("예약 조회 테스트")
+    @DisplayName("테마 조회 테스트")
     @Test
-    void reservationFindTest() {
+    void themeFindTest() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/1")
+                .when().get("/themes/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("date", is("2023-01-01"))
-                .body("time", is("11:00:00"))
-                .body("name", is("Tester"));
+                .body("name", is("Test Theme"))
+                .body("desc", is("Lorem Ipsum"))
+                .body("price", is(10000));
     }
 
-    @DisplayName("예약 삭제 테스트")
+    @DisplayName("예약 있는 테마 삭제 성공 테스트")
     @Test
-    void reservationDeleteTest() {
+    void themeDeleteTest() {
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/themes/2")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("예약 있는 테마 삭제 실패 테스트")
+    @Test
+    void themeDeleteFailTest() {
+        RestAssured.given().log().all()
+                .when().delete("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("테마 수정 테스트")
+    @Test
+    void themeUpdateTest() {
+        ThemeUpdateRequestDto themeUpdateRequest = new ThemeUpdateRequestDto("Test Theme2", null, null);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeUpdateRequest)
+                .when().patch("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("전체 테마 조회 테스트")
+    @Test
+    void themeFindAllTest() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("themes.size()", is(2));
     }
 }

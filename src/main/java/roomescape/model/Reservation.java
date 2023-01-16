@@ -1,7 +1,5 @@
 package roomescape.model;
 
-import roomescape.dto.ReservationRequestDto;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -18,10 +16,6 @@ public class Reservation {
         this.time = time;
         this.name = name;
         this.theme = theme;
-    }
-
-    public Reservation(ReservationRequestDto reservationRequestDto, Theme theme) {
-        this(null, reservationRequestDto.getDate(), reservationRequestDto.getTime(), reservationRequestDto.getName(), theme);
     }
 
     public Long getId() {
