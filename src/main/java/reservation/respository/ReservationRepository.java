@@ -6,8 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import reservation.domain.Reservation;
-import reservation.domain.Theme;
-import reservation.domain.dto.ReservationDto;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -24,18 +22,16 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long createReservation(ReservationDto reservationDto, Theme theme) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+    public Long createReservation(Reservation reservation) {
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservationDto.getDate()));
-            ps.setTime(2, Time.valueOf(reservationDto.getTime()));
-            ps.setString(3, reservationDto.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setLong(4, reservation.getThemeId());
 
             return ps;
         }, keyHolder);
@@ -43,31 +39,28 @@ public class ReservationRepository {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Reservation getReservation(Long reservationId) {
-        String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+    public Reservation getReservation(long reservationId) {
+        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
                     rs.getLong("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getTime("time").toLocalTime(),
                     rs.getString("name"),
-                    new Theme(rs.getString("theme_name"),
-                            rs.getString("theme_desc"),
-                            rs.getInt("theme_price"))
+                    rs.getLong("theme_id")
             ), reservationId);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public int deleteReservation(Long reservationId) {
+    public int deleteReservation(long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, reservationId);
     }
 
-    // 예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있는 경우 예약을 생성할 수 없다.
-    public boolean existReservation(LocalDate date, LocalTime time) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, date, time));
+    public boolean existReservation(LocalDate date, LocalTime time, long themeId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time = ? AND theme_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, date, time, themeId));
     }
 }

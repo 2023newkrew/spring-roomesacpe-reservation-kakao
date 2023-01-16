@@ -1,7 +1,6 @@
 package nextstep;
 
 import reservation.domain.Reservation;
-import reservation.domain.Theme;
 
 import java.sql.*;
 
@@ -12,15 +11,13 @@ public class ConsoleRepository {
         Connection con = connectionManager.get();
 
         try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
             assert con != null;
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getThemeId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException | AssertionError e) {
@@ -35,7 +32,7 @@ public class ConsoleRepository {
         Reservation reservation = null;
 
         try {
-            String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?;";
+            String sql = "SELECT date, time, name, theme_id FROM reservation WHERE id = ?;";
 
             assert con != null;
             PreparedStatement ps = con.prepareStatement(sql);
@@ -48,8 +45,7 @@ public class ConsoleRepository {
                         rs.getDate(1).toLocalDate(),
                         rs.getTime(2).toLocalTime(),
                         rs.getString(3),
-                        new Theme(rs.getString(4),
-                                rs.getString(5), rs.getInt(6))
+                        rs.getLong(4)
                 );
             }
 
