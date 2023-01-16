@@ -9,7 +9,7 @@ public interface ReservationRepository {
 
     Optional<Reservation> findReservationById(long reservationId);
 
-    Integer findIdByDateAndTime(Reservation reservation);
+    Integer findCountByDateAndTime(Reservation reservation);
 
     Integer deleteReservation(long deleteId);
 }

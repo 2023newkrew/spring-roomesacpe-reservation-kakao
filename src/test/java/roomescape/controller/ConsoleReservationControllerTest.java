@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,14 +14,13 @@ import roomescape.service.Reservation.WebReservationService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @DisplayName("Console Test")
 @SpringBootTest
 @TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class ConsoleReservationControllerTest {
     Reservation reservation;
     ConsoleReservationController consoleReservationController;
+
 
     @Autowired
     public ConsoleReservationControllerTest() throws ClassNotFoundException {
@@ -42,7 +40,6 @@ public class ConsoleReservationControllerTest {
 
     @DisplayName("방탈출 예약이 가능하고 조회할 수 있음")
     @Test
-//    @Transactional
     void createReservationTest() {
         Reservation createReservation = consoleReservationController.createReservation(reservation);
         Reservation findReservation = consoleReservationController.lookUpReservation(createReservation.getId());
@@ -64,10 +61,16 @@ public class ConsoleReservationControllerTest {
     @Test
     void duplicatedReservationTest(){
         consoleReservationController.createReservation(reservation);
-        assertThrows(DuplicateRequestException.class, () ->
-                consoleReservationController.createReservation(reservation)
-        );
+        Reservation testReservation = consoleReservationController.createReservation(reservation);
+        Assertions.assertThat(testReservation).isNull();
     }
 
+    @DisplayName("등록되지 않은 ID를 조회할 경우, 예외가 발생")
+    @Test
+    void notFoundReservationTest(){
+        Reservation findReservation = consoleReservationController.lookUpReservation(12121L);
+        Assertions.assertThat(findReservation).isNull();
+
+    }
 }
 

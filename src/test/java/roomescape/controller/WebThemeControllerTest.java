@@ -1,8 +1,6 @@
 package roomescape.controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,9 +73,23 @@ public class WebThemeControllerTest {
     @Test
     void duplicatedReservationTest(){
         themeController.createTheme(theme);
-        Assertions.assertThrows(DuplicateRequestException.class, () ->
-                themeController.createTheme(theme)
-        );
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(theme)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("등록되지 않은 ID를 조회할 경우, 예외가 발생")
+    @Test
+    void notFoundThemeTest(){
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(theme)
+                .when().get("/themes/"+ 12121L)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
 

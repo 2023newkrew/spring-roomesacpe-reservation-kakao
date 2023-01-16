@@ -9,12 +9,32 @@ public enum Messages {
             - 종료: quit
             """),
     RESERVATION_REGISTERED("예약이 등록되었습니다."),
-    RESERVATION_ID("예약 번호: "),
-    RESERVATION_DATE("예약 날짜: "),
-    RESERVATION_TIME("예약 시간: "),
-    RESERVATION_NAME("예약자 이름: "),
-    RESERVATION_THEME_ID("예약 테마 ID: "),
-    RESERVATION_CANCEL("예약이 취소되었습니다.");
+    RESERVATION_CANCEL("예약이 취소되었습니다."),
+    RESERVATION_ID("ID: "),
+    RESERVATION_DATE("Date "),
+    RESERVATION_TIME("Time "),
+    RESERVATION_NAME("Name: "),
+    THEME_ID("ID: "),
+    THEME_NAME("Name: "),
+    THEME_DESC("Desc: "),
+    THEME_PRICE("Price"),
+    CREATE_REQUEST("Create Request, "),
+    CREATE_RESPONSE("Create Response, "),
+    LOOKUP_REQUEST("LookUp Request, Id: "),
+    LOOKUP_RESPONSE("LookUp RESPONSE, Id: "),
+    DELETE_REQUEST("Delete Request, Id: "),
+    DELETE_RESPONSE("Delete Response, Id: "),
+    CREATE_DUPLICATED("Create DuplicatedError, "),
+    CREATE_SUCCESS("Create Success, ID: "),
+    CREATE_QUERY_FAIL("Create Query Error"),
+    NOT_FOUND_ERROR("NotFound Error Id: "),
+    DELETE_NOT_FOUND_ERROR("Delete NotFound Error Id: "),
+    DELETE_SUCCESS("Delete Success"),
+    RESERVATION_CREATE_ERROR("요청한 날짜/시간에 이미 예약이 존재"),
+    THEME_CREATE_ERROR("요청한 이름/가격의 테마가 이미 등록되어 있음"),
+    ID_NOT_FOUND_ERROR("요청한 ID의 정보가 존재하지 않음");
+
+
     private final String message;
 
     Messages(String message) {

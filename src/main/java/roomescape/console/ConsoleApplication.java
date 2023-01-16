@@ -28,17 +28,28 @@ public class ConsoleApplication {
             if (input.startsWith(ADD)) {
                 Reservation reservationInfo = inputParsing.createReserveInfo(++reservationIndex, input);
                 Reservation reservation = consoleReservationController.createReservation(reservationInfo);
+                if (reservation == null) {
+                    System.out.println(RESERVATION_CREATE_ERROR.getMessage());
+                    continue;
+                }
                 System.out.println(RESERVATION_REGISTERED.getMessage());
                 getReservationInfo(reservation);
             }
             if (input.startsWith(FIND)) {
                 long findId = inputParsing.getFindId(input);
                 Reservation reservation = consoleReservationController.lookUpReservation(findId);
+                if (reservation == null) {
+                    System.out.println(ID_NOT_FOUND_ERROR.getMessage());
+                    continue;
+                }
                 getReservationInfo(reservation);
             }
             if (input.startsWith(DELETE)) {
                 long deleteId = inputParsing.getFindId(input);
-                consoleReservationController.deleteReservation(deleteId);
+                Boolean deletion = consoleReservationController.deleteReservation(deleteId);
+                if (!deletion) {
+                    System.out.println(ID_NOT_FOUND_ERROR.getMessage());
+                }
                 System.out.println(RESERVATION_CANCEL.getMessage());
             }
             if (input.equals(QUIT)) {
@@ -52,6 +63,6 @@ public class ConsoleApplication {
         System.out.println(RESERVATION_DATE.getMessage() + reservation.getDate().toString());
         System.out.println(RESERVATION_TIME.getMessage() + reservation.getTime().toString());
         System.out.println(RESERVATION_NAME.getMessage() + reservation.getName());
-        System.out.println(RESERVATION_THEME_ID.getMessage() + reservation.getThemeId().toString());
+        System.out.println(THEME_ID.getMessage() + reservation.getThemeId().toString());
     }
 }

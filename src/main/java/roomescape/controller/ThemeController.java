@@ -12,6 +12,8 @@ import roomescape.service.Theme.ThemeService;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static roomescape.utils.Messages.*;
+
 @RestController
 public class ThemeController {
     final ThemeService themeService;
@@ -25,26 +27,41 @@ public class ThemeController {
 
     @PostMapping("/themes")
     public ResponseEntity<String> createTheme(@RequestBody @Valid Theme theme){
-        logger.info("Request Create Theme - " + theme.toMessage());
-        Theme userTheme = themeService.createTheme(theme);
-        logger.info("Finish Create Theme - " + userTheme.toMessage());
-        return ResponseEntity.created(URI.create("/themes/" + userTheme.getId()))
-                .body(userTheme.createMessage(userTheme.getId()));
+        logger.info(CREATE_REQUEST.getMessage() + theme.toMessage());
+        try {
+            Theme userTheme = themeService.createTheme(theme);
+            logger.info(CREATE_RESPONSE.getMessage() + userTheme.toMessage());
+            return ResponseEntity.created(URI.create("/themes/" + userTheme.getId()))
+                    .body(userTheme.createMessage(userTheme.getId()));
+        } catch (Exception e){
+            logger.error(String.valueOf(e));
+            return ResponseEntity.badRequest().body(THEME_CREATE_ERROR.getMessage());
+        }
     }
 
     @GetMapping("/themes/{id}")
     public ResponseEntity<String> lookUpTheme(@PathVariable("id") String themeId) {
-        logger.info("Request lookUp Theme, Id: " + themeId);
-        Theme userTheme = themeService.lookUpTheme(Long.valueOf(themeId));
-        logger.info("Finish lookUp Theme " + userTheme.toMessage());
-        return ResponseEntity.ok().body(userTheme.toMessage());
+        logger.info(LOOKUP_REQUEST.getMessage() + themeId);
+        try {
+            Theme userTheme = themeService.lookUpTheme(Long.valueOf(themeId));
+            logger.info(LOOKUP_RESPONSE.getMessage() + userTheme.toMessage());
+            return ResponseEntity.ok().body(userTheme.toMessage());
+        } catch (Exception e) {
+            logger.error(String.valueOf(e));
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/themes/{id}")
     public ResponseEntity<String> deleteTheme(@PathVariable("id") String deleteId) {
-        logger.info("Request delete Theme, Id: " + deleteId);
-        themeService.deleteTheme(Long.valueOf(deleteId));
-        logger.info("Finish delete Theme Id: " + deleteId);
-        return ResponseEntity.noContent().build();
+        logger.info(DELETE_REQUEST.getMessage() + deleteId);
+        try {
+            themeService.deleteTheme(Long.valueOf(deleteId));
+            logger.info(DELETE_RESPONSE.getMessage() + deleteId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e){
+            logger.error(String.valueOf(e));
+            return ResponseEntity.notFound().build();
+        }
     }
 }

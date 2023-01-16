@@ -12,17 +12,18 @@ import roomescape.domain.Reservation;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository{
     public final JdbcTemplate jdbcTemplate;
+    private final H2JdbcDriver h2JdbcDriver;
 
     @Autowired
     public JdbcReservationRepository() throws ClassNotFoundException {
         AppConfig appConfig = new AppConfig();
         this.jdbcTemplate = new JdbcTemplate(appConfig.getDataSource());
+        this.h2JdbcDriver = new H2JdbcDriver();
     }
 
     @Override
@@ -38,26 +39,25 @@ public class JdbcReservationRepository implements ReservationRepository{
             return ps;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return h2JdbcDriver.createReserve(keyHolder);
     }
 
     @Override
     public Optional<Reservation> findReservationById(long reservationId) {
         String sql = "select date, time, name, theme_id, from RESERVATION where id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql,
-                new Object[]{reservationId},
                 (rs, rowNum) -> {
                     LocalDate date = LocalDate.parse(rs.getString("date"));
                     LocalTime time = LocalTime.parse(rs.getString("time"));
                     String name = rs.getString("name");
                     Long themeId = rs.getLong("theme_id");
-                    return new Reservation((long) reservationId, date, time, name, themeId);
-                });
+                    return new Reservation(reservationId, date, time, name, themeId);
+                }, reservationId);
         return Optional.ofNullable(reservation);
     }
 
     @Override
-    public Integer findIdByDateAndTime(Reservation reservation) {
+    public Integer findCountByDateAndTime(Reservation reservation) {
         String sql = "select count(*) from RESERVATION where date = ? AND time = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class,
                 reservation.getDate(), reservation.getTime());
