@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter(AccessLevel.NONE)
 public class ThemeResponse {
 
-    private final String id;
+    private final Long id;
 
     private final String name;
 
