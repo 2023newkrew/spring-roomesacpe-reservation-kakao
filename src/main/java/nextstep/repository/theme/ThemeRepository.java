@@ -5,10 +5,13 @@ import nextstep.domain.Theme;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public abstract class ThemeRepository {
 
     protected String FIND_BY_ID_SQL = "select * from theme where id = ?";
+
+    protected String FIND_ALL_SQL = "select * from theme";
     protected String DELETE_BY_ID_SQL = "delete from theme where id = ?";
     protected String SAVE_SQL = "INSERT INTO theme (name, desc, price)" +
             "VALUES (?, ?, ?);";
@@ -34,6 +37,8 @@ public abstract class ThemeRepository {
     public abstract Long save(String name, String desc, Integer price);
 
     public abstract Long save(Theme theme);
+
+    public abstract List<Theme> findAll();
 
     public abstract Theme findById(Long id);
 
