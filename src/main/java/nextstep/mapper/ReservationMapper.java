@@ -9,7 +9,6 @@ import org.mapstruct.factory.Mappers;
 public interface ReservationMapper {
     ReservationMapper INSTANCE = Mappers.getMapper(ReservationMapper.class);
 
-
     ReservationDTO toDto(Reservation reservation);
 
     Reservation fromDto(ReservationDTO dto);
