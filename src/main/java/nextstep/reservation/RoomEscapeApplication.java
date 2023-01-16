@@ -65,9 +65,9 @@ public class RoomEscapeApplication {
                         System.out.println("예약 날짜: " + createdReservation.getDate());
                         System.out.println("예약 시간: " + createdReservation.getTime());
                         System.out.println("예약자 이름: " + createdReservation.getName());
-                        System.out.println("테마 이름: " + createdReservation.getThemeName());
-                        System.out.println("테마 설명: " + createdReservation.getThemeDesc());
-                        System.out.println("테마 가격: " + createdReservation.getThemePrice());
+                        System.out.println("테마 이름: " + createdReservation.getThemeResponse().getName());
+                        System.out.println("테마 설명: " + createdReservation.getThemeResponse().getDesc());
+                        System.out.println("테마 가격: " + createdReservation.getThemeResponse().getPrice());
                     } catch (RoomEscapeException e) {
                         System.out.println(e.getMessage());
                     }
@@ -109,9 +109,9 @@ public class RoomEscapeApplication {
                     System.out.println("예약 날짜: " + reservationResponse.getDate());
                     System.out.println("예약 시간: " + reservationResponse.getTime());
                     System.out.println("예약자 이름: " + reservationResponse.getName());
-                    System.out.println("예약 테마 이름: " + reservationResponse.getThemeName());
-                    System.out.println("예약 테마 설명: " + reservationResponse.getThemeDesc());
-                    System.out.println("예약 테마 가격: " + reservationResponse.getThemePrice());
+                    System.out.println("예약 테마 이름: " + reservationResponse.getThemeResponse().getName());
+                    System.out.println("예약 테마 설명: " + reservationResponse.getThemeResponse().getDesc());
+                    System.out.println("예약 테마 가격: " + reservationResponse.getThemeResponse().getPrice());
                 } catch (RoomEscapeException e) {
                     System.out.println(e.getMessage());
                 }

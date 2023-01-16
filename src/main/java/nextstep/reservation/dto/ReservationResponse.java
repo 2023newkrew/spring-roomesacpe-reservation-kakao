@@ -18,19 +18,15 @@ public class ReservationResponse {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "kk:mm")
     private final LocalTime time;
     private final String name;
-    private final String themeName;
-    private final String themeDesc;
-    private final int themePrice;
+    private final ThemeResponse themeResponse;
 
-    public static ReservationResponse from(Reservation reservation, ThemeResponse theme) {
+    public static ReservationResponse from(Reservation reservation, ThemeResponse themeResponse) {
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .date(reservation.getDate())
                 .time(reservation.getTime())
                 .name(reservation.getName())
-                .themeName(theme.getName())
-                .themeDesc(theme.getDesc())
-                .themePrice(theme.getPrice())
+                .themeResponse(themeResponse)
                 .build();
     }
 }
