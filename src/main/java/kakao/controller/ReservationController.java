@@ -23,19 +23,19 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@Valid @RequestBody CreateReservationRequest request) {
-        Reservation reservation = reservationService.createReservation(request);
-        return ResponseEntity.created(URI.create("")).body(reservation);
+    public ResponseEntity<ReservationResponse> createReservation(@Valid @RequestBody CreateReservationRequest request) {
+        ReservationResponse response = reservationService.createReservation(request);
+        return ResponseEntity.created(URI.create("")).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable("id") @Min(1L) Long id) {
-        return ResponseEntity.ok(reservationService.getReservation(id));
+        return ResponseEntity.ok(reservationService.getReservationById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteReservation(@PathVariable("id") @Min(1L) Long id) {
-        int deletedCount = reservationService.deleteReservation(id);
+        int deletedCount = reservationService.deleteReservationById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(deletedCount);
     }
 }

@@ -1,48 +1,59 @@
 package kakao.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import kakao.domain.Reservation;
+import kakao.domain.Theme;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.error.ErrorCode;
-import kakao.error.exception.DuplicatedReservationException;
-import kakao.error.exception.RecordNotFoundException;
-import kakao.repository.ReservationJDBCRepository;
-import kakao.repository.ReservationRepository;
-import kakao.repository.ThemeRepository;
+import kakao.error.exception.RoomReservationException;
+import kakao.repository.reservation.ReservationRepository;
+import kakao.repository.theme.ThemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public Reservation createReservation(CreateReservationRequest request) {
-        boolean isDuplicate = reservationRepository.findByDateAndTime(request.date, request.time).size() > 0;
-        if (isDuplicate) {
-            throw new DuplicatedReservationException(ErrorCode.DUPLICATE_RESERVATION);
-        }
-        return reservationRepository.save(Reservation.builder()
-                .date(request.date)
-                .time(request.time)
-                .name(request.name)
-                .theme(ThemeRepository.theme)
-                .build()
+    private final ThemeUtilService themeUtilService;
+
+    public ReservationResponse createReservation(CreateReservationRequest request) {
+        checkDuplicatedReservation(request.getThemeId(), request.getDate(), request.getTime());
+        Theme theme = themeUtilService.getThemeById(request.getThemeId());
+        return new ReservationResponse(reservationRepository.save(Reservation.builder()
+                .date(request.getDate())
+                .time(request.getTime())
+                .name(request.getName())
+                .theme(theme)
+                .build())
         );
     }
 
-    public ReservationResponse getReservation(Long id) {
+    @Transactional(readOnly = true)
+    public ReservationResponse getReservationById(Long id) {
         Reservation reservation = reservationRepository.findById(id);
         if (Objects.isNull(reservation)) {
-            throw new RecordNotFoundException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new RoomReservationException(ErrorCode.RESERVATION_NOT_FOUND);
         }
         return new ReservationResponse(reservation);
     }
 
-    public int deleteReservation(Long id) {
+    public int deleteReservationById(Long id) {
         return reservationRepository.delete(id);
+    }
+
+    private void checkDuplicatedReservation(Long themeId, LocalDate date, LocalTime time) {
+        boolean isDuplicate = reservationRepository.findByThemeIdAndDateAndTime (themeId, date, time).size() > 0;
+        if (isDuplicate) {
+            throw new RoomReservationException(ErrorCode.DUPLICATE_RESERVATION);
+        }
     }
 }

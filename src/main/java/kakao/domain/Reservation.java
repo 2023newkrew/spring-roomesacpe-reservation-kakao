@@ -2,12 +2,12 @@ package kakao.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class Reservation implements Comparable<Reservation> {
     private Long id;
     private LocalDate date;
@@ -16,8 +16,12 @@ public class Reservation implements Comparable<Reservation> {
     private Theme theme;
 
     @Builder
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this(null, date, time, name, theme);
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme  = theme;
     }
 
     public void setId(Long id) {
@@ -34,5 +38,24 @@ public class Reservation implements Comparable<Reservation> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getDate(), that.getDate())
+                && Objects.equals(getTime(), that.getTime()) && Objects.equals(getName(),
+                that.getName()) && Objects.equals(getTheme(), that.getTheme());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDate(), getTime(), getName(), getTheme());
     }
 }
