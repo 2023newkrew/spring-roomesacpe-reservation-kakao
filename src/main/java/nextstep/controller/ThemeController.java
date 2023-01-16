@@ -1,6 +1,7 @@
 package nextstep.controller;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.Theme;
 import nextstep.dto.ThemeRequestDTO;
 import nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/themes")
@@ -31,7 +33,7 @@ public class ThemeController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> getThemeList() {
+    public ResponseEntity<List<Theme>> getThemeList() {
 
         return ResponseEntity.ok(service.getList());
     }
