@@ -2,6 +2,7 @@ package nextstep.theme.service;
 
 import nextstep.etc.exception.ErrorMessage;
 import nextstep.etc.exception.ThemeConflictException;
+import nextstep.theme.domain.Theme;
 import nextstep.theme.dto.ThemeRequest;
 import nextstep.theme.dto.ThemeResponse;
 import nextstep.theme.mapper.ThemeMapper;
@@ -70,6 +71,38 @@ class ThemeServiceImplTest {
             Assertions.assertThatThrownBy(() -> service.create(request))
                     .isInstanceOf(ThemeConflictException.class)
                     .hasMessage(ErrorMessage.THEME_CONFLICT.getErrorMessage());
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class getById {
+
+        @BeforeEach
+        void setUp() {
+            repository.insert(new Theme(null, "theme1", "theme1", 1000));
+            repository.insert(new Theme(null, "theme2", "theme2", 2000));
+            repository.insert(new Theme(null, "theme3", "theme3", 3000));
+        }
+
+        @DisplayName("id와 일치하는 theme를 반환")
+        @ParameterizedTest
+        @MethodSource
+        void should_returnResponse_when_givenId(Long id, ThemeResponse response) {
+            var actual = service.getById(id);
+
+            Assertions.assertThat(actual)
+                    .isEqualTo(response);
+        }
+
+        List<Arguments> should_returnResponse_when_givenId() {
+            return List.of(
+                    Arguments.of(0L, null),
+                    Arguments.of(1L, new ThemeResponse(1L, "theme1", "theme1", 1000)),
+                    Arguments.of(2L, new ThemeResponse(2L, "theme2", "theme2", 2000)),
+                    Arguments.of(3L, new ThemeResponse(3L, "theme3", "theme3", 3000)),
+                    Arguments.of(4L, null)
+            );
         }
     }
 }

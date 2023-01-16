@@ -3,6 +3,7 @@ package nextstep.theme.service;
 import lombok.RequiredArgsConstructor;
 import nextstep.etc.exception.ErrorMessage;
 import nextstep.etc.exception.ThemeConflictException;
+import nextstep.theme.domain.Theme;
 import nextstep.theme.dto.ThemeRequest;
 import nextstep.theme.dto.ThemeResponse;
 import nextstep.theme.mapper.ThemeMapper;
@@ -38,7 +39,9 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public ThemeResponse getById(Long id) {
-        return null;
+        Theme theme = repository.getById(id);
+
+        return mapper.toResponse(theme);
     }
 
     @Override
