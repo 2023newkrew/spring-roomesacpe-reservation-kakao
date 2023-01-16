@@ -2,8 +2,11 @@ package nextstep.reservation;
 
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
+import nextstep.reservation.exception.RoomEscapeException;
 import nextstep.reservation.repository.ReservationRepository;
 import nextstep.reservation.repository.ThemeRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -31,9 +35,14 @@ class ReservationRepositoryTest {
     @BeforeEach
     void setUp() {
         Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        themeRepository.save(theme);
+        Theme savedTheme = themeRepository.save(theme);
 
-        this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", 1L);
+        this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+    }
+
+    @AfterEach
+    void tearDown() {
+        themeRepository.clear();
     }
 
     @Test
@@ -47,6 +56,20 @@ class ReservationRepositoryTest {
 
         //then
         assertThat(reservationDataEquals(created, reservation)).isTrue();
+    }
+
+    @Test
+    @DisplayName("예약 생성 실패(테마가 존재하지 않는 경우)")
+    void deleteReservationFail() {
+
+        //given
+        Reservation invalidReservation = new Reservation(null, LocalDate.parse("2023-01-16"), LocalTime.parse("19:20"), "herbi", 1234L);
+
+        //when
+        //then
+        Assertions.assertThatThrownBy(() -> reservationRepository.save(invalidReservation))
+                .isInstanceOf(RoomEscapeException.class)
+                .hasMessage(NO_SUCH_THEME.getMessage());
     }
 
     @Test
@@ -77,7 +100,7 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 없을 때")
+    @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 없을 때)")
     void findByDateTimeEmptyTest() {
         //given
 

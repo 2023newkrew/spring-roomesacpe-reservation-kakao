@@ -2,6 +2,7 @@ package nextstep.reservation.repository;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.entity.Reservation;
+import nextstep.reservation.exception.RoomEscapeException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +18,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
+
 @Repository
 @Primary
 @RequiredArgsConstructor
@@ -25,6 +28,12 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
+        String existsQuery = "select exists (select * from THEME where id = ?)";
+        Boolean exists = jdbcTemplate.queryForObject(existsQuery, Boolean.class, reservation.getThemeId());
+        if (!exists) {
+            throw new RoomEscapeException(NO_SUCH_THEME);
+        }
+
         String sql = "insert into reservation (date, time, name, theme_id) values(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
