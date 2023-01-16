@@ -11,14 +11,18 @@ import java.time.LocalTime;
 import java.util.Optional;
 import javax.sql.DataSource;
 import nextstep.model.Reservation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JdbcReservationRepository implements ReservationRepository {
 
     private final DataSource dataSource;
+    private final Logger logger;
 
     public JdbcReservationRepository(DataSource dataSource) {
         this.dataSource = dataSource;
+        this.logger = LoggerFactory.getLogger(JdbcReservationRepository.class);
     }
 
     @Override
@@ -103,10 +107,10 @@ public class JdbcReservationRepository implements ReservationRepository {
     private Connection createConnection() {
         try {
             Connection con = dataSource.getConnection();
-            System.out.println("정상적으로 연결되었습니다.");
+            logger.debug("정상적으로 연결되었습니다.");
             return con;
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            logger.error("연결 오류: " + e.getMessage());
             throw new IllegalStateException(e);
         }
     }
