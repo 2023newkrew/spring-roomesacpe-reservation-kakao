@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,4 +16,6 @@ public interface ThemeReservationDao {
     Optional<Reservation> findById(Long id);
 
     Optional<Reservation> findByDatetime(LocalDate date, LocalTime time);
+
+    List<Reservation> findByThemeId(Long themeId);
 }

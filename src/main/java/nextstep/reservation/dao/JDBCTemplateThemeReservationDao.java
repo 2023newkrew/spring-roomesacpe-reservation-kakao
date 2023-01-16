@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +22,8 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
     private static final String DELETE_BY_RESERVATION_ID_SQL = "DELETE FROM RESERVATION WHERE ID = ?";
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT `ID`, `DATE`, `TIME`, `NAME`, `THEME_ID`  FROM RESERVATION WHERE `ID` = ?";
     private static final String SELECT_BY_DATE_TIME_SQL = "SELECT * FROM `RESERVATION` WHERE `date` = ? AND `time` = ?";
+    private static final String SELECT_BY_THEME_ID = "SELECT * FROM `RESERVATION` WHERE THEME_ID = ?";
+
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -67,5 +70,10 @@ public class JDBCTemplateThemeReservationDao implements ThemeReservationDao {
         return jdbcTemplate.query(SELECT_BY_DATE_TIME_SQL, reservationRowMapper, date, time)
                 .stream()
                 .findFirst();
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        return jdbcTemplate.query(SELECT_BY_THEME_ID, reservationRowMapper, themeId);
     }
 }

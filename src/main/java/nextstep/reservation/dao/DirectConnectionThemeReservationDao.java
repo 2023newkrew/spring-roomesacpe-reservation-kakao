@@ -20,6 +20,8 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
     private static final String SELECT_BY_RESERVATION_ID_SQL = "SELECT * FROM `RESERVATION` WHERE `ID` = ?";
     private static final String SELECT_BY_DATE_TIME_SQL = "SELECT * FROM `RESERVATION` WHERE `date` = ? AND `time` = ?";
 
+    private static final String SELECT_BY_THEME_ID = "SELECT * FROM `RESERVATION` WHERE THEME_ID = ?";
+
     private final DataSource dataSource;
     @Override
     public int insert(Reservation reservation){
@@ -126,5 +128,25 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
             reservations.add((new Reservation(id, date, time, name, themeId)));
         }
         return reservations;
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        Connection con = null;
+        PreparedStatement psmt = null;
+        ResultSet resultSet = null;
+
+        try{
+            con = dataSource.getConnection();
+            psmt = con.prepareStatement(SELECT_BY_THEME_ID);
+            psmt.setLong(1, themeId);
+
+            resultSet = psmt.executeQuery();
+            return getReservation(resultSet);
+        }catch (SQLException sqlException){
+            return List.of();
+        }finally {
+            DatabaseUtil.close(con, psmt, resultSet);
+        }
     }
 }
