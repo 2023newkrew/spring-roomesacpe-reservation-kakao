@@ -1,5 +1,7 @@
 package nextstep.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -7,6 +9,7 @@ public class ReservationRequest {
     private LocalDate date;
     private LocalTime time;
     private String name;
+    @JsonProperty("theme_id")
     private long themeId;
 
     public ReservationRequest() {

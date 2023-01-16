@@ -4,6 +4,9 @@ import nextstep.domain.Reservation;
 import nextstep.dto.ReservationRequest;
 import nextstep.dto.ReservationResponse;
 import nextstep.repository.ReservationConnRepository;
+import nextstep.repository.ReservationRepository;
+import nextstep.repository.ThemeConnRepository;
+import nextstep.repository.ThemeRepository;
 import nextstep.service.ReservationService;
 
 import java.sql.SQLException;
@@ -19,8 +22,9 @@ public class RoomEscapeConsoleApplication {
     private static final String QUIT = "quit";
 
     public static void main(String[] args) throws SQLException {
-        ReservationConnRepository repository = new ReservationConnRepository();
-        ReservationService service = new ReservationService(repository);
+        ReservationRepository reservationRepository = new ReservationConnRepository();
+        ThemeRepository themeRepository = new ThemeConnRepository();
+        ReservationService service = new ReservationService(reservationRepository, themeRepository);
 
         Scanner scanner = new Scanner(System.in);
 
