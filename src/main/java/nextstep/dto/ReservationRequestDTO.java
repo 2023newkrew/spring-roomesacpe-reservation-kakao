@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class ReservationRequestDTO {
 
-    private String date;
+    private final String date;
 
-    private String time;
+    private final String time;
 
-    private String name;
+    private final String name;
 
-    private Long theme_id;
+    private final Long theme_id;
 }

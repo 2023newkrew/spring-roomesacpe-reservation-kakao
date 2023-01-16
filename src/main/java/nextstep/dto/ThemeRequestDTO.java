@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ThemeRequestDTO {
-    private String name;
+    private final String name;
 
-    private String desc;
+    private final String desc;
 
-    private int price;
+    private final int price;
 }
