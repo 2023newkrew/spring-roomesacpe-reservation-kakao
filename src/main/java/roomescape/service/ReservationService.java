@@ -1,6 +1,7 @@
 package roomescape.service;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
@@ -18,17 +19,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
     private final ReservationWebRepository reservationWebRepository;
     private final ThemeWebRepository themeWebRepository;
-
-    public ReservationService(
-            ReservationWebRepository reservationWebRepository,
-            ThemeWebRepository themeWebRepository
-    ) {
-        this.reservationWebRepository = reservationWebRepository;
-        this.themeWebRepository = themeWebRepository;
-    }
 
     @Transactional
     public Long createReservation(ReservationRequest reservationRequest) {

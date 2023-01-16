@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.RoomEscapeException;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @EqualsAndHashCode
+@Getter
 public class Reservation {
     private final Long id;
     private final LocalDate date;
@@ -28,25 +30,5 @@ public class Reservation {
         if (!TimeTable.isExist(time)) {
             throw new RoomEscapeException(ErrorCode.TIME_TABLE_NOT_AVAILABLE);
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getTheme_id(){
-        return theme_id;
     }
 }

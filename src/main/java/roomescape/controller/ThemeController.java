@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -11,13 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/themes")
 public class ThemeController {
     private final ThemeService themeService;
-
-    public ThemeController(ThemeService themeService){
-        this.themeService = themeService;
-    }
 
     @PostMapping
     public ResponseEntity<Long> createTheme(

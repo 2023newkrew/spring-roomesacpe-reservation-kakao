@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
@@ -15,17 +16,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ThemeService {
     private final ThemeWebRepository themeWebRepository;
     private final ReservationWebRepository reservationWebRepository;
-
-    public ThemeService(
-            ThemeWebRepository themeWebRepository,
-            ReservationWebRepository reservationWebRepository
-    ){
-        this.themeWebRepository = themeWebRepository;
-        this.reservationWebRepository = reservationWebRepository;
-    }
 
     @Transactional
     public Long createTheme(ThemeRequest themeRequest) {
