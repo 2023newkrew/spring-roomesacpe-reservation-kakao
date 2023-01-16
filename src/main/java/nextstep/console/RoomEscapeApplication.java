@@ -78,16 +78,12 @@ public class RoomEscapeApplication {
         }
     }
 
-    private static HikariDataSource createHikariDataSource() {
+    private static DataSource createHikariDataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:h2:mem:~/test");
+        config.setJdbcUrl("jdbc:h2:mem:~/prod");
         config.setUsername("sa");
         config.setPassword("");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        HikariDataSource dataSource = new HikariDataSource(config);
-        return dataSource;
+        return new HikariDataSource(config);
     }
 
     public static String getInput(Scanner scanner) {
