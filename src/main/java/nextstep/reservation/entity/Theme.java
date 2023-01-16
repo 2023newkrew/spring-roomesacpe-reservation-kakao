@@ -1,9 +1,6 @@
 package nextstep.reservation.entity;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 
@@ -12,9 +9,12 @@ import org.springframework.lang.Nullable;
 @EqualsAndHashCode
 @Builder
 public class Theme {
-    @Nullable
+    @NonNull
     private final Long id;
+    @Nullable
     private final String name;
+    @Nullable
     private final String desc;
+    @Nullable
     private final Integer price;
 }

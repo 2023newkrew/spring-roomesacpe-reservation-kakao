@@ -1,9 +1,6 @@
 package nextstep.reservation.entity;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
@@ -14,11 +11,15 @@ import java.time.LocalTime;
 @EqualsAndHashCode
 @Builder
 public class Reservation {
-    @Nullable
+    @NonNull
     private final Long id;
+    @Nullable
     private final LocalDate date;
+    @Nullable
     private final LocalTime time;
+    @Nullable
     private final String name;
+    @NonNull
     private final Long themeId;
 
 }

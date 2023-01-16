@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static nextstep.reservation.constant.RoomEscapeConstant.DUMMY_ID;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
 import static org.hamcrest.core.Is.is;
 
@@ -41,7 +42,7 @@ public class ReservationControllerTest {
         ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
 
-        reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
+        reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
     }
 
     @AfterEach
@@ -65,7 +66,7 @@ public class ReservationControllerTest {
     @DisplayName("이미 예약이 존재하는 시간에 예약 등록 시도할 때 예외 발생한다.")
     @Test
     void registerReservationDuplicate() {
-        Reservation reservationDuplicated = new Reservation(null, reservation.getDate(), reservation.getTime(), "name2", reservation.getThemeId());
+        Reservation reservationDuplicated = new Reservation(DUMMY_ID, reservation.getDate(), reservation.getTime(), "name2", reservation.getThemeId());
         registerReservation(reservation);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

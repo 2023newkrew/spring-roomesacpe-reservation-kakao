@@ -19,6 +19,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static nextstep.reservation.constant.RoomEscapeConstant.DUMMY_ID;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,10 +35,10 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Theme savedTheme = themeRepository.save(theme);
 
-        this.reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+        this.reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
     }
 
     @AfterEach
@@ -63,7 +64,7 @@ class ReservationRepositoryTest {
     void deleteReservationFail() {
 
         //given
-        Reservation invalidReservation = new Reservation(null, LocalDate.parse("2023-01-16"), LocalTime.parse("19:20"), "herbi", 1234L);
+        Reservation invalidReservation = new Reservation(DUMMY_ID, LocalDate.parse("2023-01-16"), LocalTime.parse("19:20"), "herbi", 1234L);
 
         //when
         //then

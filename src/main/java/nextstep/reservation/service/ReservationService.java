@@ -27,7 +27,7 @@ public class ReservationService {
             throw new RoomEscapeException(DUPLICATE_TIME_RESERVATION);
         }
 
-        Reservation savedReservation = reservationRepository.save(reservationRequest.toEntity());
+        Reservation savedReservation = reservationRepository.save(reservationRequest.toEntityWithDummyId());
         ThemeResponse foundedTheme = themeService.findById(savedReservation.getThemeId());
         return ReservationResponse.from(savedReservation, foundedTheme);
     }

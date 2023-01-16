@@ -22,7 +22,7 @@ public class ThemeService {
     private final ThemeRepository themeRepository;
 
     public ThemeResponse registerTheme(ThemeRequest themeRequest) {
-        Theme registeredTheme = themeRepository.save(themeRequest.toEntity());
+        Theme registeredTheme = themeRepository.save(themeRequest.toEntityWithDummyId());
         return ThemeResponse.from(registeredTheme);
     }
 

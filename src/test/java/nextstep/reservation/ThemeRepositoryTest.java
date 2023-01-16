@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static nextstep.reservation.constant.RoomEscapeConstant.DUMMY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -25,7 +26,7 @@ class ThemeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        this.theme = new Theme(null, "호러", "매우 무서운", 24000);
+        this.theme = new Theme(DUMMY_ID, "호러", "매우 무서운", 24000);
     }
 
     @Test
