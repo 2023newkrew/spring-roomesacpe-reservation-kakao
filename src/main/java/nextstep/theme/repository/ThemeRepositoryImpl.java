@@ -5,6 +5,9 @@ import nextstep.theme.domain.Theme;
 import nextstep.theme.repository.jdbc.ThemeResultSetParser;
 import nextstep.theme.repository.jdbc.ThemeStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,9 +22,18 @@ public class ThemeRepositoryImpl implements ThemeRepository {
 
     private final ThemeResultSetParser resultSetParser;
 
+
     @Override
     public Theme insert(Theme theme) {
-        return null;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(getInsertStatementCreator(theme), keyHolder);
+        theme.setId(keyHolder.getKeyAs(Long.class));
+
+        return theme;
+    }
+
+    private PreparedStatementCreator getInsertStatementCreator(Theme theme) {
+        return connection -> statementCreator.createInsert(connection, theme);
     }
 
     @Override

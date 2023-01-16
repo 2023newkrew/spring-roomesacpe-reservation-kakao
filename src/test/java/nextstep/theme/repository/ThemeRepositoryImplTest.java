@@ -42,6 +42,20 @@ class ThemeRepositoryImplTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class insert {
+
+        @DisplayName("호출 횟수만큼 ID가 증가하는지 확인")
+        @Test
+        void should_increaseId_when_insertTwice() {
+            var theme = new Theme(null, "name", "desc", 1000);
+
+            Long id1 = repository.insert(theme)
+                    .getId();
+            Long id2 = repository.insert(theme)
+                    .getId();
+
+            Assertions.assertThat(id1 + 1L)
+                    .isEqualTo(id2);
+        }
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)

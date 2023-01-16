@@ -1,4 +1,6 @@
 package nextstep.theme.repository.jdbc;
 
-public class ThemeResultSetParser {
+import nextstep.etc.jdbc.ResultSetParser;
+
+public class ThemeResultSetParser extends ResultSetParser {
 }
