@@ -41,6 +41,13 @@ public class ThemeService {
     }
 
     public void update(Long id, ThemeRequestDto themeRequestDto) {
+        themeRepository.findByName(themeRequestDto.getName())
+                .ifPresent(v -> {
+                    if (!id.equals(v.getId())) {
+                        throw new DuplicatedNameThemeException();
+                    }
+                });
+
         Theme theme = themeRepository.findById(id)
                 .orElseThrow(ThemeNotFoundException::new);
 

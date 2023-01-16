@@ -141,6 +141,48 @@ public class ThemeControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("Theme - 테마 수정")
+    @Test
+    void update2() {
+        ThemeRequestDto requestDto = new ThemeRequestDto(
+                "워너고홈2",
+                "병맛 어드벤처 회사 코믹물",
+                29_000
+        );
+        themeService.add(requestDto);
+
+        requestDto = new ThemeRequestDto(
+                "워너고홈2",
+                "병맛 어드벤처 회사 코믹물",
+                35_000
+        );
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestDto)
+                .when().put("/themes/2")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("Theme - 테마 수정 - 동일 이름 테마로 수정")
+    @Test
+    void updateExceptionTest() {
+        ThemeRequestDto requestDto = new ThemeRequestDto(
+                "워너고홈2",
+                "병맛 어드벤처 회사 코믹물",
+                29_000
+        );
+        themeService.add(requestDto);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestDto)
+                .when().put("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("Theme - 테마 삭제")
     @Test
     void delete() {
