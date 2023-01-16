@@ -4,15 +4,8 @@ CREATE TABLE RESERVATION
     date        date,
     time        time,
     name        varchar(20),
-    theme_id    bigint not null,
-    primary key (id)
-);
-
-CREATE TABLE theme
-(
-    id          bigint not null auto_increment,
-    name        varchar(20),
-    desc        varchar(255),
-    price       int,
+    theme_name  varchar(20),
+    theme_desc  varchar(255),
+    theme_price int,
     primary key (id)
 );

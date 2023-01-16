@@ -1,8 +1,8 @@
 package nextstep.domain.service;
 
 import nextstep.domain.reservation.Reservation;
-import nextstep.domain.service.exception.DuplicateSaveException;
-import nextstep.domain.service.exception.ResourceNotFoundException;
+import nextstep.controller.exception.DuplicateDataException;
+import nextstep.controller.exception.DataNotFoundException;
 import nextstep.repository.WebAppReservationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class ReservationService {
 
     public long save(Reservation reservation) {
         if (this.isDuplicate(reservation)) {
-            throw new DuplicateSaveException();
+            throw new DuplicateDataException();
         }
         return repo.save(reservation);
     }
@@ -29,14 +29,14 @@ public class ReservationService {
     public Reservation find(long id) {
         Reservation reservation = repo.findById(id);
         if (reservation == null) {
-            throw new ResourceNotFoundException();
+            throw new DataNotFoundException();
         }
         return reservation;
     }
 
     public void delete(long id) {
         if (repo.delete(id) == 0) {
-            throw new ResourceNotFoundException();
+            throw new DataNotFoundException();
         }
     }
 
