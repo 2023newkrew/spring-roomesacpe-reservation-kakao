@@ -28,40 +28,26 @@ public class WebReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation){
         logger.info(CREATE_REQUEST.getMessage() + reservation.toMessage());
-        try {
-            Reservation userReservation = reservationService.createReservation(reservation);
-            logger.info(CREATE_RESPONSE.getMessage() + userReservation.toMessage());
-            return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
-                    .body(userReservation.createMessage(userReservation.getId()));
-        } catch (Exception e){
-            logger.error(String.valueOf(e));
-            return ResponseEntity.badRequest().body(RESERVATION_CREATE_ERROR.getMessage());
-        }
+        Reservation userReservation = reservationService.createReservation(reservation);
+        logger.info(CREATE_RESPONSE.getMessage() + userReservation.toMessage());
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
+                .body(userReservation.createMessage(userReservation.getId()));
     }
+
 
     @GetMapping("/reservations/{id}")
     public ResponseEntity<String> lookUpReservation(@PathVariable("id") String reservationId) {
         logger.info(LOOKUP_REQUEST.getMessage() + reservationId);
-        try {
-            Reservation userReservation = reservationService.lookUpReservation(Long.valueOf(reservationId));
-            logger.info(LOOKUP_RESPONSE.getMessage() + userReservation.toMessage());
-            return ResponseEntity.ok().body(userReservation.toMessage());
-        } catch (Exception e){
-            logger.error(String.valueOf(e));
-            return ResponseEntity.notFound().build();
-        }
+        Reservation userReservation = reservationService.lookUpReservation(Long.valueOf(reservationId));
+        logger.info(LOOKUP_RESPONSE.getMessage() + userReservation.toMessage());
+        return ResponseEntity.ok().body(userReservation.toMessage());
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable("id") String deleteId) {
         logger.info(DELETE_REQUEST.getMessage() + deleteId);
-        try {
-            reservationService.deleteReservation(Long.valueOf(deleteId));
-            logger.info(DELETE_RESPONSE.getMessage() + deleteId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e){
-            logger.error(String.valueOf(e));
-            return ResponseEntity.notFound().build();
-        }
+        reservationService.deleteReservation(Long.valueOf(deleteId));
+        logger.info(DELETE_RESPONSE.getMessage() + deleteId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -76,7 +76,7 @@ public class WebThemeControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(theme)
-                .when().post("/reservations")
+                .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
