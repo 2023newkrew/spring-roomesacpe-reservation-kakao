@@ -1,34 +1,27 @@
 package domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@EqualsAndHashCode
+@Getter
 public class Theme {
+    private final Long id;
     private final String name;
     private final String desc;
     private final Integer price;
 
     public Theme(String name, String desc, Integer price) {
+        this.id = null;
         this.name = name;
         this.desc = desc;
         this.price = price;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Theme)) return false;
-
-        Theme cp = (Theme) obj;
-
-        return this.name.equals(cp.name) && this.desc.equals(cp.desc) && this.price.equals(cp.price);
+    public Theme(Long id, String name, String desc, Integer price) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
     }
 }

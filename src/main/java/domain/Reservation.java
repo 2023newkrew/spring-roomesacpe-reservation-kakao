@@ -1,45 +1,25 @@
 package domain;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@EqualsAndHashCode
+@Getter
+@Builder
 public class Reservation implements Comparable<Reservation> {
+
     private Long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
     private final Theme theme;
 
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this(null, date, time, name, theme);
-    }
-
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.theme = theme;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Theme getTheme() {
-        return theme;
+    public Long getThemeId() {
+        return theme.getId();
     }
 
     public String getThemeName() {

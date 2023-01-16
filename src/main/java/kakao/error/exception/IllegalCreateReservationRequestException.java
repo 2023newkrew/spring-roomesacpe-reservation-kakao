@@ -2,11 +2,11 @@ package kakao.error.exception;
 
 import kakao.error.ErrorCode;
 
-public class RecordNotFoundException extends CustomRuntimeException {
+public class IllegalCreateReservationRequestException extends CustomRuntimeException {
     private final ErrorCode errorCode;
 
-    public RecordNotFoundException(ErrorCode errorCode, Throwable cause) {
-        super(errorCode, cause);
+    public IllegalCreateReservationRequestException(ErrorCode errorCode) {
+        super(errorCode, null);
         this.errorCode = errorCode;
     }
 

@@ -1,7 +1,9 @@
 package kakao.controller;
 
 import io.restassured.RestAssured;
+import kakao.Initiator;
 import kakao.dto.request.CreateReservationRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,28 +20,36 @@ import java.time.LocalTime;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationControllerTest {
+class ReservationControllerTest {
 
     @LocalServerPort
     int port;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    private final Initiator initiator;
 
     private final String path = "reservations";
-
     private final CreateReservationRequest request = new CreateReservationRequest(
-            LocalDate.of(2022, 10, 13),
+            LocalDate.of(2023, 10, 13),
             LocalTime.of(13, 00),
-            "baker"
+            "baker",
+            1L
     );
+
+    @Autowired
+    ReservationControllerTest(JdbcTemplate jdbcTemplate) {
+        initiator = new Initiator(jdbcTemplate);
+    }
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
 
-        jdbcTemplate.execute("TRUNCATE TABLE reservation");
-        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        initiator.createThemeForTest();
+    }
+
+    @AfterEach
+    void clear() {
+        initiator.clear();
     }
 
     @DisplayName("예약 생성이 성공하면 201 status를 반환한다")
@@ -84,7 +94,7 @@ public class ReservationControllerTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", is(request.name))
-                .body("date", is("2022-10-13"))
+                .body("date", is("2023-10-13"))
                 .body("time", is("13:00"))
                 .body("id", is(1));
     }

@@ -1,42 +1,37 @@
 package nextstep;
 
 import domain.Reservation;
-import kakao.repository.ThemeRepository;
+import domain.Theme;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDAOTest {
-    private static final String DB_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
+class ReservationDAOTest {
     private final ReservationDAO reservationDAO = new ReservationDAO();
 
-    private final Reservation reservation = new Reservation(
-            LocalDate.of(2022, 10, 13),
-            LocalTime.of(13, 00),
-            "baker",
-            ThemeRepository.theme
-    );
+    private final Reservation reservation = Reservation.builder()
+            .date(LocalDate.of(2022, 10, 13))
+            .time(LocalTime.of(13, 00))
+            .name("baker")
+            .theme(new Theme(
+                    1L,
+                    "themeName",
+                    "themeDesc",
+                    1000
+            ))
+            .build();
+
+    private final Initiator initiator = new Initiator();
 
     @BeforeEach
     void setUp() {
-        try (Connection con = DriverManager.getConnection(DB_URL, "sa", "");
-             PreparedStatement truncatePs = con.prepareStatement("truncate table reservation");
-             PreparedStatement restartPs = con.prepareStatement("ALTER TABLE reservation ALTER COLUMN ID RESTART WITH 1")) {
-
-            truncatePs.executeUpdate();
-            restartPs.execute();
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
+        initiator.initReservation();
+        initiator.initTheme();
+        initiator.createSingleTheme();
     }
 
     @DisplayName("resrvation을 저장하고 저장된 id를 반환한다")
@@ -54,7 +49,7 @@ public class ReservationDAOTest {
         Assertions.assertThat(cp.getName()).isEqualTo(reservation.getName());
         Assertions.assertThat(cp.getDate()).isEqualTo(reservation.getDate());
         Assertions.assertThat(cp.getTime()).isEqualTo(reservation.getTime());
-        Assertions.assertThat(cp.getTheme()).isEqualTo(reservation.getTheme());
+        Assertions.assertThat(cp.getThemeId()).isEqualTo(reservation.getThemeId());
     }
 
     @DisplayName("id에 대응되는 resrevation이 없으면 null을 반환한다")

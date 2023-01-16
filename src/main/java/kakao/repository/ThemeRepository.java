@@ -1,9 +1,20 @@
 package kakao.repository;
 
 import domain.Theme;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class ThemeRepository {
-    public final static Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+import java.util.List;
+
+public interface ThemeRepository {
+    long save(Theme theme);
+
+    List<Theme> themes();
+
+    Theme findById(long id);
+
+    List<Theme> findByName(String name);
+
+    int update(String name, String desc, Integer price, long id);
+
+    int delete(long id);
+
 }
