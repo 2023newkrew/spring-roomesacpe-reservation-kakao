@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service;
 public class ReservationService {
 
     private final ReservationJDBCRepository reservationJDBCRepository;
-    private final ReservationValidator reservationValidator;
 
     public ReservationService(ReservationJDBCRepository reservationJDBCRepository) {
         this.reservationJDBCRepository = reservationJDBCRepository;
-        reservationValidator = new ReservationValidator(reservationJDBCRepository);
     }
 
     public long createReservation(CreateReservationRequest request) {
-        reservationValidator.validateForCreate(request);
+        ReservationValidator validator = new ReservationValidator(reservationJDBCRepository.findByDateAndTime(request.date, request.time));
+        validator.validateForCreate(request);
+
         return reservationJDBCRepository.save(Reservation.builder()
                 .date(request.date)
                 .time(request.time)
