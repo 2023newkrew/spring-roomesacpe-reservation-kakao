@@ -2,6 +2,7 @@ package nextstep.roomescape.theme;
 
 import nextstep.roomescape.theme.domain.entity.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -56,6 +57,26 @@ public class ThemeRepository {
                                 .build();
                         return theme;
                     }, name));
+    }
+
+    public Optional<Theme> findById(Long id){
+        String sql = "select id, name, desc, price from theme where id=?";
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql,
+                            (rs, rowNum) -> {
+                                Theme theme = Theme.builder()
+                                        .id(rs.getLong("id"))
+                                        .name(rs.getString("name"))
+                                        .desc(rs.getString("desc"))
+                                        .price(rs.getInt("price"))
+                                        .build();
+                                return theme;
+                            }, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 
     public Boolean delete(Long id){
