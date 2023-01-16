@@ -33,6 +33,7 @@ class ThemeReservationControllerTest {
     public static final Object EMPTY_BODY = new ReservationDto();
     public static final String REQUEST_ACCEPT_MEDIA_TYPE = MediaType.APPLICATION_JSON_VALUE;
     public static final String REQUEST_CONTENT_TYPE = MediaType.APPLICATION_JSON_VALUE;
+    public static final Long EXIST_THEME_ID = 1L;
 
     @LocalServerPort
     int port;
@@ -45,7 +46,7 @@ class ThemeReservationControllerTest {
     @Test
     @DisplayName("예약 성공 시 상태코드는 CREATED이다.")
     void test1(){
-        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:01");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(EXIST_THEME_ID);
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -53,7 +54,7 @@ class ThemeReservationControllerTest {
     @Test
     @DisplayName("이미 예약된 날짜/시간에 예약하는 경우, 상태 코드는 BAD_REQUEST이다.")
     void test2(){
-        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:02");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:02", EXIST_THEME_ID);
         sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL);
 
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
@@ -63,7 +64,7 @@ class ThemeReservationControllerTest {
     @Test
     @DisplayName("예약 요청 정보가 온전히 저장되어야 한다.")
     void test3(){
-        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:05");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:05", EXIST_THEME_ID);
         String location = sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .getHeader(HttpHeaders.LOCATION);
 
@@ -92,7 +93,7 @@ class ThemeReservationControllerTest {
     @Test
     @DisplayName("취소한 예약은 조회할 수 없어야 한다.")
     void test6(){
-        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:08");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:08", EXIST_THEME_ID);
 
         String location = sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .getHeader(HttpHeaders.LOCATION);

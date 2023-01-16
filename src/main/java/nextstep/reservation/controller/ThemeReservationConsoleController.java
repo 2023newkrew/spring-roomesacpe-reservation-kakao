@@ -44,8 +44,7 @@ public class ThemeReservationConsoleController {
                 ReservationDto reservationDto = new ReservationDto(parseDate(date), parseTime(time), name, null);
 
                 Long reservationId = themeReservationService.reserve(reservationDto);
-                ReservationDetail findReservation = themeReservationService.findById(reservationId)
-                        .orElseThrow(RuntimeException::new);
+                ReservationDetail findReservation = themeReservationService.findById(reservationId);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + findReservation.getId());
@@ -58,8 +57,7 @@ public class ThemeReservationConsoleController {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                ReservationDetail reservation = themeReservationService.findById(id)
-                        .orElseThrow(RuntimeException::new);
+                ReservationDetail reservation = themeReservationService.findById(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());

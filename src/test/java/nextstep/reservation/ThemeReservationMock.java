@@ -16,13 +16,9 @@ public class ThemeReservationMock {
         return makeRandomReservationDto(themeId).toEntity();
     }
 
-    public static ReservationDto makeRandomReservationDto(){
-        return makeRandomReservationDto(null);
-    }
-
-    public static ReservationDto makeRandomReservationDto(String date, String time){
+    public static ReservationDto makeRandomReservationDto(String date, String time, Long themeId){
         int index = getRandomIndex();
-        return makeRandomReservationDto(date, time, names[index], null);
+        return makeRandomReservationDto(date, time, names[index], themeId);
     }
 
     public static ReservationDto makeRandomReservationDto(Long themeId){

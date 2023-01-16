@@ -12,32 +12,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(classes = RoomEscapeWebApplication.class)
 @Transactional
 class ThemeReservationServiceTest {
-    public static final String RESERVATION_DATE = "2022-12-20";
+    private static final Long EXIST_THEME_ID = 1L;
     @Autowired
     private ThemeReservationService themeReservationService;
 
     @Test
     @DisplayName("방탈출 예약하기")
     void test1(){
-        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto();
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(EXIST_THEME_ID);
 
         Long reservationId = themeReservationService.reserve(reservationDto);
-        Optional<ReservationDetail> findReservation = themeReservationService.findById(reservationId);
-        assertThat(findReservation).isPresent();
+        ReservationDetail findReservation = themeReservationService.findById(reservationId);
+        assertThat(findReservation).isNotNull();
     }
 
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
     void test2(){
-        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto();
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(EXIST_THEME_ID);
         Long reservationId = themeReservationService.reserve(reservationDto);
 
         themeReservationService.cancelById(reservationId);
@@ -62,8 +60,10 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
     void test7() {
-        ReservationDto reservation1 = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "13:07");
-        ReservationDto reservation2 = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "13:07");
+        final String date = "2022-12-20";
+        final String time = "13:07";
+        ReservationDto reservation1 = ThemeReservationMock.makeRandomReservationDto(date, time, EXIST_THEME_ID);
+        ReservationDto reservation2 = ThemeReservationMock.makeRandomReservationDto(date, time, EXIST_THEME_ID);
 
         themeReservationService.reserve(reservation1);
         Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
