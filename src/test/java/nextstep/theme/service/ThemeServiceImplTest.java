@@ -105,4 +105,30 @@ class ThemeServiceImplTest {
             );
         }
     }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class getAll {
+
+        @BeforeEach
+        void setUp() {
+            repository.insert(new Theme(null, "theme1", "theme1", 1000));
+            repository.insert(new Theme(null, "theme2", "theme2", 2000));
+            repository.insert(new Theme(null, "theme3", "theme3", 3000));
+        }
+
+        @DisplayName("모든 theme를 반환")
+        @Test
+        void should_returnResponses_when_existThemes() {
+            var actual = service.getAll();
+
+            Assertions.assertThatCollection(actual)
+                    .hasSize(3)
+                    .contains(
+                            new ThemeResponse(1L, "theme1", "theme1", 1000),
+                            new ThemeResponse(2L, "theme2", "theme2", 2000),
+                            new ThemeResponse(3L, "theme3", "theme3", 3000)
+                    );
+        }
+    }
 }
