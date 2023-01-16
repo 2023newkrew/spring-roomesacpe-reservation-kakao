@@ -1,7 +1,8 @@
 package nextstep.main.java.nextstep.console;
 
-import nextstep.main.java.nextstep.domain.Reservation;
+import nextstep.main.java.nextstep.mvc.domain.reservation.Reservation;
 
+@Deprecated
 public class ConsoleView {
     public void printCommand() {
         System.out.println("### 명령어를 입력하세요. ###");
