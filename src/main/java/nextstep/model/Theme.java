@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class Theme {
 
-    private Long id;
-    private String name;
-    private String desc;
-    private Integer price;
+    private final Long id;
+    private final String name;
+    private final String desc;
+    private final Integer price;
 
     public Theme(String name, String desc, Integer price) {
         this(null, name, desc, price);
