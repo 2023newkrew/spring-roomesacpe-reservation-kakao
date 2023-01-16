@@ -1,36 +1,44 @@
 package roomescape.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import roomescape.dao.ReservationDAO;
+import roomescape.exception.DuplicateReservationScheduleException;
+import roomescape.exception.ReservationNotFoundException;
+import roomescape.exception.ThemeNotFoundException;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ThemeRepository;
 import roomescape.domain.Reservation;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationAppDAO;
-import roomescape.dto.ReservationRequest;
+import roomescape.domain.Theme;
+import roomescape.dto.ReservationCreateRequest;
+
+import java.util.NoSuchElementException;
 
 @Service
-@Transactional
 public class ReservationService {
 
-    private ReservationDAO reservationDAO;
+    private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
 
-    public ReservationService(ReservationAppDAO reservationAppDAO) {
-        this.reservationDAO = reservationAppDAO;
+    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
-    public Reservation createReservation(ReservationRequest reservationRequest) {
-        if (reservationDAO.checkSchedule(reservationRequest) == 0) {
-            Long id = reservationDAO.addReservation(reservationRequest.toReservation());
-            return reservationDAO.findReservation(id);
+    public Reservation createReservation(ReservationCreateRequest reservationCreateRequest) {
+        if (reservationRepository.checkSchedule(reservationCreateRequest.getDate(), reservationCreateRequest.getTime()) != 0) {
+            throw new DuplicateReservationScheduleException("중복된 예약 발생");
         }
-        return null;
+        Theme theme = themeRepository.findThemeById(reservationCreateRequest.getThemeId()).orElseThrow(ThemeNotFoundException::new);
+        Long id = reservationRepository.addReservation(reservationCreateRequest.toReservation(theme));
+        return reservationRepository.findReservation(id).orElseThrow(ReservationNotFoundException::new);
     }
 
     public Reservation showReservation(Long id) {
-        return reservationDAO.findReservation(id);
+        Reservation reservation = reservationRepository.findReservation(id).orElseThrow(ReservationNotFoundException::new);
+        return reservation;
     }
 
     public int deleteReservation(Long id) {
-        return reservationDAO.removeReservation(id);
+        return reservationRepository.removeReservation(id);
     }
 
 }

@@ -1,0 +1,46 @@
+package roomescape.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import roomescape.domain.Theme;
+import roomescape.dto.ThemeCreateRequest;
+import roomescape.dto.ThemeShowResponse;
+import roomescape.dto.ThemeUpdateRequest;
+import roomescape.service.ThemeService;
+
+import java.net.URI;
+
+@RestController
+public class ThemeController {
+
+    private final ThemeService themeService;
+
+    public ThemeController(ThemeService themeService) {
+        this.themeService = themeService;
+    }
+
+    @PostMapping("/theme")
+    public ResponseEntity createTheme(@RequestBody ThemeCreateRequest themeCreateRequest) {
+        Theme theme = themeService.createTheme(themeCreateRequest);
+        return ResponseEntity.created(URI.create("/theme/" + theme.getId())).build();
+    }
+
+    @GetMapping("/theme/{id}")
+    public ResponseEntity showTheme(@PathVariable Long id) {
+        ThemeShowResponse themeShowResponse = themeService.showTheme(id);
+        return ResponseEntity.ok(themeShowResponse);
+    }
+
+    @PutMapping("/theme/{id}")
+    public ResponseEntity updateTheme(@PathVariable Long id, @RequestBody ThemeUpdateRequest themeUpdateRequest) {
+        ThemeShowResponse modifiedTheme = themeService.updateTheme(themeUpdateRequest, id);
+        return ResponseEntity.ok(modifiedTheme);
+    }
+
+    @DeleteMapping("/theme/{id}")
+    public ResponseEntity deleteTheme(@PathVariable Long id) {
+        themeService.deleteTheme(id);
+        return ResponseEntity.noContent().build();
+    }
+
+}

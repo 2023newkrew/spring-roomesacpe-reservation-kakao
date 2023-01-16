@@ -1,12 +1,15 @@
-package roomescape.domain;
+package roomescape.dto;
 
-public class Theme {
+import roomescape.domain.Theme;
+
+public class ThemeShowResponse {
+
     private Long id;
     private String name;
     private String desc;
     private Integer price;
 
-    public Theme(Long id, String name, String desc, Integer price) {
+    public ThemeShowResponse(Long id, String name, String desc, Integer price) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -28,4 +31,10 @@ public class Theme {
     public Integer getPrice() {
         return price;
     }
+
+    public static ThemeShowResponse of(Theme theme) {
+        return new ThemeShowResponse(theme.getId(), theme.getName(), theme.getDesc(), theme.getPrice());
+    }
+
+
 }

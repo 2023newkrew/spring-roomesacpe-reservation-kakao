@@ -7,37 +7,30 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class ReservationRequest {
+public class ReservationCreateRequest {
 
     private String date;
     private String time;
     private String name;
+    private Long themeId;
 
-    public ReservationRequest() {}
+    public ReservationCreateRequest() {}
 
-    public ReservationRequest(String date, String time, String name) {
+    public ReservationCreateRequest(String date, String time, String name, Long themeId) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeId = themeId;
     }
 
-    public Reservation toReservation() {
+    public Reservation toReservation(Theme theme) {
         return new Reservation(
                 null,
                 LocalDate.parse(date, DateTimeFormatter.ISO_DATE),
                 LocalTime.parse(time),
                 name,
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)
-        );
-    }
+                theme
 
-    public Reservation toReservation(Long id) {
-        return new Reservation(
-                id,
-                LocalDate.parse(date, DateTimeFormatter.ISO_DATE),
-                LocalTime.parse(time),
-                name,
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000)
         );
     }
 
@@ -51,6 +44,10 @@ public class ReservationRequest {
 
     public String getName() {
         return name;
+    }
+
+    public Long getThemeId() {
+        return themeId;
     }
 
 }

@@ -1,28 +1,30 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import roomescape.domain.Reservation;
 import org.springframework.jdbc.core.RowMapper;
-import roomescape.dto.ReservationRequest;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.Optional;
+
 import roomescape.domain.Theme;
 
 @Repository
-public class ReservationAppDAO implements ReservationDAO {
+public class ReservationAppRepository implements ReservationRepository {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertActor;
-    public final RowMapper<Reservation> actorRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Reservation> actorRowMapper = (rs, rowNum) -> {
         Reservation reservation = new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
                 new Theme(
+                        rs.getLong("tid"),
                         rs.getString("theme_name"),
                         rs.getString("theme_desc"),
                         rs.getInt("theme_price")
@@ -31,7 +33,7 @@ public class ReservationAppDAO implements ReservationDAO {
         return reservation;
     };
 
-    public ReservationAppDAO(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationAppRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
@@ -50,22 +52,20 @@ public class ReservationAppDAO implements ReservationDAO {
     }
 
     @Override
-    public int checkSchedule(ReservationRequest reservationRequest) {
-        String sql = "select count(*) from reservation where `date` = ? and `time` = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, reservationRequest.getDate(), reservationRequest.getTime());
+    public int checkSchedule(String date, String time) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE `date` = ? AND `time` = ?;";
+        return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
     @Override
-    public Reservation findReservation(Long id) {
-        String sql = "select id, date, time, name, theme_name, theme_desc, theme_price from reservation where id = ?";
-        return jdbcTemplate.query(sql, actorRowMapper, id).stream()
-                .findFirst()
-                .orElse(null);
+    public Optional<Reservation> findReservation(Long id) {
+        String sql = "SELECT r.*, t.id AS tid FROM reservation r, theme t WHERE r.id = ? AND r.theme_name = t.name;";
+        return jdbcTemplate.query(sql, actorRowMapper, id).stream().findFirst();
     }
 
     @Override
     public int removeReservation(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "DELETE FROM reservation WHERE id = ?;";
         return jdbcTemplate.update(sql, id);
     }
 
