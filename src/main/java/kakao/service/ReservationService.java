@@ -5,7 +5,7 @@ import domain.ReservationValidator;
 import kakao.dto.request.CreateReservationRequest;
 import kakao.dto.response.ReservationResponse;
 import kakao.repository.ReservationJDBCRepository;
-import kakao.repository.ThemeRepository;
+import kakao.repository.ThemeMemRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +18,14 @@ public class ReservationService {
     }
 
     public long createReservation(CreateReservationRequest request) {
-        ReservationValidator validator = new ReservationValidator(reservationJDBCRepository.findByDateAndTime(request.date, request.time));
-        validator.validateForCreate(request);
+        ReservationValidator validator = new ReservationValidator(reservationJDBCRepository);
+        validator.validateForCreate(request.date, request.time);
 
         return reservationJDBCRepository.save(Reservation.builder()
                 .date(request.date)
                 .time(request.time)
                 .name(request.name)
-                .theme(ThemeRepository.theme)
+                .theme(ThemeMemRepository.theme)
                 .build());
     }
 

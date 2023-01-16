@@ -1,24 +1,24 @@
 package domain;
 
-import kakao.dto.request.CreateReservationRequest;
 import kakao.error.ErrorCode;
 import kakao.error.exception.DuplicatedReservationException;
 import kakao.error.exception.IllegalCreateReservationRequestException;
+import kakao.repository.ReservationRepository;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
 
 public class ReservationValidator {
-    private final List<Reservation> reservations;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationValidator(List<Reservation> reservations) {
-        this.reservations = reservations;
+    public ReservationValidator(ReservationRepository repository) {
+        this.reservationRepository = repository;
     }
 
-    public void validateForCreate(CreateReservationRequest request) {
-        if (request.date.isBefore(LocalDate.now()) || request.date.isEqual(LocalDate.now()))
+    public void validateForCreate(LocalDate date, LocalTime time) {
+        if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now()))
             throw new IllegalCreateReservationRequestException(ErrorCode.ILLEGAL_DATE);
 
-        if (!reservations.isEmpty()) throw new DuplicatedReservationException();
+        if (!reservationRepository.findByDateAndTime(date, time).isEmpty()) throw new DuplicatedReservationException();
     }
 }

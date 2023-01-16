@@ -17,7 +17,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-public class ReservationJDBCRepository {
+public class ReservationJDBCRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -41,12 +41,14 @@ public class ReservationJDBCRepository {
                             resultSet.getInt("theme.price")))
                     .build();
 
+    @Override
     public long save(Reservation reservation) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
 
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
+    @Override
     public Reservation findById(Long id) {
         String SELECT_SQL = "select * from reservation join theme on reservation.theme_id=theme.id where reservation.id=? limit 1";
 
@@ -55,18 +57,21 @@ public class ReservationJDBCRepository {
         return result.get(0);
     }
 
+    @Override
     public List<Reservation> findByDateAndTime(LocalDate date, LocalTime time) {
         String SELECT_SQL = "select * from reservation join theme on reservation.theme_id=theme.id where reservation.date=? and reservation.time=?";
 
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, date, time);
     }
 
-    public List<Reservation> findByRequestId(Long requestId) {
+    @Override
+    public List<Reservation> findByThemeId(Long requestId) {
         String SELECT_SQL = "select * from reservation join theme on reservation.theme_id=theme.id where reservation.theme_id=?";
 
         return jdbcTemplate.query(SELECT_SQL, customerRowMapper, requestId);
     }
 
+    @Override
     public int delete(Long id) {
         String DELETE_SQL = "delete from reservation where id=?";
 

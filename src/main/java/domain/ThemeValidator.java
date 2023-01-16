@@ -2,15 +2,23 @@ package domain;
 
 import kakao.error.exception.DuplicatedThemeException;
 import kakao.error.exception.UsingThemeException;
-
-import java.util.List;
+import kakao.repository.ReservationRepository;
+import kakao.repository.ThemeRepository;
 
 public class ThemeValidator {
-    public void validateForSameName(List<Theme> themes) {
-        if (!themes.isEmpty()) throw new DuplicatedThemeException();
+    private final ThemeRepository themeRepository;
+    private final ReservationRepository reservationRepository;
+
+    public ThemeValidator(ThemeRepository themeRepository, ReservationRepository reservationRepository) {
+        this.themeRepository = themeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
-    public void validateForUsingTheme(List<Reservation> reservationsUsingTheme) {
-        if (!reservationsUsingTheme.isEmpty()) throw new UsingThemeException();
+    public void validateForSameName(String name) {
+        if (!themeRepository.findByName(name).isEmpty()) throw new DuplicatedThemeException();
+    }
+
+    public void validateForUsingTheme(Long themeId) {
+        if (!reservationRepository.findByThemeId(themeId).isEmpty()) throw new UsingThemeException();
     }
 }

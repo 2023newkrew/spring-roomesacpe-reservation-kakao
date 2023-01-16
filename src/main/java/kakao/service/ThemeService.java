@@ -7,6 +7,7 @@ import kakao.dto.request.UpdateThemeRequest;
 import kakao.dto.response.ThemeResponse;
 import kakao.repository.ReservationJDBCRepository;
 import kakao.repository.ThemeJDBCRepository;
+import kakao.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,19 +16,18 @@ import java.util.stream.Collectors;
 @Service
 public class ThemeService {
 
-    private final ThemeJDBCRepository themeJDBCRepository;
-    private final ReservationJDBCRepository reservationJDBCRepository;
-    private final ThemeValidator validator = new ThemeValidator();
+    private final ThemeRepository themeRepository;
+    private final ThemeValidator validator;
 
-    public ThemeService(ThemeJDBCRepository themeJDBCRepository, ReservationJDBCRepository reservationJDBCRepository) {
-        this.themeJDBCRepository = themeJDBCRepository;
-        this.reservationJDBCRepository = reservationJDBCRepository;
+    public ThemeService(ThemeJDBCRepository themeRepository, ReservationJDBCRepository reservationJDBCRepository) {
+        this.themeRepository = themeRepository;
+        validator = new ThemeValidator(themeRepository, reservationJDBCRepository);
     }
 
     public long createTheme(CreateThemeRequest request) {
-        validator.validateForSameName(themeJDBCRepository.findByName(request.name));
+        validator.validateForSameName(request.name);
 
-        return themeJDBCRepository.save(new Theme(
+        return themeRepository.save(new Theme(
                 request.name,
                 request.desc,
                 request.price
@@ -35,26 +35,26 @@ public class ThemeService {
     }
 
     public List<ThemeResponse> getThemes() {
-        return themeJDBCRepository.themes()
+        return themeRepository.themes()
                 .stream().
                 map(ThemeResponse::new).
                 collect(Collectors.toList());
     }
 
     public ThemeResponse getTheme(long id) {
-        return new ThemeResponse(themeJDBCRepository.findById(id));
+        return new ThemeResponse(themeRepository.findById(id));
     }
 
     public ThemeResponse updateTheme(UpdateThemeRequest updateRequest) {
-        validator.validateForUsingTheme(reservationJDBCRepository.findByRequestId(updateRequest.id));
-
-        themeJDBCRepository.update(updateRequest.name, updateRequest.desc, updateRequest.price, updateRequest.id);
+        validator.validateForUsingTheme(updateRequest.id);
+        themeRepository.update(updateRequest.name, updateRequest.desc, updateRequest.price, updateRequest.id);
+        
         return getTheme(updateRequest.id);
     }
 
     public int delete(long id) {
-        validator.validateForUsingTheme(reservationJDBCRepository.findByRequestId(id));
+        validator.validateForUsingTheme(id);
 
-        return themeJDBCRepository.delete(id);
+        return themeRepository.delete(id);
     }
 }

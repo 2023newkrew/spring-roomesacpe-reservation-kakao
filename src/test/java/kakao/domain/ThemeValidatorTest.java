@@ -5,33 +5,37 @@ import domain.Theme;
 import domain.ThemeValidator;
 import kakao.error.exception.DuplicatedThemeException;
 import kakao.error.exception.UsingThemeException;
+import kakao.repository.ReservationMemRepository;
+import kakao.repository.ThemeMemRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 class ThemeValidatorTest {
     @DisplayName("같은 이름을 가진 theme가 있으면 DuplicateTheme 예외를 발생한다")
     @Test
     void validateForSameName() {
-        ThemeValidator validator = new ThemeValidator();
+        ThemeMemRepository themeRepository = new ThemeMemRepository();
+        ReservationMemRepository reservationRepository = new ReservationMemRepository();
+        ThemeValidator validator = new ThemeValidator(themeRepository, reservationRepository);
+
+        themeRepository.save(new Theme("themeName", "themeDesc", 1000));
 
         Assertions.assertThatExceptionOfType(DuplicatedThemeException.class)
-                .isThrownBy(() -> validator.validateForSameName(List.of(
-                        new Theme("name", "desc", 1000)
-                )));
+                .isThrownBy(() -> validator.validateForSameName("themeName"));
     }
 
     @Test
     void validateForUsingTheme() {
-        ThemeValidator validator = new ThemeValidator();
+        ThemeMemRepository themeRepository = new ThemeMemRepository();
+        ReservationMemRepository reservationRepository = new ReservationMemRepository();
+        reservationRepository.save(Reservation.builder()
+                .theme(new Theme(1L, "themeName", "themeDesc", 1000))
+                .build());
+
+        ThemeValidator validator = new ThemeValidator(themeRepository, reservationRepository);
 
         Assertions.assertThatExceptionOfType(UsingThemeException.class)
-                .isThrownBy(() -> validator.validateForUsingTheme(
-                        List.of(Reservation.builder()
-                                .theme(new Theme(1L, "name", "desc", 1000))
-                                .build())
-                ));
+                .isThrownBy(() -> validator.validateForUsingTheme(1L));
     }
 }

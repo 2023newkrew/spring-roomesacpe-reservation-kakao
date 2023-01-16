@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class ThemeJDBCRepository {
+public class ThemeJDBCRepository implements ThemeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -37,18 +37,21 @@ public class ThemeJDBCRepository {
                     resultSet.getInt("price")
             );
 
+    @Override
     public long save(Theme theme) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(theme);
 
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
+    @Override
     public List<Theme> themes() {
         String SELECT_SQL = "select * from theme";
 
         return jdbcTemplate.query(SELECT_SQL, themeRowMapper);
     }
 
+    @Override
     public Theme findById(long id) {
         String SELECT_SQL = "select * from theme where id=?";
 
@@ -59,12 +62,14 @@ public class ThemeJDBCRepository {
         }
     }
 
+    @Override
     public List<Theme> findByName(String name) {
         String SELECT_SQL = "select * from theme where name=?";
 
         return jdbcTemplate.query(SELECT_SQL, themeRowMapper, name);
     }
 
+    @Override
     public int update(String name, String desc, Integer price, long id) {
         return jdbcTemplate.update(getUpdateSQL(name, desc, price, id));
     }
@@ -82,6 +87,7 @@ public class ThemeJDBCRepository {
         return builder.toString();
     }
 
+    @Override
     public int delete(long id) {
         String DELETE_SQL = "delete theme where id=?";
 
