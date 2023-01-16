@@ -29,4 +29,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleDuplicatedThemeException() {
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
+
+    @ExceptionHandler(NoSuchThemeException.class)
+    public ResponseEntity<Void> NoSuchThemeException() {
+        return ResponseEntity.notFound().build();
+    }
+
 }

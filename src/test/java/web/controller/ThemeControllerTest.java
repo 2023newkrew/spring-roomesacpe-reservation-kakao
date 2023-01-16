@@ -51,7 +51,7 @@ public class ThemeControllerTest {
 
     @DisplayName("테마 목록 조회를 성공하면 200 반환")
     @Test
-    @Order(3)
+    @Order(2)
     void findAllThemes() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -59,5 +59,33 @@ public class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @DisplayName("테마 수정을 성공하면 200 반환")
+    @Test
+    @Order(3)
+    void changeTheme() {
+        ThemeRequestDTO themeRequestDTO = new ThemeRequestDTO("우주테마수정", "우주테마 수정입니다.", 50000);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeRequestDTO)
+                .when().put("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("없는 테마를 수정하면 404 반환")
+    @Test
+    @Order(3)
+    void changeNotExistingTheme() {
+        ThemeRequestDTO themeRequestDTO = new ThemeRequestDTO("우주테마수정", "우주테마 수정입니다.", 50000);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(themeRequestDTO)
+                .when().put("/themes/99")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

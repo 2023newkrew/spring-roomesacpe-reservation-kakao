@@ -5,8 +5,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.domain.Theme;
+import web.dto.request.ThemeRequestDTO;
 import web.dto.response.ThemeIdDto;
 import web.dto.response.ThemeResponseDTO;
+import web.exception.NoSuchThemeException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -53,4 +55,30 @@ public class ThemeJdbcRepository {
                 )));
     }
 
+    public Theme findThemeById(final Long id) throws NoSuchThemeException {
+        String sql = "SELECT * FROM theme WHERE id = (?) LIMIT 1 ";
+
+        List<Theme> themes =  jdbcTemplate.query(sql, ((rs, rowNum) -> new Theme(
+                rs.getString("name"),
+                rs.getString("desc"),
+                rs.getInt("price")
+        )), id);
+
+        if (themes.size() == 0) {
+            throw new NoSuchThemeException();
+        }
+        return themes.get(0);
+    }
+
+    public void updateTheme(Long themeId, ThemeRequestDTO themeRequestDTO) {
+        String sql = "UPDATE theme set name = (?), desc = (?), price = (?) WHERE id = (?)";
+
+        jdbcTemplate.update(sql,
+                themeRequestDTO.getName(),
+                themeRequestDTO.getDesc(),
+                themeRequestDTO.getPrice(),
+                themeId
+        );
+
+    }
 }

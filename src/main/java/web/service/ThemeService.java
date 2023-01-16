@@ -21,12 +21,12 @@ public class ThemeService {
     public ThemeIdDto createTheme(ThemeRequestDTO themeRequestDTO) {
         Theme theme  = themeRequestDTO.toEntity();
 
-        validateTheme(theme);
+        validateThemeDuplicated(theme);
 
         return themeJdbcRepository.createTheme(theme);
     }
 
-    private void validateTheme(Theme theme) {
+    private void validateThemeDuplicated(Theme theme) {
 
         List<Long> ids = themeJdbcRepository.findAllThemeByName(theme);
 
@@ -39,5 +39,10 @@ public class ThemeService {
 
     public List<ThemeResponseDTO> findAllThemes() {
         return themeJdbcRepository.findAllThemes();
+    }
+
+    public void updateTheme(Long themeId, ThemeRequestDTO themeRequestDTO) {
+        themeJdbcRepository.findThemeById(themeId);
+        themeJdbcRepository.updateTheme(themeId, themeRequestDTO);
     }
 }

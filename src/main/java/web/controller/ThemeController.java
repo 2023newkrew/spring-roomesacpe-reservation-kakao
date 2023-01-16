@@ -39,4 +39,11 @@ public class ThemeController {
                 .body(themes);
     }
 
+    @PutMapping("/{themeId}")
+    public ResponseEntity<Void> updateTheme(@PathVariable Long themeId, @RequestBody ThemeRequestDTO themeRequestDTO) {
+        themeService.updateTheme(themeId, themeRequestDTO);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
