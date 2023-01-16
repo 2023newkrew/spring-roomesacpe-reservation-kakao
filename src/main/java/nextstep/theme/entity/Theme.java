@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import nextstep.theme.dto.ThemeDto;
 
 @ToString
 @Getter
@@ -24,5 +25,9 @@ public class Theme {
         this.name = name;
         this.desc = desc;
         this.price = price;
+    }
+
+    public ThemeDto toDto(){
+        return new ThemeDto(this.id, this.name, this.desc, this.price);
     }
 }
