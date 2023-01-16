@@ -14,6 +14,7 @@ public class Theme {
     }
 
     public Theme(Long id, String name, String desc, Integer price) {
+        checkEmptyName(name);
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -46,5 +47,11 @@ public class Theme {
                 THEME_NAME.getMessage() + name + ", " +
                 THEME_DESC.getMessage() + desc + ", " +
                 THEME_PRICE.getMessage() + price;
+    }
+
+    private void checkEmptyName(String name){
+        if (name.length() == 0) {
+            throw new NullPointerException("name에 문자가 포함되어야 합니다");
+        }
     }
 }

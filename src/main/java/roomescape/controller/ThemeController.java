@@ -28,40 +28,25 @@ public class ThemeController {
     @PostMapping("/themes")
     public ResponseEntity<String> createTheme(@RequestBody @Valid Theme theme){
         logger.info(CREATE_REQUEST.getMessage() + theme.toMessage());
-        try {
-            Theme userTheme = themeService.createTheme(theme);
-            logger.info(CREATE_RESPONSE.getMessage() + userTheme.toMessage());
-            return ResponseEntity.created(URI.create("/themes/" + userTheme.getId()))
-                    .body(userTheme.createMessage(userTheme.getId()));
-        } catch (Exception e){
-            logger.error(String.valueOf(e));
-            return ResponseEntity.badRequest().body(THEME_CREATE_ERROR.getMessage());
-        }
+        Theme userTheme = themeService.createTheme(theme);
+        logger.info(CREATE_RESPONSE.getMessage() + userTheme.toMessage());
+        return ResponseEntity.created(URI.create("/themes/" + userTheme.getId()))
+                .body(userTheme.createMessage(userTheme.getId()));
     }
 
     @GetMapping("/themes/{id}")
     public ResponseEntity<String> lookUpTheme(@PathVariable("id") String themeId) {
         logger.info(LOOKUP_REQUEST.getMessage() + themeId);
-        try {
-            Theme userTheme = themeService.lookUpTheme(Long.valueOf(themeId));
-            logger.info(LOOKUP_RESPONSE.getMessage() + userTheme.toMessage());
-            return ResponseEntity.ok().body(userTheme.toMessage());
-        } catch (Exception e) {
-            logger.error(String.valueOf(e));
-            return ResponseEntity.notFound().build();
-        }
+        Theme userTheme = themeService.lookUpTheme(Long.valueOf(themeId));
+        logger.info(LOOKUP_RESPONSE.getMessage() + userTheme.toMessage());
+        return ResponseEntity.ok().body(userTheme.toMessage());
     }
 
     @DeleteMapping("/themes/{id}")
     public ResponseEntity<String> deleteTheme(@PathVariable("id") String deleteId) {
         logger.info(DELETE_REQUEST.getMessage() + deleteId);
-        try {
-            themeService.deleteTheme(Long.valueOf(deleteId));
-            logger.info(DELETE_RESPONSE.getMessage() + deleteId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e){
-            logger.error(String.valueOf(e));
-            return ResponseEntity.notFound().build();
-        }
+        themeService.deleteTheme(Long.valueOf(deleteId));
+        logger.info(DELETE_RESPONSE.getMessage() + deleteId);
+        return ResponseEntity.noContent().build();
     }
 }

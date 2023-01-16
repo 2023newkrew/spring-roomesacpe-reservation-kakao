@@ -17,6 +17,8 @@ public class Reservation {
     }
 
     public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
+        checkNegativeId(themeId);
+        checkEmptyName(name);
         this.id = id;
         this.date = date;
         this.time = time;
@@ -53,5 +55,17 @@ public class Reservation {
                 RESERVATION_TIME.getMessage() + time + ", " +
                 RESERVATION_NAME.getMessage() + name + ", " +
                 THEME_ID.getMessage() + themeId;
+    }
+
+    private void checkNegativeId(Long themeId){
+        if (themeId < 0) {
+            throw new ArithmeticException("themeId가 0보다 큰 수여야 합니다");
+        }
+    }
+
+    private void checkEmptyName(String name){
+        if (name.length() == 0) {
+            throw new NullPointerException("name에 문자가 포함되어야 합니다");
+        }
     }
 }

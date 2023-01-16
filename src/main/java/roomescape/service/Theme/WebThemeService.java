@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Theme;
 import roomescape.repository.Theme.JdbcThemeRepository;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static roomescape.utils.Messages.*;
@@ -45,7 +46,7 @@ public class WebThemeService implements ThemeService {
         } catch (Exception e){
             logger.error(NOT_FOUND_ERROR.getMessage() + themeId + ", " + e);
         }
-        throw new NullPointerException("요청한 ID " + themeId + "를 조회할 수 없습니다");
+        throw new NoSuchElementException("요청한 ID " + themeId + "를 조회할 수 없습니다");
     }
 
     @Override
@@ -53,7 +54,7 @@ public class WebThemeService implements ThemeService {
         Integer deleteResult = jdbcThemeRepository.deleteTheme(deleteId);
         if (deleteResult == 0){
             logger.error(DELETE_NOT_FOUND_ERROR.getMessage() + deleteId);
-            throw new NullPointerException("요청한 ID: " + deleteId + "를 조회할 수 없습니다");
+            throw new NoSuchElementException("요청한 ID: " + deleteId + "를 조회할 수 없습니다");
         }
         logger.info(DELETE_SUCCESS.getMessage() + deleteResult);
     }
