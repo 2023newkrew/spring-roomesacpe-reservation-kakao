@@ -1,10 +1,11 @@
 package web.exception;
 
-import java.time.DateTimeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.DateTimeException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,7 +21,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicatedReservationException.class)
-    public ResponseEntity<Void> handleDuplicatedReservationExcetion() {
+    public ResponseEntity<Void> handleDuplicatedReservationException() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @ExceptionHandler(DuplicatedThemeException.class)
+    public ResponseEntity<Void> handleDuplicatedThemeException() {
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }
