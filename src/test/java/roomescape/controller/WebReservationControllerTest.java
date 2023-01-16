@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,9 +77,23 @@ public class WebReservationControllerTest {
     @Test
     void duplicatedReservationTest(){
         roomEscapeController.createReservation(reservation);
-        Assertions.assertThrows(DuplicateRequestException.class, () ->
-            roomEscapeController.createReservation(reservation)
-        );
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("등록되지 않은 ID를 조회할 경우, 예외가 발생")
+    @Test
+    void notFoundReservationTest(){
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().get("/reservations/"+ 12121L)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
 

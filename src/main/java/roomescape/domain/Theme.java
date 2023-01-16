@@ -1,6 +1,8 @@
 package roomescape.domain;
 
 
+import static roomescape.utils.Messages.*;
+
 public class Theme {
     private Long id;
     private String name;
@@ -40,7 +42,9 @@ public class Theme {
     }
 
     public String toMessage(){
-        return "Id: " + id + ", Name: " + name + ", Desc: " + desc + ", Price: " + price;
+        return THEME_ID.getMessage() + id + ", " +
+                THEME_NAME.getMessage() + name + ", " +
+                THEME_DESC.getMessage() + desc + ", " +
+                THEME_PRICE.getMessage() + price;
     }
-
 }

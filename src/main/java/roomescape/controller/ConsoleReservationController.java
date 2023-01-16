@@ -10,6 +10,8 @@ import roomescape.service.Reservation.ReservationService;
 
 import javax.validation.Valid;
 
+import static roomescape.utils.Messages.*;
+
 @Controller
 public class ConsoleReservationController {
     final ReservationService reservationService;
@@ -21,22 +23,39 @@ public class ConsoleReservationController {
     }
 
     public Reservation createReservation(@RequestBody @Valid Reservation reservation){
-        logger.info("Request Create Reservation - " + reservation.toMessage());
-        Reservation userReservation = reservationService.createReservation(reservation);
-        logger.info("Finish Create Reservation - " + userReservation.toMessage());
-        return userReservation;
+        logger.info(CREATE_REQUEST.getMessage() + reservation.toMessage());
+        try{
+            Reservation userReservation = reservationService.createReservation(reservation);
+            logger.info(CREATE_RESPONSE.getMessage() + userReservation.toMessage());
+            return new Reservation(userReservation.getId(), userReservation.getDate(), userReservation.getTime(),
+                    userReservation.getName(), userReservation.getThemeId());
+        } catch (Exception e){
+            logger.error(String.valueOf(e));
+            return null;
+        }
     }
 
     public Reservation lookUpReservation(@PathVariable("id") Long reservationId) {
-        logger.info("Request lookUp Reservation, Id: " + reservationId);
-        Reservation userReservation = reservationService.lookUpReservation(reservationId);
-        logger.info("Finish lookUp Reservation " + userReservation.toMessage());
-        return userReservation;
+        logger.info(LOOKUP_REQUEST.getMessage() + reservationId);
+        try {
+            Reservation userReservation = reservationService.   lookUpReservation(reservationId);
+            logger.info(LOOKUP_RESPONSE.getMessage() + userReservation.toMessage());
+            return userReservation;
+        } catch (Exception e){
+            logger.error(String.valueOf(e));
+            return null;
+        }
     }
 
-    public void deleteReservation(@PathVariable("id") Long deleteId) {
-        logger.info("Request delete Reservation, Id: " + deleteId);
-        reservationService.deleteReservation(deleteId);
-        logger.info("Finish delete Reservation Id: " + deleteId);
+    public Boolean deleteReservation(@PathVariable("id") Long deleteId) {
+        logger.info(DELETE_REQUEST.getMessage() + deleteId);
+        try {
+            reservationService.deleteReservation(deleteId);
+            logger.info(DELETE_RESPONSE.getMessage() + deleteId);
+        } catch (Exception e){
+            logger.error(String.valueOf(e));
+            return false;
+        }
+        return true;
     }
 }

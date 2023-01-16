@@ -39,13 +39,12 @@ public class JdbcThemeRepository implements ThemeRepository{
     public Optional<Theme> findById(long themeId) {
         String sql = "select name, desc, price from THEME where id = ?";
         Theme theme = jdbcTemplate.queryForObject(sql,
-                new Object[]{themeId},
                 (rs, rowNum) -> {
                     String name = rs.getString("name");
                     String desc = rs.getString("price");
                     int price = rs.getInt("price");
                     return new Theme(themeId, name, desc, price);
-                });
+                }, themeId);
         return Optional.ofNullable(theme);
     }
 

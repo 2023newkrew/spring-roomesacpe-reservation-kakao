@@ -3,6 +3,8 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static roomescape.utils.Messages.*;
+
 public class Reservation {
     private Long id;
     private LocalDate date;
@@ -46,6 +48,10 @@ public class Reservation {
     }
 
     public String toMessage(){
-        return "Id: " + id + ", Date: " + date + ", Time: " + time + " , Name: " + name + ", ThemeId: " + themeId;
+        return RESERVATION_ID.getMessage() + id + ", " +
+                RESERVATION_DATE.getMessage() + date + ", " +
+                RESERVATION_TIME.getMessage() + time + ", " +
+                RESERVATION_NAME.getMessage() + name + ", " +
+                THEME_ID.getMessage() + themeId;
     }
 }
