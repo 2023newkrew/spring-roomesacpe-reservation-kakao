@@ -1,6 +1,7 @@
 package nextstep.controller;
 
 import lombok.RequiredArgsConstructor;
+import nextstep.Reservation;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ReservationController {
     }
 
     @GetMapping("/{reservation_id}")
-    public ResponseEntity<?> getReservation(@PathVariable("reservation_id") Long reservationId) {
+    public ResponseEntity<Reservation> getReservation(@PathVariable("reservation_id") Long reservationId) {
 
         return ResponseEntity.ok(service.getById(reservationId));
     }
