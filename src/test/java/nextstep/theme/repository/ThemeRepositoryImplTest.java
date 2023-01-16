@@ -198,7 +198,7 @@ class ThemeRepositoryImplTest {
         @DisplayName("수정 성공 여부 확인")
         @ParameterizedTest
         @CsvSource(value = {"0,false", "1, true", "2, true", "3, false"})
-        void should_updateTheme_when_givenIdAndTheme(Long id, boolean updated) {
+        void should_returnUpdated_when_givenId(Long id, boolean updated) {
             Theme theme = new Theme(null, "updated", "updated", 0);
 
             boolean actual = repository.update(id, theme);
@@ -220,6 +220,25 @@ class ThemeRepositoryImplTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class delete {
+
+        @BeforeEach
+        void setUp() {
+            List<Theme> themes = List.of(
+                    new Theme(null, "theme1", "theme1", 1000),
+                    new Theme(null, "theme2", "theme2", 2000)
+            );
+            themes.forEach(ThemeRepositoryImplTest.this::insertTestTheme);
+        }
+
+        @DisplayName("삭제 성공 여부 확인")
+        @ParameterizedTest
+        @CsvSource(value = {"0,false", "1, true", "2, true", "3, false"})
+        void should_returnDeleted_when_givenId(Long id, boolean deleted) {
+            boolean actual = repository.delete(id);
+
+            Assertions.assertThat(actual)
+                    .isEqualTo(deleted);
+        }
     }
 
     private void insertTestTheme(Theme theme) {

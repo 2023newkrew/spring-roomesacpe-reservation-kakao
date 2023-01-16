@@ -60,6 +60,8 @@ public class ThemeRepositoryImpl implements ThemeRepository {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        int deleteRow = jdbcTemplate.update(connection -> statementCreator.createDeleteById(connection, id));
+
+        return deleteRow > 0;
     }
 }
