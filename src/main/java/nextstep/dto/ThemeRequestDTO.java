@@ -1,14 +1,14 @@
 package nextstep.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class ThemeRequestDTO {
-    private final String name;
+    private String name;
 
-    private final String desc;
+    private String desc;
 
-    private final int price;
+    private int price;
 }

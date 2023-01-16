@@ -1,17 +1,15 @@
 package nextstep.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class ReservationRequestDTO {
 
-    private final String date;
+    private String date;
 
-    private final String time;
+    private String time;
 
-    private final String name;
+    private String name;
 
-    private final Long theme_id;
+    private Long theme_id;
 }
