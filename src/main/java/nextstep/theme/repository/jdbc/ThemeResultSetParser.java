@@ -2,12 +2,14 @@ package nextstep.theme.repository.jdbc;
 
 import nextstep.etc.jdbc.ResultSetParser;
 import nextstep.theme.domain.Theme;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ThemeResultSetParser extends ResultSetParser {
 
 

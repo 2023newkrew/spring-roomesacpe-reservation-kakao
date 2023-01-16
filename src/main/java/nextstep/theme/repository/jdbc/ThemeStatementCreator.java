@@ -2,11 +2,13 @@ package nextstep.theme.repository.jdbc;
 
 
 import nextstep.theme.domain.Theme;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+@Component
 public class ThemeStatementCreator {
 
     private static final String INSERT_SQL = "INSERT INTO theme(name, desc, price) VALUES(?, ?, ?)";
