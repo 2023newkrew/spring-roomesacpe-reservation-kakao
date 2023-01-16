@@ -4,6 +4,9 @@ public class ReservationException extends RuntimeException {
     private ErrorCode errorCode;
     private String errorMessage;
 
+    public ReservationException() {
+    }
+
     public ReservationException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.errorMessage = errorCode.getDescription();
