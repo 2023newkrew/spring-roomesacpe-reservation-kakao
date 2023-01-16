@@ -1,6 +1,5 @@
 package nextstep.reservation.repository.jdbc;
 
-import nextstep.etc.jdbc.ResultSetParser;
 import nextstep.reservation.domain.Reservation;
 import nextstep.theme.domain.Theme;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 
 @Component
-public class ReservationResultSetParser extends ResultSetParser {
+public class ReservationResultSetParser {
 
     public Reservation parseReservation(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) {
@@ -37,5 +36,11 @@ public class ReservationResultSetParser extends ResultSetParser {
                 resultSet.getString("theme_desc"),
                 resultSet.getInt("theme_price")
         );
+    }
+
+    public Long parseKey(ResultSet resultSet) throws SQLException {
+        resultSet.next();
+
+        return resultSet.getLong(1);
     }
 }
