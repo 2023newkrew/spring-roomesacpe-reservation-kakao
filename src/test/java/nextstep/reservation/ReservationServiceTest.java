@@ -7,7 +7,6 @@ import nextstep.reservation.exception.RoomEscapeException;
 import nextstep.reservation.service.ReservationService;
 import nextstep.reservation.service.ThemeService;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,23 +26,18 @@ class ReservationServiceTest {
     private ReservationService reservationService;
     @Autowired
     private ThemeService themeService;
-    private ReservationRequest reservation;
-
-    @BeforeEach
-    void setUp() {
-        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-
-        ThemeResponse themeResponse = themeService.registerTheme(themeRequest);
-
-        this.reservation = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", themeResponse.getId());
-    }
 
     @Test
     @DisplayName("이미 예약이 존재하는 시간에 예약 생성 시도할 때 예외 발생한다.")
     void duplicate_time_Reservation_Exception() {
         //given
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        ThemeResponse themeResponse = themeService.registerTheme(themeRequest);
+
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", themeResponse.getId());
+        reservationService.registerReservation(reservation);
+
         ReservationRequest reservationDuplicated = new ReservationRequest(LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name2", reservation.getThemeId());
-        reservationService.registerReservation(reservationDuplicated);
 
         //when
         //then

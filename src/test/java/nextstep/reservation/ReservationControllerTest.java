@@ -8,7 +8,6 @@ import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.service.ReservationService;
 import nextstep.reservation.service.ThemeService;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +32,6 @@ public class ReservationControllerTest {
     private ReservationService reservationService;
     @Autowired
     private ThemeService themeService;
-    private Reservation reservation;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-
-        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
-
-        reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
-    }
 
     @AfterEach
     void tearDown() {
@@ -54,7 +42,16 @@ public class ReservationControllerTest {
     @DisplayName("예약 등록시 201이 반환되며 /reservations/{id}로 이동한다.")
     @Test
     void registerReservation() {
+        //given
+        RestAssured.port = port;
 
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
+
+        //when
+        //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservation)
@@ -66,8 +63,17 @@ public class ReservationControllerTest {
     @DisplayName("이미 예약이 존재하는 시간에 예약 등록 시도할 때 예외 발생한다.")
     @Test
     void registerReservationDuplicate() {
-        Reservation reservationDuplicated = new Reservation(DUMMY_ID, reservation.getDate(), reservation.getTime(), "name2", reservation.getThemeId());
+        //given
+        RestAssured.port = port;
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
+
+        Reservation reservation =  new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
         registerReservation(reservation);
+
+        Reservation reservationDuplicated = new Reservation(DUMMY_ID, reservation.getDate(), reservation.getTime(), "name2", reservation.getThemeId());
+        //when
+        //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationDuplicated)
@@ -80,8 +86,19 @@ public class ReservationControllerTest {
     @DisplayName("예약 조회시 body에 예약 정보가 정해진 형식으로 주어진다.")
     @Test
     void showReservation() {
+        //given
+        RestAssured.port = port;
+
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
         Response createResponse = registerReservation(reservation);
+
         String id = createResponse.getHeader("Location").split("/")[2]; // Redirect 주소: /reservations/id
+
+        //when
+        //then
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/" + id)
@@ -94,8 +111,19 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("id를 통한 예약 삭제시 204를 반환한다.")
     void deleteReservation() {
+        //given
+        RestAssured.port = port;
+
+        ThemeRequest themeRequest = new ThemeRequest("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        ThemeResponse createdTheme = themeService.registerTheme(themeRequest);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", createdTheme.getId());
         Response response = registerReservation(reservation);
+
         String id = response.getHeader("Location").split("/")[2]; // Redirect 주소: /reservations/id
+
+        //when
+        //then
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/" + id)
@@ -106,6 +134,11 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("예약 전체 삭제시 204를 반환한다.")
     void clearAll() {
+        //given
+        RestAssured.port = port;
+
+        //when
+        //then
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations")

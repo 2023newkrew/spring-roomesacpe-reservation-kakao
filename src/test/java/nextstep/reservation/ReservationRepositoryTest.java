@@ -7,7 +7,6 @@ import nextstep.reservation.repository.ReservationRepository;
 import nextstep.reservation.repository.ThemeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +30,6 @@ class ReservationRepositoryTest {
     private ReservationRepository reservationRepository;
     @Autowired
     private ThemeRepository themeRepository;
-    private Reservation reservation;
-
-    @BeforeEach
-    void setUp() {
-        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme savedTheme = themeRepository.save(theme);
-
-        this.reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
-    }
 
     @AfterEach
     void tearDown() {
@@ -51,6 +41,10 @@ class ReservationRepositoryTest {
     void createReservationTest() {
 
         //given
+        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme savedTheme = themeRepository.save(theme);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
 
         //when
         Reservation created = reservationRepository.save(reservation);
@@ -77,6 +71,10 @@ class ReservationRepositoryTest {
     @DisplayName("예약 ID로 조회 성공")
     void findByIdTest() {
         //given
+        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme savedTheme = themeRepository.save(theme);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
         Reservation created = reservationRepository.save(reservation);
 
         //when
@@ -91,6 +89,10 @@ class ReservationRepositoryTest {
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 있을 때)")
     void findByDateTimeTest() {
         //given
+        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme savedTheme = themeRepository.save(theme);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
         reservationRepository.save(reservation);
 
         //when
@@ -117,6 +119,10 @@ class ReservationRepositoryTest {
     void deleteReservation() {
 
         //given
+        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme savedTheme = themeRepository.save(theme);
+
+        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
         Reservation created = reservationRepository.save(reservation);
 
         //when
