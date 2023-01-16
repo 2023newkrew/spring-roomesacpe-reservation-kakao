@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mapstruct.factory.Mappers;
 
@@ -179,6 +180,27 @@ class ThemeServiceImplTest {
             Assertions.assertThatThrownBy(() -> service.update(0L, request))
                     .isInstanceOf(ThemeException.class)
                     .hasMessage(ErrorMessage.THEME_NOT_EXISTS.getErrorMessage());
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class delete {
+
+        @BeforeEach
+        void setUp() {
+            repository.insert(new Theme(null, "theme1", "theme1", 1000));
+            repository.insert(new Theme(null, "theme2", "theme2", 2000));
+        }
+
+        @DisplayName("삭제 성공 여부 확인")
+        @ParameterizedTest
+        @CsvSource(value = {"0,false", "1, true", "2, true", "3, false"})
+        void should_returnDeleted_when_givenId(Long id, boolean deleted) {
+            boolean actual = service.deleteById(id);
+
+            Assertions.assertThat(actual)
+                    .isEqualTo(deleted);
         }
     }
 }

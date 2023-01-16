@@ -53,6 +53,7 @@ public class ThemeServiceImpl implements ThemeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public ThemeResponse update(Long id, ThemeRequest request) {
         Theme theme = mapper.fromRequest(request);
@@ -70,8 +71,9 @@ public class ThemeServiceImpl implements ThemeService {
         return getById(id);
     }
 
+    @Transactional
     @Override
     public boolean deleteById(Long id) {
-        return false;
+        return repository.delete(id);
     }
 }
