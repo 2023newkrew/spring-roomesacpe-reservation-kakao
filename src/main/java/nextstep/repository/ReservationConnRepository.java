@@ -1,7 +1,6 @@
 package nextstep.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.dto.ReservationDTO;
 import nextstep.domain.Theme;
 
 import java.sql.*;

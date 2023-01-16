@@ -1,8 +1,8 @@
 package nextstep;
 
 import nextstep.domain.Reservation;
-import nextstep.dto.ReservationDTO;
-import nextstep.dto.ReservationVO;
+import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationResponse;
 import nextstep.repository.ReservationConnRepository;
 import nextstep.service.ReservationService;
 
@@ -40,13 +40,13 @@ public class RoomEscapeConsoleApplication {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                ReservationDTO reservationDTO = new ReservationDTO(
+                ReservationRequest reservationRequest = new ReservationRequest(
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name
                 );
 
-                Reservation reservation = service.newReservation(reservationDTO);
+                Reservation reservation = service.newReservation(reservationRequest);
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
@@ -60,7 +60,7 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                ReservationVO reservation = service.findReservation(id);
+                ReservationResponse reservation = service.findReservation(id);
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
