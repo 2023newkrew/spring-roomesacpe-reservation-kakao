@@ -10,6 +10,7 @@ import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static nextstep.reservation.constant.RoomEscapeConstant.ENTITY_DELETE_NUMBER;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_RESERVATION;
 
@@ -41,7 +42,7 @@ public class ReservationService {
 
     public Boolean delete(long id) {
         int deleteRowNumber = reservationRepository.deleteById(id);
-        return deleteRowNumber == 1;
+        return deleteRowNumber == ENTITY_DELETE_NUMBER;
     }
 
     public void clear() {

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static nextstep.reservation.constant.RoomEscapeConstant.ENTITY_DELETE_NUMBER;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
 
 @Service
@@ -42,7 +43,7 @@ public class ThemeService {
 
     public boolean deleteById(long id) {
         int deletedRowNumber = themeRepository.deleteById(id);
-        return deletedRowNumber == 1;
+        return deletedRowNumber == ENTITY_DELETE_NUMBER;
     }
 
     public void clear() {

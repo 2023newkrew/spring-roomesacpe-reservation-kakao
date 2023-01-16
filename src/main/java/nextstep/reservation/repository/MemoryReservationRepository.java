@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import static nextstep.reservation.constant.RoomEscapeConstant.ENTITY_DELETE_NUMBER;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
 
 
@@ -48,7 +49,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     public int deleteById(long id) {
         if (reservationList.containsKey(id)) {
             reservationList.remove(id);
-            return 1;
+            return ENTITY_DELETE_NUMBER;
         }
         return 0;
     }
