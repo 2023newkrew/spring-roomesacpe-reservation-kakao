@@ -6,6 +6,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ThemeDTO {
+    private Long id;
 
     private String name;
 
