@@ -4,9 +4,7 @@ CREATE TABLE IF NOT EXISTS RESERVATION
     date        date,
     time        time,
     name        varchar(20),
-    theme_name  varchar(20),
-    theme_desc  varchar(255),
-    theme_price int,
+    theme_id    bigint,
     primary key (id)
 );
 

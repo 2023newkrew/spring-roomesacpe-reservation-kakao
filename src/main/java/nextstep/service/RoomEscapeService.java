@@ -2,9 +2,9 @@ package nextstep.service;
 
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
+import nextstep.exception.ThemeNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
-import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
 import nextstep.web.dto.ReservationRequest;
@@ -29,13 +29,13 @@ public class RoomEscapeService {
 
     public Reservation createReservation(ReservationRequest request) {
         Theme theme = themeRepository.findById(request.getThemeId())
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new ThemeNotFoundException(request.getThemeId()));
 
-        if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
+        if (reservationRepository.existsByDateAndTimeAndThemeId(request.getDate(), request.getTime(), theme.getId())) {
             throw new ReservationDuplicateException();
         }
         return reservationRepository.save(
-                new Reservation(request.getDate(), request.getTime(), request.getName(), theme));
+                new Reservation(null, request.getDate(), request.getTime(), request.getName(), theme));
     }
 
     public Reservation getReservation(Long id) {

@@ -6,18 +6,11 @@ import java.time.LocalTime;
 
 public class ReservationRequest {
 
-    private String name;
-    private LocalDate date;
-    private LocalTime time;
-    private Long themeId;
+    private final String name;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final Long themeId;
 
-    public ReservationRequest(String name, LocalDate date, LocalTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    @JsonCreator
     public ReservationRequest(String name, LocalDate date, LocalTime time, Long themeId) {
         this.name = name;
         this.date = date;

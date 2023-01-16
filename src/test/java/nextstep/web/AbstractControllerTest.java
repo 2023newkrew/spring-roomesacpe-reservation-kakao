@@ -57,8 +57,13 @@ public class AbstractControllerTest {
     }
 
     protected ReservationResponse 예약을_조회한다(Long id) {
-        return RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
-                .get("/reservations/" + id).then().statusCode(HttpStatus.OK.value()).extract()
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().log().all()
+                .get("/reservations/" + id)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
                 .as(ReservationResponse.class);
     }
 

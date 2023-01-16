@@ -19,14 +19,4 @@ public class ReservationConverter {
         ps.setString(5, reservation.getTheme().getDesc());
         ps.setInt(6, reservation.getTheme().getPrice());
     }
-
-    public static Reservation get(ResultSet rs, Long id) throws SQLException {
-        LocalDate date = rs.getDate("date").toLocalDate();
-        LocalTime time = rs.getTime("time").toLocalTime();
-        String name = rs.getString("name");
-        String themeName = rs.getString("theme_name");
-        String themeDesc = rs.getString("theme_desc");
-        Integer themePrice = rs.getInt("theme_price");
-        return new Reservation(id, date, time, name, new Theme(themeName, themeDesc, themePrice));
-    }
 }

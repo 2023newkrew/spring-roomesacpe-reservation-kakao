@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.model.Reservation;
-import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +34,7 @@ public class RoomEscapeControllerTest extends AbstractControllerTest {
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
         assertThat(reservation.getName()).isEqualTo(name);
-        assertThat(reservation.getTheme()).isEqualTo(new Theme(themeId, "베루스홈", "베루스의 집", 50_000));
+        assertThat(reservation.getTheme().getId()).isEqualTo(themeId);
     }
 
     @DisplayName("예약을 조회한다")

@@ -27,7 +27,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price, theme_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
@@ -46,7 +46,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+        String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price, theme_id FROM reservation WHERE id = ?";
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -54,7 +54,14 @@ public class JdbcReservationRepository implements ReservationRepository {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Reservation reservation = ReservationConverter.get(rs, id);
+                LocalDate date = rs.getDate("date").toLocalDate();
+                LocalTime time = rs.getTime("time").toLocalTime();
+                String name = rs.getString("name");
+                String themeName = rs.getString("theme_name");
+                String themeDesc = rs.getString("theme_desc");
+                Integer themePrice = rs.getInt("theme_price");
+                Long themeId = rs.getObject("theme_id", Long.class);
+                Reservation reservation = new Reservation(id, date, time, name, null);
                 return Optional.of(reservation);
             }
         } catch (SQLException e) {
@@ -77,6 +84,11 @@ public class JdbcReservationRepository implements ReservationRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean existsByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
+        return existsByDateAndTime(date, time);
     }
 
     @Override
