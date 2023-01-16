@@ -17,8 +17,10 @@ import java.util.Optional;
 public class JDBCTemplateThemeDao implements ThemeDao {
 
     private static final String SELECT_BY_THEME_ID_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM THEME WHERE `ID` = ?";
-    private static final String INSERT_SQL = "INSERT INTO `THEME`(`NAME`, `DESC`, `PRICE`) VALUES (?, ?, ?)";
     private static final String SELECT_ALL_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM `THEME`";
+    private static final String SELECT_BY_NAME_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM `THEME` WHERE `NAME` = ?";
+
+    private static final String INSERT_SQL = "INSERT INTO `THEME`(`NAME`, `DESC`, `PRICE`) VALUES (?, ?, ?)";
     private static final String UPDATE_SQL = "UPDATE `THEME` SET `NAME` = ?, `DESC` = ?, `PRICE` = ? WHERE `ID` = ?";
     private static final String DELETE_BY_ID_SQL = "DELETE FROM `THEME` WHERE `ID` = ?";
 
@@ -40,6 +42,18 @@ public class JDBCTemplateThemeDao implements ThemeDao {
     }
 
     @Override
+    public Optional<Theme> findByName(String name) {
+        return jdbcTemplate.query(SELECT_BY_NAME_SQL, themeRowMapper, name)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        return jdbcTemplate.query(SELECT_ALL_SQL, themeRowMapper);
+    }
+
+    @Override
     public int insert(Theme theme){
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -54,11 +68,6 @@ public class JDBCTemplateThemeDao implements ThemeDao {
         theme.setId(keyHolder.getKey().longValue());
 
         return insertCount;
-    }
-
-    @Override
-    public List<Theme> findAll() {
-        return jdbcTemplate.query(SELECT_ALL_SQL, themeRowMapper);
     }
 
     @Override

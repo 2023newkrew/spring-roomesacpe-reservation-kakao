@@ -14,9 +14,11 @@ import java.util.Optional;
 public class DirectConnectionThemeDao implements ThemeDao {
     private static final String SELECT_BY_ID_SQL = "SELECT ID, NAME, DESC, PRICE FROM THEME WHERE ID = ?";
     private static final String SELECT_ALL_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM `THEME`";
+    private static final String SELECT_BY_NAME_SQL = "SELECT `ID`, `NAME`, `DESC`, `PRICE` FROM `THEME` WHERE `NAME` = ?";
     private static final String UPDATE_SQL = "UPDATE `THEME` SET `NAME` = ?, `DESC` = ?, `PRICE` = ? WHERE `ID` = ?";
     private static final String DELETE_BY_ID_SQL = "DELETE FROM `THEME` WHERE `ID` = ?";
     private static final String INSERT_SQL = "INSERT INTO `THEME`(`name`, `desc`, `price`) VALUES (?, ?, ?)";
+
 
     private final DataSource dataSource;
 
@@ -30,6 +32,46 @@ public class DirectConnectionThemeDao implements ThemeDao {
             con = dataSource.getConnection();
             psmt = con.prepareStatement(SELECT_BY_ID_SQL);
             setTheme(id, psmt);
+
+            resultSet = psmt.executeQuery();
+            List<Theme> themes = getTheme(resultSet);
+            return themes.stream().findFirst();
+        }catch (SQLException sqlException){
+            return Optional.empty();
+        }finally {
+            DatabaseUtil.close(con, psmt, resultSet);
+        }
+    }
+
+    @Override
+    public List<Theme> findAll() {
+        Connection con = null;
+        PreparedStatement psmt = null;
+        ResultSet resultSet = null;
+
+        try{
+            con = dataSource.getConnection();
+            psmt = con.prepareStatement(SELECT_ALL_SQL);
+            resultSet = psmt.executeQuery();
+            return getTheme(resultSet);
+        }catch (SQLException sqlException){
+            return List.of();
+        }finally {
+            DatabaseUtil.close(con, psmt, resultSet);
+        }
+    }
+
+    @Override
+    public Optional<Theme> findByName(String name) {
+        Connection con = null;
+        PreparedStatement psmt = null;
+        ResultSet resultSet = null;
+
+        try{
+            con = dataSource.getConnection();
+            psmt = con.prepareStatement(SELECT_BY_NAME_SQL);
+            int parameterIndex = 1;
+            psmt.setString(parameterIndex++, name);
 
             resultSet = psmt.executeQuery();
             List<Theme> themes = getTheme(resultSet);
@@ -65,24 +107,6 @@ public class DirectConnectionThemeDao implements ThemeDao {
             DatabaseUtil.close(con, psmt, resultSet);
         }
         return insertCount;
-    }
-
-    @Override
-    public List<Theme> findAll() {
-        Connection con = null;
-        PreparedStatement psmt = null;
-        ResultSet resultSet = null;
-
-        try{
-            con = dataSource.getConnection();
-            psmt = con.prepareStatement(SELECT_ALL_SQL);
-            resultSet = psmt.executeQuery();
-            return getTheme(resultSet);
-        }catch (SQLException sqlException){
-            return List.of();
-        }finally {
-            DatabaseUtil.close(con, psmt, resultSet);
-        }
     }
 
     @Override
