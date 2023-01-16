@@ -24,11 +24,10 @@ class ReservationServiceTest {
     @Autowired
     ReservationService reservationService;
 
-    Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-    ;
+    Theme theme = new Theme(4L, "테스트 테마", "테스트용 테마임", 1234);
 
     Reservation reservation = new Reservation(
-            1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme);
+            1L, LocalDate.parse("2022-01-02"), LocalTime.parse("13:00"), "bryan", theme.getId());
 
     @Test
     void 예약을_생성할_수_있다() {
@@ -55,7 +54,7 @@ class ReservationServiceTest {
         //then
         assertThat(reservation.getName()).isEqualTo(savedReservation.getName());
         assertThat(reservation.getDate()).isEqualTo(savedReservation.getDate());
-        assertThat(reservation.getTheme().getName()).isEqualTo(savedReservation.getTheme().getName());
+        assertThat(reservation.getThemeId()).isEqualTo(savedReservation.getThemeId());
     }
 
     @Test
