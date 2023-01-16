@@ -37,4 +37,11 @@ public class ThemeController {
         List<Theme> themes = themeService.retrieveAll();
         return ResponseEntity.ok().body(themes);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id,
+                                       @RequestBody ThemeRequestDto themeRequestDto) {
+        themeService.update(id, themeRequestDto);
+        return ResponseEntity.created(URI.create("/themes/" + id)).build();
+    }
 }

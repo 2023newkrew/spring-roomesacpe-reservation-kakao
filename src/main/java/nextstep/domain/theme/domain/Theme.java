@@ -1,7 +1,7 @@
 package nextstep.domain.theme.domain;
 
 public class Theme {
-    private Long id;
+    private final Long id;
     private String name;
     private String desc;
     private Integer price;
@@ -31,5 +31,17 @@ public class Theme {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

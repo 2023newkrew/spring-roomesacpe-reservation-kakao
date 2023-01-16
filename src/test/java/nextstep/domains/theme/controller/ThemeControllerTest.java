@@ -123,4 +123,21 @@ public class ThemeControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
     }
+
+    @DisplayName("Theme - 테마 수정")
+    @Test
+    void update() {
+        ThemeRequestDto requestDto = new ThemeRequestDto(
+                "워너고홈",
+                "병맛 어드벤처 회사 코믹물",
+                29_000
+        );
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestDto)
+                .when().put("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
 }

@@ -16,6 +16,7 @@ public interface ThemeRepository {
 
     List<Theme> findAll();
 
-    void clear();
+    void update(Theme theme);
 
+    void clear();
 }

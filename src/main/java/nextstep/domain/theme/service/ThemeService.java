@@ -39,4 +39,15 @@ public class ThemeService {
     public List<Theme> retrieveAll() {
         return themeRepository.findAll();
     }
+
+    public void update(Long id, ThemeRequestDto themeRequestDto) {
+        Theme theme = themeRepository.findById(id)
+                .orElseThrow(ThemeNotFoundException::new);
+
+        theme.setName(themeRequestDto.getName());
+        theme.setDesc(themeRequestDto.getDesc());
+        theme.setPrice(themeRequestDto.getPrice());
+        themeRepository.update(theme);
+    }
 }
+
