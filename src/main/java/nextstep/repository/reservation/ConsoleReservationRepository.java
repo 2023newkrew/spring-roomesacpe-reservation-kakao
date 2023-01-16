@@ -1,12 +1,13 @@
 package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static nextstep.exception.ErrorCode.*;
 
@@ -34,11 +35,11 @@ public class ConsoleReservationRepository extends ReservationRepository {
     }
 
     @Override
-    public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
+    public Long save(LocalDate date, LocalTime time, String name, Long themeId) {
         try {
             validateReservation(date, time);
 
-            PreparedStatement ps = getReservationPreparedStatement(con, date, time, name, theme);
+            PreparedStatement ps = getReservationPreparedStatement(con, date, time, name, themeId);
             ps.executeUpdate();
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -70,7 +71,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
     @Override
     public Long save(Reservation reservation) {
         return this.save(reservation.getDate(), reservation.getTime(),
-                reservation.getName(), reservation.getTheme());
+                reservation.getName(), reservation.getThemeId());
     }
 
     @Override
@@ -81,6 +82,24 @@ public class ConsoleReservationRepository extends ReservationRepository {
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
             return Reservation.from(resultSet);
+        } catch (SQLException e) {
+            throw new ReservationException(RESERVATION_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        try {
+            PreparedStatement ps = con.prepareStatement(FIND_BY_THEME_ID_SQL, new String[]{"id"});
+            ps.setLong(1, themeId);
+            ResultSet resultSet = ps.executeQuery();
+
+            List<Reservation> reservations = new ArrayList<>();
+            while (resultSet.next()) {
+                reservations.add(Reservation.from(resultSet));
+            }
+
+            return reservations;
         } catch (SQLException e) {
             throw new ReservationException(RESERVATION_NOT_FOUND);
         }

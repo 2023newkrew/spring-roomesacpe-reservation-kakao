@@ -1,7 +1,6 @@
 package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.exception.ReservationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static nextstep.exception.ErrorCode.DUPLICATED_RESERVATION_EXISTS;
 import static nextstep.exception.ErrorCode.RESERVATION_NOT_FOUND;
@@ -26,15 +26,16 @@ public class JdbcReservationRepository extends ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> Reservation.from(resultSet);
+    private final RowMapper<Reservation> actorRowMapper =
+            (resultSet, rowNum) -> Reservation.from(resultSet);
 
     @Override
-    public Long save(LocalDate date, LocalTime time, String name, Theme theme) {
+    public Long save(LocalDate date, LocalTime time, String name, Long themeId) {
         validateReservation(date, time);
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         PreparedStatementCreator preparedStatementCreator = (connection) ->
-                getReservationPreparedStatement(connection, date, time, name, theme);
+                getReservationPreparedStatement(connection, date, time, name, themeId);
 
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();
@@ -51,7 +52,7 @@ public class JdbcReservationRepository extends ReservationRepository {
     @Override
     public Long save(Reservation reservation) {
         return this.save(reservation.getDate(), reservation.getTime(),
-                reservation.getName(), reservation.getTheme());
+                reservation.getName(), reservation.getThemeId());
     }
 
     @Override
@@ -62,6 +63,12 @@ public class JdbcReservationRepository extends ReservationRepository {
         } catch (DataAccessException e) {
             throw new ReservationException(RESERVATION_NOT_FOUND);
         }
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        List<Reservation> reservations = jdbcTemplate.query(FIND_BY_THEME_ID_SQL, actorRowMapper, themeId);
+        return reservations;
     }
 
     @Override
