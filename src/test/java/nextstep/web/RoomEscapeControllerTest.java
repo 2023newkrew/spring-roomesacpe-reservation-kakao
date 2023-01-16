@@ -1,15 +1,13 @@
 package nextstep.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
-import nextstep.repository.JdbcTemplateReservationRepository;
 import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
@@ -50,20 +48,9 @@ public class RoomEscapeControllerTest {
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 12, 14);
         LocalTime time = LocalTime.of(15, 5);
-        ReservationRequest request = new ReservationRequest(name, date, time);
 
-        ExtractableResponse<Response> response = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/reservations")
-                .then()
-                .extract();
+        Long id = 예약을_생성한다(name, date, time);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-
-        Long id = 생성된_예약_번호를_반환한다(response);
         Reservation reservation = repository.findById(id).orElseThrow();
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
@@ -77,18 +64,10 @@ public class RoomEscapeControllerTest {
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 4, 3);
         LocalTime time = LocalTime.of(12, 15);
-        Long id = 예약_생성_후_번호를_반환한다(name, date, time);
+        Long id = 예약을_생성한다(name, date, time);
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/reservations/" + id)
-                .then()
-                .extract();
+        ReservationResponse reservation = 예약을_조회한다(id);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-
-        ReservationResponse reservation = response.as(ReservationResponse.class);
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
         assertThat(reservation.getName()).isEqualTo(name);
@@ -100,41 +79,31 @@ public class RoomEscapeControllerTest {
     @DisplayName("에약을 삭제한다")
     @Test
     void deleteReservation() {
-        String name = "취소될 예약";
-        LocalDate date = LocalDate.of(2023, 5, 29);
-        LocalTime time = LocalTime.of(8, 30);
-        Long id = 예약_생성_후_번호를_반환한다(name, date, time);
+        Long id = 예약을_생성한다("취소될 예약", LocalDate.of(2023, 5, 29), LocalTime.of(8, 30));
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .delete("/reservations/" + id)
-                .then()
-                .extract();
+        예약을_삭제한다(id);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(repository.findById(id)).isEmpty();
     }
 
-    private Long 생성된_예약_번호를_반환한다(ExtractableResponse<Response> response) {
-        String id = response
-                .header(HttpHeaders.LOCATION)
-                .split("/")[2];
+    private Long 예약을_생성한다(String name, LocalDate date, LocalTime time) {
+        ReservationRequest request = new ReservationRequest(name, date, time);
+
+        String id = RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).body(request).when()
+                .post("/reservations").then().statusCode(HttpStatus.CREATED.value())
+                .header(HttpHeaders.LOCATION, notNullValue()).extract().header(HttpHeaders.LOCATION).split("/")[2];
+
         return Long.parseLong(id);
     }
 
-    private Long 예약_생성_후_번호를_반환한다(String name, LocalDate date, LocalTime time) {
-        ReservationRequest request = new ReservationRequest(name, date, time);
+    private ReservationResponse 예약을_조회한다(Long id) {
+        return RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
+                .get("/reservations/" + id).then().statusCode(HttpStatus.OK.value()).extract()
+                .as(ReservationResponse.class);
+    }
 
-        String id = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/reservations")
-                .then()
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/")[2];
-        return Long.parseLong(id);
+    private void 예약을_삭제한다(Long id) {
+        RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).when()
+                .delete("/reservations/" + id).then().statusCode(HttpStatus.NO_CONTENT.value()).extract();
     }
 }

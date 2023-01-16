@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.JdbcTemplateReservationRepository;
+import nextstep.repository.ReservationRepository;
 import nextstep.service.RoomEscapeService;
 import nextstep.web.dto.ReservationRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,13 +22,11 @@ class RoomEscapeServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private JdbcTemplateReservationRepository repository;
-
     private RoomEscapeService roomEscapeService;
 
     @BeforeEach
     void setUp() {
-        repository = new JdbcTemplateReservationRepository(jdbcTemplate);
+        ReservationRepository repository = new JdbcTemplateReservationRepository(jdbcTemplate);
         roomEscapeService = new RoomEscapeService(repository);
     }
 
