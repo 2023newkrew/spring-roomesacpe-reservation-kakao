@@ -1,6 +1,7 @@
 package nextstep.service;
 
 import nextstep.dto.ThemeRequest;
+import nextstep.exception.ThemeDuplicateException;
 import nextstep.exception.ThemeNotFoundException;
 import nextstep.exception.ThemeReservationExistsException;
 import nextstep.model.Reservation;
@@ -9,6 +10,7 @@ import nextstep.web.JdbcTemplateThemeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ThemeService {
@@ -20,7 +22,15 @@ public class ThemeService {
     }
 
     public Theme createTheme(ThemeRequest request) {
+        if (existsThemeByName(request.getName())) {
+            throw new ThemeDuplicateException();
+        }
         return themeRepository.save(new Theme(null, request.getName(), request.getDesc(), request.getPrice()));
+    }
+
+    private Boolean existsThemeByName(String name) {
+        Optional<Theme> optional =  themeRepository.findByName(name);
+        return optional.isPresent();
     }
 
     public Theme getTheme(Long id) {

@@ -37,12 +37,12 @@ public class JdbcTemplateThemeRepository {
     }
 
     public Optional<Theme> findById(Long id) {
+        String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?";
+        RowMapper<Theme> mapper = (rs, rowNum) ->
+                new Theme(id, rs.getString("name"), rs.getString("desc"), rs.getInt("price"));
         try {
-            String sql = "SELECT id, name, desc, price FROM theme WHERE id = ?";
-            RowMapper<Theme> mapper = (rs, rowNum) ->
-                    new Theme(id, rs.getString("name"), rs.getString("desc"), rs.getInt("price"));
-
-            return Optional.of(jdbcTemplate.queryForObject(sql, mapper, id));
+            Theme theme = jdbcTemplate.queryForObject(sql, mapper, id);
+            return Optional.of(theme);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -52,5 +52,17 @@ public class JdbcTemplateThemeRepository {
         String sql = "DELETE FROM theme WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    public Optional<Theme> findByName(String name) {
+        String sql = "SELECT id, name, desc, price FROM theme WHERE name = ?";
+        RowMapper<Theme> mapper = (rs, rowNum) -> new Theme(rs.getLong("id"), name, rs.getString("desc"), rs.getInt("price"));
+
+        try {
+            Theme theme = jdbcTemplate.queryForObject(sql, mapper, name);
+            return Optional.of(theme);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
