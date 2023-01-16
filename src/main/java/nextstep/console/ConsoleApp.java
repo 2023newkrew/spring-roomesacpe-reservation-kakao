@@ -5,7 +5,7 @@ import static nextstep.console.ConsoleCommand.QUIT;
 import nextstep.console.controller.ReservationConsoleController;
 import nextstep.console.controller.ThemeConsoleController;
 import nextstep.console.view.View;
-import nextstep.dto.ConnectionHandler;
+import nextstep.console.utils.ConnectionHandler;
 import org.springframework.stereotype.Component;
 
 @Component

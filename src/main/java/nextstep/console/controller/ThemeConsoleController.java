@@ -6,7 +6,7 @@ import static nextstep.console.ConsoleCommand.EDIT;
 import static nextstep.console.ConsoleCommand.FIND;
 
 import nextstep.console.view.View;
-import nextstep.dto.ConnectionHandler;
+import nextstep.console.utils.ConnectionHandler;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;

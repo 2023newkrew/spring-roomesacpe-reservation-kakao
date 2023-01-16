@@ -7,7 +7,7 @@ import static nextstep.console.ConsoleCommand.FIND;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.console.view.View;
-import nextstep.dto.ConnectionHandler;
+import nextstep.console.utils.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ThemeResponseDto;
 import nextstep.entity.Reservation;

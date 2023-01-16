@@ -14,7 +14,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
-import nextstep.dto.ConnectionHandler;
+import nextstep.console.utils.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;

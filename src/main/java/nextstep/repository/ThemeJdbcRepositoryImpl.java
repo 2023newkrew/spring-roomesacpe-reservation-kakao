@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-import nextstep.dto.ConnectionHandler;
+import nextstep.console.utils.ConnectionHandler;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;

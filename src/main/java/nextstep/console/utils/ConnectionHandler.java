@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.console.utils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
