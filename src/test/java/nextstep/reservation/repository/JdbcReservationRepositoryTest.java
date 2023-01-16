@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -173,6 +174,16 @@ class JdbcReservationRepositoryTest {
                     Arguments.of(new ReservationRequest("2022-08-11", "16:00", "류성현", 1L)),
                     Arguments.of(new ReservationRequest("2022-08-13", "13:00", "pluto", 1L))
             );
+        }
+
+        @DisplayName("테마가 존재하지 않을 경우 예외 발생")
+        @Test
+        void should_throwException_when_themeNotExists() {
+            ReservationRequest request = new ReservationRequest("2022-08-11", "14:00", "류성현", 0L);
+            Reservation reservation = mapper.fromRequest(request);
+
+            Assertions.assertThatThrownBy(() -> repository.insert(reservation))
+                    .isInstanceOf(DataIntegrityViolationException.class);
         }
     }
 

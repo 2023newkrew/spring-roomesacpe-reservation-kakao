@@ -3,11 +3,13 @@ package nextstep.reservation.service;
 import lombok.RequiredArgsConstructor;
 import nextstep.etc.exception.ErrorMessage;
 import nextstep.etc.exception.ReservationException;
+import nextstep.etc.exception.ThemeException;
 import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.ReservationRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +29,12 @@ public class ReservationServiceImpl implements ReservationService {
         if (repository.existsByTimetable(reservation)) {
             throw new ReservationException(ErrorMessage.RESERVATION_CONFLICT);
         }
-        reservation = repository.insert(reservation);
+        try {
+            reservation = repository.insert(reservation);
+        }
+        catch (DataIntegrityViolationException ignore) {
+            throw new ThemeException(ErrorMessage.THEME_NOT_EXISTS);
+        }
 
         return mapper.toResponse(reservation);
     }

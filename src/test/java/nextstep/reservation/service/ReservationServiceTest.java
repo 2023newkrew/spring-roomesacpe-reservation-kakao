@@ -2,6 +2,7 @@ package nextstep.reservation.service;
 
 import nextstep.etc.exception.ErrorMessage;
 import nextstep.etc.exception.ReservationException;
+import nextstep.etc.exception.ThemeException;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
@@ -87,6 +88,16 @@ class ReservationServiceTest {
                     Arguments.of(new ReservationRequest("2022-08-12", "13:00", "류성현", 1L)),
                     Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현", 1L))
             );
+        }
+
+        @DisplayName("테마가 존재하지 않을 경우 예외 발생")
+        @Test
+        void should_throwException_when_themeNotExists() {
+            ReservationRequest request = new ReservationRequest("2022-08-11", "14:00", "류성현", 0L);
+
+            Assertions.assertThatThrownBy(() -> service.create(request))
+                    .isInstanceOf(ThemeException.class)
+                    .hasMessage(ErrorMessage.THEME_NOT_EXISTS.getErrorMessage());
         }
     }
 
