@@ -2,8 +2,7 @@ package nextstep.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.Reservation;
-import nextstep.Theme;
-import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationRequestDTO;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.ReservationService;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository repository;
 
     @Override
-    public Long create(ReservationRequest request) {
+    public Long create(ReservationRequestDTO request) {
         LocalDate date = LocalDate.parse(request.getDate());
         LocalTime time = LocalTime.parse(request.getTime() + ":00");
         String name = request.getName();

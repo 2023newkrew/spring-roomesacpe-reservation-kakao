@@ -1,7 +1,7 @@
 package nextstep.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.dto.ReservationRequest;
+import nextstep.dto.ReservationRequestDTO;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class ReservationController {
     private final ReservationService service;
 
     @PostMapping
-    public ResponseEntity<?> createReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<?> createReservation(@RequestBody ReservationRequestDTO request) {
         URI location = URI.create(RESERVATION_PATH + "/" + service.create(request));
 
         return ResponseEntity.created(location)
