@@ -22,12 +22,12 @@ public class RoomEscapeApplication {
         ReservationDAO dao = new SimpleReservationDAO();
         ReservationRepository repository = new ReservationRepositoryImpl(dao);
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
 
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
-            System.out.println("- 예약하기: add {date},{time},{name} ex) add 2022-08-11,13:00,류성현");
+            System.out.println("- 예약하기: add {date},{time},{name},{theme id} ex) add 2022-08-11,13:00,류성현,1");
             System.out.println("- 예약조회: find {id} ex) find 1");
             System.out.println("- 예약취소: delete {id} ex) delete 1");
             System.out.println("- 종료: quit");
@@ -39,13 +39,14 @@ public class RoomEscapeApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
+                Long theme_id = Long.parseLong(params.split(",")[3]);
 
                 Reservation reservation = new Reservation(
                         null,
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        theme
+                        theme_id
                 );
                 Long id = repository.insertIfNotExistsDateTime(reservation);
                 reservation = repository.getById(id);
@@ -55,6 +56,7 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
+                System.out.println(("예약 테마 번호 : " + reservation.getTheme_id()));
             }
 
             if (input.startsWith(FIND)) {
@@ -68,12 +70,13 @@ public class RoomEscapeApplication {
                     System.out.println("예약 날짜: " + reservation.getDate());
                     System.out.println("예약 시간: " + reservation.getTime());
                     System.out.println("예약자 이름: " + reservation.getName());
-                    System.out.println("예약 테마 이름: " + reservation.getTheme()
-                            .getName());
-                    System.out.println("예약 테마 설명: " + reservation.getTheme()
-                            .getDesc());
-                    System.out.println("예약 테마 가격: " + reservation.getTheme()
-                            .getPrice());
+//                    System.out.println("예약 테마 이름: " + reservation.getTheme()
+//                            .getName());
+//                    System.out.println("예약 테마 설명: " + reservation.getTheme()
+//                            .getDesc());
+//                    System.out.println("예약 테마 가격: " + reservation.getTheme()
+//                            .getPrice());
+                    System.out.println("예약 테마 번호: " + reservation.getTheme_id());
                 }
             }
 
