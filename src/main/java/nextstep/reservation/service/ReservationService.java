@@ -6,14 +6,12 @@ import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.dto.ThemeResponse;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.exception.RoomEscapeException;
-import nextstep.reservation.exception.RoomEscapeExceptionCode;
 import nextstep.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.DUPLICATE_TIME_RESERVATION;
+import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_RESERVATION;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +33,8 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public ReservationResponse findById(long id) {
-        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        if (optionalReservation.isEmpty()) {
-            throw new RoomEscapeException(RoomEscapeExceptionCode.NO_SUCH_RESERVATION);
-        }
-        Reservation reservation = optionalReservation.get();
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new RoomEscapeException(NO_SUCH_RESERVATION));
         ThemeResponse theme = themeService.findById(reservation.getThemeId());
         return ReservationResponse.from(reservation, theme);
     }

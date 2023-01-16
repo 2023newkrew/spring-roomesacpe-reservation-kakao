@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
@@ -28,11 +27,8 @@ public class ThemeService {
 
     @Transactional(readOnly = true)
     public ThemeResponse findById(long id) {
-        Optional<Theme> foundedThemeOptional = themeRepository.findById(id);
-        if (foundedThemeOptional.isEmpty()) {
-            throw new RoomEscapeException(NO_SUCH_THEME);
-        }
-        Theme foundedTheme = foundedThemeOptional.get();
+        Theme foundedTheme = themeRepository.findById(id)
+                .orElseThrow(() -> new RoomEscapeException(NO_SUCH_THEME));
         return ThemeResponse.from(foundedTheme);
     }
 
