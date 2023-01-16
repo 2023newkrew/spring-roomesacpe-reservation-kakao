@@ -20,9 +20,8 @@ public class themeReservationController {
 
     @GetMapping("/{id}")
     ResponseEntity<ReservationDetail> getReservations(@NonNull @PathVariable("id") Long id){
-        return themeReservationService.findById(id)
-                .map((reservationDetail) -> ResponseEntity.ok().body(reservationDetail))
-                .orElse(ResponseEntity.notFound().build());
+        ReservationDetail reservationDetail = themeReservationService.findById(id);
+        return ResponseEntity.ok().body(reservationDetail);
     }
 
     @PostMapping

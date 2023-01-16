@@ -14,8 +14,6 @@ import nextstep.theme.exception.ThemeErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ThemeReservationServiceImpl implements ThemeReservationService {
@@ -55,13 +53,13 @@ public class ThemeReservationServiceImpl implements ThemeReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ReservationDetail> findById(Long id){
+    public ReservationDetail findById(Long id){
         Reservation reservation = themeReservationDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ThemeReservationErrorCode.RESERVATION_NOT_FOUND));
 
         Theme theme = themeDao.findById(reservation.getThemeId())
                 .orElseThrow(() -> new EntityNotFoundException(ThemeErrorCode.THEME_NOT_FOUND));
 
-        return Optional.of(new ReservationDetail(reservation, theme));
+        return new ReservationDetail(reservation, theme);
     }
 }
