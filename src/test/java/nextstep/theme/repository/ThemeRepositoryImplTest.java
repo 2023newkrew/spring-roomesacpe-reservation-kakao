@@ -4,15 +4,17 @@ import nextstep.theme.domain.Theme;
 import nextstep.theme.repository.jdbc.ThemeResultSetParser;
 import nextstep.theme.repository.jdbc.ThemeStatementCreator;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
+
+import java.util.List;
 
 @SqlGroup(
         {
@@ -61,6 +63,46 @@ class ThemeRepositoryImplTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class getById {
+
+        @BeforeEach
+        void setUp() {
+            List<Theme> themes = List.of(
+                    new Theme(null, "theme1", "theme1", 1000),
+                    new Theme(null, "theme2", "theme2", 2000),
+                    new Theme(null, "theme3", "theme3", 3000)
+            );
+            insertTestThemes(themes);
+        }
+
+        @DisplayName("ID와 일치하는 예약 확인")
+        @ParameterizedTest
+        @MethodSource
+        void should_returnTheme_when_givenId(Long id, Theme theme) {
+            Theme actual = repository.getById(id);
+
+            Assertions.assertThat(actual)
+                    .extracting(
+                            Theme::getId,
+                            Theme::getName,
+                            Theme::getDesc,
+                            Theme::getPrice
+                    )
+                    .contains(
+                            id,
+                            theme.getName(),
+                            theme.getDesc(),
+                            theme.getPrice()
+                    );
+        }
+
+
+        List<Arguments> should_returnTheme_when_givenId() {
+            return List.of(
+                    Arguments.of(1L, new Theme(null, "theme1", "theme1", 1000)),
+                    Arguments.of(2L, new Theme(null, "theme2", "theme2", 2000)),
+                    Arguments.of(3L, new Theme(null, "theme3", "theme3", 3000))
+            );
+        }
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -76,5 +118,11 @@ class ThemeRepositoryImplTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @Nested
     class delete {
+    }
+
+    private void insertTestThemes(List<Theme> themes) {
+        themes.forEach(theme -> {
+            jdbcTemplate.update(connection -> statementCreator.createInsert(connection, theme));
+        });
     }
 }

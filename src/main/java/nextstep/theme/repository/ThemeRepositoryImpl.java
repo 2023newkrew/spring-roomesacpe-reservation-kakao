@@ -38,7 +38,14 @@ public class ThemeRepositoryImpl implements ThemeRepository {
 
     @Override
     public Theme getById(Long id) {
-        return null;
+        return jdbcTemplate.query(
+                getSelectByIdStatementCreator(id),
+                resultSetParser::parseTheme
+        );
+    }
+
+    private PreparedStatementCreator getSelectByIdStatementCreator(Long id) {
+        return connection -> statementCreator.createSelectById(connection, id);
     }
 
     @Override
