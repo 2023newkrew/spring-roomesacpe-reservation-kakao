@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import web.domain.Theme;
 import web.dto.request.ThemeRequestDTO;
 import web.dto.response.ThemeIdDto;
+import web.dto.response.ThemeResponseDTO;
 import web.exception.DuplicatedThemeException;
 import web.repository.ThemeJdbcRepository;
 
@@ -34,5 +35,9 @@ public class ThemeService {
         if (ids.size() > 0) {
             throw new DuplicatedThemeException();
         }
+    }
+
+    public List<ThemeResponseDTO> findAllThemes() {
+        return themeJdbcRepository.findAllThemes();
     }
 }

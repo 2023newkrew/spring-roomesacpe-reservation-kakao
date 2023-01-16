@@ -48,4 +48,16 @@ public class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value());
     }
+
+    @DisplayName("테마 목록 조회를 성공하면 200 반환")
+    @Test
+    @Order(3)
+    void findAllThemes() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+    }
 }

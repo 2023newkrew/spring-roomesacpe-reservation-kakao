@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.domain.Theme;
 import web.dto.response.ThemeIdDto;
+import web.dto.response.ThemeResponseDTO;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -39,6 +40,17 @@ public class ThemeJdbcRepository {
         }, keyHolder);
 
         return new ThemeIdDto((Long) keyHolder.getKey());
+    }
+
+    public List<ThemeResponseDTO> findAllThemes() {
+        String sql = "SELECT * FROM theme";
+
+        return jdbcTemplate.query(sql, ((rs, rowNum) -> new ThemeResponseDTO(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("desc"),
+                rs.getInt("price")
+                )));
     }
 
 }
