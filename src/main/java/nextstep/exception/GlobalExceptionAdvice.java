@@ -1,18 +1,14 @@
-package nextstep.reservation.exception;
+package nextstep.exception;
 
-import nextstep.exception.ConstraintViolationException;
-import nextstep.exception.EntityNotFoundException;
-import nextstep.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ThemeExceptionAdvice {
+public class GlobalExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     ResponseEntity<ErrorResponse> entityNotFoundException(RuntimeException err){
-        err.printStackTrace();
         return ResponseEntity.internalServerError().build();
     }
 
@@ -23,7 +19,7 @@ public class ThemeExceptionAdvice {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    ResponseEntity<ErrorResponse> contraintViolationException(ConstraintViolationException err){
+    ResponseEntity<ErrorResponse> constraintViolationException(ConstraintViolationException err){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(err.getMessage()));
     }
