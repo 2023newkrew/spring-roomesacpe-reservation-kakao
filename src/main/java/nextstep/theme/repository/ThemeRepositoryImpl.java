@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nextstep.theme.domain.Theme;
 import nextstep.theme.repository.jdbc.ThemeResultSetParser;
 import nextstep.theme.repository.jdbc.ThemeStatementCreator;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -23,7 +24,7 @@ public class ThemeRepositoryImpl implements ThemeRepository {
 
 
     @Override
-    public Theme insert(Theme theme) {
+    public Theme insert(Theme theme) throws DuplicateKeyException {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> statementCreator.createInsert(connection, theme),
@@ -51,7 +52,7 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public Theme update(Theme theme) {
+    public Theme update(Theme theme) throws DuplicateKeyException {
         return null;
     }
 

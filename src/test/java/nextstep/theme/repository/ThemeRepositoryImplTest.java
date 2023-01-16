@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -50,15 +51,26 @@ class ThemeRepositoryImplTest {
         @DisplayName("호출 횟수만큼 ID가 증가하는지 확인")
         @Test
         void should_increaseId_when_insertTwice() {
-            var theme = new Theme(null, "name", "desc", 1000);
+            var theme1 = new Theme(null, "theme1", "desc", 1000);
+            var theme2 = new Theme(null, "theme2", "desc", 1000);
 
-            Long id1 = repository.insert(theme)
+            Long id1 = repository.insert(theme1)
                     .getId();
-            Long id2 = repository.insert(theme)
+            Long id2 = repository.insert(theme2)
                     .getId();
 
             Assertions.assertThat(id1 + 1L)
                     .isEqualTo(id2);
+        }
+
+        @DisplayName("이름이 중복될 경우 예외 발생")
+        @Test
+        void should_throwException_when_nameDuplicated() {
+            var theme = new Theme(null, "theme", "desc", 1000);
+            repository.insert(theme);
+
+            Assertions.assertThatThrownBy(() -> repository.insert(theme))
+                    .isInstanceOf(DuplicateKeyException.class);
         }
     }
 
