@@ -1,26 +1,24 @@
-package nextstep.service;
+package nextstep.reservation.service;
 
 import nextstep.RoomEscapeWebApplication;
 import nextstep.exception.EntityNotFoundException;
+import nextstep.reservation.ThemeReservationMock;
 import nextstep.reservation.dto.ReservationDetail;
 import nextstep.reservation.dto.ReservationDto;
-import nextstep.reservation.service.ThemeReservationService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(classes = RoomEscapeWebApplication.class)
+@Transactional
 class ThemeReservationServiceTest {
     public static final String RESERVATION_DATE = "2022-12-20";
     @Autowired
@@ -29,7 +27,7 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("방탈출 예약하기")
     void test1(){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:01");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto();
 
         Long reservationId = themeReservationService.reserve(reservationDto);
         Optional<ReservationDetail> findReservation = themeReservationService.findById(reservationId);
@@ -39,7 +37,7 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("이미 예약된 방탈출 예약을 취소한다.")
     void test2(){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "13:02");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto();
         Long reservationId = themeReservationService.reserve(reservationDto);
 
         themeReservationService.cancelById(reservationId);
@@ -64,20 +62,11 @@ class ThemeReservationServiceTest {
     @Test
     @DisplayName("날짜와 시간이 같은 예약은 할 수 없다.")
     void test7() {
-        ReservationDto reservation1 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
-        ReservationDto reservation2 = makeRandomReservationDto(RESERVATION_DATE, "13:07");
+        ReservationDto reservation1 = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "13:07");
+        ReservationDto reservation2 = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "13:07");
 
         themeReservationService.reserve(reservation1);
         Assertions.assertThatThrownBy(() -> themeReservationService.reserve(reservation2))
                 .isInstanceOf(RuntimeException.class);
     }
-
-    ReservationDto makeRandomReservationDto(String date, String time){
-        List<String> names = List.of("omin", "ethan", "java");
-
-        int index = ThreadLocalRandom.current().nextInt(3);
-
-        return new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), names.get(index), null);
-    }
-
 }

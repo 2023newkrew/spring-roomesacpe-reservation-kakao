@@ -1,8 +1,10 @@
-package nextstep;
+package nextstep.reservation.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
+import nextstep.RoomEscapeWebApplication;
+import nextstep.reservation.ThemeReservationMock;
 import nextstep.reservation.dto.ReservationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,16 +17,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = RoomEscapeWebApplication.class)
-class themeReservationControllerTest {
+@Transactional
+class ThemeReservationControllerTest {
     public static final String RESERVATION_DATE = "2022-11-22";
     public static final String RESERVATION_URL = "/reservations";
     public static final Long NOT_EXIST_RESERVATION_ID = Long.MAX_VALUE;
@@ -43,7 +45,7 @@ class themeReservationControllerTest {
     @Test
     @DisplayName("예약 성공 시 상태코드는 CREATED이다.")
     void test1(){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:01");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:01");
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -51,7 +53,7 @@ class themeReservationControllerTest {
     @Test
     @DisplayName("이미 예약된 날짜/시간에 예약하는 경우, 상태 코드는 BAD_REQUEST이다.")
     void test2(){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:02");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:02");
         sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL);
 
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
@@ -61,7 +63,7 @@ class themeReservationControllerTest {
     @Test
     @DisplayName("예약 요청 정보가 온전히 저장되어야 한다.")
     void test3(){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:05");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:05");
         String location = sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .getHeader(HttpHeaders.LOCATION);
 
@@ -90,7 +92,7 @@ class themeReservationControllerTest {
     @Test
     @DisplayName("취소한 예약은 조회할 수 없어야 한다.")
     void test6(){
-        ReservationDto reservationDto = makeRandomReservationDto(RESERVATION_DATE, "16:08");
+        ReservationDto reservationDto = ThemeReservationMock.makeRandomReservationDto(RESERVATION_DATE, "16:08");
 
         String location = sendRequest(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .getHeader(HttpHeaders.LOCATION);
@@ -109,13 +111,6 @@ class themeReservationControllerTest {
 
         getValidationResponse(reservationDto, HttpMethod.POST, RESERVATION_URL)
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    ReservationDto makeRandomReservationDto(String date, String time){
-        List<String> names = List.of("omin", "ethan", "java");
-        int randomIndex = ThreadLocalRandom.current().nextInt(names.size());
-
-        return new ReservationDto(LocalDate.parse(date), LocalTime.parse(time), names.get(randomIndex), null);
     }
 
     private static Response sendRequest(Object body, HttpMethod httpMethod, String url) {
