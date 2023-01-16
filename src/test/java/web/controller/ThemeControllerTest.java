@@ -88,4 +88,26 @@ public class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
+
+    @DisplayName("예약 취소를 성공하면 204 반환")
+    @Test
+    @Order(4)
+    void deleteTheme() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("없는 예약을 취소하면 404를 반환")
+    @Test
+    @Order(4)
+    void deleteNotExistingTheme() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/99")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
 }

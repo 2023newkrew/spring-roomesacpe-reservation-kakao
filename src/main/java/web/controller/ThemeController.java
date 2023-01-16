@@ -46,4 +46,11 @@ public class ThemeController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{themeId}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long themeId) {
+
+        themeService.deleteThemeById(themeId);
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -45,4 +45,9 @@ public class ThemeService {
         themeJdbcRepository.findThemeById(themeId);
         themeJdbcRepository.updateTheme(themeId, themeRequestDTO);
     }
+
+    public void deleteThemeById(Long themeId) {
+        themeJdbcRepository.findThemeById(themeId);
+        themeJdbcRepository.deleteTheme(themeId);
+    }
 }
