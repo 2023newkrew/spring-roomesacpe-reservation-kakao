@@ -68,4 +68,4 @@
 ### 추가 리팩토링 목록
 - [x] upsert -> update 로 수정하기 (기능 구분하기)
 - [x] DB 연결 정보 config 파일로 구분하기
-- [ ] Spring DataSource 연결/관리 방법 적용하기  
+- [x] Spring DataSource 연결/관리 방법 적용하기  
