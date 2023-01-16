@@ -49,5 +49,12 @@ public class ThemeService {
         theme.setPrice(themeRequestDto.getPrice());
         themeRepository.update(theme);
     }
+
+    public void delete(Long id) {
+        themeRepository.findById(id)
+                .orElseThrow(ThemeNotFoundException::new);
+
+        themeRepository.delete(id);
+    }
 }
 

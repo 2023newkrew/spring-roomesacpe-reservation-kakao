@@ -71,6 +71,12 @@ public class ThemeJdbcTemplateRepository implements ThemeRepository {
         jdbcTemplate.update(sql, theme.getId(), theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
+    @Override
+    public void delete(Long id) {
+        String sql = "DELETE FROM theme WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     public void clear() {
         String sql = "DELETE FROM theme";
         jdbcTemplate.update(sql);

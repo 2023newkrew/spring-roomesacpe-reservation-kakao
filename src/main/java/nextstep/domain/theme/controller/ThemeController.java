@@ -44,4 +44,10 @@ public class ThemeController {
         themeService.update(id, themeRequestDto);
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        themeService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

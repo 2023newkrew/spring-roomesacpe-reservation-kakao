@@ -18,5 +18,8 @@ public interface ThemeRepository {
 
     void update(Theme theme);
 
+    void delete(Long id);
+
     void clear();
+
 }
