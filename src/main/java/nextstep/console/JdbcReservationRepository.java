@@ -1,6 +1,7 @@
 package nextstep.console;
 
 import nextstep.model.Reservation;
+import nextstep.repository.ReservationSQL;
 import nextstep.util.JdbcRemoveDuplicateUtils;
 import nextstep.repository.ReservationRepository;
 
@@ -16,7 +17,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
+        String sql = ReservationSQL.INSERT.toString();
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
@@ -34,7 +35,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT date, time, name, theme_id FROM reservation WHERE id = ?";
+        String sql = ReservationSQL.SELECT_BY_ID.toString();
 
         try (Connection con = createConnection();
             PreparedStatement ps = con.prepareStatement(sql)) {
@@ -53,7 +54,8 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findByThemeId(Long themeId) {
-        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE theme_id = ?";
+        String sql = ReservationSQL.SELECT_BY_THEME_ID.toString();
+
         List<Reservation> reservations = new ArrayList<>();
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -72,7 +74,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT count(*) as count FROM reservation WHERE date=? AND time=?";
+        String sql = ReservationSQL.COUNT_BY_DATE_AND_TIME.toString();
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -88,7 +90,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = ReservationSQL.DELETE_BY_ID.toString();
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
