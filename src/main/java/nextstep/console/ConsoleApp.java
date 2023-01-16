@@ -2,7 +2,6 @@ package nextstep.console;
 
 import static nextstep.console.ConsoleCommand.QUIT;
 
-import java.sql.SQLException;
 import nextstep.console.controller.ReservationConsoleController;
 import nextstep.console.controller.ThemeConsoleController;
 import nextstep.console.view.View;
@@ -15,7 +14,7 @@ public class ConsoleApp {
     private static final ConnectionHandler connectionHandler = new ConnectionHandler();
 
     private static final View view = new View();
-    private static final ReservationConsoleController RESERVATION_CONSOLE_CONTROLLER = new ReservationConsoleController(
+    private static final ReservationConsoleController reservationConsoleController = new ReservationConsoleController(
             connectionHandler, view);
     private static final ThemeConsoleController themeConsole = new ThemeConsoleController(connectionHandler, view);
 
@@ -25,7 +24,7 @@ public class ConsoleApp {
             try {
                 view.printCommand();
                 String input = view.readLine();
-                RESERVATION_CONSOLE_CONTROLLER.executeReservationCommand(input);
+                reservationConsoleController.executeReservationCommand(input);
                 if (input.startsWith("theme")) {
                     themeConsole.executeThemeCommand(input);
                 }
