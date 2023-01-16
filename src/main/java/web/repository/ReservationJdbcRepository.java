@@ -17,11 +17,11 @@ import java.util.List;
 @Repository
 public class ReservationJdbcRepository {
 
+    private final JdbcTemplate jdbcTemplate;
+
     public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    private final JdbcTemplate jdbcTemplate;
 
     public List<Long> findAllReservationWithDateAndTime(Reservation reservation) {
 
