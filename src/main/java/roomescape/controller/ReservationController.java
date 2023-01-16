@@ -34,20 +34,20 @@ public class ReservationController {
         ).build();
     }
 
-    @GetMapping("/{reservationId}")
+    @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(
-            @PathVariable Long reservationId
+            @PathVariable Long id
     ) {
         return ResponseEntity.ok(
-                reservationService.getReservation(reservationId)
+                reservationService.getReservation(id)
         );
     }
 
-    @DeleteMapping("/{reservationId}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(
-            @PathVariable Long reservationId
+            @PathVariable Long id
     ) {
-        reservationService.deleteReservation(reservationId);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }
