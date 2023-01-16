@@ -63,4 +63,17 @@ class ThemeRepositoryTest {
         Optional<Theme> findTheme = themeRepository.findById(createTheme.getId());
         assertTrue(findTheme.isEmpty());
     }
+
+    @Test
+    @Transactional
+    void updateById() {
+        Theme theme = new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme createTheme = themeRepository.create(theme);
+        themeRepository.updateById(createTheme.getId(), new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 28000));
+        Theme findTheme = themeRepository.findById(createTheme.getId()).get();
+        assertEquals("워너고홈", findTheme.getName());
+        assertEquals("병맛 어드벤처 회사 코믹물", findTheme.getDesc());
+        assertEquals(28000, findTheme.getPrice());
+
+    }
 }

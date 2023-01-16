@@ -79,6 +79,12 @@ public class ThemeRepository {
 
     }
 
+    public int updateById(Long id, Theme theme){
+        String sql = "update theme set name=?, desc=?, price=?" +
+                "where id = ?";
+        return jdbcTemplate.update(sql, theme.getName(), theme.getDesc(), theme.getPrice(), id);
+    }
+
     public Boolean delete(Long id){
         String sql = "delete from theme where id = ?";
         return jdbcTemplate.update(sql, Long.valueOf(id)) == 1 ;
