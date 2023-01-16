@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ThemeJdbcDao implements ThemeDao{
+public class ThemeJdbcDao implements ThemeDao {
     private Connection getConnection() {
         Connection con = null;
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(JdbcConfigForConsole.URL, JdbcConfigForConsole.ID, JdbcConfigForConsole.PASSWORD);
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());

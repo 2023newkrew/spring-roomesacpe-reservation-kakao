@@ -33,10 +33,7 @@ public class ReservationService {
         LocalTime time = reservationRequest.getTime();
         Long themeId = reservationRequest.getThemeId();
 
-        if (reservationDao.countByDateAndTimeAndThemeId(date, time, themeId) > 0) {
-            throw new InvalidRequestException(ErrorCode.RESERVATION_DUPLICATED);
-        }
-
+        validateDuplication(date, time, themeId);
         validateId(themeId);
         Optional<Theme> themeFound = themeDao.findById(themeId);
         if (themeFound.isEmpty()) {
@@ -47,13 +44,21 @@ public class ReservationService {
         return reservationDao.save(newReservation);
     }
 
+    private void validateDuplication(LocalDate date, LocalTime time, Long themeId) {
+        if (reservationDao.countByDateAndTimeAndThemeId(date, time, themeId) > 0) {
+            throw new InvalidRequestException(ErrorCode.RESERVATION_DUPLICATED);
+        }
+    }
+
     public ReservationResponse retrieve(Long id) {
         validateId(id);
-        Optional<Reservation> reservationFound = reservationDao.findById(id);
-        if (reservationFound.isEmpty()) {
+        return new ReservationResponse(getReservationById(id));
+    }
+
+    private Reservation getReservationById(Long id) {
+        return reservationDao.findById(id).orElseThrow(() -> {
             throw new InvalidRequestException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
-        return new ReservationResponse(reservationFound.get());
+        });
     }
 
     private void validateId(Long id) {
@@ -64,9 +69,7 @@ public class ReservationService {
 
     public void delete(Long id) {
         validateId(id);
-        if (reservationDao.findById(id).isEmpty()) {
-            throw new InvalidRequestException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
+        getReservationById(id);
         reservationDao.delete(id);
     }
 }

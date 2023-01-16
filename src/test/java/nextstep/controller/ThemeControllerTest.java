@@ -178,7 +178,7 @@ class ThemeControllerTest {
                 .body("price", is(23000));
     }
 
-    @DisplayName("수정 - 등록되지 않은 id 와 theme 정보로 요청시 새롭게 생성이 되어야 한다.")
+    @DisplayName("수정 - 등록되지 않은 id 와 theme 정보로 요청시 예외처리 되어야 한다.")
     @Test
     void updateByNotCreatedId() {
         Map<String, String> request = new HashMap<>() {{
@@ -192,8 +192,7 @@ class ThemeControllerTest {
                 .body(request)
                 .when().put("/themes/100")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/themes/2");
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("수정 - 유효하지 않은 id 로 요청시 예외처리 되어야 한다.")

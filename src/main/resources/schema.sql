@@ -1,4 +1,4 @@
-CREATE TABLE theme
+CREATE TABLE IF NOT EXISTS theme
 (
     id    bigint not null auto_increment,
     name  varchar(20),
@@ -7,7 +7,7 @@ CREATE TABLE theme
     primary key (id)
 );
 
-CREATE TABLE RESERVATION
+CREATE TABLE IF NOT EXISTS RESERVATION
 (
     id       bigint not null auto_increment,
     date     date,

@@ -15,7 +15,7 @@ public class ReservationJdbcDao implements ReservationDao {
     private Connection getConnection() {
         Connection con = null;
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
+            con = DriverManager.getConnection(JdbcConfigForConsole.URL, JdbcConfigForConsole.ID, JdbcConfigForConsole.PASSWORD);
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
