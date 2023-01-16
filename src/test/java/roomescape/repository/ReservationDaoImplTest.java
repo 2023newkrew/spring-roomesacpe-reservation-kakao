@@ -14,7 +14,7 @@ import java.time.LocalTime;
 import roomescape.reservation.repository.dao.ReservationDao;
 import roomescape.reservation.repository.dao.ReservationDaoImpl;
 
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ReservationDaoImplTest {
     private final static LocalDate testDate = LocalDate.now();
     private final static LocalTime testTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);

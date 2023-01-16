@@ -18,6 +18,7 @@ public class ThemeService {
     public ThemeService(ThemeRepository themeRepository) {
         this.themeRepository = themeRepository;
     }
+
     public long createTheme(ThemeRequestDto themeRequestDto) {
         Theme theme = themeRequestDto.toEntity();
         validateNonExistentTheme(theme.getName());
@@ -39,7 +40,7 @@ public class ThemeService {
     }
 
     public ThemeResponseDto findThemeById(Long themeId) {
-        Theme theme = themeRepository.findById(themeId).orElseThrow(() -> new ThemeNotFoundException());
+        Theme theme = themeRepository.findById(themeId).orElseThrow(ThemeNotFoundException::new);
         return ThemeResponseDto.of(theme);
     }
 

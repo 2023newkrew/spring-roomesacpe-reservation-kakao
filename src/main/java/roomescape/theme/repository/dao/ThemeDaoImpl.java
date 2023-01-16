@@ -14,6 +14,7 @@ import roomescape.entity.Theme;
 @Repository
 public class ThemeDaoImpl implements ThemeDao {
     private final JdbcTemplate jdbcTemplate;
+
     public ThemeDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -43,8 +44,7 @@ public class ThemeDaoImpl implements ThemeDao {
                     .desc(resultSet.getString("desc"))
                     .price(resultSet.getInt("price"))
                     .build(), id);
-        }
-        catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
         return Optional.ofNullable(theme);
@@ -60,8 +60,7 @@ public class ThemeDaoImpl implements ThemeDao {
                     .desc(resultSet.getString("desc"))
                     .price(resultSet.getInt("price"))
                     .build());
-        }
-        catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
     }

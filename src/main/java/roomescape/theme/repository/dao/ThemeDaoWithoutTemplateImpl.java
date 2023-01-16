@@ -60,7 +60,7 @@ public class ThemeDaoWithoutTemplateImpl implements ThemeDao {
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/text", "sa", "");
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-            while(rs.next()) {
+            while (rs.next()) {
                 themes.add(Theme.builder()
                         .themeId(rs.getLong("id"))
                         .name(rs.getString("name"))
@@ -68,7 +68,6 @@ public class ThemeDaoWithoutTemplateImpl implements ThemeDao {
                         .price(rs.getInt("price"))
                         .build());
             }
-
         } catch (SQLException e) {
         }
         return themes;

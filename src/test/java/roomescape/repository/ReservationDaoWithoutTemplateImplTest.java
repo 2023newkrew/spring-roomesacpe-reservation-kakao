@@ -12,7 +12,7 @@ import roomescape.entity.Reservation;
 import roomescape.reservation.repository.dao.ReservationDao;
 import roomescape.reservation.repository.dao.ReservationDaoWithoutTemplateImpl;
 
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ReservationDaoWithoutTemplateImplTest {
     private final static LocalDate testDate = LocalDate.now();
     private final static LocalTime testTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);

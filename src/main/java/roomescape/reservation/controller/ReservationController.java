@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
-
 import java.net.URI;
 import roomescape.reservation.service.ReservationService;
 
@@ -15,6 +14,7 @@ import roomescape.reservation.service.ReservationService;
 @RequiredArgsConstructor
 public class ReservationController {
     private final ReservationService reservationService;
+
     @PostMapping()
     public ResponseEntity<String> createReservation(@RequestBody ReservationRequestDto requestDto) {
         Long id = reservationService.makeReservation(requestDto);

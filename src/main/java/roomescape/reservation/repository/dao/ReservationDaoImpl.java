@@ -13,6 +13,7 @@ import roomescape.entity.Reservation;
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
+
     public ReservationDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -45,8 +46,7 @@ public class ReservationDaoImpl implements ReservationDao {
                     .name(resultSet.getString("name"))
                     .themeId(resultSet.getLong("theme_id"))
                     .build(), id);
-        }
-        catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
         return Optional.ofNullable(reservation);
