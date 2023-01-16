@@ -5,7 +5,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import web.domain.Reservation;
-import web.domain.Theme;
 import web.dto.response.ReservationIdDto;
 import web.exception.NoSuchReservationException;
 
@@ -25,25 +24,26 @@ public class ReservationJdbcRepository {
 
     public List<Long> findAllReservationWithDateAndTime(Reservation reservation) {
 
-        String selectSql = "SELECT id FROM reservation WHERE date = (?) AND time = (?) LIMIT 1 ";
+        String selectSql = "SELECT id FROM reservation WHERE date = (?) AND time = (?) AND theme_id = (?) LIMIT 1 ";
 
         return jdbcTemplate.query(selectSql, ((rs, rowNum) ->
-                rs.getLong("id")), Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime()));
+                rs.getLong("id")),
+                Date.valueOf(reservation.getDate()),
+                Time.valueOf(reservation.getTime()),
+                reservation.getThemeId()
+                );
     }
 
     public ReservationIdDto createReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        final Theme theme = reservation.getTheme();
 
         this.jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
+            ps.setLong(4, reservation.getThemeId());
             return ps;
         }, keyHolder);
 
@@ -58,10 +58,8 @@ public class ReservationJdbcRepository {
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
-                new Theme(rs.getString("theme_name"),
-                        rs.getString("theme_desc"),
-                        rs.getInt("theme_price")
-                ))), id);
+                rs.getLong("theme_id"))),
+                id);
 
         if (reservations.size() == 0) {
             throw new NoSuchReservationException();

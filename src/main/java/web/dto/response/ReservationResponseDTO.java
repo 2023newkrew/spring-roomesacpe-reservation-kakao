@@ -17,8 +17,7 @@ public class ReservationResponseDTO {
     private final String themeDesc;
     private final Integer themePrice;
 
-    public static ReservationResponseDTO from(Reservation reservation) {
-        Theme theme = reservation.getTheme();
+    public static ReservationResponseDTO from(Reservation reservation, Theme theme) {
 
         return new ReservationResponseDTO(reservation.getId(), reservation.getDate().toString(),
                 reservation.getTime().toString(),

@@ -8,6 +8,7 @@ import web.dto.response.ReservationIdDto;
 import web.dto.response.ReservationResponseDTO;
 import web.exception.DuplicatedReservationException;
 import web.repository.ReservationJdbcRepository;
+import web.repository.ThemeJdbcRepository;
 
 import java.util.List;
 
@@ -15,18 +16,24 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationJdbcRepository reservationJdbcRepository;
-    private final Theme defaultTheme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+    private final ThemeJdbcRepository themeJdbcRepository;
 
-    public ReservationService(ReservationJdbcRepository reservationJdbcRepository) {
+    public ReservationService(ReservationJdbcRepository reservationJdbcRepository, ThemeJdbcRepository themeJdbcRepository) {
         this.reservationJdbcRepository = reservationJdbcRepository;
+        this.themeJdbcRepository = themeJdbcRepository;
     }
 
     public ReservationIdDto createReservation(ReservationRequestDTO reservationRequestDTO) {
-        Reservation reservation = reservationRequestDTO.toEntity(defaultTheme);
+        Reservation reservation = reservationRequestDTO.toEntity();
 
+        validateThemeExist(reservation.getThemeId());
         validateReservation(reservation);
 
         return reservationJdbcRepository.createReservation(reservation);
+    }
+
+    private void validateThemeExist(Long themeId) {
+        themeJdbcRepository.findThemeById(themeId);
     }
 
     private void validateReservation(Reservation reservation) {
@@ -39,8 +46,10 @@ public class ReservationService {
     }
 
     public ReservationResponseDTO getReservationById(Long id) {
+        Reservation reservation = reservationJdbcRepository.findReservationById(id);
+        Theme theme = themeJdbcRepository.findThemeById(reservation.getThemeId());
 
-        return ReservationResponseDTO.from(reservationJdbcRepository.findReservationById(id));
+        return ReservationResponseDTO.from(reservation, theme);
     }
 
     public void deleteReservationById(Long id) {
