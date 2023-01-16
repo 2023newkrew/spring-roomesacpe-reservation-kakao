@@ -26,7 +26,7 @@ public class ReservationController {
             return ResponseEntity.created(location)
                     .build();
         } catch(Exception e) {
-            return ResponseEntity.badRequest().body("reservation already exists on that time");
+            return ResponseEntity.badRequest().body(e);
         }
     }
 
