@@ -1,4 +1,4 @@
-package nextstep.serviceimpl;
+package nextstep.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.Reservation;
