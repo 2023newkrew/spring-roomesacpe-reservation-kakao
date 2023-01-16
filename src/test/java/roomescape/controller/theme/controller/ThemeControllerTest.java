@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.theme.controller;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,20 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.domain.Reservation;
 import roomescape.theme.domain.Theme;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
-@DisplayName("Http Method")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-public class RoomEscapeControllerTest {
+public class ThemeControllerTest {
 
     @LocalServerPort
     int port;
@@ -34,12 +29,12 @@ public class RoomEscapeControllerTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    final static Reservation DUMMY_RESERVATION = new Reservation(
+    final static Theme DUMMY_THEME = new Theme(
             1L,
-            LocalDate.of(2022, 8, 11),
-            LocalTime.of(13, 0, 0),
-            "name22",
-            1L);
+            "테마이름",
+            "테마설명",
+            22000
+    );
 
     @BeforeEach
     void setUp() {
@@ -49,43 +44,28 @@ public class RoomEscapeControllerTest {
     /**
      * RoomEscapeController > createReservation 메서드
      */
-    @DisplayName("reservation이 잘 생성되는지 확인한다")
+    @DisplayName("theme이 잘 생성되는지 확인한다")
     @Test
-    void createReservation() {
+    void createTheme() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_RESERVATION)
-                .when().post("/reservations")
+                .body(DUMMY_THEME)
+                .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
-    }
-
-    /**
-     * RoomEscapeController > createReservation 메서드
-     */
-    @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생한다")
-    @Test
-    void duplicatedReservation() {
-        createReservation();
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_RESERVATION)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .header("Location", "/themes/1");
     }
 
     /**
      * RoomEscapeController > lookUpReservation 메서드
      */
-    @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")
+    @DisplayName("id에 해당하는 theme 객체를 잘 가져오는지 확인한다")
     @Test
-    void findReservationById() {
-        createReservation();
+    void findThemeById() {
+        createTheme();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/1")
+                .when().get("/themes/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(1));
@@ -94,13 +74,13 @@ public class RoomEscapeControllerTest {
     /**
      * RoomEscapeController > deleteReservation 메서드
      */
-    @DisplayName("id에 해당하는 reservation 객체를 잘 삭제하는지 확인한다")
+    @DisplayName("id에 해당하는 theme 객체를 잘 삭제하는지 확인한다")
     @Test
-    void deleteReservation() {
-        createReservation();
+    void deleteTheme() {
+        createTheme();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/1")
+                .when().delete("/themes/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

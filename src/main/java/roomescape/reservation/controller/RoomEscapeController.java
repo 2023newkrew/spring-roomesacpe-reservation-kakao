@@ -2,17 +2,12 @@ package roomescape.reservation.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.service.ReservationService;
-import roomescape.theme.domain.Theme;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @RestController
 public class RoomEscapeController {

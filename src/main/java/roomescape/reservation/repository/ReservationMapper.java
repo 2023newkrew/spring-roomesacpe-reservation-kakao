@@ -1,7 +1,6 @@
 package roomescape.reservation.repository;
 
 import roomescape.reservation.domain.Reservation;
-import roomescape.theme.domain.Theme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
