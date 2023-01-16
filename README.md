@@ -45,3 +45,68 @@
   - [x] "/themes/{id}"의 경우 id에 해당되는 theme을 반환한다. (추가한 기능)
 - [x] delete 명령에 대해 id에 해당되는 theme을 제거한다.
 
+
+## 설계
+### roomescape
+- RoomEscapeConsoleApplication : 콘솔 애플리케이션
+- RoomEscapeWebApplication : 웹 애플리케이션
+
+### roomesape.entity
+- Reservation
+- Theme
+- ~~~TimeTable~~~ : 아직 반영 못함
+  
+### roomsecape.exceptions
+- RoomEscapeExceptionHandler : ControllerAdvice / ErrorCode 아직 분리 못함
+
+### roomescape.exceptions.exception
+- DuplicatedReservatoinException
+- DuplicatedThemeException
+- NoThemesExistException
+- ReservationNotFoundException
+- ThemeNotFoundException
+
+<br>
+
+### roomescape.reservation.controller
+- ReservationController
+
+### roomescape.reservation.dto
+- ReservationRequestDto
+- ReservationResponseDto
+
+### roomescape.reservation.repository
+- ReservationRepository
+- ReservationRepositoryImpl
+- ReservationRepositoryWithoutTemplateImpl
+
+#### roomescape.reservation.repository.dao
+- ReservationDao
+- ReservationDaoImpl
+- ReservationDaoWithoutTemplateImpl
+
+### roomescape.reservation.repository.service
+- ReservationService
+
+<br>
+
+### roomescape.theme.controller
+- ThemeController
+
+### roomescape.theme.dto
+- ThemeRequestDto
+- ThemeResponseDto
+
+### roomescape.theme.repository
+- ThemeRepository
+- ThemeRepositoryImpl
+- ThemeRepositoryWithoutTemplateImpl
+
+#### roomescape.theme.repository.dao
+- ThemeDao
+- ThemeDaoImpl
+- ThemeDaoWithoutTemplateImpl
+
+### roomescape.theme.repository.service
+- ThemeService
+
