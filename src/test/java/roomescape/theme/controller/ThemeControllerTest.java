@@ -14,9 +14,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import roomescape.common.exception.ErrorCode;
 import roomescape.theme.dto.request.ThemeRequestDTO;
 import roomescape.theme.dto.response.ThemeResponseDTO;
-import roomescape.theme.exception.DuplicatedThemeException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
@@ -66,7 +66,6 @@ class ThemeControllerTest {
         final String expectedName = "name";
         final String expectedDesc = "desc";
         final int expectedPrice = 1000;
-        final DuplicatedThemeException e = new DuplicatedThemeException();
 
         final ThemeRequestDTO themeRequestDTO = ThemeRequestDTO.builder()
                 .name(expectedName)
@@ -80,7 +79,7 @@ class ThemeControllerTest {
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body("message", is(e.getMessage()));
+                .body("message", is(ErrorCode.DUPLICATED_THEME.getMessage()));
     }
 
     @Test

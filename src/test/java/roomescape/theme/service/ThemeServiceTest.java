@@ -15,9 +15,7 @@ import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.theme.dto.request.ThemeRequestDTO;
 import roomescape.theme.entity.Theme;
-import roomescape.theme.exception.AlreadyReservedThemeException;
-import roomescape.theme.exception.DuplicatedThemeException;
-import roomescape.theme.exception.NoSuchThemeException;
+import roomescape.theme.exception.ThemeException;
 import roomescape.theme.repository.ThemeRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +46,7 @@ class ThemeServiceTest {
         when(themeRepository.findByName(any(String.class))).thenReturn(Optional.of(mockedTheme));
 
         assertThatThrownBy(() -> this.themeService.save(this.themeRequestDTO)).isInstanceOf(
-                DuplicatedThemeException.class);
+                ThemeException.class);
     }
 
     @DisplayName("지우려는 테마가 없을 경우 예외가 발생한다.")
@@ -58,7 +56,7 @@ class ThemeServiceTest {
         when(themeRepository.deleteById(any(Long.class))).thenReturn(false);
 
         assertThatThrownBy(() -> this.themeService.deleteById(1L)).isInstanceOf(
-                NoSuchThemeException.class);
+                ThemeException.class);
     }
 
     @DisplayName("테마가 이미 예약되어 있을 경우 변경(삭제)할 수 없다.")
@@ -67,6 +65,6 @@ class ThemeServiceTest {
         when(reservationRepository.findByThemeId(any(Long.class))).thenReturn(Optional.of(mockedReservation));
 
         assertThatThrownBy(() -> this.themeService.deleteById(1L)).isInstanceOf(
-                AlreadyReservedThemeException.class);
+                ThemeException.class);
     }
 }

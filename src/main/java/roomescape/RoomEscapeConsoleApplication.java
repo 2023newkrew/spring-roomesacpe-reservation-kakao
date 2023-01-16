@@ -3,8 +3,9 @@ package roomescape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import roomescape.common.exception.ErrorCode;
 import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.repository.ReservationJdbcRepository;
 import roomescape.theme.entity.Theme;
 
@@ -63,7 +64,7 @@ public class RoomEscapeConsoleApplication {
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 Reservation reservation = RESERVATION_JDBC_REPOSITORY.findById(id)
-                        .orElseThrow(NoSuchReservationException::new);
+                        .orElseThrow(() -> new ReservationException(ErrorCode.NO_SUCH_RESERVATION));
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());

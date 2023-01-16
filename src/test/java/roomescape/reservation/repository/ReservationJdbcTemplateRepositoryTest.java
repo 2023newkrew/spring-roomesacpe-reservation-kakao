@@ -11,8 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.common.exception.ErrorCode;
 import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.reservation.exception.ReservationException;
 
 @JdbcTest
 public class ReservationJdbcTemplateRepositoryTest {
@@ -51,7 +52,7 @@ public class ReservationJdbcTemplateRepositoryTest {
     @Test
     void findById() {
         final Reservation result = reservationRepository.findById(reservationId)
-                .orElseThrow(NoSuchReservationException::new);
+                .orElseThrow(() -> new ReservationException(ErrorCode.NO_SUCH_RESERVATION));
 
         assertThat(result.getName()).isEqualTo(expectedName);
         assertThat(result.getDate()).isEqualTo(expectedDate);
@@ -69,7 +70,7 @@ public class ReservationJdbcTemplateRepositoryTest {
     void findByDateAndTime() {
         final Reservation result = reservationRepository.findByDateTimeAndThemeId(expectedDate, expectedTime,
                         expectedThemeId)
-                .orElseThrow(NoSuchReservationException::new);
+                .orElseThrow(() -> new ReservationException(ErrorCode.NO_SUCH_RESERVATION));
 
         assertThat(result.getName()).isEqualTo(expectedName);
         assertThat(result.getDate()).isEqualTo(expectedDate);

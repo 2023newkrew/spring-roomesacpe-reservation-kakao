@@ -16,11 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.reservation.dto.request.ReservationRequestDTO;
 import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.exception.DuplicatedReservationException;
-import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.theme.entity.Theme;
-import roomescape.theme.exception.NoSuchThemeException;
+import roomescape.theme.exception.ThemeException;
 import roomescape.theme.repository.ThemeRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +47,7 @@ class ReservationServiceTest {
         when(this.themeRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> reservationService.save(reservationRequestDTO)).isInstanceOf(
-                NoSuchThemeException.class);
+                ThemeException.class);
     }
 
     @DisplayName("겹치는 시간대의 예약이 존재할 경우 예외가 발생한다.")
@@ -59,7 +58,7 @@ class ReservationServiceTest {
                 nullable(Long.class))).thenReturn(Optional.of(mockedReservation));
 
         assertThatThrownBy(() -> reservationService.save(reservationRequestDTO)).isInstanceOf(
-                DuplicatedReservationException.class);
+                ReservationException.class);
     }
 
     @DisplayName("해당 예약을 찾지 못할 경우 예외가 발생한다.")
@@ -67,7 +66,7 @@ class ReservationServiceTest {
     void findById() {
         when(reservationRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> reservationService.findById(1L)).isInstanceOf(NoSuchReservationException.class);
+        assertThatThrownBy(() -> reservationService.findById(1L)).isInstanceOf(ReservationException.class);
     }
 
     @DisplayName("존재하지 않는 예약을 취소하는 경우 예외가 발생한다.")
@@ -75,6 +74,6 @@ class ReservationServiceTest {
     void deleteById() {
         when(reservationRepository.deleteById(any(Long.class))).thenReturn(false);
 
-        assertThatThrownBy(() -> reservationService.deleteById(1L)).isInstanceOf(NoSuchReservationException.class);
+        assertThatThrownBy(() -> reservationService.deleteById(1L)).isInstanceOf(ReservationException.class);
     }
 }

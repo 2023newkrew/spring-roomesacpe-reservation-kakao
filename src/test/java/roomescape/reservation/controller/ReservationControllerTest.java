@@ -23,9 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
+import roomescape.common.exception.ErrorCode;
 import roomescape.reservation.dto.request.ReservationRequestDTO;
-import roomescape.reservation.exception.DuplicatedReservationException;
-import roomescape.reservation.exception.NoSuchReservationException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -95,15 +94,13 @@ public class ReservationControllerTest {
     @Test
     @Order(3)
     void duplicateDateTimeReservation() {
-        final DuplicatedReservationException e = new DuplicatedReservationException();
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationRequestDTO)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body("message", is(e.getMessage()));
+                .body("message", is(ErrorCode.DUPLICATED_RESERVATION.getMessage()));
     }
 
     @DisplayName("Reservation 조회")
@@ -126,14 +123,12 @@ public class ReservationControllerTest {
     @DisplayName("없는 Reservation 조회 시 404를 반환한다.")
     @Test
     void retrieveNotExistingReservation() {
-        final NoSuchReservationException e = new NoSuchReservationException();
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/15")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", is(e.getMessage()));
+                .body("message", is(ErrorCode.NO_SUCH_RESERVATION.getMessage()));
     }
 
     @DisplayName("Reservation 취소")
@@ -150,13 +145,11 @@ public class ReservationControllerTest {
     @DisplayName("없는 예약을 취소하면 404를 반환한다.")
     @Test
     void deleteNotExistingReservation() {
-        final NoSuchReservationException e = new NoSuchReservationException();
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/15")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", is(e.getMessage()));
+                .body("message", is(ErrorCode.NO_SUCH_RESERVATION.getMessage()));
     }
 }
