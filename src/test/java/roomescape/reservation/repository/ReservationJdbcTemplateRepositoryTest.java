@@ -11,11 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.common.exception.ErrorCode;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ThemeReservation;
 import roomescape.reservation.exception.ReservationException;
+import roomescape.theme.entity.Theme;
 
 @JdbcTest
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ReservationJdbcTemplateRepositoryTest {
 
     private final ReservationRepository reservationRepository;
@@ -24,6 +32,12 @@ public class ReservationJdbcTemplateRepositoryTest {
     public ReservationJdbcTemplateRepositoryTest(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.reservationRepository = new ReservationJdbcTemplateRepository(jdbcTemplate,
                 dataSource);
+        SimpleJdbcInsert insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("theme")
+                .usingGeneratedKeyColumns("id");
+        Theme theme = Theme.builder().name("name").desc("desc").price(1000).build();
+        SqlParameterSource params = new BeanPropertySqlParameterSource(theme);
+        insertActor.execute(params);
     }
 
     private static final String expectedName = "name";
@@ -51,7 +65,7 @@ public class ReservationJdbcTemplateRepositoryTest {
     @DisplayName("id로 예약을 불러온다")
     @Test
     void findById() {
-        final Reservation result = reservationRepository.findById(reservationId)
+        final ThemeReservation result = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(ErrorCode.NO_SUCH_RESERVATION));
 
         assertThat(result.getName()).isEqualTo(expectedName);

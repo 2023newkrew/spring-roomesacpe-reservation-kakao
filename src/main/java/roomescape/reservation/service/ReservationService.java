@@ -6,6 +6,7 @@ import roomescape.common.exception.ErrorCode;
 import roomescape.reservation.dto.request.ReservationRequestDTO;
 import roomescape.reservation.dto.response.ReservationResponseDTO;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ThemeReservation;
 import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.theme.entity.Theme;
@@ -36,7 +37,7 @@ public class ReservationService {
     }
 
     public ReservationResponseDTO findById(final Long id) {
-        Reservation reservation = this.reservationRepository.findById(id)
+        ThemeReservation reservation = this.reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationException(ErrorCode.NO_SUCH_RESERVATION));
 
         return ReservationResponseDTO.from(reservation);

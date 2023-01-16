@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ThemeReservation;
 
 @Getter
 @Builder
@@ -21,13 +21,22 @@ public class ReservationResponseDTO {
 
     private final Long themeId;
 
-    public static ReservationResponseDTO from(Reservation reservation) {
+    private final String themeName;
+
+    private final String themeDesc;
+
+    private final int themePrice;
+
+    public static ReservationResponseDTO from(ThemeReservation reservation) {
         return ReservationResponseDTO.builder()
                 .id(reservation.getId())
                 .date(reservation.getDate().toString())
                 .time(reservation.getTime().toString())
                 .name(reservation.getName())
                 .themeId(reservation.getThemeId())
+                .themeDesc(reservation.getThemeDesc())
+                .themeName(reservation.getName())
+                .themePrice(reservation.getThemePrice())
                 .build();
     }
 }

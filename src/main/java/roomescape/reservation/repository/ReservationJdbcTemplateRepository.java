@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ThemeReservation;
 import roomescape.reservation.mapper.ReservationRowMapper;
+import roomescape.reservation.mapper.ThemeReservationRowMapper;
 
 @Repository
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
@@ -37,17 +39,17 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     }
 
     @Override
-    public Optional<Reservation> findById(final Long reservationId) {
-        String selectSql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
+    public Optional<ThemeReservation> findById(final Long reservationId) {
+        String selectSql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id = (?) LIMIT 1 ";
 
-        List<Reservation> reservations = jdbcTemplate.query(selectSql, new ReservationRowMapper(),
+        List<ThemeReservation> themeReservations = jdbcTemplate.query(selectSql, new ThemeReservationRowMapper(),
                 reservationId);
 
-        if (reservations.isEmpty()) {
+        if (themeReservations.isEmpty()) {
             return Optional.empty();
         }
 
-        return Optional.of(reservations.get(0));
+        return Optional.of(themeReservations.get(0));
     }
 
     @Override

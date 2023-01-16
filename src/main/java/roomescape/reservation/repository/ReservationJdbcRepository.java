@@ -12,11 +12,15 @@ import java.time.LocalTime;
 import java.util.Optional;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ThemeReservation;
 import roomescape.reservation.mapper.ReservationRowMapper;
+import roomescape.reservation.mapper.ThemeReservationRowMapper;
 
 public class ReservationJdbcRepository implements ReservationRepository {
 
-    private final RowMapper<Reservation> rowMapper = new ReservationRowMapper();
+    private final RowMapper<ThemeReservation> themeReservationRowMapper = new ThemeReservationRowMapper();
+
+    private final RowMapper<Reservation> reservationRowMapper = new ReservationRowMapper();
 
     @Override
     public Long save(Reservation reservation) {
@@ -57,7 +61,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 return Optional.empty();
             }
 
-            final Reservation reservation = rowMapper.mapRow(rs, 1);
+            final Reservation reservation = reservationRowMapper.mapRow(rs, 1);
             return Optional.of(reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -79,7 +83,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 return Optional.empty();
             }
 
-            final Reservation reservation = rowMapper.mapRow(rs, 1);
+            final Reservation reservation = reservationRowMapper.mapRow(rs, 1);
             return Optional.of(reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -87,12 +91,12 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(Long reservationId) {
+    public Optional<ThemeReservation> findById(Long reservationId) {
         // 드라이버 연결
         try (Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
             System.out.println("정상적으로 연결되었습니다.");
 
-            String sql = "SELECT * FROM reservation WHERE id=?";
+            String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id=?";
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, reservationId);
@@ -102,9 +106,9 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 return Optional.empty();
             }
 
-            final Reservation reservation = rowMapper.mapRow(rs, 1);
+            final ThemeReservation themeReservation = themeReservationRowMapper.mapRow(rs, 1);
 
-            return Optional.of(reservation);
+            return Optional.of(themeReservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

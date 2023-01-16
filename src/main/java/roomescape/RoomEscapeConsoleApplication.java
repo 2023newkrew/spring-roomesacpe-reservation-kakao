@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Scanner;
 import roomescape.common.exception.ErrorCode;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ThemeReservation;
 import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.repository.ReservationJdbcRepository;
 import roomescape.theme.entity.Theme;
@@ -63,16 +64,16 @@ public class RoomEscapeConsoleApplication {
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
-                Reservation reservation = RESERVATION_JDBC_REPOSITORY.findById(id)
+                ThemeReservation reservation = RESERVATION_JDBC_REPOSITORY.findById(id)
                         .orElseThrow(() -> new ReservationException(ErrorCode.NO_SUCH_RESERVATION));
 
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + theme.getName());
-                System.out.println("예약 테마 설명: " + theme.getDesc());
-                System.out.println("예약 테마 가격: " + theme.getPrice());
+                System.out.println("예약 테마 이름: " + reservation.getThemeName());
+                System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+                System.out.println("예약 테마 가격: " + reservation.getThemePrice());
             }
 
             if (input.startsWith(DELETE)) {
