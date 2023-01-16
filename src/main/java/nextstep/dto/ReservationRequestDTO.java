@@ -1,8 +1,10 @@
 package nextstep.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@AllArgsConstructor
+@Getter
 public class ReservationRequestDTO {
 
     private final String date;
