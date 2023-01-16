@@ -10,4 +10,6 @@ public class ReservationRequest {
     private String time;
 
     private String name;
+
+    private Long theme_id;
 }

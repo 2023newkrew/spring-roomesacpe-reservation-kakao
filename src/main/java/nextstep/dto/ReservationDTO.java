@@ -18,5 +18,5 @@ public class ReservationDTO {
 
     private String name;
 
-    private ThemeDTO theme;
+    private Long theme_id;
 }
