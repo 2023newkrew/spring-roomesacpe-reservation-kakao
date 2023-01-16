@@ -1,7 +1,7 @@
 package nextstep.theme.service;
 
 import nextstep.etc.exception.ErrorMessage;
-import nextstep.etc.exception.ThemeConflictException;
+import nextstep.etc.exception.ThemeException;
 import nextstep.theme.domain.Theme;
 import nextstep.theme.dto.ThemeRequest;
 import nextstep.theme.dto.ThemeResponse;
@@ -69,7 +69,7 @@ class ThemeServiceImplTest {
             service.create(request);
 
             Assertions.assertThatThrownBy(() -> service.create(request))
-                    .isInstanceOf(ThemeConflictException.class)
+                    .isInstanceOf(ThemeException.class)
                     .hasMessage(ErrorMessage.THEME_CONFLICT.getErrorMessage());
         }
     }
@@ -129,6 +129,56 @@ class ThemeServiceImplTest {
                             new ThemeResponse(2L, "theme2", "theme2", 2000),
                             new ThemeResponse(3L, "theme3", "theme3", 3000)
                     );
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class update {
+
+        @BeforeEach
+        void setUp() {
+            repository.insert(new Theme(null, "theme1", "theme1", 1000));
+            repository.insert(new Theme(null, "theme2", "theme2", 2000));
+        }
+
+        @DisplayName("수정 성공")
+        @ParameterizedTest
+        @MethodSource
+        void should_returnResponse_when_givenId(Long id, ThemeResponse response) {
+            var request = new ThemeRequest("updated", "updated", 0);
+
+            var actual = service.update(id, request);
+
+            Assertions.assertThat(actual)
+                    .isEqualTo(response);
+        }
+
+        List<Arguments> should_returnResponse_when_givenId() {
+            return List.of(
+                    Arguments.of(1L, new ThemeResponse(1L, "updated", "updated", 0)),
+                    Arguments.of(2L, new ThemeResponse(2L, "updated", "updated", 0))
+            );
+        }
+
+        @DisplayName("이름이 중복될 경우 예외 발생")
+        @Test
+        void should_throwException_when_nameDuplicated() {
+            var request = new ThemeRequest("theme2", "theme2", 2000);
+
+            Assertions.assertThatThrownBy(() -> service.update(1L, request))
+                    .isInstanceOf(ThemeException.class)
+                    .hasMessage(ErrorMessage.THEME_CONFLICT.getErrorMessage());
+        }
+
+        @DisplayName("수정할 테마가 존재하지 않을 경우 예외 발생")
+        @Test
+        void should_throwException_when_themeNotExists() {
+            var request = new ThemeRequest("theme3", "theme2", 2000);
+
+            Assertions.assertThatThrownBy(() -> service.update(0L, request))
+                    .isInstanceOf(ThemeException.class)
+                    .hasMessage(ErrorMessage.THEME_NOT_EXISTS.getErrorMessage());
         }
     }
 }

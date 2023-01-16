@@ -2,7 +2,7 @@ package nextstep.theme.service;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.etc.exception.ErrorMessage;
-import nextstep.etc.exception.ThemeConflictException;
+import nextstep.etc.exception.ThemeException;
 import nextstep.theme.domain.Theme;
 import nextstep.theme.dto.ThemeRequest;
 import nextstep.theme.dto.ThemeResponse;
@@ -32,7 +32,7 @@ public class ThemeServiceImpl implements ThemeService {
             theme = repository.insert(theme);
         }
         catch (DuplicateKeyException ignore) {
-            throw new ThemeConflictException(ErrorMessage.THEME_CONFLICT);
+            throw new ThemeException(ErrorMessage.THEME_CONFLICT);
         }
 
         return mapper.toResponse(theme);
@@ -55,7 +55,19 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public ThemeResponse update(Long id, ThemeRequest request) {
-        return null;
+        Theme theme = mapper.fromRequest(request);
+        boolean updated;
+        try {
+            updated = repository.update(id, theme);
+        }
+        catch (DuplicateKeyException ignore) {
+            throw new ThemeException(ErrorMessage.THEME_CONFLICT);
+        }
+        if (!updated) {
+            throw new ThemeException(ErrorMessage.THEME_NOT_EXISTS);
+        }
+
+        return getById(id);
     }
 
     @Override

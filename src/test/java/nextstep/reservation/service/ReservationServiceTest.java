@@ -1,7 +1,7 @@
 package nextstep.reservation.service;
 
 import nextstep.etc.exception.ErrorMessage;
-import nextstep.etc.exception.ReservationConflictException;
+import nextstep.etc.exception.ReservationException;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
@@ -57,7 +57,7 @@ class ReservationServiceTest {
             service.create(request);
 
             Assertions.assertThatThrownBy(() -> service.create(request))
-                    .isInstanceOf(ReservationConflictException.class)
+                    .isInstanceOf(ReservationException.class)
                     .hasMessage(ErrorMessage.RESERVATION_CONFLICT.getErrorMessage());
         }
 

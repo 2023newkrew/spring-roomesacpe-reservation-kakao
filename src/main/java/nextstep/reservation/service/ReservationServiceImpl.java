@@ -2,7 +2,7 @@ package nextstep.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.etc.exception.ErrorMessage;
-import nextstep.etc.exception.ReservationConflictException;
+import nextstep.etc.exception.ReservationException;
 import nextstep.reservation.domain.Reservation;
 import nextstep.reservation.domain.Theme;
 import nextstep.reservation.dto.ReservationRequest;
@@ -28,7 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponse create(ReservationRequest request) {
         Reservation reservation = mapper.fromRequest(request, THEME);
         if (repository.existsByDateAndTime(reservation)) {
-            throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
+            throw new ReservationException(ErrorMessage.RESERVATION_CONFLICT);
         }
         reservation = repository.insert(reservation);
 
