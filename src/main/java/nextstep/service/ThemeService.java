@@ -44,11 +44,14 @@ public class ThemeService {
     }
 
     public ThemeResponse retrieveOne(Long id) {
+        return new ThemeResponse(getThemeById(id));
+    }
+
+    private Theme getThemeById(Long id) {
         Optional<Theme> themeFound = themeDao.findById(id);
-        if (themeFound.isEmpty()) {
+        return themeFound.orElseThrow(() -> {
             throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
-        }
-        return new ThemeResponse(themeFound.get());
+        });
     }
 
     public List<ThemeResponse> retrieveAll() {
@@ -58,21 +61,21 @@ public class ThemeService {
                 .collect(Collectors.toList());
     }
 
-    public Long update(Long id, ThemeRequest themeRequest) {
+    public void update(Long id, ThemeRequest themeRequest) {
         validateId(id);
-        Optional<Theme> themeFound = themeDao.findById(id);
-        if (themeFound.isEmpty()) {
-            return create(themeRequest);
-        }
-        if (!themeFound.get().getName().equals(themeRequest.getName())) {
+        Theme themeFound = getThemeById(id);
+        if (!themeFound.getName().equals(themeRequest.getName())) {
             validateNameDuplication(themeRequest.getName());
         }
+        validateReservedOrNotByThemeId(id);
+        Theme theme = new Theme(id, themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
+        themeDao.update(theme);
+    }
+
+    private void validateReservedOrNotByThemeId(Long id) {
         if (reservationDao.countByThemeId(id) > 0) {
             throw new InvalidRequestException(ErrorCode.RESERVATION_EXIST);
         }
-        Theme theme = new Theme(id, themeRequest.getName(), themeRequest.getDesc(), themeRequest.getPrice());
-        themeDao.update(theme);
-        return id;
     }
 
     private void validateId(Long id) {
@@ -83,12 +86,8 @@ public class ThemeService {
 
     public void delete(Long id) {
         validateId(id);
-        if (themeDao.findById(id).isEmpty()) {
-            throw new InvalidRequestException(ErrorCode.THEME_NOT_FOUND);
-        }
-        if (reservationDao.countByThemeId(id) > 0) {
-            throw new InvalidRequestException(ErrorCode.RESERVATION_EXIST);
-        }
+        getThemeById(id);
+        validateReservedOrNotByThemeId(id);
         themeDao.delete(id);
     }
 }

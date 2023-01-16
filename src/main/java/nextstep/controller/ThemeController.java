@@ -38,10 +38,7 @@ public class ThemeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ThemeRequest themeRequest) {
-        Long newId = themeService.update(id, themeRequest);
-        if (!id.equals(newId)) {
-            return ResponseEntity.created(URI.create("/themes/" + newId)).build();
-        }
+        themeService.update(id, themeRequest);
         return ResponseEntity.ok().build();
     }
 
