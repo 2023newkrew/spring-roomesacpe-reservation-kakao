@@ -39,7 +39,7 @@ public class ThemeService {
     }
 
     public void deleteTheme(Long id, List<Reservation> reservations) { // 다른 서비스에서 엔티티 사용??
-        if (reservations.size() != 0) {
+        if (!reservations.isEmpty()) {
             throw new ThemeReservationExistsException(id);
         }
         themeRepository.deleteById(id);
