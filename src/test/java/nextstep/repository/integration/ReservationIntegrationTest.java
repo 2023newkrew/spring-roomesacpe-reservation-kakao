@@ -2,9 +2,10 @@ package nextstep.repository.integration;
 
 import io.restassured.RestAssured;
 import nextstep.dto.web.request.CreateReservationRequest;
-import nextstep.dto.web.request.CreateThemeRequest;
+import nextstep.util.DatabaseCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,25 +16,14 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ReservationIntegrationTest {
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @BeforeEach
     void setUp() {
-        RestAssured
-                .given()
-                .delete("/reservations");
-
-        RestAssured
-                .given()
-                .delete("/themes");
-
-        RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(CreateThemeRequest.of(
-                        DEFAULT_THEME.getName(),
-                        DEFAULT_THEME.getDesc(),
-                        DEFAULT_THEME.getPrice()
-                ))
-                .post("/themes");
+        databaseCleaner.clear();
+        databaseCleaner.insertInitialData();
     }
 
     private CreateReservationRequest createReservationRequest = CreateReservationRequest.of(

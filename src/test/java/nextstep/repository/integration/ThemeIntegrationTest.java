@@ -2,8 +2,10 @@ package nextstep.repository.integration;
 
 import io.restassured.RestAssured;
 import nextstep.dto.web.request.CreateThemeRequest;
+import nextstep.util.DatabaseCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,25 +15,15 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class ThemeIntegrationTest {
+class ThemeIntegrationTest {
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
     void setUp() {
-        RestAssured
-            .given()
-                .delete("/themes");
-    }
-
-    void createDefaultTheme() {
-        RestAssured
-            .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(CreateThemeRequest.of(
-                        DEFAULT_THEME.getName(),
-                        DEFAULT_THEME.getDesc(),
-                        DEFAULT_THEME.getPrice()
-                ))
-                .post("/themes");
+        databaseCleaner.clear();
+        databaseCleaner.insertInitialData();
     }
 
     @Test
@@ -49,9 +41,6 @@ public class ThemeIntegrationTest {
 
     @Test
     void should_returnAllThemes_when_findAllRequestSent() {
-        //given
-        createDefaultTheme();
-
         RestAssured
             .when()
                 .get("/themes")
@@ -67,9 +56,6 @@ public class ThemeIntegrationTest {
 
     @Test
     void should_deleteTheme_when_deleteRequestSent() {
-        //given
-        createDefaultTheme();
-
         RestAssured
             .when()
                 .delete("/themes/1")
