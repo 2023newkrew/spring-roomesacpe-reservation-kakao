@@ -11,6 +11,8 @@ public class CreateThemeRequest {
     @NotNull(message = "테마 생성 시 가격을 기재해야 합니다.")
     Integer price;
 
+    public CreateThemeRequest() {}
+
     public CreateThemeRequest(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;

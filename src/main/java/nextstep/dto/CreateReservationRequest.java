@@ -14,6 +14,8 @@ public class CreateReservationRequest {
     @Positive(message = "예약 생성 시에는 테마번호를 기입해야 합니다.")
     private Long themeId;
 
+    public CreateReservationRequest() {}
+
     public CreateReservationRequest(String date, String time, String name, Long themeId) {
         this.date = date;
         this.time = time;
