@@ -1,17 +1,21 @@
 package nextstep.service;
 
 import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
+import nextstep.entity.Theme;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface ReservationService {
 
-    Long createReservation(ReservationRequestDTO reservationRequestDTO);
+    Reservation createReservation(ReservationRequestDTO reservationRequestDTO, Theme theme);
 
-    ReservationResponseDTO findReservation(Long id);
+    void validateCreateReservation(ReservationRequestDTO reservationRequestDTO);
+
+    Reservation findReservationByID(Long id);
 
     void deleteById(Long id);
 
     boolean existByThemeId(Long id);
+
 }

@@ -1,14 +1,14 @@
 package nextstep.service;
 
 import java.time.LocalTime;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
 import nextstep.entity.Reservation;
+import nextstep.entity.Theme;
 import nextstep.entity.TimeTable;
 import nextstep.exception.ConflictException;
 import nextstep.exception.NotFoundException;
-import nextstep.mapstruct.ReservationMapper;
 import nextstep.repository.ReservationRepository;
 
 @RequiredArgsConstructor
@@ -17,16 +17,15 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public Long createReservation(ReservationRequestDTO reservationRequestDTO) {
-        validateCreateReservation(reservationRequestDTO);
-        return reservationRepository.save(reservationRequestDTO);
+    public Reservation createReservation(ReservationRequestDTO reservationRequestDTO, Theme theme) {
+        return reservationRepository.save(reservationRequestDTO.toEntity(theme));
     }
 
     @Override
-    public ReservationResponseDTO findReservation(Long id) {
+    public Reservation findReservationByID(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElse(null);
-        if (reservation != null) {
-            return ReservationMapper.INSTANCE.reservationToResponseDTO(reservation);
+        if (Objects.nonNull(reservation)) {
+            return reservation;
         }
         return null;
     }
@@ -40,13 +39,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public boolean existByThemeId(Long id) {
-        return reservationRepository.existByThemeId(id) !=0;
+        return reservationRepository.existByThemeId(id);
     }
 
 
-    private void validateCreateReservation(ReservationRequestDTO reservationRequestDTO) {
-        validateTime(reservationRequestDTO.getTime());
-        validateDuplicate(reservationRequestDTO);
+    @Override
+    public void validateCreateReservation(ReservationRequestDTO reservationRequestDTOvation) {
+        validateTime(reservationRequestDTOvation.getTime());
+        validateDuplicate(reservationRequestDTOvation);
     }
 
     private void validateTime(LocalTime time) {
