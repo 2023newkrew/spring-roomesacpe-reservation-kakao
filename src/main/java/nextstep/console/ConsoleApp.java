@@ -2,21 +2,22 @@ package nextstep.console;
 
 import static nextstep.console.ConsoleCommand.QUIT;
 
+import nextstep.console.config.ConsoleConfig;
 import nextstep.console.controller.ReservationConsoleController;
 import nextstep.console.controller.ThemeConsoleController;
-import nextstep.console.view.View;
 import nextstep.console.utils.ConnectionHandler;
-import org.springframework.stereotype.Component;
+import nextstep.console.view.View;
 
-@Component
 public class ConsoleApp {
 
     private static final ConnectionHandler connectionHandler = new ConnectionHandler();
 
-    private static final View view = new View();
-    private static final ReservationConsoleController reservationConsoleController = new ReservationConsoleController(
-            connectionHandler, view);
-    private static final ThemeConsoleController themeConsole = new ThemeConsoleController(connectionHandler, view);
+    private static final View view = ConsoleConfig.getInstance().getView();
+
+    private static final ReservationConsoleController reservationConsoleController = ConsoleConfig.getInstance()
+            .getReservationConsoleController();
+    private static final ThemeConsoleController themeConsoleController = ConsoleConfig.getInstance()
+            .getThemeConsoleController();
 
     public static void run(){
 
@@ -26,7 +27,7 @@ public class ConsoleApp {
                 String input = view.readLine();
                 reservationConsoleController.executeReservationCommand(input);
                 if (input.startsWith("theme")) {
-                    themeConsole.executeThemeCommand(input);
+                    themeConsoleController.executeThemeCommand(input);
                 }
                 if (input.equals(QUIT)) {
                     connectionHandler.release();
@@ -36,7 +37,8 @@ public class ConsoleApp {
                 view.printErrorMessage(e, "형식에 맞춰 입력해주세요.");
             } catch (NullPointerException e) {
                 view.printErrorMessage(e, "해당하는 값이 존재하지 않습니다.");
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 view.printErrorMessage(e);
             }
 

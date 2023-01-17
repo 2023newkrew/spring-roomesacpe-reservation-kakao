@@ -15,12 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.entity.ThemeConstants;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -112,7 +110,8 @@ class ReservationControllerTest {
     void reservations_get_성공_테스트() throws Exception {
         //expected
         mockMvc.perform(get("/reservations/{id}", id)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.date").value("2022-08-11")).andExpect(jsonPath("$.time").value("13:00:00"))
+                .andExpect(jsonPath("$.date").value("2022-08-11"))
+                .andExpect(jsonPath("$.time").value("13:00:00"))
                 .andExpect(jsonPath("$.name").value("류성현"))
                 .andExpect(jsonPath("$.themeName").value(ThemeConstants.THEME_NAME))
                 .andExpect(jsonPath("$.themeDesc").value(ThemeConstants.THEME_DESC))
@@ -141,10 +140,12 @@ class ReservationControllerTest {
     }
 
     private static RowMapper<Reservation> reservationRowMapper() {
-        return (rs, rowNum) -> new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime(), rs.getString("name"),
-                new Theme(ThemeConstants.THEME_NAME, ThemeConstants.THEME_DESC, ThemeConstants.THEME_PRICE)
-        );
+        return (rs, rowNum) ->
+                Reservation.creteReservation(new Reservation(rs.getDate("date").toLocalDate(),
+                                rs.getTime("time").toLocalTime(), rs.getString("name"),
+                                new Theme(ThemeConstants.THEME_NAME, ThemeConstants.THEME_DESC, ThemeConstants.THEME_PRICE)),
+                        rs.getLong("id"));
+
     }
 
 

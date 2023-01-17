@@ -1,11 +1,12 @@
 package nextstep.controller;
 
 import java.net.URI;
-import java.sql.SQLException;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.dto.ReservationResponseDTO;
+import nextstep.entity.Reservation;
+import nextstep.entity.Theme;
 import nextstep.service.ReservationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,22 +21,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ThemeService themeService;
 
-    @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ThemeService themeService) {
         this.reservationService = reservationService;
+        this.themeService = themeService;
     }
 
     @PostMapping(value = "")
     public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
+        reservationService.validateCreateReservation(reservationRequestDTO);
+        Theme theme = themeService.findById(reservationRequestDTO.getThemeId());
+        Reservation reservation = reservationService.createReservation(reservationRequestDTO, theme);
         return ResponseEntity.created(URI.create(String.format("/reservations/%d",
-                reservationService.createReservation(reservationRequestDTO)))).build();
+                reservation.getId()))).build();
     }
 
     @GetMapping(value = "{id}")
     public ResponseEntity<ReservationResponseDTO> findReservation(@PathVariable(value = "id") Long id) {
-        ReservationResponseDTO response = reservationService.findReservation(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ReservationResponseDTO.of(reservationService.findReservationByID(id)));
     }
 
     @DeleteMapping(value = "{id}")

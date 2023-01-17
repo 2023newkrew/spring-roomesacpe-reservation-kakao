@@ -7,17 +7,12 @@ import static nextstep.console.ConsoleCommand.FIND;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.console.view.View;
-import nextstep.console.utils.ConnectionHandler;
 import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ThemeResponseDto;
+import nextstep.dto.ReservationResponseDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
-import nextstep.repository.ReservationJdbcRepositoryImpl;
-import nextstep.repository.ThemeJdbcRepositoryImpl;
 import nextstep.service.ReservationService;
-import nextstep.service.ReservationServiceImpl;
 import nextstep.service.ThemeService;
-import nextstep.service.ThemeServiceImpl;
 
 public class ReservationConsoleController {
 
@@ -27,19 +22,19 @@ public class ReservationConsoleController {
 
     private final View view;
 
-    public ReservationConsoleController(ConnectionHandler connectionHandler, View view) {
-        this.reservationService = new ReservationServiceImpl(new ReservationJdbcRepositoryImpl(connectionHandler));
-        this.themeService = new ThemeServiceImpl(new ThemeJdbcRepositoryImpl(connectionHandler));
+    public ReservationConsoleController(ReservationService reservationService, ThemeService themeService, View view) {
+        this.reservationService = reservationService;
+        this.themeService = themeService;
         this.view = view;
     }
 
     public void executeReservationCommand(String input){
         if (input.startsWith(ADD)) {
-            view.printReservation(makeReservation(input));
+            view.printReservationResponseDto(makeReservationResponseDto(input));
         }
         if (input.startsWith(FIND)) {
             Long id = parseId(input);
-            view.printReservationResponseDto(reservationService.findReservation(id));
+            view.printReservationResponseDto(ReservationResponseDTO.of(reservationService.findReservationByID(id)));
         }
         if (input.startsWith(DELETE)) {
             Long id = parseId(input);
@@ -57,16 +52,18 @@ public class ReservationConsoleController {
     }
 
 
-    private Reservation makeReservation(String input){
+    private ReservationResponseDTO makeReservationResponseDto(String input){
         String params = parseParams(input);
         String date = params.split(",")[0];
         String time = params.split(",")[1];
         String name = params.split(",")[2];
-        String themeId = params.split(",")[3];
-        Long id = reservationService.createReservation(
-                new ReservationRequestDTO(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, 1L));
-        ThemeResponseDto themeResponseDto = themeService.findTheme(Long.parseLong(themeId));
-        return new Reservation(id, LocalDate.parse(date), LocalTime.parse(time + ":00"), name,
-                new Theme(themeResponseDto.getName(), themeResponseDto.getDescription(), themeResponseDto.getPrice()));
+        Long themeId = Long.parseLong(params.split(",")[3]);
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO(LocalDate.parse(date),LocalTime.parse(time + ":00"), name, themeId);
+        reservationService.validateCreateReservation(reservationRequestDTO);
+        Theme theme = themeService.findById(themeId);
+        Reservation reservation = reservationService.createReservation(reservationRequestDTO, theme);
+
+        return ReservationResponseDTO.of(reservation);
+
     }
 }

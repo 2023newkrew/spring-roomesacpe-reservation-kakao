@@ -2,26 +2,24 @@ package nextstep.console.view;
 
 import nextstep.dto.ReservationResponseDTO;
 import nextstep.dto.ThemeResponseDto;
-import nextstep.entity.Reservation;
-import nextstep.entity.Theme;
 
 public class View {
 
-    private final InputView inputView = new InputView();
+    private final InputView inputView;
 
-    private final OutputView outputView = new OutputView();
+    private final OutputView outputView;
 
+    public View(InputView inputView, OutputView outputView) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+    }
 
     // Output
-    public void printCommand(){
+    public void printCommand() {
         outputView.printCommand();
     }
 
-    public void printReservation(Reservation reservation){
-        outputView.printReservation(reservation);
-    }
-
-    public void printReservationResponseDto(ReservationResponseDTO responseDTO){
+    public void printReservationResponseDto(ReservationResponseDTO responseDTO) {
         outputView.printReservationResponseDto(responseDTO);
     }
 
@@ -29,16 +27,12 @@ public class View {
         outputView.printThemeResponseDto(themeResponseDto);
     }
 
-    public void printTheme(Theme theme) {
-        outputView.printTheme(theme);
-    }
-
     public void printErrorMessage(Exception e, String... messages) {
         outputView.printErrorMessage(e, messages);
     }
     // Input
 
-    public String readLine(){
+    public String readLine() {
         return inputView.readLine();
     }
 }
