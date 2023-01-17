@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static nextstep.reservation.constant.RoomEscapeConstant.DUMMY_ID;
 import static nextstep.reservation.exception.RoomEscapeExceptionCode.NO_SUCH_THEME;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,10 +40,10 @@ class ReservationRepositoryTest {
     void createReservationTest() {
 
         //given
-        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Theme savedTheme = themeRepository.save(theme);
 
-        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
 
         //when
         Reservation created = reservationRepository.save(reservation);
@@ -58,7 +57,7 @@ class ReservationRepositoryTest {
     void deleteReservationFail() {
 
         //given
-        Reservation invalidReservation = new Reservation(DUMMY_ID, LocalDate.parse("2023-01-16"), LocalTime.parse("19:20"), "herbi", 1234L);
+        Reservation invalidReservation = new Reservation(null, LocalDate.parse("2023-01-16"), LocalTime.parse("19:20"), "herbi", 1234L);
 
         //when
         //then
@@ -71,10 +70,10 @@ class ReservationRepositoryTest {
     @DisplayName("예약 ID로 조회 성공")
     void findByIdTest() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Theme savedTheme = themeRepository.save(theme);
 
-        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
         Reservation created = reservationRepository.save(reservation);
 
         //when
@@ -89,10 +88,10 @@ class ReservationRepositoryTest {
     @DisplayName("날짜/시간으로 예약 존재 여부 조회(예약 있을 때)")
     void findByDateTimeTest() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Theme savedTheme = themeRepository.save(theme);
 
-        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
         reservationRepository.save(reservation);
 
         //when
@@ -119,10 +118,10 @@ class ReservationRepositoryTest {
     void deleteReservation() {
 
         //given
-        Theme theme = new Theme(DUMMY_ID, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        Theme theme = new Theme(null, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
         Theme savedTheme = themeRepository.save(theme);
 
-        Reservation reservation = new Reservation(DUMMY_ID, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
+        Reservation reservation = new Reservation(null, LocalDate.parse("2022-08-12"), LocalTime.parse("13:00"), "name", savedTheme.getId());
         Reservation created = reservationRepository.save(reservation);
 
         //when

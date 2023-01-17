@@ -9,8 +9,6 @@ import nextstep.reservation.entity.Reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static nextstep.reservation.constant.RoomEscapeConstant.DUMMY_ID;
-
 @Getter
 @RequiredArgsConstructor
 @Builder
@@ -23,7 +21,7 @@ public class ReservationRequest {
 
     public Reservation toEntityWithDummyId() {
         return Reservation.builder()
-                .id(DUMMY_ID)
+                .id(null)
                 .date(date)
                 .time(time)
                 .name(name)

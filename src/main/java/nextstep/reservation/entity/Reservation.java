@@ -11,13 +11,13 @@ import java.time.LocalTime;
 @EqualsAndHashCode
 @Builder
 public class Reservation {
-    @NonNull
+    @Nullable
     private final Long id;
-    @Nullable
+    @NonNull
     private final LocalDate date;
-    @Nullable
+    @NonNull
     private final LocalTime time;
-    @Nullable
+    @NonNull
     private final String name;
     @NonNull
     private final Long themeId;

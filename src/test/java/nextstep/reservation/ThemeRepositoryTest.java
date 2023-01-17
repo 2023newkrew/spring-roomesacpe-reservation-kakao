@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static nextstep.reservation.constant.RoomEscapeConstant.DUMMY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -26,7 +25,7 @@ class ThemeRepositoryTest {
     @DisplayName("테마 생성")
     void create() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "호러", "매우 무서운", 24000);
+        Theme theme = new Theme(null, "호러", "매우 무서운", 24000);
 
         //when
         Theme created = jdbcThemeRepository.save(theme);
@@ -39,7 +38,7 @@ class ThemeRepositoryTest {
     @DisplayName("id를 통한 조회")
     void findById() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "호러", "매우 무서운", 24000);
+        Theme theme = new Theme(null, "호러", "매우 무서운", 24000);
         Theme created = jdbcThemeRepository.save(theme);
 
         //when
@@ -55,7 +54,7 @@ class ThemeRepositoryTest {
     @DisplayName("전체 조회시 리스트로 반환")
     void findAll() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "호러", "매우 무서운", 24000);
+        Theme theme = new Theme(null, "호러", "매우 무서운", 24000);
         Theme created = jdbcThemeRepository.save(theme);
         Theme created2 = jdbcThemeRepository.save(theme);
 
@@ -70,7 +69,7 @@ class ThemeRepositoryTest {
     @DisplayName("id를 통한 삭제 성공")
     void deleteById() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "호러", "매우 무서운", 24000);
+        Theme theme = new Theme(null, "호러", "매우 무서운", 24000);
         Theme created = jdbcThemeRepository.save(theme);
 
         //when
@@ -84,7 +83,7 @@ class ThemeRepositoryTest {
     @DisplayName("테이블 전체 삭제")
     void clear() {
         //given
-        Theme theme = new Theme(DUMMY_ID, "호러", "매우 무서운", 24000);
+        Theme theme = new Theme(null, "호러", "매우 무서운", 24000);
         Theme created = jdbcThemeRepository.save(theme);
         Theme created2 = jdbcThemeRepository.save(theme);
 

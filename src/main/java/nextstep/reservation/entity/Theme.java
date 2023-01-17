@@ -9,12 +9,12 @@ import org.springframework.lang.Nullable;
 @EqualsAndHashCode
 @Builder
 public class Theme {
-    @NonNull
+    @Nullable
     private final Long id;
-    @Nullable
+    @NonNull
     private final String name;
-    @Nullable
+    @NonNull
     private final String desc;
-    @Nullable
+    @NonNull
     private final Integer price;
 }
