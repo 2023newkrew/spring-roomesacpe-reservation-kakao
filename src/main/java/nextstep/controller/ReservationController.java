@@ -25,7 +25,7 @@ public class ReservationController {
         this.themeService = themeService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
         Theme theme = themeService.findById(request.getThemeId());
         Long id = reservationService.createReservation(request.getDate(),

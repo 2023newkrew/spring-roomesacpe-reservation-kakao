@@ -23,13 +23,13 @@ public class ThemeController {
     }
 
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity createTheme(@RequestBody CreateThemeRequest request) {
         Long id = themeService.createTheme(request.getName(), request.getDesc(), request.getPrice());
         return ResponseEntity.created(URI.create("/themes/" + id)).build();
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<FindTheme> findAllThemes() {
         return themeService.findAll().stream()
                 .map(theme -> FindTheme.from(theme))
