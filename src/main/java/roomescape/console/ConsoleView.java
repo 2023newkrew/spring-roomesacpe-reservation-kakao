@@ -1,4 +1,4 @@
-package roomescape.view;
+package roomescape.console;
 
 import org.springframework.stereotype.Component;
 import roomescape.dto.ReservationResponseDto;

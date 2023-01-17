@@ -1,14 +1,12 @@
-package roomescape.controller;
+package roomescape.console;
 
 import org.springframework.stereotype.Controller;
 import roomescape.dto.*;
 import roomescape.service.ReservationService;
 import roomescape.service.ThemeService;
-import roomescape.view.ConsoleView;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 
 @Controller
 public class ConsoleController {
@@ -20,10 +18,6 @@ public class ConsoleController {
         this.reservationService = reservationService;
         this.themeService = themeService;
         this.consoleView = consoleView;
-    }
-
-    public String getInput() {
-        return consoleView.inputCommand();
     }
 
     public void createReservation(String[] params) {
@@ -100,27 +94,5 @@ public class ConsoleController {
             return;
         }
         consoleView.showThemeDeleted();
-    }
-
-    public String getCommand(String input) {
-        String[] splitted = input.split(" ");
-        return String.join("_", Arrays.copyOf(splitted, Math.min(splitted.length, 2))).toUpperCase();
-    }
-
-    // 이름, 설명 등의 공백은 유지
-    public String[] getParams(String input) {
-        String[] splitted = input.split(" ");
-        String[] subArray = Arrays.copyOfRange(splitted, Math.min(splitted.length, 2), splitted.length);
-        return Arrays.stream(String.join(" ", subArray).split(","))
-                .map(String::strip)
-                .toArray(String[]::new);
-    }
-
-    public void close() {
-        consoleView.close();
-    }
-
-    public void receivedInvalidInput() {
-        consoleView.showInvalidInput();
     }
 }
