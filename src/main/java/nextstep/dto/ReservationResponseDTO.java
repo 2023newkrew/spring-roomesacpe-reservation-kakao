@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import nextstep.entity.Reservation;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class ReservationResponseDTO {
 
     private final Long id;
@@ -23,4 +26,19 @@ public class ReservationResponseDTO {
     private final String themeDescription;
 
     private final Integer themePrice;
+
+    public static ReservationResponseDTO of(Reservation reservation){
+        return ReservationResponseDTO.builder()
+                .id(reservation.getId())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
+                .name(reservation.getName())
+                .themeName(reservation.getTheme().getName())
+                .themeDescription(reservation.getTheme().getDescription())
+                .themePrice(reservation.getTheme().getPrice())
+                .build();
+    }
+
+
+
 }
