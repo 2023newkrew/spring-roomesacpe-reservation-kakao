@@ -12,9 +12,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 
-public class ReservationRepositoryMemoryImpl implements ReservationRepository{
+public class ReservationRepositoryMemoryImpl implements ReservationRepository {
     private static final Map<Long, Reservation> reservationList = new HashMap<>();
     private static final AtomicLong reservationCount = new AtomicLong(1);
+
     @Override
     public Long create(Reservation reservation) {
         if (findByDateTime(reservation.getDate(), reservation.getTime())) {
@@ -30,6 +31,7 @@ public class ReservationRepositoryMemoryImpl implements ReservationRepository{
     public Reservation findById(long id) {
         return reservationList.getOrDefault(id, null);
     }
+
     @Override
     public Boolean findByDateTime(LocalDate date, LocalTime time) {
         return reservationList

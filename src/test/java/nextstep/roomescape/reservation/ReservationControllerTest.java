@@ -146,7 +146,7 @@ public class ReservationControllerTest {
         return new Theme(Long.parseLong(location.split("/")[2]), "테마이름", "테마설명", 22000);
     }
 
-    public void deleteTheme(Long id){
+    public void deleteTheme(Long id) {
         RestAssured
                 .given().log().all()
                 .when().delete("/themes/" + id)

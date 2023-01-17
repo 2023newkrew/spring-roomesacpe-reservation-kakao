@@ -55,7 +55,7 @@ public class ThemeReservationConsoleController {
 
                     System.out.println("예약이 등록되었습니다.");
                     printReservation(reservationServiceImpl.findById(createReservationID));
-                } catch (ClassCastException e){
+                } catch (ClassCastException e) {
                     System.out.println(e.getMessage());
                 }
 
@@ -77,7 +77,7 @@ public class ThemeReservationConsoleController {
                 try {
                     reservationServiceImpl.delete(id);
                     System.out.println("예약이 취소되었습니다.");
-                } catch (NotExistEntityException e){
+                } catch (NotExistEntityException e) {
                     System.out.println(e.getMessage());
                 }
 
@@ -89,14 +89,14 @@ public class ThemeReservationConsoleController {
         }
     }
 
-    public static void printReservation(ReservationResponseDTO reservation){
+    public static void printReservation(ReservationResponseDTO reservation) {
         System.out.println("예약 번호: " + reservation.getId());
         System.out.println("예약 날짜: " + reservation.getDate());
         System.out.println("예약 시간: " + reservation.getTime());
         System.out.println("예약자 이름: " + reservation.getName());
     }
 
-    public static void printTheme(ReservationResponseDTO reservation){
+    public static void printTheme(ReservationResponseDTO reservation) {
         System.out.println("예약 테마 이름: " + reservation.getThemeName());
         System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
         System.out.println("예약 테마 가격: " + reservation.getThemePrice());

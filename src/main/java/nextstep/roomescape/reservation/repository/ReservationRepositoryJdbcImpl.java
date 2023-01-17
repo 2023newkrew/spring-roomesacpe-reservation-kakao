@@ -21,7 +21,7 @@ import java.util.List;
 
 @Repository
 @Primary
-public class ReservationRepositoryJdbcImpl implements ReservationRepository{
+public class ReservationRepositoryJdbcImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -42,6 +42,7 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
             )
 
     );
+
     @Override
     public Long create(Reservation reservation) {
         Theme theme = reservation.getTheme();
@@ -70,7 +71,7 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
                 "where reservation.id = ?;";
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
 

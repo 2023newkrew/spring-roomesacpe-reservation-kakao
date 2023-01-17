@@ -10,13 +10,13 @@ import org.springframework.lang.Nullable;
 public class Theme {
 
     @Nullable
-    private  Long id;
-    private  String name;
-    private  String desc;
-    private  Integer price;
+    private Long id;
+    private String name;
+    private String desc;
+    private Integer price;
 
     public Theme(String name, String desc, Integer price) {
-        this(null,name,desc,price);
+        this(null, name, desc, price);
     }
 
 }

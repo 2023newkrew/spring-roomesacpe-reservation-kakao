@@ -22,7 +22,7 @@ public class ReservationResponseDTO {
     private final String themeDesc;
     private final int themePrice;
 
-    public static ReservationResponseDTO of (Reservation reservation){
+    public static ReservationResponseDTO of(Reservation reservation) {
         Theme theme = reservation.getTheme();
         return ReservationResponseDTO.builder()
                 .id(reservation.getId())

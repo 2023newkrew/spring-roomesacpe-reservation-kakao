@@ -23,7 +23,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Long create(ReservationRequestDTO reservation) {
-        if (themeRepository.find(reservation.getTheme()) == null){
+        if (themeRepository.find(reservation.getTheme()) == null) {
             System.out.println("입력된 테마 정보가 잘못되었습니다.");
             throw new NotExistEntityException("입력된 테마 정보가 잘못되었습니다.");
         }

@@ -16,7 +16,7 @@ public class ReservationRequestDTO {
     private final String name;
     private final Theme theme;
 
-    public Reservation toEntity(){
+    public Reservation toEntity() {
         return Reservation.builder()
                 .date(date)
                 .time(time)

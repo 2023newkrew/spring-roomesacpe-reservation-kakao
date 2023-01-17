@@ -18,7 +18,7 @@ public class ThemeRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ThemeRepository(JdbcTemplate jdbcTemplate){
+    public ThemeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -29,7 +29,7 @@ public class ThemeRepository {
             resultSet.getInt("price")
     );
 
-    public Long create(Theme theme){
+    public Long create(Theme theme) {
         String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -45,41 +45,41 @@ public class ThemeRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public List<Theme> findAll(){
+    public List<Theme> findAll() {
         String sql = "SELECT id, name, desc, price from theme;";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Theme findByName(String name){
+    public Theme findByName(String name) {
         String sql = "select id, name, desc, price from theme where name=?";
         return jdbcTemplate.queryForObject(sql, rowMapper, name);
     }
 
-    public Theme find(Theme theme){
+    public Theme find(Theme theme) {
         String sql = "select id, name, desc, price from theme where id=? and name=? and desc=? and price=?";
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, theme.getId(), theme.getName(), theme.getDesc(), theme.getPrice());
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public Theme findById(Long id){
+    public Theme findById(Long id) {
         String sql = "select id, name, desc, price from theme where id=?";
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public int updateById(Long id, Theme theme){
+    public int updateById(Long id, Theme theme) {
         String sql = "update theme set name=?, desc=?, price=?" +
                 "where id = ?";
         return jdbcTemplate.update(sql, theme.getName(), theme.getDesc(), theme.getPrice(), id);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         String sql = "delete from theme where id = ?";
         jdbcTemplate.update(sql, id);
     }
