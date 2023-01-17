@@ -1,17 +1,13 @@
 package nextstep.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class ThemeCreateDto {
+public class ThemeCreateDto extends ThemeBaseDto{
+    @Builder
+    public ThemeCreateDto(String name, String description, Integer price) {
+        super(name, description, price);
+    }
 
-    private String name;
-
-    @JsonProperty("desc")
-    private String description;
-
-    private Integer price;
 }

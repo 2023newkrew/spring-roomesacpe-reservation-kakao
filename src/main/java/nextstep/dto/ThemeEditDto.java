@@ -1,20 +1,24 @@
 package nextstep.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import nextstep.entity.Theme;
 
 @Getter
-@AllArgsConstructor
-public class ThemeEditDto {
-    private Long id;
+public class ThemeEditDto extends ThemeBaseDto {
+    private final Long id;
 
-    private String name;
+    @Builder
+    public ThemeEditDto(Long id, String name, String description, Integer price) {
+        super(name, description, price);
+        this.id = id;
+    }
 
-    @JsonProperty("desc")
-    private String description;
-
-    private Integer price;
+    @Override
+    public Theme toEntity() {
+        Theme theme = super.toEntity();
+        return Theme.createTheme(theme, id);
+    }
 
 
 }
