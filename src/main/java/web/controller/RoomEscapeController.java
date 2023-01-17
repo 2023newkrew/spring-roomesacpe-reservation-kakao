@@ -75,6 +75,10 @@ public class RoomEscapeController {
     @PostMapping("/themes")
     public ResponseEntity<Void> createTheme(@RequestBody @Valid ThemeRequestDto requestDto) {
         Long createdId = roomEscapeService.createTheme(requestDto);
+        if (createdId == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/themes/" + createdId))
                 .build();

@@ -12,7 +12,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     private static long createdId = 0L;
 
     @Override
-    public long save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
             throw new ReservationDuplicateException();
         }

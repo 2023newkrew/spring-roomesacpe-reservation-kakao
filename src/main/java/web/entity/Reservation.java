@@ -1,13 +1,15 @@
 package web.entity;
 
+import org.springframework.ui.context.Theme;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
-
     private LocalDate date;
     private LocalTime time;
     private String name;
+    private Theme theme;
 
     private Reservation(LocalDate date, LocalTime time, String name) {
         this.date = date;

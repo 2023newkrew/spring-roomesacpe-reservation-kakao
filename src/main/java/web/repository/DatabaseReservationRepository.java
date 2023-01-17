@@ -25,11 +25,11 @@ public class DatabaseReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public long save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
             throw new ReservationDuplicateException();
         }
-        String sql = "INSERT INTO RESERVATION (date, time, name) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name) VALUES (?, ?, ?);";
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
@@ -41,12 +41,12 @@ public class DatabaseReservationRepository implements ReservationRepository {
             }, keyHolder);
             return new Long(keyHolder.getKey().longValue());
         } catch (Exception E) {
-            return -1;
+            return null;
         }
     }
 
     private boolean isDuplicateReservation(Reservation reservation) {
-        String sql = "SELECT * FROM RESERVATION WHERE DATE = ? AND TIME = ?";
+        String sql = "SELECT * FROM reservation WHERE DATE = ? AND TIME = ?";
         Reservation findReservation;
         try {
             findReservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
@@ -61,7 +61,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(long reservationId) {
-        String sql = "SELECT * FROM RESERVATION WHERE ID = ?";
+        String sql = "SELECT * FROM reservation WHERE ID = ?";
         Reservation reservation;
         try {
             reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
@@ -76,13 +76,14 @@ public class DatabaseReservationRepository implements ReservationRepository {
 
     @Override
     public Long delete(long reservationId) {
-        String sql = "DELETE FROM RESERVATION WHERE ID = ?";
+        String sql = "DELETE FROM reservation WHERE ID = ?";
         return (long) jdbcTemplate.update(sql, reservationId);
     }
 
+
     @Override
     public void clearAll() {
-        String sql = "DELETE FROM RESERVATION";
+        String sql = "DELETE FROM reservation";
         jdbcTemplate.update(sql);
     }
 }
