@@ -29,7 +29,7 @@ public class WebThemeService implements ThemeService {
         if (jdbcThemeRepository.findIdByDateAndTime(theme) == 1) {
             logger.error(CREATE_DUPLICATED.getMessage() + THEME_NAME.getMessage() + theme.getName()
                         + THEME_PRICE.getMessage() + theme.getPrice());
-            throw new DuplicateRequestException("요청한 이름/가격의 테마가 이미 등록되어 있습니다.");
+            throw new DuplicateRequestException(THEME_CREATE_ERROR.getMessage());
         }
         Long themeId = jdbcThemeRepository.createTheme(theme);
         logger.info(CREATE_SUCCESS.getMessage() + themeId);
@@ -46,7 +46,7 @@ public class WebThemeService implements ThemeService {
         } catch (Exception e){
             logger.error(NOT_FOUND_ERROR.getMessage() + themeId + ", " + e);
         }
-        throw new NoSuchElementException("요청한 ID " + themeId + "를 조회할 수 없습니다");
+        throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + themeId);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class WebThemeService implements ThemeService {
         Integer deleteResult = jdbcThemeRepository.deleteTheme(deleteId);
         if (deleteResult == 0){
             logger.error(DELETE_NOT_FOUND_ERROR.getMessage() + deleteId);
-            throw new NoSuchElementException("요청한 ID: " + deleteId + "를 조회할 수 없습니다");
+            throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + deleteId);
         }
         logger.info(DELETE_SUCCESS.getMessage() + deleteResult);
     }

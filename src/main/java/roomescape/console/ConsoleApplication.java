@@ -28,28 +28,17 @@ public class ConsoleApplication {
             if (input.startsWith(ADD)) {
                 Reservation reservationInfo = inputParsing.createReserveInfo(++reservationIndex, input);
                 Reservation reservation = consoleReservationController.createReservation(reservationInfo);
-                if (reservation == null) {
-                    System.out.println(RESERVATION_CREATE_ERROR.getMessage());
-                    continue;
-                }
                 System.out.println(RESERVATION_REGISTERED.getMessage());
                 getReservationInfo(reservation);
             }
             if (input.startsWith(FIND)) {
                 long findId = inputParsing.getFindId(input);
                 Reservation reservation = consoleReservationController.lookUpReservation(findId);
-                if (reservation == null) {
-                    System.out.println(ID_NOT_FOUND_ERROR.getMessage());
-                    continue;
-                }
                 getReservationInfo(reservation);
             }
             if (input.startsWith(DELETE)) {
                 long deleteId = inputParsing.getFindId(input);
-                Boolean deletion = consoleReservationController.deleteReservation(deleteId);
-                if (!deletion) {
-                    System.out.println(ID_NOT_FOUND_ERROR.getMessage());
-                }
+                consoleReservationController.deleteReservation(deleteId);
                 System.out.println(RESERVATION_CANCEL.getMessage());
             }
             if (input.equals(QUIT)) {

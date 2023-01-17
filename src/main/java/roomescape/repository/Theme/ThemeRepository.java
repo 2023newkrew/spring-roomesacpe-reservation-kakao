@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface ThemeRepository {
     Long createTheme(Theme theme);
     Optional<Theme> findById(long themeId);
-    Integer findIdByDateAndTime(Theme theme);
+    Long findIdByDateAndTime(Theme theme);
     Integer deleteTheme(long deleteId);
 }
