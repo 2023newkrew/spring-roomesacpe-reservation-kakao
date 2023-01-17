@@ -24,14 +24,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    // mapstruct
-    implementation group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.5.3.Final'
-    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-
-    //joda-time
+    // joda-time
     implementation group: 'joda-time', name: 'joda-time', version: '2.12.2'
-
 
 
     // test
