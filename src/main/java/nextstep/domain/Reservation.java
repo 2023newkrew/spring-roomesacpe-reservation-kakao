@@ -1,15 +1,17 @@
 package nextstep.domain;
 
+import nextstep.dto.CreateReservationRequest;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
-    private Long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private Long themeId;
+    private final Long id;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final Long themeId;
 
 
 
@@ -55,5 +57,14 @@ public class Reservation {
 
     public Long getThemeId() {
         return themeId;
+    }
+
+    public static Reservation from(CreateReservationRequest createReservationRequest) {
+        return new Reservation(
+                LocalDate.parse(createReservationRequest.getDate()),
+                LocalTime.parse(createReservationRequest.getTime()),
+                createReservationRequest.getName(),
+                createReservationRequest.getThemeId()
+        );
     }
 }
