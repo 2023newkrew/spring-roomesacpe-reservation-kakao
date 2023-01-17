@@ -1,7 +1,6 @@
 package nextstep.controller;
 
 import java.net.URI;
-import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
@@ -30,12 +29,12 @@ public class ThemeController {
     @PostMapping("")
     ResponseEntity createTheme(@RequestBody ThemeCreateDto themeCreateDto) {
         return ResponseEntity.created(
-                URI.create(String.format("/themes/%d", themeService.createTheme(themeCreateDto)))).build();
+                URI.create(String.format("/themes/%d", themeService.createTheme(themeCreateDto).getId()))).build();
     }
 
     @GetMapping("{id}")
     ResponseEntity<ThemeResponseDto> findTheme(@PathVariable Long id) {
-        return ResponseEntity.ok(themeService.findTheme(id));
+        return ResponseEntity.ok(ThemeResponseDto.of(themeService.findById(id)));
     }
 
     @PutMapping("")
