@@ -57,4 +57,8 @@ public class RoomEscapeRepositoryImpl implements RoomEscapeRepository {
         return themeDaoImpl.findThemeById(themeId);
     }
 
+    @Override
+    public Boolean isExistReservationByThemeId(long themeId) {
+        return reservationDaoImpl.isExistReservationByThemeId(themeId);
+    }
 }

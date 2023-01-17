@@ -90,10 +90,19 @@ public class ReservationDaoImpl implements ReservationDao {
         return (long) jdbcTemplate.update(sql, reservationId);
     }
 
-
     @Override
     public void clearAll() {
         String sql = "DELETE FROM reservation";
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public Boolean isExistReservationByThemeId(long themeId) {
+        String sql = "SELECT * FROM reservation WHERE THEME_ID = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> rowNum, themeId) != null;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 }

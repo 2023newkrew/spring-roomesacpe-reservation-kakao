@@ -22,4 +22,6 @@ public interface RoomEscapeRepository {
     Optional<List<Theme>> getThemes();
 
     Optional<Theme> findThemeById(long themeId);
+
+    Boolean isExistReservationByThemeId(long themeId);
 }

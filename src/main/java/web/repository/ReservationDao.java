@@ -14,4 +14,6 @@ public interface ReservationDao {
     Long delete(long reservationId);
 
     void clearAll();
+
+    Boolean isExistReservationByThemeId(long themeId);
 }

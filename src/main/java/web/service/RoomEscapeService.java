@@ -9,6 +9,7 @@ import web.dto.ThemeResponseDto;
 import web.entity.Reservation;
 import web.entity.Theme;
 import web.exception.ReservationNotFoundException;
+import web.exception.ThemeDeleteNotAllowException;
 import web.exception.ThemeNotFoundException;
 import web.repository.RoomEscapeRepositoryImpl;
 
@@ -90,6 +91,9 @@ public class RoomEscapeService {
     }
 
     public void deleteTheme(long themeId) {
+        if (roomEscapeRepositoryImpl.isExistReservationByThemeId(themeId)) {
+            throw new ThemeDeleteNotAllowException();
+        }
         long deleteThemeCount = roomEscapeRepositoryImpl.deleteThemeById(themeId);
         if (deleteThemeCount == 0) {
             throw new ThemeNotFoundException();
