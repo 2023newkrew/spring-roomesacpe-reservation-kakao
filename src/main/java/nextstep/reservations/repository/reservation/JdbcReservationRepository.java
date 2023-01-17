@@ -20,13 +20,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
+import static nextstep.reservations.repository.reservation.ReservationSqlRepository.*;
+
 @Repository
 @Primary
-public class JdbcReservationRepository implements ReservationRepository{
-    private static final String INSERT_ONE_QUERY = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM reservation WHERE id = ?";
-    private static final String REMOVE_BY_ID_QUERY = "DELETE FROM reservation WHERE id = ?";
-
+public class JdbcReservationRepository extends ReservationSqlRepository{
     public static final int DuplicateReservationError = 23505;
     public static final int NoSuchThemeError = 23506;
 
