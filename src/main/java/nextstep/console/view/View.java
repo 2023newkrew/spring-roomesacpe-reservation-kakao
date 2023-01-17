@@ -1,6 +1,6 @@
 package nextstep.console.view;
 
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.dto.ReservationResponseDto;
 import nextstep.dto.ThemeResponseDto;
 
 public class View {
@@ -19,7 +19,7 @@ public class View {
         outputView.printCommand();
     }
 
-    public void printReservationResponseDto(ReservationResponseDTO responseDTO) {
+    public void printReservationResponseDto(ReservationResponseDto responseDTO) {
         outputView.printReservationResponseDto(responseDTO);
     }
 

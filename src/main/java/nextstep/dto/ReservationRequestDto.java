@@ -10,7 +10,7 @@ import nextstep.entity.Theme;
 
 @Getter
 @RequiredArgsConstructor
-public class ReservationRequestDTO {
+public class ReservationRequestDto {
 
     private final LocalDate date;
 

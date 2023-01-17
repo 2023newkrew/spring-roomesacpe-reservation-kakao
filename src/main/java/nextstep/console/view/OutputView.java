@@ -1,7 +1,7 @@
 package nextstep.console.view;
 
 import java.util.Arrays;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.dto.ReservationResponseDto;
 import nextstep.dto.ThemeResponseDto;
 
 public class OutputView {
@@ -19,7 +19,7 @@ public class OutputView {
         System.out.println("- 종료: quit");
     }
 
-    public void printReservationResponseDto(ReservationResponseDTO reservationResponseDTO) {
+    public void printReservationResponseDto(ReservationResponseDto reservationResponseDTO) {
         System.out.println("예약 번호: " + reservationResponseDTO.getId());
         System.out.println("예약 날짜: " + reservationResponseDTO.getDate());
         System.out.println("예약 시간: " + reservationResponseDTO.getTime());

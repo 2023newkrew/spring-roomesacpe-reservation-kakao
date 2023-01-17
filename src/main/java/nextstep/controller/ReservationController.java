@@ -1,8 +1,8 @@
 package nextstep.controller;
 
 import java.net.URI;
-import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.dto.ReservationRequestDto;
+import nextstep.dto.ReservationResponseDto;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.service.ReservationService;
@@ -29,7 +29,7 @@ public class ReservationController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
+    public ResponseEntity createReservation(@RequestBody ReservationRequestDto reservationRequestDTO) {
         reservationService.validateCreateReservation(reservationRequestDTO);
         Theme theme = themeService.findById(reservationRequestDTO.getThemeId());
         Reservation reservation = reservationService.createReservation(reservationRequestDTO, theme);
@@ -38,8 +38,8 @@ public class ReservationController {
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<ReservationResponseDTO> findReservation(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(ReservationResponseDTO.of(reservationService.findReservationByID(id)));
+    public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable(value = "id") Long id) {
+        return ResponseEntity.ok(ReservationResponseDto.of(reservationService.findReservationByID(id)));
     }
 
     @DeleteMapping(value = "{id}")

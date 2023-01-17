@@ -7,8 +7,8 @@ import static nextstep.console.ConsoleCommand.FIND;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.console.view.View;
-import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.dto.ReservationRequestDto;
+import nextstep.dto.ReservationResponseDto;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.service.ReservationService;
@@ -34,7 +34,7 @@ public class ReservationConsoleController {
         }
         if (input.startsWith(FIND)) {
             Long id = parseId(input);
-            view.printReservationResponseDto(ReservationResponseDTO.of(reservationService.findReservationByID(id)));
+            view.printReservationResponseDto(ReservationResponseDto.of(reservationService.findReservationByID(id)));
         }
         if (input.startsWith(DELETE)) {
             Long id = parseId(input);
@@ -52,18 +52,18 @@ public class ReservationConsoleController {
     }
 
 
-    private ReservationResponseDTO makeReservationResponseDto(String input){
+    private ReservationResponseDto makeReservationResponseDto(String input){
         String params = parseParams(input);
         String date = params.split(",")[0];
         String time = params.split(",")[1];
         String name = params.split(",")[2];
         Long themeId = Long.parseLong(params.split(",")[3]);
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO(LocalDate.parse(date),LocalTime.parse(time + ":00"), name, themeId);
+        ReservationRequestDto reservationRequestDTO = new ReservationRequestDto(LocalDate.parse(date),LocalTime.parse(time + ":00"), name, themeId);
         reservationService.validateCreateReservation(reservationRequestDTO);
         Theme theme = themeService.findById(themeId);
         Reservation reservation = reservationService.createReservation(reservationRequestDTO, theme);
 
-        return ReservationResponseDTO.of(reservation);
+        return ReservationResponseDto.of(reservation);
 
     }
 }

@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import nextstep.dto.ReservationRequestDTO;
+import nextstep.dto.ReservationRequestDto;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.entity.ThemeConstants;
@@ -48,7 +48,7 @@ class ReservationControllerTest {
     private JdbcTemplate jdbcTemplate;
     Long id = null;
 
-    ReservationRequestDTO requestDTO = new ReservationRequestDTO(LocalDate.parse("2022-08-11"),
+    ReservationRequestDto requestDTO = new ReservationRequestDto(LocalDate.parse("2022-08-11"),
             LocalTime.parse("13:00:00"), "류성현", 1L);
 
     @PostConstruct
@@ -84,7 +84,7 @@ class ReservationControllerTest {
     @DisplayName("/reservations post 성공")
     void reservations_POST_성공_테스트() throws Exception {
         //given
-        ReservationRequestDTO requestDTO2 = new ReservationRequestDTO(LocalDate.parse("2022-08-12"),
+        ReservationRequestDto requestDTO2 = new ReservationRequestDto(LocalDate.parse("2022-08-12"),
                 LocalTime.parse("13:00:00"), "류성현", 1L);
         String json2 = objectMapper.writeValueAsString(requestDTO2);
 

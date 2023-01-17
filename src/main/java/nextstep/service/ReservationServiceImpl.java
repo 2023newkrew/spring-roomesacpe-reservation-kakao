@@ -3,7 +3,7 @@ package nextstep.service;
 import java.time.LocalTime;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import nextstep.dto.ReservationRequestDTO;
+import nextstep.dto.ReservationRequestDto;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.entity.TimeTable;
@@ -17,7 +17,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public Reservation createReservation(ReservationRequestDTO reservationRequestDTO, Theme theme) {
+    public Reservation createReservation(ReservationRequestDto reservationRequestDTO, Theme theme) {
         return reservationRepository.save(reservationRequestDTO.toEntity(theme));
     }
 
@@ -44,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     @Override
-    public void validateCreateReservation(ReservationRequestDTO reservationRequestDTOvation) {
+    public void validateCreateReservation(ReservationRequestDto reservationRequestDTOvation) {
         validateTime(reservationRequestDTOvation.getTime());
         validateDuplicate(reservationRequestDTOvation);
     }
@@ -55,7 +55,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-    private void validateDuplicate(ReservationRequestDTO reservationRequestDTO) {
+    private void validateDuplicate(ReservationRequestDto reservationRequestDTO) {
         boolean isExist = reservationRepository.existByDateAndTimeAndThemeId(reservationRequestDTO.getDate(),
                 reservationRequestDTO.getTime(), reservationRequestDTO.getThemeId());
         if (isExist) {

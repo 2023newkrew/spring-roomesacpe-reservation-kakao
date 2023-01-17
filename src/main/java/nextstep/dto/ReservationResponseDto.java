@@ -11,7 +11,7 @@ import nextstep.entity.Reservation;
 @Getter
 @AllArgsConstructor
 @Builder
-public class ReservationResponseDTO {
+public class ReservationResponseDto {
 
     private final Long id;
 
@@ -27,8 +27,8 @@ public class ReservationResponseDTO {
 
     private final Integer themePrice;
 
-    public static ReservationResponseDTO of(Reservation reservation){
-        return ReservationResponseDTO.builder()
+    public static ReservationResponseDto of(Reservation reservation){
+        return ReservationResponseDto.builder()
                 .id(reservation.getId())
                 .date(reservation.getDate())
                 .time(reservation.getTime())
