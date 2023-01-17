@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,4 +22,7 @@ public class ReservationRequest {
 
     @NonNull
     private String name;
+
+    @NonNull
+    private Long themeId;
 }
