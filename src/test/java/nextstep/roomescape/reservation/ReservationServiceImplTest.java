@@ -2,7 +2,7 @@ package nextstep.roomescape.reservation;
 
 import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.model.Theme;
+import nextstep.roomescape.reservation.repository.model.Theme;
 import nextstep.roomescape.reservation.repository.ReservationRepositoryMemoryImpl;
 import nextstep.roomescape.reservation.service.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

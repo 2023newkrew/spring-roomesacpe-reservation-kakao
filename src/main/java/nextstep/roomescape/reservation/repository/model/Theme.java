@@ -1,23 +1,29 @@
-package nextstep.roomescape.theme.domain.entity;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import org.springframework.lang.Nullable;
+package nextstep.roomescape.reservation.repository.model;
 
 import java.util.Objects;
 
-@Builder
-@Getter
-@AllArgsConstructor
 public class Theme {
-
-    @Nullable
-    private final Long id;
     private final String name;
     private final String desc;
     private final Integer price;
 
+    public Theme(String name, String desc, Integer price) {
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
 
     @Override
     public boolean equals(Object o) {

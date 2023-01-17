@@ -1,8 +1,8 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.model.Reservation;
-import nextstep.roomescape.reservation.model.Theme;
-import nextstep.roomescape.reservation.exception.CreateReservationException;
+import nextstep.roomescape.reservation.repository.model.Reservation;
+import nextstep.roomescape.reservation.repository.model.Theme;
+import nextstep.roomescape.exception.DuplicateEntityException;
 import nextstep.roomescape.reservation.repository.ReservationRepository;
 import nextstep.roomescape.reservation.repository.ReservationRepositoryMemoryImpl;
 import org.junit.jupiter.api.*;
@@ -64,7 +64,7 @@ class ReservationRepositoryTest {
     @Test
     void duplicateTimeReservationThrowException() {
         reservationRepository.create(createRequest(LocalDate.parse("9999-04-04")));
-        Assertions.assertThrows(CreateReservationException.class,
+        Assertions.assertThrows(DuplicateEntityException.class,
                 () -> reservationRepository.create(
                         new Reservation(null, LocalDate.parse("9999-04-04"), LocalTime.parse("13:00"), "name", theme)
                 ));

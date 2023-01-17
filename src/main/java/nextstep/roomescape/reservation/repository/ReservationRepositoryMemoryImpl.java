@@ -1,7 +1,7 @@
 package nextstep.roomescape.reservation.repository;
 
-import nextstep.roomescape.reservation.model.Reservation;
-import nextstep.roomescape.reservation.exception.CreateReservationException;
+import nextstep.roomescape.reservation.repository.model.Reservation;
+import nextstep.roomescape.exception.DuplicateEntityException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ public class ReservationRepositoryMemoryImpl implements ReservationRepository{
     @Override
     public Reservation create(Reservation reservation) {
         if (findByDateTime(reservation.getDate(), reservation.getTime())) {
-            throw new CreateReservationException("예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있습니다.");
+            throw new DuplicateEntityException("예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있습니다.");
         }
         Long id = reservationCount.getAndIncrement();
         Reservation creatteReservation = new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());

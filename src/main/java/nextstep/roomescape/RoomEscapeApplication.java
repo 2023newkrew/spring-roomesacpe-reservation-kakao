@@ -4,8 +4,8 @@ import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.repository.ReservationRepositoryJdbcImpl;
 import nextstep.roomescape.reservation.service.ReservationServiceImpl;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.model.Theme;
-import nextstep.roomescape.reservation.exception.DeleteReservationException;
+import nextstep.roomescape.reservation.repository.model.Theme;
+import nextstep.roomescape.exception.NotExistEntityException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -77,7 +77,7 @@ public class RoomEscapeApplication {
                     if (reservationServiceImpl.delete(id)) {
                         System.out.println("예약이 취소되었습니다.");
                     }
-                } catch (DeleteReservationException e){
+                } catch (NotExistEntityException e){
                     System.out.println(e.getMessage());
                 }
 

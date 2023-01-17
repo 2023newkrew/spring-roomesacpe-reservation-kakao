@@ -1,6 +1,7 @@
 package nextstep.roomescape.theme;
 
-import nextstep.roomescape.theme.domain.entity.Theme;
+import nextstep.roomescape.theme.repository.model.Theme;
+import nextstep.roomescape.theme.repository.ThemeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,29 +22,20 @@ class ThemeRepositoryTest {
     @Transactional
     void create() {
         Theme theme = new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme createTheme = themeRepository.create(theme);
+        Long id = themeRepository.create(theme);
 
-        assertTrue(theme.getName().equals(createTheme.getName()) &&
-                theme.getDesc().equals(createTheme.getDesc()) &&
-                theme.getPrice().equals(createTheme.getPrice()));
+        assertNotNull(id);
     }
-
-//    @Test
-//    @Transactional
-//    void findAll() {
-//        Theme theme = new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-//        Theme createTheme = themeRepository.create(theme);
-//    }
 
     @Test
     @Transactional
     void findById() {
         Theme theme = new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme createTheme = themeRepository.create(theme);
-        Theme findTheme = themeRepository.findById(createTheme.getId()).get();
-        assertEquals(createTheme.getName(), findTheme.getName());
-        assertEquals(createTheme.getDesc(), findTheme.getDesc());
-        assertEquals(createTheme.getPrice(), findTheme.getPrice());
+        Long id = themeRepository.create(theme);
+        Theme findTheme = themeRepository.findById(id).get();
+        assertEquals("워너고홈", findTheme.getName());
+        assertEquals("병맛 어드벤처 회사 코믹물", findTheme.getDesc());
+        assertEquals(29000, findTheme.getPrice());
 
     }
 
@@ -58,9 +50,9 @@ class ThemeRepositoryTest {
     @Transactional
     void delete() {
         Theme theme = new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme createTheme = themeRepository.create(theme);
-        themeRepository.delete(createTheme.getId());
-        Optional<Theme> findTheme = themeRepository.findById(createTheme.getId());
+        Long id = themeRepository.create(theme);
+        themeRepository.delete(id);
+        Optional<Theme> findTheme = themeRepository.findById(id);
         assertTrue(findTheme.isEmpty());
     }
 
@@ -68,9 +60,9 @@ class ThemeRepositoryTest {
     @Transactional
     void updateById() {
         Theme theme = new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Theme createTheme = themeRepository.create(theme);
-        themeRepository.updateById(createTheme.getId(), new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 28000));
-        Theme findTheme = themeRepository.findById(createTheme.getId()).get();
+        Long id = themeRepository.create(theme);
+        themeRepository.updateById(id, new Theme(null,"워너고홈", "병맛 어드벤처 회사 코믹물", 28000));
+        Theme findTheme = themeRepository.findById(id).get();
         assertEquals("워너고홈", findTheme.getName());
         assertEquals("병맛 어드벤처 회사 코믹물", findTheme.getDesc());
         assertEquals(28000, findTheme.getPrice());

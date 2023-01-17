@@ -1,4 +1,4 @@
-package nextstep.roomescape.reservation.model;
+package nextstep.roomescape.reservation.repository.model;
 
 import lombok.Builder;
 import org.springframework.lang.Nullable;
