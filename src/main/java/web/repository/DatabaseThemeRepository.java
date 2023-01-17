@@ -40,7 +40,7 @@ public class DatabaseThemeRepository implements ThemeRepository {
     }
 
 
-    public long deleteTheme(long themeId) {
+    public Integer deleteTheme(long themeId) {
         String sql = "DELETE FROM theme WHERE ID = ?";
         return jdbcTemplate.update(sql, themeId);
     }
