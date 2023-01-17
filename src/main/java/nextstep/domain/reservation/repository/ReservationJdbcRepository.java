@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -204,5 +205,10 @@ public class ReservationJdbcRepository implements ReservationRepository {
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Reservation> findByTheme(String name) {
+        return null;
     }
 }

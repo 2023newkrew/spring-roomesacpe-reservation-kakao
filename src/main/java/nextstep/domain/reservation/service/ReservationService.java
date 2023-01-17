@@ -5,8 +5,10 @@ import nextstep.domain.reservation.dto.ReservationRequestDto;
 import nextstep.domain.reservation.dto.ReservationResponseDto;
 import nextstep.domain.reservation.repository.ReservationRepository;
 import nextstep.domain.theme.domain.Theme;
+import nextstep.domain.theme.repository.ThemeRepository;
 import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
 import nextstep.global.exceptions.exception.ReservationNotFoundException;
+import nextstep.global.exceptions.exception.ThemeNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,12 @@ import java.time.LocalTime;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    public final ThemeRepository themeRepository;
 
-    public ReservationService(@Qualifier("reservationJdbcTemplateRepository") ReservationRepository reservationRepository) {
+    public ReservationService(@Qualifier("reservationJdbcTemplateRepository") ReservationRepository reservationRepository,
+                              ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
     public Long reserve(ReservationRequestDto reservationRequestDto) {
@@ -29,7 +34,8 @@ public class ReservationService {
             throw new DuplicatedDateAndTimeException();
         }
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
+        Theme theme = themeRepository.findById(reservationRequestDto.getThemeId())
+                .orElseThrow(ThemeNotFoundException::new);
         Reservation newReservation = new Reservation(date, time, reservationRequestDto.getName(), theme);
 
         return reservationRepository.save(newReservation);

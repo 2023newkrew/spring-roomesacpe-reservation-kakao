@@ -4,6 +4,8 @@ import io.restassured.RestAssured;
 import nextstep.domain.reservation.dto.ReservationRequestDto;
 import nextstep.domain.reservation.repository.ReservationJdbcTemplateRepository;
 import nextstep.domain.reservation.service.ReservationService;
+import nextstep.domain.theme.dto.ThemeRequestDto;
+import nextstep.domain.theme.service.ThemeService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +18,7 @@ import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Reservation Test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
@@ -27,29 +29,41 @@ public class ReservationControllerTest {
     @Autowired
     ReservationService reservationService;
     @Autowired
-    ReservationJdbcTemplateRepository reservationJdbcTemplateDao;
+    ReservationJdbcTemplateRepository reservationJdbcTemplateRepository;
+    @Autowired
+    ThemeService themeService;
+
+    @BeforeAll
+    void setTheme() {
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto(
+                "워너고홈",
+                "병맛 어드벤처 회사 코믹물",
+                29_000
+        );
+        themeService.add(themeRequestDto);
+    }
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.parse("2023-01-10"),
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(
+                1L, LocalDate.parse("2023-01-10"),
                 LocalTime.parse("13:00"),
                 "jay"
         );
-        reservationService.reserve(requestDto);
+        reservationService.reserve(reservationRequestDto);
     }
 
     @AfterEach
     void afterEach() {
-        reservationJdbcTemplateDao.clear();
+        reservationJdbcTemplateRepository.clear();
     }
 
     @DisplayName("Reservation - 예약하기")
     @Test
     void reserve() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.parse("2023-01-11"),
+                1L, LocalDate.parse("2023-01-11"),
                 LocalTime.parse("13:00:00"),
                 "jay"
         );
@@ -67,7 +81,7 @@ public class ReservationControllerTest {
     @Test
     void reserveException() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.parse("2023-01-10"),
+                1L, LocalDate.parse("2023-01-10"),
                 LocalTime.parse("13:00:00"),
                 "jay"
         );

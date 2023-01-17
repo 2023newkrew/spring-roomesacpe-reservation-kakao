@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -38,5 +39,10 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     public void delete(Long id) {
         reservations.remove(id);
+    }
+
+    @Override
+    public List<Reservation> findByTheme(String name) {
+        return null;
     }
 }

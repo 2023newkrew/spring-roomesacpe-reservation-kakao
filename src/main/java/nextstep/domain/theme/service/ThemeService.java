@@ -8,6 +8,7 @@ import nextstep.domain.theme.repository.ThemeRepository;
 import nextstep.global.exceptions.exception.DuplicatedNameThemeException;
 import nextstep.global.exceptions.exception.ReservedThemeModifyException;
 import nextstep.global.exceptions.exception.ThemeNotFoundException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,7 +21,8 @@ public class ThemeService {
     private final ThemeRepository themeRepository;
     private final ReservationRepository reservationRepository;
 
-    public ThemeService(ThemeRepository themeRepository, ReservationRepository reservationRepository) {
+    public ThemeService(ThemeRepository themeRepository,
+                        @Qualifier("reservationJdbcTemplateRepository") ReservationRepository reservationRepository) {
         this.themeRepository = themeRepository;
         this.reservationRepository = reservationRepository;
     }
