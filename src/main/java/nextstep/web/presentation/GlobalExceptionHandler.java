@@ -1,4 +1,4 @@
-package nextstep.presentation;
+package nextstep.web.presentation;
 
 import nextstep.dto.ErrorResponse;
 import nextstep.exception.*;

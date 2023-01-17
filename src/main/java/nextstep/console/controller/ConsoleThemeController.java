@@ -5,9 +5,9 @@ import nextstep.console.view.ConsoleThemeView;
 import nextstep.domain.repository.ReservationRepository;
 import nextstep.domain.repository.ThemeRepository;
 import nextstep.dto.CreateThemeRequest;
-import nextstep.repository.JdbcReservationRepository;
-import nextstep.repository.JdbcThemeRepository;
-import nextstep.service.ThemeService;
+import nextstep.web.repository.JdbcReservationRepository;
+import nextstep.web.repository.JdbcThemeRepository;
+import nextstep.web.service.ThemeService;
 import nextstep.utils.DataSourceUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 

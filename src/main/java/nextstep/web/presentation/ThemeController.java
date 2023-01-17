@@ -1,17 +1,16 @@
-package nextstep.presentation;
+package nextstep.web.presentation;
 
 import nextstep.dto.CreateThemeRequest;
 import nextstep.dto.ThemeResponse;
 import nextstep.dto.ThemesResponse;
 import nextstep.exception.InvalidCreateThemeRequestException;
-import nextstep.service.ThemeService;
+import nextstep.web.service.ThemeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/themes")

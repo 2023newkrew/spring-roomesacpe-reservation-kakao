@@ -1,7 +1,6 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
 import nextstep.domain.repository.ReservationRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
