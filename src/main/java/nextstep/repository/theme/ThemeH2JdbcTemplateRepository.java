@@ -40,12 +40,6 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
     }
 
     @Override
-    public void deleteAll() {
-        String sql = "DELETE FROM theme";
-        jdbcTemplate.update(sql);
-    }
-
-    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM theme WHERE id = ?";
         jdbcTemplate.update(sql, id);

@@ -39,17 +39,8 @@ public class ThemeController {
                 .body(themes);
     }
 
-    @DeleteMapping("")
-    public ResponseEntity deleteAllThemes() {
-        themeService.deleteAllThemes();
-
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTheme(@PathVariable Long id) throws ReservedThemeException {
+    public ResponseEntity<Void> deleteTheme(@PathVariable Long id) throws ReservedThemeException {
         themeService.deleteTheme(id);
 
         return ResponseEntity
