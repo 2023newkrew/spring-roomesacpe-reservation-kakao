@@ -1,6 +1,7 @@
 package nextstep.roomescape.theme.service;
 
 import nextstep.roomescape.exception.NotExistEntityException;
+import nextstep.roomescape.theme.controller.dto.ThemeRequestDTO;
 import nextstep.roomescape.theme.repository.ThemeRepository;
 import nextstep.roomescape.theme.repository.model.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Long create(Theme theme) {
-        return themeRepository.create(theme);
+    public Long create(ThemeRequestDTO themeRequestDTO) {
+        return themeRepository.create(themeRequestDTO.toEntity());
     }
 
     @Override
@@ -31,7 +32,7 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public void delete(long id) {
         Optional<Theme> theme = themeRepository.findById(id);
-        if (!theme.isPresent()){
+        if (theme.isEmpty()){
             throw new NotExistEntityException("해당 id 테마는 존재하지 않습니다.");
         }
         themeRepository.delete(id);

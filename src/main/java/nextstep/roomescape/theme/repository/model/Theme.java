@@ -18,6 +18,9 @@ public class Theme {
     private final String desc;
     private final Integer price;
 
+    public Theme(String name, String desc, Integer price) {
+        this(null,name,desc,price);
+    }
 
     @Override
     public boolean equals(Object o) {
