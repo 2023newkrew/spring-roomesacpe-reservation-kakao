@@ -15,26 +15,23 @@ import java.util.Scanner;
 
 public class ConsoleEscapeApplication {
 
-    private static final String ADD = "add";
-    private static final String FIND = "find";
-    private static final String DELETE = "delete";
-    private static final String QUIT = "quit";
+    private static final String ADD_RESERVATION = "add_reservation";
+    private static final String FIND_RESERVATION = "find_reservation";
+    private static final String DELETE_RESERVATION = "delete_reservation";
     private static final String THEMES = "themes";
-    private static final String ADD_THEME = "newT";
-    private static final String DELETE_THEME = "delT";
+    private static final String ADD_THEME = "add_theme";
+    private static final String DELETE_THEME = "delete_theme";
+    private static final String QUIT = "quit";
 
     private static final String RESERVATION_SUCCESS_MESSAGE = "예약이 등록되었습니다.";
     private static final String RESERVATION_CANCEL_SUCCESS_MESSAGE = "예약이 취소되었습니다.";
     private static final String THEME_SUCCESS_MESSAGE = "테마가 등록되었습니다.";
     private static final String THEME_DELETE_SUCCESS_MESSAGE = "테마가 삭제되었습니다.";
 
-    private static final ConsoleReservationRepository consoleReservationRepository
-            = new ConsoleReservationRepository();
-    private static final ReservationService reservationService =
-            new ReservationService(consoleReservationRepository);
+    private static final ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
+    private static final ReservationService reservationService = new ReservationService(consoleReservationRepository);
 
-    private static final ThemeService themeService =
-            new ThemeService(new ConsoleThemeRepository(), consoleReservationRepository);
+    private static final ThemeService themeService = new ThemeService(new ConsoleThemeRepository(), consoleReservationRepository);
 
     public static void run() {
         Scanner scanner = new Scanner(System.in);
@@ -56,15 +53,15 @@ public class ConsoleEscapeApplication {
                     deleteTheme(input);
                 }
 
-                if (input.startsWith(ADD)) {
+                if (input.startsWith(ADD_RESERVATION)) {
                     makeReservation(input);
                 }
 
-                if (input.startsWith(FIND)) {
+                if (input.startsWith(FIND_RESERVATION)) {
                     getReservation(input);
                 }
 
-                if (input.startsWith(DELETE)) {
+                if (input.startsWith(DELETE_RESERVATION)) {
                     cancelReservation(input);
                 }
 
@@ -118,13 +115,14 @@ public class ConsoleEscapeApplication {
     private static void printHowToUse() {
         System.out.println();
         System.out.println("### 명령어를 입력하세요. ###");
-        System.out.println("- 테마보기: themes");
-        System.out.println("- 테마추가: newT {name},{desc},{price} ex) addT 라이언의 탈옥,라이언이 감옥을 탈출했다,39000");
-        System.out.println("- 테마삭제: delT {id} ex) delete 1");
-        System.out.println("- 예약하기: add {date},{time},{name},{themeId} ex) add 2022-08-11,13:00,류성현,1");
-        System.out.println("- 예약조회: find {id} ex) find 1");
-        System.out.println("- 예약취소: delete {id} ex) delete 1");
-        System.out.println("- 종료: quit");
+        System.out.println(String.format("- 테마보기: %s", THEMES));
+        // TODO: 같은 변수가 두 번씩 쓰이는 경우가 잦다. 더 깔끔한 문자열 보간법이 없을까?
+        System.out.println(String.format("- 테마추가: %s {name},{desc},{price} ex) %s 라이언의 탈옥,라이언이 감옥을 탈출했다,39000", ADD_THEME, ADD_THEME));
+        System.out.println(String.format("- 테마삭제: %s {id} ex) %s 1", DELETE_THEME, DELETE_THEME));
+        System.out.println(String.format("- 예약하기: %s {date},{time},{name},{themeId} ex) %s 2022-08-11,13:00,류성현,1", ADD_RESERVATION, ADD_RESERVATION));
+        System.out.println(String.format("- 예약조회: %s {id} ex) %s 1", FIND_RESERVATION, FIND_RESERVATION));
+        System.out.println(String.format("- 예약취소: %s {id} ex) %s 1", DELETE_RESERVATION, DELETE_RESERVATION));
+        System.out.println(String.format("- 종료: %s", QUIT));
     }
 
     private static void makeReservation(String input) {
@@ -138,8 +136,7 @@ public class ConsoleEscapeApplication {
         // 입력받은 테마가 존재하는지 확인
         Theme foundTheme = themeService.findById(themeId);
         // 예약 데이터 생성
-        Long id = reservationService.createReservation(LocalDate.parse(date),
-                LocalTime.parse(time + ":00"), name, foundTheme.getId());
+        Long id = reservationService.createReservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, foundTheme.getId());
 
         // 안내 문구 출력
         Reservation reservation = reservationService.findById(id);
