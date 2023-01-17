@@ -9,8 +9,8 @@ import java.util.Optional;
 
 @Repository
 public class RoomEscapeRepositoryImpl implements RoomEscapeRepository {
-    private ReservationDaoImpl reservationDaoImpl;
-    private ThemeDaoImpl themeDaoImpl;
+    private final ReservationDaoImpl reservationDaoImpl;
+    private final ThemeDaoImpl themeDaoImpl;
 
     public RoomEscapeRepositoryImpl(ReservationDaoImpl reservationDaoImpl, ThemeDaoImpl themeDaoImpl) {
         this.reservationDaoImpl = reservationDaoImpl;
@@ -50,6 +50,11 @@ public class RoomEscapeRepositoryImpl implements RoomEscapeRepository {
     @Override
     public Optional<List<Theme>> getThemes() {
         return themeDaoImpl.getThemes();
+    }
+
+    @Override
+    public Optional<Theme> findThemeById(long themeId) {
+        return themeDaoImpl.findThemeById(themeId);
     }
 
 }

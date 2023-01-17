@@ -33,7 +33,17 @@ public class RoomEscapeService {
         if (isInvalidTime(requestDto.getTime())) {
             throw new IllegalArgumentException("시간이 올바르지 않습니다.");
         }
+        if (isInvalidThemeId(requestDto.getThemeId())) {
+            throw new IllegalArgumentException("테마 번호가 올바르지 않습니다.");
+        }
         return roomEscapeRepositoryImpl.saveReservation(requestDto.toEntity());
+    }
+
+    private boolean isInvalidThemeId(long themeId) {
+        if (roomEscapeRepositoryImpl.findThemeById(themeId).isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isInvalidTime(LocalTime reservationTime) {
@@ -57,7 +67,9 @@ public class RoomEscapeService {
     public ReservationResponseDto findReservationById(long reservationId) {
         Reservation reservation = roomEscapeRepositoryImpl.findReservationById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
-        return ReservationResponseDto.of(reservationId, reservation);
+        Theme theme = roomEscapeRepositoryImpl.findThemeById(reservation.getThemeId())
+                .orElseThrow(ThemeNotFoundException::new);
+        return ReservationResponseDto.of(reservationId, reservation, theme);
     }
 
     public void cancelReservation(long reservationId) {

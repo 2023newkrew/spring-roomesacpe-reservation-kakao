@@ -2,6 +2,7 @@ package web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import web.entity.Reservation;
+import web.entity.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,8 +28,9 @@ public class ReservationResponseDto {
         this.themePrice = themePrice;
     }
 
-    public static ReservationResponseDto of(long id, Reservation reservation) {
-        return new ReservationResponseDto(id, reservation.getDate(), reservation.getTime(), reservation.getName(), "워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+    public static ReservationResponseDto of(long id, Reservation reservation, Theme theme) {
+        return new ReservationResponseDto(id, reservation.getDate(), reservation.getTime(),
+                reservation.getName(), theme.getName(), theme.getDesc(), theme.getPrice());
     }
 
     public Long getId() {

@@ -20,4 +20,6 @@ public interface RoomEscapeRepository {
     Long deleteThemeById(long themeId);
 
     Optional<List<Theme>> getThemes();
+
+    Optional<Theme> findThemeById(long themeId);
 }

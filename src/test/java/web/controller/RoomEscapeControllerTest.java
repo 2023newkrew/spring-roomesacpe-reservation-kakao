@@ -180,7 +180,7 @@ public class RoomEscapeControllerTest {
                             LocalDate.of(2022, 8, 11),
                             LocalTime.of(13, 0),
                             "name",
-                            1));
+                            1), Theme.of(1, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
             when(roomEscapeService.findReservationById(anyLong())).thenReturn(responseDto);
             mockMvc.perform(get("/reservations/1"))
                     .andExpect(status().isOk())

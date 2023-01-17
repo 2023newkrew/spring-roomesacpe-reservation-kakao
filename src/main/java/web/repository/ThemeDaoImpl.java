@@ -39,7 +39,7 @@ public class ThemeDaoImpl implements ThemeDao {
             return null;
         }
     }
-    
+
     @Override
     @Transactional
     public Long deleteTheme(long themeId) {
@@ -58,6 +58,23 @@ public class ThemeDaoImpl implements ThemeDao {
                             resultSet.getString("desc"),
                             resultSet.getInt("price")));
             return Optional.ofNullable(themes);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    @Transactional
+    public Optional<Theme> findThemeById(long themeId) {
+        String sql = "SELECT * FROM theme WHERE ID = ?;";
+        Theme theme;
+        try {
+            theme = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Theme.of(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("desc"),
+                    resultSet.getInt("price")), themeId);
+            return Optional.ofNullable(theme);
         } catch (DataAccessException e) {
             return Optional.empty();
         }

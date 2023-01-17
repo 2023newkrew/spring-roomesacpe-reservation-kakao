@@ -11,4 +11,6 @@ public interface ThemeDao {
     Long deleteTheme(long themeId);
 
     Optional<List<Theme>> getThemes();
+
+    Optional<Theme> findThemeById(long themeId);
 }
