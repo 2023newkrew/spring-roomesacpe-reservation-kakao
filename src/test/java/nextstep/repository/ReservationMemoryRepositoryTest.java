@@ -2,6 +2,7 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.reservation.ReservationMemoryRepository;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationMemoryRepositoryTest {
 
@@ -62,6 +63,6 @@ class ReservationMemoryRepositoryTest {
 
         repository.delete(0L);
 
-        assertThat(repository.get(0L)).isNull();
+        assertThatThrownBy(() -> repository.get(0L)).isInstanceOf(ReservationNotFoundException.class);
     }
 }
