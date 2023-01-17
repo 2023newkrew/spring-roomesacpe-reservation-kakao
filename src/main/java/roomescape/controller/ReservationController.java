@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -10,13 +11,10 @@ import roomescape.service.ReservationService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
-
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> createReservation(
@@ -34,20 +32,20 @@ public class ReservationController {
         ).build();
     }
 
-    @GetMapping("/{reservationId}")
+    @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(
-            @PathVariable Long reservationId
+            @PathVariable Long id
     ) {
         return ResponseEntity.ok(
-                reservationService.getReservation(reservationId)
+                reservationService.getReservation(id)
         );
     }
 
-    @DeleteMapping("/{reservationId}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(
-            @PathVariable Long reservationId
+            @PathVariable Long id
     ) {
-        reservationService.deleteReservation(reservationId);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }
