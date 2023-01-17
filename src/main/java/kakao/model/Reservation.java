@@ -14,16 +14,14 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final Theme theme;
+    private final Long themeId;
 
     public static class Column {
         public static final String ID = "id";
         public static final String DATE = "date";
         public static final String TIME = "time";
         public static final String NAME = "name";
-        public static final String THEME_NAME = "theme_name";
-        public static final String THEME_DESC = "theme_desc";
-        public static final String THEME_PRICE = "theme_price";
+        public static final String THEME_ID = "theme_id";
 
         private Column() {}
     }
