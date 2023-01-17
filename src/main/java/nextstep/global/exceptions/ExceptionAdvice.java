@@ -2,6 +2,7 @@ package nextstep.global.exceptions;
 
 import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
 import nextstep.global.exceptions.exception.DuplicatedNameThemeException;
+import nextstep.global.exceptions.exception.ReservedThemeModifyException;
 import nextstep.global.exceptions.exception.ThemeNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +23,10 @@ public class ExceptionAdvice {
     @ExceptionHandler(ThemeNotFoundException.class)
     public ResponseEntity<String> handleThemeNotFoundException() {
         return ResponseEntity.badRequest().body("존재하지 않는 테마입니다.");
+    }
+
+    @ExceptionHandler(ReservedThemeModifyException.class)
+    public ResponseEntity<String> handleReservedThemeModifyException() {
+        return ResponseEntity.badRequest().body("예약이 존재하는 테마는 수정 및 삭제할 수 없습니다.");
     }
 }

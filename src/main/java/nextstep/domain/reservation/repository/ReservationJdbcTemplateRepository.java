@@ -5,6 +5,7 @@ import nextstep.domain.theme.domain.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,11 +15,24 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
     private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) ->
+            new Reservation(
+                    rs.getLong("id"),
+                    rs.getDate("date").toLocalDate(),
+                    rs.getTime("time").toLocalTime(),
+                    rs.getString("name"),
+                    new Theme(
+                            rs.getString("theme_name"),
+                            rs.getString("theme_desc"),
+                            rs.getInt("theme_price"))
+            );
 
     public ReservationJdbcTemplateRepository() {
     }
@@ -53,17 +67,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                    new Reservation(
-                            rs.getLong("id"),
-                            rs.getDate("date").toLocalDate(),
-                            rs.getTime("time").toLocalTime(),
-                            rs.getString("name"),
-                            new Theme(
-                                    rs.getString("theme_name"),
-                                    rs.getString("theme_desc"),
-                                    rs.getInt("theme_price"))
-                    ), id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, reservationRowMapper, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -83,5 +87,11 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public List<Reservation> findByTheme(String name) {
+        String sql = "SELECT * FROM reservation WHERE theme_name = ?";
+        return jdbcTemplate.query(sql, reservationRowMapper, name);
     }
 }
