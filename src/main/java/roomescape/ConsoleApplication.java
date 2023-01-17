@@ -1,8 +1,8 @@
 package roomescape;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.PropertySources;
 import org.springframework.stereotype.Component;
 import roomescape.controller.ConsoleController;
 
@@ -17,6 +17,7 @@ enum Command {
 }
 
 @Component("consoleApplication")
+@ConditionalOnProperty(value = "app.console.enabled")
 public class ConsoleApplication {
     private final ConsoleController consoleController;
 
@@ -26,10 +27,6 @@ public class ConsoleApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void run(ApplicationReadyEvent event) {
-        PropertySources propertySources = event.getApplicationContext().getEnvironment().getPropertySources();
-        if (propertySources.contains("test")) {
-            return;
-        }
         Command cmd = null;
         String[] params;
         while (cmd == null || !cmd.equals(Command.QUIT)) {
