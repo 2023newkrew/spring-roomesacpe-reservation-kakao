@@ -2,7 +2,6 @@ package nextstep.roomescape.theme.repository;
 
 import nextstep.roomescape.theme.repository.model.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 
 
 @Repository
@@ -51,23 +49,14 @@ public class ThemeRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<Theme> findByName(String name){
+    public Theme findByName(String name){
         String sql = "select id, name, desc, price from theme where name=?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, name));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.queryForObject(sql, rowMapper, name);
     }
 
-    public Optional<Theme> findById(Long id){
+    public Theme findById(Long id){
         String sql = "select id, name, desc, price from theme where id=?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public int updateById(Long id, Theme theme){

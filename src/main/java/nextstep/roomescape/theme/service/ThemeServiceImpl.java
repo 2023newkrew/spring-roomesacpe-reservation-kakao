@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ThemeServiceImpl implements ThemeService {
@@ -31,8 +30,8 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public void delete(long id) {
-        Optional<Theme> theme = themeRepository.findById(id);
-        if (theme.isEmpty()){
+        Theme theme = themeRepository.findById(id);
+        if (theme == null){
             throw new NotExistEntityException("해당 id 테마는 존재하지 않습니다.");
         }
         themeRepository.delete(id);
