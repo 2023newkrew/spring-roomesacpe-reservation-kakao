@@ -14,7 +14,7 @@ public class JdbcUtil {
         Connection connection;
         Yaml yaml = new Yaml();
 
-        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/application.yml")){
+        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/application.yml")) {
             HashMap<String, Object> config = yaml.load(fileInputStream);
             HashMap<String, Object> springConfig = (HashMap<String, Object>) config.get("spring");
             HashMap<String, String> datasourceConfig = (HashMap<String, String>) springConfig.get("datasource");

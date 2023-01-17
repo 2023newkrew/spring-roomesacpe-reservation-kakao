@@ -7,11 +7,13 @@ import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationE
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.stereotype.Repository;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,16 +26,59 @@ public class JdbcReservationRepository implements ReservationRepository{
     private static final String INSERT_ONE_QUERY = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM reservation WHERE id = ?";
     private static final String REMOVE_BY_ID_QUERY = "DELETE FROM reservation WHERE id = ?";
+
     public static final int DuplicateReservationError = 23505;
     public static final int NoSuchThemeError = 23506;
+
+    public static final String SCHEMA_FILE = "src/main/resources/schema/schema.sql";
+    public static final String DATA_FILE = "src/main/resources/data/init.sql";
+
     private final SQLExceptionTranslator sqlExceptionTranslator;
 
     public JdbcReservationRepository() {
         this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator();
     }
 
+    public void dropAndCreateTable() {
+        StringBuilder dropAndCreateQuery = new StringBuilder();
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(SCHEMA_FILE)); Connection connection = JdbcUtil.getConnection()){
+
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                dropAndCreateQuery.append(line + "\n");
+            }
+            PreparedStatement pstmt = connection.prepareStatement(dropAndCreateQuery.toString());
+            pstmt.execute();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw Objects.requireNonNull(sqlExceptionTranslator.translate("dropAndCreate", dropAndCreateQuery.toString(), e));
+        }
+    }
+
+    public void initData() {
+        StringBuilder initDataQuery = new StringBuilder();
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(DATA_FILE)); Connection connection = JdbcUtil.getConnection()){
+
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                initDataQuery.append(line + "\n");
+            }
+            PreparedStatement pstmt = connection.prepareStatement(initDataQuery.toString());
+            pstmt.execute();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw Objects.requireNonNull(sqlExceptionTranslator.translate("initData", initDataQuery.toString(), e));
+        }
+    }
+
     @Override
-    public Long add(Reservation reservation) throws DuplicateKeyException, NoSuchReservationException {
+    public Long add(Reservation reservation) {
         try (Connection connection = JdbcUtil.getConnection()) {
             PreparedStatement pstmt = getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY);
             pstmt.executeUpdate();
