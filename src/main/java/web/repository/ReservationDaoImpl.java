@@ -41,7 +41,7 @@ public class ReservationDaoImpl implements ReservationDao {
                 ps.setLong(4, reservation.getThemeId());
                 return ps;
             }, keyHolder);
-            return new Long(keyHolder.getKey().longValue());
+            return keyHolder.getKey().longValue();
         } catch (Exception E) {
             return null;
         }

@@ -3,9 +3,10 @@ package web.dto;
 import web.entity.Theme;
 
 public class ThemeResponseDto {
-    private long id;
-    private String name;
-    private String desc;
+    private final long id;
+    private final String name;
+    private final String desc;
+    private final int price;
 
     public long getId() {
         return id;
@@ -23,7 +24,6 @@ public class ThemeResponseDto {
         return price;
     }
 
-    private int price;
 
     public ThemeResponseDto(long id, String name, String desc, int price) {
         this.id = id;

@@ -1,10 +1,10 @@
 package web.entity;
 
 public class Theme {
-    private long id;
-    private String name;
-    private String desc;
-    private int price;
+    private final long id;
+    private final String name;
+    private final String desc;
+    private final int price;
 
     public Theme(long id, String name, String desc, Integer price) {
         this.id = id;

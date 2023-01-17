@@ -65,10 +65,10 @@ public class RoomEscapeController {
 
     @GetMapping("/themes")
     public ResponseEntity<List<ThemeResponseDto>> getThemes() {
-        List<ThemeResponseDto> themeResponseDtos = roomEscapeService.getThemes();
+        List<ThemeResponseDto> themeResponseDtoList = roomEscapeService.getThemes();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(themeResponseDtos);
+                .body(themeResponseDtoList);
     }
 
     @DeleteMapping("/themes/{themeId}")
