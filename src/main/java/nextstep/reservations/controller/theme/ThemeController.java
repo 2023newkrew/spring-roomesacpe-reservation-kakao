@@ -1,4 +1,4 @@
-package nextstep.reservations.domain.controller.theme;
+package nextstep.reservations.controller.theme;
 
 import nextstep.reservations.domain.service.theme.ThemeService;
 import nextstep.reservations.dto.theme.ThemeRequestDto;

@@ -4,6 +4,7 @@ import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.domain.repository.reservation.JdbcReservationRepository;
 import nextstep.reservations.domain.repository.reservation.ReservationRepository;
+import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 
 import java.time.LocalDate;
@@ -82,7 +83,8 @@ public class RoomEscapeConsoleApplication {
                 String params = input.split(" ")[1];
 
                 Long id = Long.parseLong(params.split(",")[0]);
-                consoleReservationRepository.remove(id);
+                int removeCount = consoleReservationRepository.remove(id);
+                if(removeCount == 0) throw new NoSuchReservationException();
                 System.out.println("예약이 취소되었습니다.");
 
             }

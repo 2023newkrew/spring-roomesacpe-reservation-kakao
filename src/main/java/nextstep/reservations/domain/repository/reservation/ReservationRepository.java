@@ -9,7 +9,7 @@ public interface ReservationRepository {
 
     Reservation findById(Long id);
 
-    void remove(final Long id);
+    int remove(final Long id);
 
     default PreparedStatement getInsertOnePstmt(Connection connection, Reservation reservation) throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(ReservationQuery.INSERT_ONE.get(), new String[]{"id"});

@@ -6,17 +6,28 @@ import nextstep.reservations.exceptions.reservation.exception.DuplicateReservati
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Repository
+//@Primary
 public class JdbcReservationRepository implements ReservationRepository{
+    public static final int DuplicateReservationError = 23505;
+    public static final int NoSuchThemeError = 23506;
+    private final SQLExceptionTranslator sqlExceptionTranslator;
+
+    public JdbcReservationRepository() {
+        this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator();
+    }
+
     @Override
     public Long add(Reservation reservation) throws DuplicateKeyException, NoSuchReservationException {
         try (Connection connection = JdbcUtil.getConnection()) {
@@ -28,10 +39,10 @@ public class JdbcReservationRepository implements ReservationRepository{
             }
         }
         catch (SQLException e) {
-            if (e.getErrorCode() == 23505) {
+            if (e.getErrorCode() == DuplicateReservationError) {
                 throw new DuplicateReservationException();
             }
-            else if (e.getErrorCode() == 23506) {
+            else if (e.getErrorCode() == NoSuchThemeError) {
                 throw new NoSuchThemeException();
             }
         }
@@ -66,23 +77,21 @@ public class JdbcReservationRepository implements ReservationRepository{
             }
         }
         catch (SQLException e) {
-            throw new RuntimeException();
+            throw Objects.requireNonNull(sqlExceptionTranslator.translate("find", ReservationQuery.FIND_BY_ID.get(), e));
         }
     }
 
     @Override
-    public void remove(final Long id) {
+    public int remove(final Long id) {
         try (Connection connection = JdbcUtil.getConnection()) {
             PreparedStatement pstmt;
 
             pstmt = connection.prepareStatement(ReservationQuery.REMOVE_BY_ID.get());
             pstmt.setLong(1, id);
-            int count = pstmt.executeUpdate();
-
-            if (count == 0) throw new NoSuchReservationException();
+            return pstmt.executeUpdate();
         }
         catch (SQLException e) {
-            throw new RuntimeException();
+            throw Objects.requireNonNull(sqlExceptionTranslator.translate("remove", ReservationQuery.REMOVE_BY_ID.get(), e));
         }
     }
 }

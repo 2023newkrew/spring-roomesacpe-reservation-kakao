@@ -1,4 +1,4 @@
-package nextstep.reservations.domain.controller.reservation;
+package nextstep.reservations.controller.reservation;
 
 import nextstep.reservations.domain.service.reservation.ReservationService;
 import nextstep.reservations.dto.reservation.ReservationRequestDto;

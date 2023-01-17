@@ -1,6 +1,6 @@
 package nextstep.reservations.exceptions.reservation;
 
-import nextstep.reservations.domain.controller.reservation.ReservationController;
+import nextstep.reservations.controller.reservation.ReservationController;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.exceptions.reservation.exception.NotAvailableTimeException;
