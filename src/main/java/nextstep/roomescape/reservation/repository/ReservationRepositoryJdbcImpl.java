@@ -5,6 +5,7 @@ import nextstep.roomescape.theme.repository.model.Theme;
 import nextstep.roomescape.exception.DuplicateEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -64,15 +65,25 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
     public Reservation findById(long id) {
         String sql = "SELECT reservation.id, reservation.name, reservation.date, reservation.time, theme.id, theme.name, theme.desc, theme.price " +
                 "from reservation " +
-                "inner join theme on schedule.theme_id = theme.id " +
+                "inner join theme on reservation.theme_id = theme.id " +
                 "where reservation.id = ?;";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+
     }
 
     @Override
     public Boolean findByDateTime(LocalDate date, LocalTime time) {
         String sql = "select exists (select * from reservation where date= ? and time = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, date, time);
+        try {
+            return jdbcTemplate.queryForObject(sql, Boolean.class, date, time);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
     @Override

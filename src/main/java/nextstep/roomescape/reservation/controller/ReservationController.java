@@ -6,12 +6,12 @@ import nextstep.roomescape.reservation.repository.model.Reservation;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@Controller
+@RestController
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -22,21 +22,19 @@ public class ReservationController {
     }
 
 
-    @PostMapping("/reservations")
-    public ResponseEntity createReservation(@RequestBody ReservationRequestDTO reservation) {
-        ReservationResponseDTO createReservation;
-        createReservation = reservationService.create(reservation);
-
-        return ResponseEntity.created(URI.create("/reservations/" + createReservation.getId())).build();
+    @PostMapping
+    public ResponseEntity<Long> createReservation(@RequestBody ReservationRequestDTO reservation) {
+        Long id = reservationService.create(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
-    @GetMapping("/reservations/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> findReservation(@PathVariable Long id) {
         ReservationResponseDTO reservation = reservationService.findById(id);
         return ResponseEntity.ok().body(reservation);
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Reservation> deleteReservation(@PathVariable Long id) {
         reservationService.delete(id);
         return ResponseEntity.noContent().build();

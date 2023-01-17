@@ -2,6 +2,7 @@ package nextstep.roomescape.theme.repository;
 
 import nextstep.roomescape.theme.repository.model.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -54,9 +55,22 @@ public class ThemeRepository {
         return jdbcTemplate.queryForObject(sql, rowMapper, name);
     }
 
+    public Theme find(Theme theme){
+        String sql = "select id, name, desc, price from theme where id=? and name=? and desc=? and price=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, theme.getId(), theme.getName(), theme.getDesc(), theme.getPrice());
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
     public Theme findById(Long id){
         String sql = "select id, name, desc, price from theme where id=?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     public int updateById(Long id, Theme theme){

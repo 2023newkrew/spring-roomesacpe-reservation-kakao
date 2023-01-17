@@ -3,8 +3,8 @@ package nextstep.roomescape.reservation;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import nextstep.roomescape.reservation.repository.model.Reservation;
-import nextstep.roomescape.reservation.repository.model.Theme;
+import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
+import nextstep.roomescape.theme.repository.model.Theme;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,14 +29,14 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+        theme = new Theme(2L,	"워너고홈",	"병맛 어드벤처 회사 코믹물",	29000);
     }
 
 
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
-        Reservation reservation = createRequest(LocalDate.parse("2099-01-01"));
+        ReservationRequestDTO reservation = createRequest(LocalDate.parse("2099-01-01"));
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,9 +53,8 @@ public class ReservationControllerTest {
     @DisplayName("예약 생성 예외처리")
     @Test
     void createReservationDuplicate() {
-        Reservation reservation = createRequest(LocalDate.parse("2099-02-02"));
-        ExtractableResponse<Response> response = createReservation(reservation);
-        String id = response.response().getHeader("Location").split("/")[2];
+        ReservationRequestDTO reservation = createRequest(LocalDate.parse("2099-02-02"));
+        Long id = createReservation(reservation);
         try {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +64,7 @@ public class ReservationControllerTest {
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body(is("예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있습니다."));
         } finally {
-            deleteReservation(Long.parseLong(id));
+            deleteReservation(id);
         }
 
 
@@ -76,18 +75,17 @@ public class ReservationControllerTest {
     @Test
     void showReservation() {
 
-        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2099-03-03")));
-        String id = reservation.response().getHeader("Location").split("/")[2];
+        Long id = createReservation(createRequest(LocalDate.parse("2099-05-05")));
         try {
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when().get("/reservations/" + id)
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
-                    .body("date", is("2099-03-03"))
+                    .body("date", is("2099-05-05"))
                     .body("time", is("13:00:00"));
         } finally {
-            deleteReservation(Long.parseLong(id));
+            deleteReservation(id);
         }
 
     }
@@ -96,8 +94,7 @@ public class ReservationControllerTest {
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {
-        ExtractableResponse<Response> reservation = createReservation(createRequest(LocalDate.parse("2099-04-04")));
-        String id = reservation.response().getHeader("Location").split("/")[2];
+        Long id = createReservation(createRequest(LocalDate.parse("2099-04-04")));
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/" + id)
@@ -105,20 +102,22 @@ public class ReservationControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private Reservation createRequest(LocalDate date) {
+    private ReservationRequestDTO createRequest(LocalDate date) {
         final LocalTime time = LocalTime.parse("13:00");
         final String name = "kakao";
-        return new Reservation(null, date, time, name, theme);
+        return new ReservationRequestDTO(date, time, name, theme);
     }
 
-    private ExtractableResponse<Response> createReservation(Reservation reservation) {
-        return RestAssured
+    private Long createReservation(ReservationRequestDTO reservationRequestDTO) {
+        String location = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(reservationRequestDTO)
                 .when().post("/reservations")
                 .then().log().all()
-                .extract();
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
+        return Long.parseLong(location.split("/")[2]);
     }
 
     private ExtractableResponse<Response> deleteReservation(Long id) {
