@@ -20,6 +20,9 @@ import java.util.Objects;
 @Repository
 //@Primary
 public class JdbcReservationRepository implements ReservationRepository{
+    private static final String INSERT_ONE_QUERY = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM reservation WHERE id = ?";
+    private static final String REMOVE_BY_ID_QUERY = "DELETE FROM reservation WHERE id = ?";
     public static final int DuplicateReservationError = 23505;
     public static final int NoSuchThemeError = 23506;
     private final SQLExceptionTranslator sqlExceptionTranslator;
@@ -31,7 +34,7 @@ public class JdbcReservationRepository implements ReservationRepository{
     @Override
     public Long add(Reservation reservation) throws DuplicateKeyException, NoSuchReservationException {
         try (Connection connection = JdbcUtil.getConnection()) {
-            PreparedStatement pstmt = getInsertOnePstmt(connection, reservation);
+            PreparedStatement pstmt = getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY);
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
@@ -55,7 +58,7 @@ public class JdbcReservationRepository implements ReservationRepository{
         try (Connection connection = JdbcUtil.getConnection()) {
             PreparedStatement pstmt;
 
-            pstmt = connection.prepareStatement(ReservationQuery.FIND_BY_ID.get());
+            pstmt = connection.prepareStatement(FIND_BY_ID_QUERY);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
 
@@ -77,7 +80,7 @@ public class JdbcReservationRepository implements ReservationRepository{
             }
         }
         catch (SQLException e) {
-            throw Objects.requireNonNull(sqlExceptionTranslator.translate("find", ReservationQuery.FIND_BY_ID.get(), e));
+            throw Objects.requireNonNull(sqlExceptionTranslator.translate("find", FIND_BY_ID_QUERY, e));
         }
     }
 
@@ -86,12 +89,12 @@ public class JdbcReservationRepository implements ReservationRepository{
         try (Connection connection = JdbcUtil.getConnection()) {
             PreparedStatement pstmt;
 
-            pstmt = connection.prepareStatement(ReservationQuery.REMOVE_BY_ID.get());
+            pstmt = connection.prepareStatement(REMOVE_BY_ID_QUERY);
             pstmt.setLong(1, id);
             return pstmt.executeUpdate();
         }
         catch (SQLException e) {
-            throw Objects.requireNonNull(sqlExceptionTranslator.translate("remove", ReservationQuery.REMOVE_BY_ID.get(), e));
+            throw Objects.requireNonNull(sqlExceptionTranslator.translate("remove", REMOVE_BY_ID_QUERY, e));
         }
     }
 }

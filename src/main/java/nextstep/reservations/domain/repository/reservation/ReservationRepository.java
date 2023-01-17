@@ -11,8 +11,8 @@ public interface ReservationRepository {
 
     int remove(final Long id);
 
-    default PreparedStatement getInsertOnePstmt(Connection connection, Reservation reservation) throws SQLException {
-        PreparedStatement pstmt = connection.prepareStatement(ReservationQuery.INSERT_ONE.get(), new String[]{"id"});
+    default PreparedStatement getInsertOnePstmt(Connection connection, Reservation reservation, String query) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(query, new String[]{"id"});
         pstmt.setDate(1, Date.valueOf(reservation.getDate()));
         pstmt.setTime(2, Time.valueOf(reservation.getTime()));
         pstmt.setString(3, reservation.getName());

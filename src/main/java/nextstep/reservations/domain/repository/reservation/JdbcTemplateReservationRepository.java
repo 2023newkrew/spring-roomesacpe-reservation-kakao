@@ -20,6 +20,9 @@ import java.util.Objects;
 @Repository
 @Primary
 public class JdbcTemplateReservationRepository implements ReservationRepository{
+    private static final String INSERT_ONE_QUERY = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM reservation WHERE id = ?";
+    private static final String REMOVE_BY_ID_QUERY = "DELETE FROM reservation WHERE id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcTemplateReservationRepository(final JdbcTemplate jdbcTemplate) {
@@ -31,7 +34,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository{
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         try {
-            jdbcTemplate.update(connection -> getInsertOnePstmt(connection, reservation), keyHolder);
+            jdbcTemplate.update(connection -> getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY), keyHolder);
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
         }
         catch (DuplicateKeyException e) {
@@ -47,7 +50,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository{
         RowMapper<Reservation> rowMapper = getReservationRowMapper();
 
         try {
-            return Objects.requireNonNull(jdbcTemplate.queryForObject(ReservationQuery.FIND_BY_ID.get(), rowMapper, id));
+            return Objects.requireNonNull(jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rowMapper, id));
         }
         catch (EmptyResultDataAccessException e) {
             throw new NoSuchReservationException();
@@ -56,7 +59,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository{
 
     @Override
     public int remove(final Long id) {
-        return jdbcTemplate.update(ReservationQuery.REMOVE_BY_ID.get(), id);
+        return jdbcTemplate.update(REMOVE_BY_ID_QUERY, id);
     }
 
     private static RowMapper<Reservation> getReservationRowMapper() {
