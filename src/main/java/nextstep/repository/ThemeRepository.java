@@ -1,18 +1,16 @@
 package nextstep.repository;
 
 import java.util.Optional;
-import nextstep.dto.ThemeCreateDto;
-import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ThemeRepository {
-    Long save(ThemeCreateDto themeCreateDto);
+    Theme save(Theme theme);
 
     Optional<Theme> findById(Long id);
 
-    int update(ThemeEditDto themeEditDto);
+    int update(Theme theme);
 
     int deleteById(Long id);
 

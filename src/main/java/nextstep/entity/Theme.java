@@ -1,16 +1,9 @@
 package nextstep.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 @Getter
-@RequiredArgsConstructor
-@AllArgsConstructor
-@ToString
 public class Theme {
 
     private Long id;
@@ -20,4 +13,22 @@ public class Theme {
     private final String description;
 
     private final Integer price;
+
+    @Builder
+    public Theme(String name, String description, Integer price) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
+    public static Theme createTheme(Theme other, Long id) {
+        Theme theme = Theme.builder()
+                .description(other.description)
+                .name(other.getName())
+                .price(other.price).build();
+        theme.id = id;
+        return theme;
+    }
+
+
 }

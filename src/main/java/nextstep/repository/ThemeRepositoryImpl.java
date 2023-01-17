@@ -1,14 +1,12 @@
 package nextstep.repository;
 
-import static nextstep.repository.ThemeJdbcSql.DELETE_BY_ID;
-import static nextstep.repository.ThemeJdbcSql.FIND_BY_ID;
-import static nextstep.repository.ThemeJdbcSql.UPDATE;
+import static nextstep.repository.ThemeJdbcSql.DELETE_BY_ID_STATEMENT;
+import static nextstep.repository.ThemeJdbcSql.FIND_BY_ID_STATEMENT;
+import static nextstep.repository.ThemeJdbcSql.UPDATE_STATEMENT;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import nextstep.dto.ThemeCreateDto;
-import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,33 +24,41 @@ public class ThemeRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public Long save(ThemeCreateDto themeCreateDto) {
+    public Theme save(Theme theme) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("desc", themeCreateDto.getDescription());
-        parameters.put("name", themeCreateDto.getName());
-        parameters.put("price", themeCreateDto.getPrice());
-        return new SimpleJdbcInsert(jdbcTemplate).withTableName("THEME").usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(parameters).longValue();
+        parameters.put("desc", theme.getDescription());
+        parameters.put("name", theme.getName());
+        parameters.put("price", theme.getPrice());
+        long id = new SimpleJdbcInsert(jdbcTemplate).withTableName("THEME")
+                .usingGeneratedKeyColumns("id").executeAndReturnKey(parameters).longValue();
+
+        return Theme.createTheme(theme, id);
     }
 
     @Override
     public Optional<Theme> findById(Long id) {
-        return jdbcTemplate.query(FIND_BY_ID,
+        return jdbcTemplate.query(FIND_BY_ID_STATEMENT,
                 (rs, rowNum) ->
-                        new Theme(rs.getLong("id"), rs.getString("name"), rs.getString("desc"), rs.getInt("price")),
-                id).stream().findAny();
+                {
+                    Theme theme = Theme.builder()
+                            .price(rs.getInt("price"))
+                            .name(rs.getString("name"))
+                            .description(rs.getString("desc")).build();
+                    Theme.createTheme(theme, rs.getLong("id"));
+                    return Theme.createTheme(theme,id);
+                }, id).stream().findAny();
 
     }
 
     @Override
-    public int update(ThemeEditDto themeEditDto) {
-        return jdbcTemplate.update(UPDATE,
-                themeEditDto.getName(),
-                themeEditDto.getDescription(), themeEditDto.getPrice(), themeEditDto.getId());
+    public int update(Theme theme) {
+        return jdbcTemplate.update(UPDATE_STATEMENT,
+                theme.getName(),
+                theme.getDescription(), theme.getPrice(), theme.getId());
     }
 
     @Override
     public int deleteById(Long id) {
-        return jdbcTemplate.update(DELETE_BY_ID, id);
+        return jdbcTemplate.update(DELETE_BY_ID_STATEMENT, id);
     }
 }

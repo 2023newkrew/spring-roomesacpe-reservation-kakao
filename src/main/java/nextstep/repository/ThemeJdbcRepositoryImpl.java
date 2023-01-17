@@ -1,15 +1,13 @@
 package nextstep.repository;
 
-import static nextstep.repository.ThemeJdbcSql.FIND_BY_ID;
-import static nextstep.repository.ThemeJdbcSql.INSERT_INTO;
+import static nextstep.repository.ThemeJdbcSql.FIND_BY_ID_STATEMENT;
+import static nextstep.repository.ThemeJdbcSql.INSERT_INTO_STATEMENT;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import nextstep.console.utils.ConnectionHandler;
-import nextstep.dto.ThemeCreateDto;
-import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;
 
 public class ThemeJdbcRepositoryImpl implements ThemeRepository {
@@ -21,27 +19,34 @@ public class ThemeJdbcRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public Long save(ThemeCreateDto themeCreateDto){
+    public Theme save(Theme theme) {
         PreparedStatement ps;
         ResultSet rs;
-        Long id = null;
+        Theme entity = null;
         try {
-            ps = connectionHandler.createPreparedStatement(INSERT_INTO,
+            ps = connectionHandler.createPreparedStatement(INSERT_INTO_STATEMENT,
                     new String[]{"id"});
-            ps.setString(1, themeCreateDto.getName());
-            ps.setString(2, themeCreateDto.getDescription());
-            ps.setInt(3, themeCreateDto.getPrice());
+            ps.setString(1, theme.getName());
+            ps.setString(2, theme.getDescription());
+            ps.setInt(3, theme.getPrice());
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
-            if(rs.next()){
-                id = rs.getLong("id");
+            if (rs.next()) {
+                Long id = rs.getLong("id");
+                entity = Theme.createTheme(Theme
+                                .builder()
+                                .name(rs.getString("name"))
+                                .price(rs.getInt("price"))
+                                .description(rs.getString("desc"))
+                                .build(),
+                        id);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         releaseResultSet(rs);
         releasePreparedStatement(ps);
-        return id;
+        return entity;
 
     }
 
@@ -50,7 +55,7 @@ public class ThemeJdbcRepositoryImpl implements ThemeRepository {
         Optional<Theme> theme = Optional.empty();
         PreparedStatement ps;
         try {
-            ps = connectionHandler.createPreparedStatement(FIND_BY_ID, new String[]{"id"});
+            ps = connectionHandler.createPreparedStatement(FIND_BY_ID_STATEMENT, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -65,15 +70,15 @@ public class ThemeJdbcRepositoryImpl implements ThemeRepository {
     }
 
     @Override
-    public int update(ThemeEditDto themeEditDto) {
+    public int update(Theme theme) {
         PreparedStatement ps;
         int row = 0;
         try {
-            ps = connectionHandler.createPreparedStatement(ThemeJdbcSql.UPDATE, new String[]{"id"});
-            ps.setString(1, themeEditDto.getName());
-            ps.setString(2, themeEditDto.getDescription());
-            ps.setInt(3, themeEditDto.getPrice());
-            ps.setLong(4, themeEditDto.getId());
+            ps = connectionHandler.createPreparedStatement(ThemeJdbcSql.UPDATE_STATEMENT, new String[]{"id"});
+            ps.setString(1, theme.getName());
+            ps.setString(2, theme.getDescription());
+            ps.setInt(3, theme.getPrice());
+            ps.setLong(4, theme.getId());
             row = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -86,11 +91,11 @@ public class ThemeJdbcRepositoryImpl implements ThemeRepository {
     public int deleteById(Long id) {
         PreparedStatement ps;
         int row;
-        try{
-            ps = connectionHandler.createPreparedStatement(ThemeJdbcSql.DELETE_BY_ID, new String[]{"id"});
+        try {
+            ps = connectionHandler.createPreparedStatement(ThemeJdbcSql.DELETE_BY_ID_STATEMENT, new String[]{"id"});
             ps.setLong(1, id);
             row = ps.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         releasePreparedStatement(ps);
@@ -114,9 +119,11 @@ public class ThemeJdbcRepositoryImpl implements ThemeRepository {
     }
 
     private static Theme makeTheme(ResultSet resultSet) throws SQLException {
-        return new Theme(resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("desc"),
-                resultSet.getInt("price"));
+        return Theme.createTheme(Theme.builder()
+                        .name(resultSet.getString("name"))
+                        .description(resultSet.getString("desc"))
+                        .price(resultSet.getInt("price"))
+                        .build(),
+                resultSet.getLong("id"));
     }
 }
