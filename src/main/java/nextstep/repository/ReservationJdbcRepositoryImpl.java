@@ -1,10 +1,10 @@
 package nextstep.repository;
 
-import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID;
-import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME;
-import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID;
-import static nextstep.repository.ReservationJdbcSql.FIND_BY_THEME_ID;
-import static nextstep.repository.ReservationJdbcSql.INSERT_INTO;
+import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.EXIST_BY_THEME_ID_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.INSERT_INTO_STATEMENT;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 import nextstep.console.utils.ConnectionHandler;
-import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 
@@ -28,38 +27,36 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Long save(ReservationRequestDTO reservationRequestDTO) {
-        Long id = null;
+    public Reservation save(Reservation reservation) {
         PreparedStatement ps;
         ResultSet rs;
+        Reservation entity = null;
         try {
-            String sql = INSERT_INTO;
-            ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservationRequestDTO.getDate()));
-            ps.setTime(2, Time.valueOf(reservationRequestDTO.getTime()));
-            ps.setString(3, reservationRequestDTO.getName());
-            ps.setLong(4, reservationRequestDTO.getThemeId());
+            ps = connectionHandler.createPreparedStatement(INSERT_INTO_STATEMENT, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setLong(4, reservation.getTheme().getId());
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                id = rs.getLong("id");
+                entity = Reservation.creteReservation(reservation, rs.getLong("id"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         releaseResultSet(rs);
         releasePreparedStatement(ps);
-        return id;
+        return entity;
     }
 
     @Override
     public boolean existByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
-        String sql = FIND_BY_DATE_AND_TIME;
         PreparedStatement ps;
         ResultSet rs;
         boolean exist;
         try {
-            ps = connectionHandler.createPreparedStatement(sql, new String[]{"id"});
+            ps = connectionHandler.createPreparedStatement(FIND_BY_DATE_AND_TIME_STATEMENT, new String[]{"id"});
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
             ps.setLong(3, themeId);
@@ -79,7 +76,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
         Optional<Reservation> reservation = Optional.empty();
         PreparedStatement ps;
         try {
-            ps = connectionHandler.createPreparedStatement(FIND_BY_ID, new String[]{"id"});
+            ps = connectionHandler.createPreparedStatement(FIND_BY_ID_STATEMENT, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -94,12 +91,25 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     @Override
     public int deleteById(Long id) {
-        return executeSqlReturnRow(id, DELETE_BY_ID);
+        return executeSqlReturnRow(id, DELETE_BY_ID_STATEMENT);
     }
 
     @Override
-    public int existByThemeId(Long id) {
-        return executeSqlReturnRow(id, FIND_BY_THEME_ID);
+    public boolean existByThemeId(Long id) {
+
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean exist;
+        try {
+            ps = connectionHandler.createPreparedStatement(EXIST_BY_THEME_ID_STATEMENT, new String[]{"id"});
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            exist = rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        releasePreparedStatementAndResultSet(ps, rs);
+        return exist;
     }
 
     private int executeSqlReturnRow(Long id, String findByThemeId) {
@@ -117,14 +127,21 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     }
 
     private Reservation makeReservation(ResultSet rs) throws SQLException {
-        return new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(), rs.getTime("time").toLocalTime(),
-                rs.getString("name"),
-                new Theme(rs.getString("theme_name"), rs.getString("theme_desc"), rs.getInt("theme_price")));
+        Theme theme = Theme.builder()
+                .description(rs.getString("theme_desc"))
+                .name(rs.getString("theme_name"))
+                .price(rs.getInt("price")).build();
+        Reservation reservation = Reservation.builder()
+                .theme(theme)
+                .date(rs.getDate("date").toLocalDate())
+                .time(rs.getTime("time").toLocalTime())
+                .name(rs.getString("name"))
+                .build();
+        return Reservation.creteReservation(reservation, rs.getLong("id"));
     }
 
     private static void releasePreparedStatementAndResultSet(PreparedStatement ps, ResultSet rs) {
         releaseResultSet(rs);
-
         releasePreparedStatement(ps);
     }
 
