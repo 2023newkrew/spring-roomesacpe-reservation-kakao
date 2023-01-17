@@ -179,7 +179,8 @@ public class RoomEscapeControllerTest {
                     Reservation.of(
                             LocalDate.of(2022, 8, 11),
                             LocalTime.of(13, 0),
-                            "name"));
+                            "name",
+                            1));
             when(roomEscapeService.findReservationById(anyLong())).thenReturn(responseDto);
             mockMvc.perform(get("/reservations/1"))
                     .andExpect(status().isOk())

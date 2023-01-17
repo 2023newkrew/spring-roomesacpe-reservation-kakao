@@ -33,7 +33,8 @@ public class ReservationDaoImplTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
 
             long reservationId = reservationDaoImpl.save(reservation);
 
@@ -48,7 +49,8 @@ public class ReservationDaoImplTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
 
             reservationDaoImpl.save(reservation);
 
@@ -65,7 +67,8 @@ public class ReservationDaoImplTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
             long reservationId = reservationDaoImpl.save(reservation);
 
             Reservation findReservation = reservationDaoImpl.findById(reservationId)
@@ -90,7 +93,8 @@ public class ReservationDaoImplTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
             long reservationId = reservationDaoImpl.save(reservation);
 
             long deleteReservationCount = reservationDaoImpl.delete(reservationId);

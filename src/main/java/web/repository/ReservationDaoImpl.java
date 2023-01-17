@@ -30,7 +30,7 @@ public class ReservationDaoImpl implements ReservationDao {
         if (isDuplicateReservation(reservation)) {
             throw new ReservationDuplicateException();
         }
-        String sql = "INSERT INTO reservation (date, time, name) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
@@ -38,6 +38,7 @@ public class ReservationDaoImpl implements ReservationDao {
                 ps.setDate(1, Date.valueOf(reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
                 ps.setTime(2, Time.valueOf(reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
                 ps.setString(3, reservation.getName());
+                ps.setLong(4, reservation.getThemeId());
                 return ps;
             }, keyHolder);
             return new Long(keyHolder.getKey().longValue());
@@ -52,9 +53,12 @@ public class ReservationDaoImpl implements ReservationDao {
         Reservation findReservation;
         try {
             findReservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
-                    resultSet.getDate("DATE").toLocalDate(),
-                    resultSet.getTime("TIME").toLocalTime(),
-                    resultSet.getString("NAME")), reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+                            resultSet.getDate("DATE").toLocalDate(),
+                            resultSet.getTime("TIME").toLocalTime(),
+                            resultSet.getString("NAME"),
+                            resultSet.getLong("THEME_ID")),
+                    reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         } catch (DataAccessException e) {
             return false;
         }
@@ -68,9 +72,11 @@ public class ReservationDaoImpl implements ReservationDao {
         Reservation reservation;
         try {
             reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> Reservation.of(
-                    resultSet.getDate("DATE").toLocalDate(),
-                    resultSet.getTime("TIME").toLocalTime(),
-                    resultSet.getString("NAME")), reservationId);
+                            resultSet.getDate("DATE").toLocalDate(),
+                            resultSet.getTime("TIME").toLocalTime(),
+                            resultSet.getString("NAME"),
+                            resultSet.getLong("THEME_ID"))
+                    , reservationId);
         } catch (DataAccessException e) {
             return Optional.empty();
         }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class RoomEscapeService {
     private static final LocalTime BEGIN_TIME = LocalTime.of(11, 0, 0);
     private static final LocalTime LAST_TIME = LocalTime.of(20, 30, 0);
-    
+
     private final RoomEscapeRepositoryImpl roomEscapeRepositoryImpl;
 
     @Autowired
@@ -31,7 +31,7 @@ public class RoomEscapeService {
 
     public Long reservation(ReservationRequestDto requestDto) throws IllegalArgumentException {
         if (isInvalidTime(requestDto.getTime())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("시간이 올바르지 않습니다.");
         }
         return roomEscapeRepositoryImpl.saveReservation(requestDto.toEntity());
     }

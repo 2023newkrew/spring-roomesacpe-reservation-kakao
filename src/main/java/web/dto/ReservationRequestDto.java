@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import web.entity.Reservation;
 
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
@@ -21,6 +22,8 @@ public class ReservationRequestDto {
     @NotEmpty
     @NotBlank
     private String name;
+    @Min(0)
+    private long themeId;
 
     public LocalDate getDate() {
         return date;
@@ -34,7 +37,11 @@ public class ReservationRequestDto {
         return name;
     }
 
+    public long getThemeId() {
+        return themeId;
+    }
+
     public Reservation toEntity() {
-        return Reservation.of(date, time, name);
+        return Reservation.of(date, time, name, themeId);
     }
 }
