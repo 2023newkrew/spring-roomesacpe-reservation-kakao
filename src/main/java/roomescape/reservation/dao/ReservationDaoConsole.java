@@ -1,6 +1,6 @@
-package roomescape.dao;
+package roomescape.reservation.dao;
 
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

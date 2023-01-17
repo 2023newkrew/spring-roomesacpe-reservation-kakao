@@ -1,11 +1,9 @@
 package roomescape;
 
-import roomescape.dao.ReservationDaoConsole;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.reservation.dao.ReservationDaoConsole;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationDto;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleApplication {
