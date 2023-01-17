@@ -5,11 +5,10 @@ import web.entity.Theme;
 import java.util.List;
 import java.util.Optional;
 
-public interface ThemeRepository {
-
+public interface ThemeDao {
     Long createTheme(Theme theme);
 
-    Integer deleteTheme(long themeId);
+    Long deleteTheme(long themeId);
 
     Optional<List<Theme>> getThemes();
 }

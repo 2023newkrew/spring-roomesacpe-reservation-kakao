@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import web.entity.Theme;
 
 import javax.sql.DataSource;
@@ -13,15 +14,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class DatabaseThemeRepository implements ThemeRepository {
-
+public class ThemeDaoImpl implements ThemeDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseThemeRepository(DataSource dataSource) {
+    public ThemeDaoImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
+    @Transactional
     public Long createTheme(Theme theme) {
         String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
         try {
@@ -38,14 +39,16 @@ public class DatabaseThemeRepository implements ThemeRepository {
             return null;
         }
     }
-
-
-    public Integer deleteTheme(long themeId) {
+    
+    @Override
+    @Transactional
+    public Long deleteTheme(long themeId) {
         String sql = "DELETE FROM theme WHERE ID = ?";
-        return jdbcTemplate.update(sql, themeId);
+        return (long) jdbcTemplate.update(sql, themeId);
     }
 
     @Override
+    @Transactional
     public Optional<List<Theme>> getThemes() {
         String sql = "SELECT * FROM theme;";
         try {

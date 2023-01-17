@@ -1,5 +1,6 @@
 package web.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.dto.ReservationRequestDto;
 import web.dto.ReservationResponseDto;
@@ -9,8 +10,7 @@ import web.entity.Reservation;
 import web.entity.Theme;
 import web.exception.ReservationNotFoundException;
 import web.exception.ThemeNotFoundException;
-import web.repository.ReservationRepository;
-import web.repository.ThemeRepository;
+import web.repository.RoomEscapeRepositoryImpl;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -21,21 +21,19 @@ import java.util.stream.Collectors;
 public class RoomEscapeService {
     private static final LocalTime BEGIN_TIME = LocalTime.of(11, 0, 0);
     private static final LocalTime LAST_TIME = LocalTime.of(20, 30, 0);
+    
+    private final RoomEscapeRepositoryImpl roomEscapeRepositoryImpl;
 
-    private final ReservationRepository reservationRepository;
-    private final ThemeRepository themeRepository;
-
-
-    public RoomEscapeService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.themeRepository = themeRepository;
+    @Autowired
+    public RoomEscapeService(RoomEscapeRepositoryImpl roomEscapeRepositoryImpl) {
+        this.roomEscapeRepositoryImpl = roomEscapeRepositoryImpl;
     }
 
     public Long reservation(ReservationRequestDto requestDto) throws IllegalArgumentException {
         if (isInvalidTime(requestDto.getTime())) {
             throw new IllegalArgumentException();
         }
-        return reservationRepository.save(requestDto.toEntity());
+        return roomEscapeRepositoryImpl.saveReservation(requestDto.toEntity());
     }
 
     private boolean isInvalidTime(LocalTime reservationTime) {
@@ -57,30 +55,30 @@ public class RoomEscapeService {
     }
 
     public ReservationResponseDto findReservationById(long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
+        Reservation reservation = roomEscapeRepositoryImpl.findReservationById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException(reservationId));
         return ReservationResponseDto.of(reservationId, reservation);
     }
 
     public void cancelReservation(long reservationId) {
-        long deleteReservationCount = reservationRepository.delete(reservationId);
+        long deleteReservationCount = roomEscapeRepositoryImpl.deleteReservationById(reservationId);
         if (deleteReservationCount == 0) {
             throw new ReservationNotFoundException(reservationId);
         }
     }
 
     public Long createTheme(ThemeRequestDto requestDto) {
-        return themeRepository.createTheme(requestDto.toEntity());
+        return roomEscapeRepositoryImpl.createTheme(requestDto.toEntity());
     }
 
     public List<ThemeResponseDto> getThemes() {
-        List<Theme> themes = themeRepository.getThemes()
+        List<Theme> themes = roomEscapeRepositoryImpl.getThemes()
                 .orElseThrow(ThemeNotFoundException::new);
         return themes.stream().map(ThemeResponseDto::of).collect(Collectors.toList());
     }
 
     public void deleteTheme(long themeId) {
-        long deleteThemeCount = themeRepository.deleteTheme(themeId);
+        long deleteThemeCount = roomEscapeRepositoryImpl.deleteThemeById(themeId);
         if (deleteThemeCount == 0) {
             throw new ThemeNotFoundException();
         }

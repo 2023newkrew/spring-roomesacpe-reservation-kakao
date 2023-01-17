@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import web.entity.Reservation;
 import web.exception.ReservationDuplicateException;
 
@@ -16,15 +17,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Repository
-public class DatabaseReservationRepository implements ReservationRepository {
-
+public class ReservationDaoImpl implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseReservationRepository(DataSource dataSource) {
+    public ReservationDaoImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
+    @Transactional
     public Long save(Reservation reservation) {
         if (isDuplicateReservation(reservation)) {
             throw new ReservationDuplicateException();
@@ -45,7 +46,8 @@ public class DatabaseReservationRepository implements ReservationRepository {
         }
     }
 
-    private boolean isDuplicateReservation(Reservation reservation) {
+    @Transactional
+    public boolean isDuplicateReservation(Reservation reservation) {
         String sql = "SELECT * FROM reservation WHERE DATE = ? AND TIME = ?";
         Reservation findReservation;
         try {
@@ -60,6 +62,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     }
 
     @Override
+    @Transactional
     public Optional<Reservation> findById(long reservationId) {
         String sql = "SELECT * FROM reservation WHERE ID = ?";
         Reservation reservation;
@@ -75,6 +78,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     }
 
     @Override
+    @Transactional
     public Long delete(long reservationId) {
         String sql = "DELETE FROM reservation WHERE ID = ?";
         return (long) jdbcTemplate.update(sql, reservationId);
