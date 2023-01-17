@@ -12,6 +12,9 @@ import web.exception.ThemeNotFoundException;
 import web.repository.ReservationRepository;
 import web.repository.ThemeRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class RoomEscapeService {
@@ -24,7 +27,7 @@ public class RoomEscapeService {
         this.themeRepository = themeRepository;
     }
 
-    public long reservation(ReservationRequestDto requestDto) {
+    public Long reservation(ReservationRequestDto requestDto) {
         return reservationRepository.save(requestDto.toEntity());
     }
 
@@ -45,10 +48,10 @@ public class RoomEscapeService {
         return themeRepository.createTheme(requestDto.toEntity());
     }
 
-    public ThemeResponseDto getThemes() {
-        Theme theme = themeRepository.getThemes()
-                .orElseThrow(() -> new ThemeNotFoundException());
-        return ThemeResponseDto.of(1, theme);
+    public List<ThemeResponseDto> getThemes() {
+        List<Theme> themes = themeRepository.getThemes()
+                .orElseThrow(ThemeNotFoundException::new);
+        return themes.stream().map(ThemeResponseDto::of).collect(Collectors.toList());
     }
 
     public void deleteTheme(long themeId) {

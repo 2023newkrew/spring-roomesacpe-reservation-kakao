@@ -6,6 +6,23 @@ public class ThemeResponseDto {
     private long id;
     private String name;
     private String desc;
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
     private int price;
 
     public ThemeResponseDto(long id, String name, String desc, int price) {
@@ -15,7 +32,7 @@ public class ThemeResponseDto {
         this.price = price;
     }
 
-    public static ThemeResponseDto of(long id, Theme theme) {
-        return new ThemeResponseDto(id, theme.getName(), theme.getDesc(), theme.getPrice());
+    public static ThemeResponseDto of(Theme theme) {
+        return new ThemeResponseDto(theme.getId(), theme.getName(), theme.getDesc(), theme.getPrice());
     }
 }

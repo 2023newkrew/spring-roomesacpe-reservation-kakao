@@ -13,6 +13,7 @@ import web.service.RoomEscapeService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 public class RoomEscapeController {
@@ -80,9 +81,13 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/themes")
-    public ResponseEntity<ThemeResponseDto> getThemes() {
-        ThemeResponseDto themeResponseDto = roomEscapeService.getThemes();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<ThemeResponseDto>> getThemes() {
+        List<ThemeResponseDto> themeResponseDtos = roomEscapeService.getThemes();
+
+        themeResponseDtos.forEach(a -> System.out.println("id: " + a.getId() + "   name: " + a.getName()));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(themeResponseDtos);
     }
 
     @DeleteMapping("/themes/{themeId}")

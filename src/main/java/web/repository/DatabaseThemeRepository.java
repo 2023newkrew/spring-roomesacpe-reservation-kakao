@@ -9,6 +9,7 @@ import web.entity.Theme;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,11 +29,11 @@ public class DatabaseThemeRepository implements ThemeRepository {
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                 ps.setString(1, String.valueOf(theme.getName()));
-                ps.setString(2, String.valueOf(theme.getName()));
-                ps.setLong(3, Long.valueOf(theme.getPrice()));
+                ps.setString(2, String.valueOf(theme.getDesc()));
+                ps.setInt(3, theme.getPrice());
                 return ps;
             }, keyHolder);
-            return new Long(keyHolder.getKey().longValue());
+            return keyHolder.getKey().longValue();
         } catch (Exception E) {
             return null;
         }
@@ -45,18 +46,17 @@ public class DatabaseThemeRepository implements ThemeRepository {
     }
 
     @Override
-    public Optional<Theme> getThemes() {
-        String sql = "SELECT * FROM theme WHERE ID = ?;";
-        Theme themes;
+    public Optional<List<Theme>> getThemes() {
+        String sql = "SELECT * FROM theme;";
         try {
-            themes = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                    Theme.of(
+            List<Theme> themes = jdbcTemplate.query(sql,
+                    (resultSet, rowNum) -> Theme.of(resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("desc"),
                             resultSet.getInt("price")));
+            return Optional.ofNullable(themes);
         } catch (DataAccessException e) {
             return Optional.empty();
         }
-        return Optional.ofNullable(themes);
     }
 }

@@ -35,6 +35,6 @@ public class ThemeRequestDto {
     }
 
     public Theme toEntity() {
-        return Theme.of(name, desc, price);
+        return Theme.of(0, name, desc, price);
     }
 }

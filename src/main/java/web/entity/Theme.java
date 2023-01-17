@@ -1,18 +1,20 @@
 package web.entity;
 
 public class Theme {
+    private long id;
     private String name;
     private String desc;
     private int price;
 
-    public Theme(String name, String desc, Integer price) {
+    public Theme(long id, String name, String desc, Integer price) {
+        this.id = id;
         this.name = name;
         this.desc = desc;
         this.price = price;
     }
 
-    public static Theme of(String name, String desc, int price) {
-        return new Theme(name, desc, price);
+    public static Theme of(long id, String name, String desc, int price) {
+        return new Theme(id, name, desc, price);
     }
 
     public String getName() {
@@ -23,7 +25,11 @@ public class Theme {
         return desc;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
+    }
+
+    public long getId() {
+        return id;
     }
 }
