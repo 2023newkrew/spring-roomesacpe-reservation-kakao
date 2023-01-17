@@ -12,6 +12,5 @@ spring:
 
   sql:
     init:
-      mode: always # 처음 실행할때는 always
-      #      mode: never # 이후에는 never로 변경
+      mode: always
       schema-locations: classpath:schema.sql
