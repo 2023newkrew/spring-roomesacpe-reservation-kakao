@@ -1,7 +1,7 @@
 package nextstep.reservations;
 
 import io.restassured.RestAssured;
-import nextstep.reservations.domain.repository.theme.ThemeRepository;
+import nextstep.reservations.repository.theme.ThemeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

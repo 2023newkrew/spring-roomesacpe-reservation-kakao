@@ -1,4 +1,4 @@
-package nextstep.reservations.domain.repository.reservation;
+package nextstep.reservations.repository.reservation;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
@@ -6,6 +6,7 @@ import nextstep.reservations.exceptions.reservation.exception.DuplicateReservati
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 @Repository
-//@Primary
+@Primary
 public class JdbcReservationRepository implements ReservationRepository{
     private static final String INSERT_ONE_QUERY = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM reservation WHERE id = ?";

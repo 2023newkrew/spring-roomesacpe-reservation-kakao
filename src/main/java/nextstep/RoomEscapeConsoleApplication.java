@@ -2,9 +2,9 @@ package nextstep;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.domain.repository.reservation.JdbcReservationRepository;
-import nextstep.reservations.domain.repository.reservation.ReservationRepository;
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
+import nextstep.reservations.repository.reservation.JdbcReservationRepository;
+import nextstep.reservations.repository.reservation.ReservationRepository;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 
 import java.time.LocalDate;

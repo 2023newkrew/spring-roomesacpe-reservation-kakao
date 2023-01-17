@@ -1,8 +1,7 @@
-package nextstep.reservations.domain.repository.theme;
+package nextstep.reservations.repository.theme;
 
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.theme.exception.DuplicateThemeException;
-import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -55,9 +54,7 @@ public class ThemeRepository {
         return jdbcTemplate.query(FIND_ALL_QUERY, rowMapper);
     }
 
-    public void remove(final Long id) {
-        int count = jdbcTemplate.update(REMOVE_BY_ID_QUERY, id);
-
-        if (count == 0) throw new NoSuchThemeException();
+    public int remove(final Long id) {
+        return jdbcTemplate.update(REMOVE_BY_ID_QUERY, id);
     }
 }

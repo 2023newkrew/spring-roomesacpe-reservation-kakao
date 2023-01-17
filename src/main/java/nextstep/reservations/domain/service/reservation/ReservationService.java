@@ -1,9 +1,9 @@
 package nextstep.reservations.domain.service.reservation;
 
-import nextstep.reservations.domain.repository.reservation.ReservationRepository;
 import nextstep.reservations.dto.reservation.ReservationRequestDto;
 import nextstep.reservations.dto.reservation.ReservationResponseDto;
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
+import nextstep.reservations.repository.reservation.ReservationRepository;
 import nextstep.reservations.util.mapper.ReservationMapper;
 import org.springframework.stereotype.Service;
 

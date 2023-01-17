@@ -1,4 +1,4 @@
-package nextstep.reservations.domain.repository.reservation;
+package nextstep.reservations.repository.reservation;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 

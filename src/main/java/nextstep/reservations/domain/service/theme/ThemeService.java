@@ -1,8 +1,9 @@
 package nextstep.reservations.domain.service.theme;
 
-import nextstep.reservations.domain.repository.theme.ThemeRepository;
 import nextstep.reservations.dto.theme.ThemeRequestDto;
 import nextstep.reservations.dto.theme.ThemeResponseDto;
+import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
+import nextstep.reservations.repository.theme.ThemeRepository;
 import nextstep.reservations.util.mapper.ThemeMapper;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class ThemeService {
     }
 
     public void deleteTheme(final Long id) {
-        themeRepository.remove(id);
+        int removeCount = themeRepository.remove(id);
+        if (removeCount == 0) throw new NoSuchThemeException();
     }
 }
