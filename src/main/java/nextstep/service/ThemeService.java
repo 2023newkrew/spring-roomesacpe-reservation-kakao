@@ -1,9 +1,8 @@
 package nextstep.service;
 
-import java.sql.SQLException;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
-import nextstep.dto.ThemeResponseDto;
+import nextstep.entity.Theme;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ThemeService {
 
 
-    Long createTheme(ThemeCreateDto themeCreateDto);
+    Theme createTheme(ThemeCreateDto themeCreateDto);
 
     boolean editTheme(ThemeEditDto themeEditDto);
 
     @Transactional(readOnly = true)
-    ThemeResponseDto findTheme(Long id);
+    Theme findById(Long id);
 
     boolean deleteById(Long id);
 }

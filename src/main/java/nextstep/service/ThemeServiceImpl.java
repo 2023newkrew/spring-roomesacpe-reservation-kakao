@@ -1,13 +1,10 @@
 package nextstep.service;
 
-import java.sql.SQLException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
 import nextstep.entity.Theme;
-import nextstep.dto.ThemeResponseDto;
-import nextstep.mapstruct.ThemeMapper;
-import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
 
 @RequiredArgsConstructor
@@ -15,22 +12,22 @@ public class ThemeServiceImpl implements ThemeService {
 
     private final ThemeRepository themeRepository;
     @Override
-    public Long createTheme(ThemeCreateDto themeCreateDto){
-        return themeRepository.save(themeCreateDto);
+    public Theme createTheme(ThemeCreateDto themeCreateDto){
+        return themeRepository.save(themeCreateDto.toEntity());
     }
 
     @Override
     public boolean editTheme(ThemeEditDto themeEditDto) {
-        return themeRepository.update(themeEditDto) != 0;
+        return themeRepository.update(themeEditDto.toEntity()) != 0;
     }
 
     @Override
-    public ThemeResponseDto findTheme(Long id) {
+    public Theme findById(Long id) {
         Theme theme = themeRepository.findById(id).orElse(null);
-        if(theme == null){
+        if(Objects.isNull(theme)){
             return null;
         }
-        return ThemeMapper.INSTANCE.themeToThemeResponseDto(theme);
+        return theme;
     }
 
     @Override

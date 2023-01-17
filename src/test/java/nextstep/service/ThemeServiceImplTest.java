@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeResponseDto;
+import nextstep.entity.Theme;
 import nextstep.repository.ThemeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class ThemeServiceImplTest {
     @BeforeEach
     void init() {
         jdbcTemplate.update("DELETE FROM THEME");
-        id = themeRepository.save(new ThemeCreateDto(NAME, DESC, PRICE));
+        id = themeRepository.save(new ThemeCreateDto(NAME, DESC, PRICE).toEntity()).getId();
 
     }
 
@@ -47,12 +48,12 @@ class ThemeServiceImplTest {
     @Test
     void find_theme_test() {
         //when
-        ThemeResponseDto themeResponseDto = themeService.findTheme(id);
+        Theme theme = themeService.findById(id);
 
         //expected
-        assertThat(themeResponseDto.getName()).isEqualTo(NAME);
-        assertThat(themeResponseDto.getDescription()).isEqualTo(DESC);
-        assertThat(themeResponseDto.getPrice()).isEqualTo(PRICE);
+        assertThat(theme.getName()).isEqualTo(NAME);
+        assertThat(theme.getDescription()).isEqualTo(DESC);
+        assertThat(theme.getPrice()).isEqualTo(PRICE);
     }
 
     @Test
