@@ -47,7 +47,6 @@ public class ThemeService {
     }
 
     public boolean deleteThemeById(Long id) {
-        System.out.println(id);
         if(reservationRepository.findByThemeId(id).size() > 0)
             throw new ReservedThemeDeleteException();
 
