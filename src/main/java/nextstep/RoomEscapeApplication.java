@@ -1,6 +1,5 @@
 package nextstep;
 
-import java.sql.SQLException;
 import nextstep.console.ConsoleApp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

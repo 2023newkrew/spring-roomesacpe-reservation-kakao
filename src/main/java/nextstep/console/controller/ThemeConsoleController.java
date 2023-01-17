@@ -10,9 +10,7 @@ import nextstep.dto.ThemeCreateDto;
 import nextstep.dto.ThemeEditDto;
 import nextstep.dto.ThemeResponseDto;
 import nextstep.entity.Theme;
-import nextstep.exception.ConflictException;
 import nextstep.exception.ConsoleConflictException;
-import nextstep.exception.NotFoundException;
 import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
 

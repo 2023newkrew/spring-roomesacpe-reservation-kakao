@@ -1,9 +1,9 @@
 package nextstep.repository;
 
 import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.EXIST_BY_THEME_ID_STATEMENT;
 import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME_STATEMENT;
 import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID_STATEMENT;
-import static nextstep.repository.ReservationJdbcSql.EXIST_BY_THEME_ID_STATEMENT;
 import static nextstep.repository.ReservationJdbcSql.INSERT_INTO_STATEMENT;
 
 import java.sql.Date;
