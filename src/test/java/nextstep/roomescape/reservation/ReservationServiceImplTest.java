@@ -1,8 +1,7 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.repository.model.Theme;
+import nextstep.roomescape.theme.repository.model.Theme;
 import nextstep.roomescape.reservation.repository.ReservationRepositoryMemoryImpl;
 import nextstep.roomescape.reservation.service.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ReservationServiceImplTest {
 
@@ -32,10 +31,8 @@ public class ReservationServiceImplTest {
     @Test
     void createReservationTest() {
         ReservationRequestDTO reservation = createRequest(LocalDate.parse("9999-01-11"));
-        ReservationResponseDTO result = reservationServiceImpl.create(reservation);
-        assertEquals(result.getDate(), reservation.getDate());
-        assertEquals(result.getTime(), reservation.getTime());
-        assertEquals(result.getName(), reservation.getName());
+        Long id = reservationServiceImpl.create(reservation);
+        assertNotNull(id);
     }
 
     private ReservationRequestDTO createRequest(LocalDate date) {

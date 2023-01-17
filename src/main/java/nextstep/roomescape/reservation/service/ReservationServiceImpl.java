@@ -1,8 +1,10 @@
 package nextstep.roomescape.reservation.service;
 
+import nextstep.roomescape.exception.NotExistEntityException;
 import nextstep.roomescape.reservation.repository.ReservationRepository;
 import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
+import nextstep.roomescape.reservation.repository.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDTO create(ReservationRequestDTO reservation) {
-        return ReservationResponseDTO.of(reservationRepository.create(reservation.toEntity()));
+    public Long create(ReservationRequestDTO reservation) {
+        return reservationRepository.create(reservation.toEntity());
     }
 
     @Override
@@ -27,7 +29,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Boolean delete(long id) {
-        return reservationRepository.delete(id);
+    public void delete(long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        if (reservation == null) {
+            throw new NotExistEntityException("해당 id가 없습니다.");
+        }
+        reservationRepository.delete(id);
     }
 }

@@ -4,9 +4,9 @@ import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
 
 public interface ReservationService {
-    ReservationResponseDTO create(ReservationRequestDTO reservation);
+    Long create(ReservationRequestDTO reservation);
 
     ReservationResponseDTO findById(long id);
 
-    Boolean delete(long id);
+    void delete(long id);
 }

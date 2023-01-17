@@ -1,13 +1,12 @@
 package nextstep.roomescape.reservation.repository;
 
 import nextstep.roomescape.reservation.repository.model.Reservation;
-import nextstep.roomescape.reservation.repository.model.Theme;
+import nextstep.roomescape.theme.repository.model.Theme;
 import nextstep.roomescape.exception.DuplicateEntityException;
-import nextstep.roomescape.exception.NotExistEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -28,46 +27,46 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("reservation.id"),
+            resultSet.getDate("reservation.date").toLocalDate(),
+            resultSet.getTime("reservation.time").toLocalTime(),
+            resultSet.getString("reservation.name"),
+            new Theme(
+                    resultSet.getLong("theme.id"),
+                    resultSet.getString("theme.name"),
+                    resultSet.getString("theme.desc"),
+                    resultSet.getInt("theme.price")
+            )
+
+    );
     @Override
-    public Reservation create(Reservation reservation) {
+    public Long create(Reservation reservation) {
         Theme theme = reservation.getTheme();
         if (findByDateTime(reservation.getDate(), reservation.getTime())) {
             throw new DuplicateEntityException("예약 생성 시 날짜와 시간이 똑같은 예약이 이미 있습니다.");
         }
-        String sql = "insert into reservation (date, time, name, theme_name, theme_desc, theme_price) values(?,?,?,?,?,?)";
+        String sql = "insert into reservation (date, time, name, theme_id) values(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, theme.getName());
-            ps.setString(5, theme.getDesc());
-            ps.setInt(6, theme.getPrice());
-
+            ps.setLong(4, theme.getId());
             return ps;
         }, keyHolder);
 
-        return new Reservation(keyHolder.getKey().longValue(), reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public Reservation findById(long id) {
-        String sql = "select * from reservation where id= ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime(),
-                            resultSet.getString("name"),
-                            new Theme(resultSet.getString("theme_name"),
-                                    resultSet.getString("theme_desc"),
-                                    resultSet.getInt("theme_price"))
-                    );
-                    return reservation;
-                }, id);
+        String sql = "SELECT reservation.id, reservation.name, reservation.date, reservation.time, theme.id, theme.name, theme.desc, theme.price " +
+                "from reservation " +
+                "inner join theme on schedule.theme_id = theme.id " +
+                "where reservation.id = ?;";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override
@@ -77,14 +76,9 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
     }
 
     @Override
-    public Boolean delete(long id) {
-        try {
-            findById(id);
-        }catch (EmptyResultDataAccessException e){
-            throw new NotExistEntityException("삭제하려는 id가 존재하지 않습니다.");
-        }
+    public void delete(long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, Long.valueOf(id)) == 1 ;
+        jdbcTemplate.update(sql, id);
     }
 
 }
