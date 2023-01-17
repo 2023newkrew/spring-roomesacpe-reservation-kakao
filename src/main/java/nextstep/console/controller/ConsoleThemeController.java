@@ -1,16 +1,11 @@
 package nextstep.console.controller;
 
 
+import nextstep.console.repository.ConsoleReservationRepository;
+import nextstep.console.repository.ConsoleThemeRepository;
 import nextstep.console.view.ConsoleThemeView;
-import nextstep.domain.repository.ReservationRepository;
-import nextstep.domain.repository.ThemeRepository;
+import nextstep.domain.ThemeManager;
 import nextstep.dto.CreateThemeRequest;
-import nextstep.web.repository.JdbcReservationRepository;
-import nextstep.web.repository.JdbcThemeRepository;
-import nextstep.web.service.ThemeService;
-import nextstep.utils.DataSourceUtil;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 
 
 import static nextstep.console.ConsoleCommands.*;
@@ -18,15 +13,14 @@ import static nextstep.console.ConsoleCommands.*;
 public class ConsoleThemeController {
 
     private final ConsoleThemeView themeView;
-    private final ThemeService themeService;
+    private final ThemeManager themeManager;
 
     public ConsoleThemeController() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSourceUtil.getDataSource());
-        ReservationRepository reservationRepository = new JdbcReservationRepository(jdbcTemplate);
-        ThemeRepository themeRepository = new JdbcThemeRepository(jdbcTemplate);
-
+        this.themeManager = new ThemeManager(
+                new ConsoleReservationRepository(),
+                new ConsoleThemeRepository()
+        );
         this.themeView = new ConsoleThemeView();
-        this.themeService = new ThemeService(themeRepository, reservationRepository);
     }
 
     public void run() {
@@ -58,26 +52,26 @@ public class ConsoleThemeController {
 
         CreateThemeRequest themeRequest = new CreateThemeRequest(name, desc, price);
 
-        Long savedId = themeService.createTheme(themeRequest);
+        Long savedId = themeManager.createTheme(themeRequest);
 
         themeView.printAddMessage();
-        themeView.printThemeResponse(themeService.findThemeById(savedId));
+        themeView.printThemeResponse(themeManager.findThemeById(savedId));
     }
 
     private void findProcess(String input) {
         Long id = Long.parseLong(input.split(" ")[1]);
 
-        themeView.printThemeResponse(themeService.findThemeById(id));
+        themeView.printThemeResponse(themeManager.findThemeById(id));
     }
 
     private void findAllProcess() {
-        themeView.printThemes(themeService.getAllThemes());
+        themeView.printThemes(themeManager.getAllThemes());
     }
 
     private void deleteProcess(String input) {
         Long id = Long.parseLong(input.split(" ")[1]);
 
-        if(themeService.deleteThemeById(id))
+        if(themeManager.deleteThemeById(id))
             themeView.printDeleteMessage();
     }
 

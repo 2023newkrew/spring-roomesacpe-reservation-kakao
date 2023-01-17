@@ -1,29 +1,24 @@
 package nextstep.console.controller;
 
+import nextstep.console.repository.ConsoleReservationRepository;
+import nextstep.console.repository.ConsoleThemeRepository;
 import nextstep.console.view.ConsoleReservationView;
-import nextstep.domain.repository.ReservationRepository;
-import nextstep.domain.repository.ThemeRepository;
+import nextstep.domain.ReservationManager;
 import nextstep.dto.CreateReservationRequest;
-import nextstep.web.repository.JdbcReservationRepository;
-import nextstep.web.repository.JdbcThemeRepository;
-import nextstep.web.service.ReservationService;
-import nextstep.utils.DataSourceUtil;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import static nextstep.console.ConsoleCommands.*;
 import static nextstep.console.ConsoleCommands.BACK;
 
 public class ConsoleReservationController {
     private final ConsoleReservationView reservationView;
-    private final ReservationService reservationService;
+    private final ReservationManager reservationManager;
 
     public ConsoleReservationController() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSourceUtil.getDataSource());
-        ReservationRepository reservationRepository = new JdbcReservationRepository(jdbcTemplate);
-        ThemeRepository themeRepository = new JdbcThemeRepository(jdbcTemplate);
-
         this.reservationView = new ConsoleReservationView();
-        this.reservationService = new ReservationService(reservationRepository, themeRepository);
+        this.reservationManager = new ReservationManager(
+                new ConsoleReservationRepository(),
+                new ConsoleThemeRepository()
+        );
     }
 
     public void run() {
@@ -55,16 +50,16 @@ public class ConsoleReservationController {
 
         CreateReservationRequest reservationRequest = new CreateReservationRequest(date, time + ":00", name, Long.parseLong(themeId));
 
-        Long reservationId = reservationService.createReservation(reservationRequest);
+        Long reservationId = reservationManager.createReservation(reservationRequest);
 
         reservationView.printAddMessage();
-        reservationView.printReservation(reservationService.findReservationById(reservationId));
+        reservationView.printReservation(reservationManager.findReservationById(reservationId));
     }
 
     private void findProcess(String input) {
         String params = input.split(" ")[1];
         Long id = Long.parseLong(params.split(",")[0]);
-        reservationView.printReservation(reservationService.findReservationById(id));
+        reservationView.printReservation(reservationManager.findReservationById(id));
     }
 
     private void deleteProcess(String input) {
@@ -72,7 +67,7 @@ public class ConsoleReservationController {
 
         Long id = Long.parseLong(params.split(",")[0]);
 
-        if (reservationService.deleteReservationById(id))
+        if (reservationManager.deleteReservationById(id))
             reservationView.printDeleteMessage();
     }
 }
