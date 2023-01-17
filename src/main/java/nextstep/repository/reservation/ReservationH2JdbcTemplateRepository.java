@@ -56,12 +56,6 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public void deleteAll() {
-        String sql = "DELETE FROM reservation;";
-        jdbcTemplate.update(sql);
-    }
-
-    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation where id = ?";
         jdbcTemplate.update(sql, id);

@@ -39,17 +39,8 @@ public class ReservationController {
                 .ok(reservationService.findReservation(id, reservationMapper));
     }
 
-    @DeleteMapping("")
-    public ResponseEntity deleteAllReservations() {
-        reservationService.cancelAllReservations();
-
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.cancelReservation(id);
 
         return ResponseEntity
