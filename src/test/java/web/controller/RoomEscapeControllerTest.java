@@ -15,9 +15,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import web.dto.ReservationResponseDto;
+import web.dto.ThemeResponseDto;
 import web.entity.Reservation;
+import web.entity.Theme;
 import web.exception.ReservationDuplicateException;
 import web.exception.ReservationNotFoundException;
+import web.exception.ThemeNotFoundException;
 import web.service.RoomEscapeService;
 
 import java.time.LocalDate;
@@ -215,4 +218,81 @@ public class RoomEscapeControllerTest {
         }
     }
 
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class CreateThemes {
+
+        @BeforeEach
+        void setupMockingService() {
+        }
+
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            String content = getValidContent();
+            mockMvc.perform(post("/themes")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content))
+                    .andExpect(status().isCreated());
+        }
+
+        @Test
+        void should_responseBadRequest_then_invalidRequest() throws Exception {
+
+        }
+
+        private String getValidContent() {
+            return "{\n" +
+                    "\t\"name\": \"테마이름\",\n" +
+                    "\t\"desc\": \"테마설명\",\n" +
+                    "\t\"price\": 22000\n" +
+                    "}";
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class DeleteTheme {
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            doNothing().when(roomEscapeService).deleteTheme(anyLong());
+            mockMvc.perform(delete("/themes/1"))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        void should_responseBadRequest_when_invalidRequest() throws Exception {
+            doThrow(ThemeNotFoundException.class).when(roomEscapeService).deleteTheme(anyLong());
+            mockMvc.perform(delete("/themes/-1"))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class GetTheme {
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            ThemeResponseDto responseDto = ThemeResponseDto.of(1,
+                    Theme.of(
+                            "워너고홈",
+                            "병맛 어드벤처 회사 코믹물",
+                            29000
+                    ));
+            when(roomEscapeService.getThemes()).thenReturn(responseDto);
+            mockMvc.perform(get("/themes"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(1))
+                    .andExpect(jsonPath("$.name").value("워너고홈"))
+                    .andExpect(jsonPath("$.desc").value("병맛 어드벤처 회사 코믹물"))
+                    .andExpect(jsonPath("$.price").value(29000));
+        }
+
+        @Test
+        void should_status404_when_notExistId() throws Exception {
+            when(roomEscapeService.getThemes()).thenThrow(ThemeNotFoundException.class);
+            mockMvc.perform(get("/themes")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+    }
 }

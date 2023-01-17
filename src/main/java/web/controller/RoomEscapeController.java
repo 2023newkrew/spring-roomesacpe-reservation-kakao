@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.dto.ReservationRequestDto;
 import web.dto.ReservationResponseDto;
+import web.dto.ThemeRequestDto;
+import web.dto.ThemeResponseDto;
 import web.service.RoomEscapeService;
 
 import javax.validation.Valid;
@@ -67,5 +69,25 @@ public class RoomEscapeController {
         roomEscapeService.cancelReservation(reservationId);
         return ResponseEntity.noContent()
                 .build();
+    }
+
+    @PostMapping("/themes")
+    public ResponseEntity<Void> createTheme(@RequestBody @Valid ThemeRequestDto requestDto) {
+        Long createdId = roomEscapeService.createTheme(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/themes/" + createdId))
+                .build();
+    }
+
+    @GetMapping("/themes")
+    public ResponseEntity<ThemeResponseDto> getThemes() {
+        ThemeResponseDto themeResponseDto = roomEscapeService.getThemes();
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/themes/{themeId}")
+    public ResponseEntity<Void> deleteTheme(@PathVariable long themeId) {
+        roomEscapeService.deleteTheme(themeId);
+        return ResponseEntity.noContent().build();
     }
 }
