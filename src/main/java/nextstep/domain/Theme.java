@@ -1,14 +1,28 @@
 package nextstep.domain;
 
+import java.util.Objects;
+
 public class Theme {
+    private Long id;
     private String name;
     private String desc;
     private Integer price;
+
+    public Theme(Long id, String name, String desc, Integer price) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
+    }
 
     public Theme(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -21,5 +35,26 @@ public class Theme {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public boolean isSameId(Long id) {
+        return this.id.equals(id);
+    }
+
+    public boolean isSameName(String name) {
+        return this.name.equals(name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Theme theme = (Theme) o;
+        return id.equals(theme.id) && name.equals(theme.name) && desc.equals(theme.desc) && price.equals(theme.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, desc, price);
     }
 }

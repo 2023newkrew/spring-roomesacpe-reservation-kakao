@@ -1,9 +1,9 @@
-package nextstep.presentation;
+package nextstep.web.presentation;
 
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservationResponse;
 import nextstep.exception.InvalidCreateReservationRequestException;
-import nextstep.service.ReservationService;
+import nextstep.web.service.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReservation(@Validated @RequestBody CreateReservationRequest createReservationRequest, BindingResult bindingResult) {
+    public ResponseEntity<Void> createReservation(
+            @Validated @RequestBody CreateReservationRequest createReservationRequest,
+            BindingResult bindingResult) {
         if(bindingResult.hasErrors())
             throw new InvalidCreateReservationRequestException();
 

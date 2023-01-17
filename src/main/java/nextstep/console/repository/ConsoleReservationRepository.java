@@ -1,14 +1,18 @@
-package nextstep.repository;
+package nextstep.console.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.repository.ReservationRepository;
 import nextstep.exception.JdbcException;
 import nextstep.utils.JdbcUtils;
+import nextstep.web.repository.Queries;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 
 public class ConsoleReservationRepository implements ReservationRepository {
 
@@ -20,16 +24,13 @@ public class ConsoleReservationRepository implements ReservationRepository {
         try {
             conn = JdbcUtils.getConnection();
             pstmt = conn.prepareStatement(Queries.Reservation.INSERT_SQL, new String[] {"id"});
-
             pstmt.setDate(1, Date.valueOf(reservation.getDate()));
             pstmt.setTime(2, Time.valueOf(reservation.getTime()));
             pstmt.setString(3, reservation.getName());
-            pstmt.setString(4, reservation.getTheme().getName());
-            pstmt.setString(5, reservation.getTheme().getDesc());
-            pstmt.setInt(6, reservation.getTheme().getPrice());
+            pstmt.setLong(4, reservation.getThemeId());
             pstmt.executeUpdate();
 
-            return new Reservation(getGeneratedKey(pstmt), reservation);
+            return new Reservation(JdbcUtils.getGeneratedKey(pstmt), reservation);
         } catch (SQLException e) {
             throw new JdbcException(e.getMessage());
         } finally {
@@ -54,11 +55,7 @@ public class ConsoleReservationRepository implements ReservationRepository {
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time")),
                         rs.getString("name"),
-                        new Theme(
-                                rs.getString("theme_name"),
-                                rs.getString("theme_desc"),
-                                rs.getInt("theme_price")
-                        )
+                        rs.getLong("theme_id")
                 );
                 return Optional.of(reservation);
             }
@@ -69,6 +66,39 @@ public class ConsoleReservationRepository implements ReservationRepository {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        List<Reservation> reservations = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = JdbcUtils.getConnection();
+            pstmt = conn.prepareStatement(Queries.Reservation.SELECT_BY_THEME_ID_SQL);
+            pstmt.setLong(1, themeId);
+            rs = pstmt.executeQuery();
+            while(rs.next()) {
+                Reservation reservation = new Reservation(
+                        rs.getLong("id"),
+                        LocalDate.parse(rs.getString("date")),
+                        LocalTime.parse(rs.getString("time")),
+                        rs.getString("name"),
+                        rs.getLong("theme_id")
+                );
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            throw new JdbcException(e.getMessage());
+        }
+        finally {
+            JdbcUtils.close(rs, pstmt, conn);
+        }
+
+        return reservations;
     }
 
     @Override
@@ -124,15 +154,6 @@ public class ConsoleReservationRepository implements ReservationRepository {
         } finally {
             JdbcUtils.close(pstmt, conn);
         }
-    }
-
-    private Long getGeneratedKey(PreparedStatement pstmt) throws SQLException {
-        ResultSet generatedKeys = pstmt.getGeneratedKeys();
-        if (!generatedKeys.next()) {
-            throw new JdbcException("id 값이 존재하지 않습니다.");
-        }
-
-        return generatedKeys.getLong(1);
     }
 
 }

@@ -1,53 +1,65 @@
 package nextstep.dto;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
+
+import java.util.Objects;
 
 public class FindReservationResponse {
 
-    private Long id;
-    private String date;
-    private String time;
-    private String name;
+    private Long reservationId;
+    private String reservationDate;
+    private String reservationTime;
+    private String reservationName;
+    private Long themeId;
     private String themeName;
     private String themeDesc;
     private Integer themePrice;
 
-    private FindReservationResponse(Long id, String date, String time, String name, String themeName, String themeDesc, Integer themePrice) {
-        this.id = id;
-        this.date = date;
-        this.time = time;
-        this.name = name;
+    public FindReservationResponse(
+            Long reservationId, String reservationDate, String reservationTime, String reservationName,
+            Long themeId, String themeName, String themeDesc, Integer themePrice) {
+        this.reservationId = reservationId;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+        this.reservationName = reservationName;
+        this.themeId = themeId;
         this.themeName = themeName;
         this.themeDesc = themeDesc;
         this.themePrice = themePrice;
     }
 
-    public static FindReservationResponse from(Reservation reservation) {
+    public static FindReservationResponse from(Reservation reservation, Theme theme) {
         return new FindReservationResponse(
                 reservation.getId(),
                 reservation.getDate().toString(),
                 reservation.getTime().toString(),
                 reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
+                theme.getId(),
+                theme.getName(),
+                theme.getDesc(),
+                theme.getPrice()
         );
     }
 
-    public Long getId() {
-        return id;
+    public Long getReservationId() {
+        return reservationId;
     }
 
-    public String getDate() {
-        return date;
+    public String getReservationDate() {
+        return reservationDate;
     }
 
-    public String getTime() {
-        return time;
+    public String getReservationTime() {
+        return reservationTime;
     }
 
-    public String getName() {
-        return name;
+    public String getReservationName() {
+        return reservationName;
+    }
+
+    public Long getThemeId() {
+        return themeId;
     }
 
     public String getThemeName() {
@@ -60,5 +72,18 @@ public class FindReservationResponse {
 
     public Integer getThemePrice() {
         return themePrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FindReservationResponse that = (FindReservationResponse) o;
+        return reservationId.equals(that.reservationId) && reservationDate.equals(that.reservationDate) && reservationTime.equals(that.reservationTime) && reservationName.equals(that.reservationName) && themeId.equals(that.themeId) && themeName.equals(that.themeName) && themeDesc.equals(that.themeDesc) && themePrice.equals(that.themePrice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reservationId, reservationDate, reservationTime, reservationName, themeId, themeName, themeDesc, themePrice);
     }
 }
