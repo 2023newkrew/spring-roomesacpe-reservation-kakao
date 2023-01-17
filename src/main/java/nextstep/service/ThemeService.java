@@ -2,6 +2,7 @@ package nextstep.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.dto.CreateThemeRequest;
 import nextstep.repository.reservation.ReservationRepository;
 import nextstep.repository.theme.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class ThemeService {
 
     public Long createTheme(Theme theme) {
         return this.createTheme(theme.getName(), theme.getDesc(), theme.getPrice());
+    }
+
+    public Long createTheme(CreateThemeRequest request) {
+        return this.createTheme(request.getName(), request.getDesc(), request.getPrice());
     }
 
     public List<Theme> findAll() {
