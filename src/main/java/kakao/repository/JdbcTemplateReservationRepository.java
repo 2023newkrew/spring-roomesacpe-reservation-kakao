@@ -3,8 +3,6 @@ package kakao.repository;
 import kakao.exception.ReservationNotFoundException;
 import kakao.model.Reservation;
 import kakao.controller.request.ReservationRequest;
-import kakao.controller.response.ReservationResponse;
-import kakao.model.Theme;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {

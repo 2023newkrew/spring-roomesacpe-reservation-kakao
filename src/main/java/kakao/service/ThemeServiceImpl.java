@@ -6,18 +6,20 @@ import kakao.exception.CorrespondingReservationExistException;
 import kakao.exception.DuplicatedThemeException;
 import kakao.repository.ReservationRepository;
 import kakao.repository.ThemeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ThemeServiceImpl implements ThemeService {
     ReservationRepository reservationRepository;
     ThemeRepository themeRepository;
 
+    public ThemeServiceImpl(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
+    }
 
     @Override
     public Long create(ThemeRequest themeRequest) {

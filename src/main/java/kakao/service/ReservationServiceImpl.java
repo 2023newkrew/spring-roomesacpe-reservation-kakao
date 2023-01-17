@@ -13,11 +13,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService{
 
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
+
+    public ReservationServiceImpl(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
+    }
 
     public Long book(ReservationRequest reservationRequest) {
         checkIfThemeExist(reservationRequest.getThemeId());
