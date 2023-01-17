@@ -1,25 +1,30 @@
 package console;
 
 import web.domain.Reservation;
-import web.domain.Theme;
+import web.dto.request.ReservationRequestDTO;
 
 import java.sql.*;
 import java.util.Optional;
 
 public class ReservationDAO {
 
-    public void addReservation(Reservation reservation) {
+    public Reservation add(ReservationRequestDTO reservationRequestDTO) {
         try(Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
             System.out.println("정상적으로 연결되었습니다.");
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            Reservation reservation = reservationRequestDTO.toEntity();
+            String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setInt(4, reservation.getThemeId().intValue());
             ps.executeUpdate();
+
+            ResultSet resultSet = ps.getGeneratedKeys();
+            resultSet.next();
+            Long id = resultSet.getLong("id");
+
+            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
@@ -28,9 +33,6 @@ public class ReservationDAO {
     }
 
     public Optional<Reservation> findById(Long reservationId) {
-//        Connection con = null;
-
-        // 드라이버 연결
         try(Connection con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "")) {
 
             System.out.println("정상적으로 연결되었습니다.");
@@ -44,16 +46,12 @@ public class ReservationDAO {
                 return Optional.empty();
             }
 
-            final Theme theme = new Theme(rs.getString(5),
-                    rs.getString(6),
-                    rs.getInt(7));
-
             final Reservation reservation = new Reservation(
                     rs.getLong(1),
                     rs.getDate(2).toLocalDate(),
                     rs.getTime(3).toLocalTime(),
                     rs.getString(4),
-                    theme
+                    rs.getLong(5)
             );
 
             return Optional.of(reservation);
