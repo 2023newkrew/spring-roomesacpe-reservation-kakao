@@ -27,9 +27,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
-        Theme theme = themeService.findById(request.getThemeId());
-        Long id = reservationService.createReservation(request.getDate(),
-                request.getTime(), request.getName(), theme.getId());
+        // request 내의 themeId로 findById 메서드를 호출함으로서 존재하지 않는 theme에 대한 reservation 생성을 요청한 것은 아닌지 확인
+        themeService.findById(request.getThemeId());
+        Long id = reservationService.createReservation(request);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 

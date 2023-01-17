@@ -1,6 +1,7 @@
 package nextstep.service;
 
 import nextstep.domain.Reservation;
+import nextstep.dto.CreateReservationRequest;
 import nextstep.repository.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,9 @@ public class ReservationService {
     public Long createReservation(Reservation reservation) {
         return this.createReservation(reservation.getDate(), reservation.getTime(),
                 reservation.getName(), reservation.getThemeId());
+    }
+
+    public Long createReservation(CreateReservationRequest request) {
+        return this.createReservation(request.getDate(), request.getTime(), request.getName(), request.getThemeId());
     }
 }
