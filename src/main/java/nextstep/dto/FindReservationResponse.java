@@ -3,6 +3,8 @@ package nextstep.dto;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 
+import java.util.Objects;
+
 public class FindReservationResponse {
 
     private Long reservationId;
@@ -70,5 +72,18 @@ public class FindReservationResponse {
 
     public Integer getThemePrice() {
         return themePrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FindReservationResponse that = (FindReservationResponse) o;
+        return reservationId.equals(that.reservationId) && reservationDate.equals(that.reservationDate) && reservationTime.equals(that.reservationTime) && reservationName.equals(that.reservationName) && themeId.equals(that.themeId) && themeName.equals(that.themeName) && themeDesc.equals(that.themeDesc) && themePrice.equals(that.themePrice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reservationId, reservationDate, reservationTime, reservationName, themeId, themeName, themeDesc, themePrice);
     }
 }
