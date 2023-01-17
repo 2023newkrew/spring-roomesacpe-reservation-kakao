@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 @Primary
@@ -90,6 +91,15 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository{
     public void delete(long id) {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        String sql = "SELECT reservation.id, reservation.name, reservation.date, reservation.time, theme.id, theme.name, theme.desc, theme.price " +
+                "from reservation " +
+                "inner join theme on reservation.theme_id = theme.id " +
+                "where theme.id .id = ?;";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
 }

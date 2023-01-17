@@ -4,10 +4,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
+import nextstep.roomescape.theme.controller.dto.ThemeRequestDTO;
 import nextstep.roomescape.theme.repository.model.Theme;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -24,14 +23,19 @@ public class ReservationControllerTest {
 
     @LocalServerPort
     int port;
-    private Theme theme;
+    private static Theme theme;
+
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        theme = new Theme(2L,	"워너고홈",	"병맛 어드벤처 회사 코믹물",	29000);
+        theme = createTheme();
     }
 
+    @AfterEach
+    void afterEach() {
+        deleteTheme(theme.getId());
+    }
 
     @DisplayName("예약 생성")
     @Test
@@ -127,5 +131,27 @@ public class ReservationControllerTest {
                 .when().delete("/reservations/" + id)
                 .then().log().all()
                 .extract();
+    }
+
+    public Theme createTheme() {
+        ThemeRequestDTO body = new ThemeRequestDTO("테마이름", "테마설명", 22000);
+        String location = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+                .when().post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
+        return new Theme(Long.parseLong(location.split("/")[2]), "테마이름", "테마설명", 22000);
+    }
+
+    public void deleteTheme(Long id){
+        RestAssured
+                .given().log().all()
+                .when().delete("/themes/" + id)
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
     }
 }

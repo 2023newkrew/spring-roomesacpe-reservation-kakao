@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 
 public class ReservationRepositoryMemoryImpl implements ReservationRepository{
@@ -46,6 +46,11 @@ public class ReservationRepositoryMemoryImpl implements ReservationRepository{
             return;
         }
         throw new NotExistEntityException("해당 id가 없습니다.");
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        return reservationList.values().stream().filter(r -> Objects.equals(r.getTheme().getId(), themeId)).collect(Collectors.toList());
     }
 
 }
