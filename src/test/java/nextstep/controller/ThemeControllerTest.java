@@ -51,5 +51,13 @@ class ThemeControllerTest {
 
     @Test
     void deleteTheme() {
+        ThemeRequest themeRequest = new ThemeRequest("theme1", "desc1", 10000);
+        RestAssured
+                .given().contentType(ContentType.JSON).body(themeRequest)
+                .when().post("/themes");
+        RestAssured
+                .given().log().all()
+                .when().delete("/themes/1").then()
+                .statusCode(org.apache.http.HttpStatus.SC_NO_CONTENT);
     }
 }
