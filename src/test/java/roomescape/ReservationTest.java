@@ -37,18 +37,18 @@ public class ReservationTest {
         RestAssured.port = port;
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationDto("2022-08-11", "13:00", "kayla")))
+                .content(this.objectMapper.writeValueAsString(new ReservationDto("2022-08-11", "13:00", "kayla", 1L)))
         );
         this.mockMvc.perform(post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(new ReservationDto("2022-08-12", "13:00", "jerrie")))
+                .content(this.objectMapper.writeValueAsString(new ReservationDto("2022-08-12", "13:00", "jerrie", 1L)))
         );
     }
 
     @DisplayName("예약 생성 테스트")
     @Test
     void createReservation() {
-        ReservationDto reservationDto = new ReservationDto("2022-08-13", "13:00", "kayla");
+        ReservationDto reservationDto = new ReservationDto("2022-08-13", "13:00", "kayla", 1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +63,7 @@ public class ReservationTest {
     @DisplayName("예약 생성 거절 테스트")
     void rejectCreateReservation() throws Exception {
         // Given
-        ReservationDto overlapReservationDto = new ReservationDto("2022-08-11", "13:00", "jerrie");
+        ReservationDto overlapReservationDto = new ReservationDto("2022-08-11", "13:00", "jerrie", 1L);
 
         // When
         ResultActions overlapResultActions = mockMvc.perform(post("/reservations")

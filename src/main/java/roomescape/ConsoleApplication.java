@@ -33,13 +33,13 @@ public class ConsoleApplication {
                 String date = params.split(",")[0];
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
-                
+
                 if (reservationDAO.findReservationByDateAndTime(date, time).size() > 0) {
                     System.out.println("이미 예약된 시간입니다.");
                     continue;
                 }
 
-                Reservation reservation = reservationDAO.addReservation(new Reservation(new ReservationDto(date, time, name)));
+                Reservation reservation = reservationDAO.addReservation(new Reservation(new ReservationDto(date, time, name, 1L)));
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + reservation.getId());
                 System.out.println("예약 날짜: " + reservation.getDate());
@@ -64,9 +64,9 @@ public class ConsoleApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                //System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
+                //System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
+                //System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {

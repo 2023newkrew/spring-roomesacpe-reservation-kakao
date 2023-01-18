@@ -9,23 +9,24 @@ import java.time.format.DateTimeFormatter;
 
 public class Reservation {
     private Long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final Long themeId;
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = themeId;
     }
 
     public Reservation(ReservationDto reservationDto) {
         this.date = LocalDate.parse(reservationDto.getDate(), DateTimeFormatter.ISO_DATE);
         this.time = LocalTime.parse(reservationDto.getTime());
         this.name = reservationDto.getName();
+        this.themeId = reservationDto.getThemeId();
     }
 
     public Long getId() {
@@ -48,8 +49,8 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Long getThemeId() {
+        return themeId;
     }
 
 }
