@@ -1,7 +1,7 @@
-package roomescape.theme.repository;
+package roomescape.reservation.repository.common;
 
 import org.springframework.jdbc.core.RowMapper;
-import roomescape.theme.domain.Theme;
+import roomescape.reservation.domain.Theme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

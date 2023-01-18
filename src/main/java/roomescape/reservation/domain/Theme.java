@@ -1,6 +1,6 @@
-package roomescape.theme.domain;
+package roomescape.reservation.domain;
 
-import roomescape.theme.dto.ThemeDto;
+import roomescape.reservation.dto.ThemeDto;
 
 public class Theme {
 

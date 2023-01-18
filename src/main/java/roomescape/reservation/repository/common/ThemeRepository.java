@@ -1,6 +1,6 @@
-package roomescape.theme.repository;
+package roomescape.reservation.repository.common;
 
-import roomescape.theme.domain.Theme;
+import roomescape.reservation.domain.Theme;
 
 import java.util.List;
 

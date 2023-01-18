@@ -1,4 +1,4 @@
-package roomescape.theme.dto;
+package roomescape.reservation.dto;
 
 public class ThemeDto {
     private String name;

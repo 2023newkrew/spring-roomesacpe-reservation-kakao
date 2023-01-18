@@ -1,11 +1,13 @@
-package roomescape.theme.repository;
+package roomescape.reservation.repository.web;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.theme.domain.Theme;
+import roomescape.reservation.domain.Theme;
+import roomescape.reservation.repository.common.AbstractThemeH2Repository;
+import roomescape.reservation.repository.common.ThemeMapper;
 
 import javax.sql.DataSource;
 import java.util.List;

@@ -8,7 +8,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import roomescape.reservation.dto.ReservationDto;
-import roomescape.theme.dto.ThemeDto;
+import roomescape.reservation.dto.ThemeDto;
 
 import static org.hamcrest.core.Is.is;
 

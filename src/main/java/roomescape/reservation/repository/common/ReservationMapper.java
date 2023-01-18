@@ -1,4 +1,4 @@
-package roomescape.reservation.dao;
+package roomescape.reservation.repository.common;
 
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.reservation.domain.Reservation;

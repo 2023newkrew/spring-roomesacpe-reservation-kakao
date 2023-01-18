@@ -1,6 +1,5 @@
 package roomescape.reservation.domain;
 
-import roomescape.theme.domain.Theme;
 import roomescape.reservation.dto.ReservationDto;
 
 import java.time.LocalDate;
