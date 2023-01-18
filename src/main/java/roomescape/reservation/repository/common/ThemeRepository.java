@@ -5,7 +5,7 @@ import roomescape.reservation.domain.Theme;
 import java.util.List;
 
 public interface ThemeRepository {
-    Theme add(Theme them);
+    Theme add(Theme theme);
 
     List<Theme> get();
 
