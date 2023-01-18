@@ -31,4 +31,14 @@ public class CreateReservationRequest {
     public Long getThemeId() {
         return themeId;
     }
+
+    @Override
+    public String toString() {
+        return "CreateReservationRequest{" +
+                "date=" + date +
+                ", time=" + time +
+                ", name='" + name + '\'' +
+                ", themeId=" + themeId +
+                '}';
+    }
 }

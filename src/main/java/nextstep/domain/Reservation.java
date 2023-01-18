@@ -48,4 +48,15 @@ public class Reservation {
                 resultSet.getLong("THEME_ID")
         );
     }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", date=" + date +
+                ", time=" + time +
+                ", name='" + name + '\'' +
+                ", themeId=" + themeId +
+                '}';
+    }
 }

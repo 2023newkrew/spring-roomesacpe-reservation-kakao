@@ -35,4 +35,14 @@ public class FindTheme {
     public Integer getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "FindTheme{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

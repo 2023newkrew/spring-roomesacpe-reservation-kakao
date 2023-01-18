@@ -18,4 +18,12 @@ public class ErrorResponse {
     public String getErrorMessage() {
         return errorMessage;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "errorCode=" + errorCode +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
+    }
 }

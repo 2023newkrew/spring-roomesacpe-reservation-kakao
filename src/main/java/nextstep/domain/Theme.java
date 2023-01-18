@@ -39,4 +39,14 @@ public class Theme {
                 resultSet.getString("desc"),
                 resultSet.getInt("price"));
     }
+
+    @Override
+    public String toString() {
+        return "Theme{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

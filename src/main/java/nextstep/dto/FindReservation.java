@@ -64,4 +64,17 @@ public class FindReservation {
                 theme.getPrice()
         );
     }
+
+    @Override
+    public String toString() {
+        return "FindReservation{" +
+                "id=" + id +
+                ", date=" + date +
+                ", time=" + time +
+                ", name='" + name + '\'' +
+                ", themeName='" + themeName + '\'' +
+                ", themeDesc='" + themeDesc + '\'' +
+                ", themePrice=" + themePrice +
+                '}';
+    }
 }

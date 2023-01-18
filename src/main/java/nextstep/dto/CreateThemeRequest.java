@@ -22,4 +22,13 @@ public class CreateThemeRequest {
     public Integer getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "CreateThemeRequest{" +
+                "name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }
