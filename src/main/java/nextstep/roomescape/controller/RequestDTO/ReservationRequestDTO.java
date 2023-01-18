@@ -1,9 +1,9 @@
-package nextstep.roomescape.reservation.controller.dto;
+package nextstep.roomescape.controller.RequestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import nextstep.roomescape.reservation.model.Reservation;
-import nextstep.roomescape.reservation.model.Theme;
+import nextstep.roomescape.repository.model.Reservation;
+import nextstep.roomescape.repository.model.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +16,7 @@ public class ReservationRequestDTO {
     private final String name;
     private final Theme theme;
 
-    public Reservation toEntity(){
+    public Reservation toEntity() {
         return Reservation.builder()
                 .date(date)
                 .time(time)

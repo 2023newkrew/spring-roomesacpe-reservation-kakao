@@ -1,18 +1,18 @@
 package nextstep.roomescape.reservation;
 
-import nextstep.roomescape.reservation.model.Reservation;
-import nextstep.roomescape.reservation.model.Theme;
-import nextstep.roomescape.reservation.exception.CreateReservationException;
-import nextstep.roomescape.reservation.repository.ReservationRepository;
-import nextstep.roomescape.reservation.repository.ReservationRepositoryMemoryImpl;
+import nextstep.roomescape.repository.model.Reservation;
+import nextstep.roomescape.repository.model.Theme;
+import nextstep.roomescape.exception.DuplicateEntityException;
+import nextstep.roomescape.repository.ReservationRepository;
+import nextstep.roomescape.repository.ReservationRepositoryMemoryImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ReservationRepositoryTest {
     private ReservationRepository reservationRepository;
@@ -30,17 +30,18 @@ class ReservationRepositoryTest {
     @Test
     void createReservationTest() {
         Reservation reservation = createRequest(LocalDate.parse("9999-01-02"));
-        Reservation result = reservationRepository.create(reservation);
-        assertEquals(result, reservation);
+        Long id = reservationRepository.create(reservation);
+        assertNotNull(id);
     }
 
     @DisplayName("예약 ID로 조회")
     @Transactional
     @Test
     void findByIdTest() {
-        Reservation reservation = reservationRepository.create(createRequest(LocalDate.parse("9999-02-02")));
-        Reservation result = reservationRepository.findById(reservation.getId());
-        assertEquals(result, reservation);
+        Reservation reservation = createRequest(LocalDate.parse("9999-02-02"));
+        Long id = reservationRepository.create(reservation);
+        Reservation result = reservationRepository.findById(id);
+        assertTrue(result.getDate() == reservation.getDate() && result.getTime() == reservation.getTime() && Objects.equals(result.getName(), reservation.getName()));
     }
 
     @DisplayName("예약 날짜/시간 조회")
@@ -64,7 +65,7 @@ class ReservationRepositoryTest {
     @Test
     void duplicateTimeReservationThrowException() {
         reservationRepository.create(createRequest(LocalDate.parse("9999-04-04")));
-        Assertions.assertThrows(CreateReservationException.class,
+        Assertions.assertThrows(DuplicateEntityException.class,
                 () -> reservationRepository.create(
                         new Reservation(null, LocalDate.parse("9999-04-04"), LocalTime.parse("13:00"), "name", theme)
                 ));
@@ -74,10 +75,8 @@ class ReservationRepositoryTest {
     @Transactional
     @Test
     void deleteReservation() {
-        Reservation reservation = reservationRepository.create(createRequest(LocalDate.parse("9999-05-05")));
-        long id = reservation.getId();
-        Boolean result = reservationRepository.delete(id);
-        assertEquals(result,true);
+        long id = reservationRepository.create(createRequest(LocalDate.parse("9999-05-05")));
+        reservationRepository.delete(id);
         assertNull(reservationRepository.findById(id));
     }
 
