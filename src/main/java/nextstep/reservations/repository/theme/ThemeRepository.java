@@ -1,8 +1,6 @@
 package nextstep.reservations.repository.theme;
 
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.exceptions.theme.exception.DuplicateThemeException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

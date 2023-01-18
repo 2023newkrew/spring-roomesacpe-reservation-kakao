@@ -2,8 +2,6 @@ package nextstep.reservations.repository.reservation;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
-import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
