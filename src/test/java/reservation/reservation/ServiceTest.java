@@ -1,4 +1,4 @@
-package reservation;
+package reservation.reservation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,9 +10,10 @@ import reservation.model.domain.Reservation;
 import reservation.model.domain.Theme;
 import reservation.model.dto.RequestReservation;
 import reservation.respository.ReservationJdbcTemplateRepository;
+import reservation.respository.ThemeJdbcTemplateRepository;
 import reservation.service.ReservationService;
-import reservation.util.exception.DuplicateException;
-import reservation.util.exception.NotFoundException;
+import reservation.util.exception.restAPI.DuplicateException;
+import reservation.util.exception.restAPI.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,17 +30,16 @@ public class ServiceTest {
 
     @Mock
     private ReservationJdbcTemplateRepository reservationRepository;
-
-    private final Theme theme;
+    @Mock
+    private ThemeJdbcTemplateRepository themeRepository;
     private final RequestReservation req;
     private final Reservation reservation;
 
     public ServiceTest() {
         LocalDate date = LocalDate.of(2023, 1, 1);
         LocalTime time = LocalTime.of(11, 0);
-        this.req = new RequestReservation(date, time, "name");
-        this.theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-        this.reservation = new Reservation(0L, date, time, "name", theme);
+        this.req = new RequestReservation(date, time, "name", 1L);
+        this.reservation = new Reservation(0L, date, time, "name", 1L);
     }
 
     @Test
@@ -48,15 +48,19 @@ public class ServiceTest {
         // when
         given(reservationRepository.save(any()))
                 .willReturn(1L);
-
-        assertThat(reservationRepository.save(reservation)).isEqualTo(1L);
+        given(themeRepository.checkExistById(any()))
+                .willReturn(true);
+        assertThat(reservationService.createReservation(req)).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("날짜와 시간이 중복되는 예약 생성은 불가능하다.")
     void saveDuplicateTest(){
         // 무조건 중복되었다고 반환
-        given(reservationRepository.existByDateTime(any(), any()))
+        given(reservationRepository.existByDateTimeTheme(any(), any(), any()))
+                .willReturn(true);
+        // 무조건 존재한다고 반환
+        given(themeRepository.checkExistById(any()))
                 .willReturn(true);
 
         // 중복 반환 시 DuplicateException 발생

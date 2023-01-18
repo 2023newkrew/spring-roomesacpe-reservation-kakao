@@ -1,10 +1,10 @@
-package reservation.util.exception;
+package reservation.util.exception.restAPI;
 
 import org.springframework.http.HttpStatus;
 
-public class DuplicateException extends RestAPIException{
+public class ExistException extends RestAPIException {
 
-    public DuplicateException(String errorMessage){
+    public ExistException(String errorMessage){
         super(errorMessage);
     }
 
