@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 @Repository
-@Primary
 public class JdbcReservationRepository extends ReservationSqlRepository{
     public static final int DuplicateReservationError = 23505;
     public static final int NoSuchThemeError = 23506;
