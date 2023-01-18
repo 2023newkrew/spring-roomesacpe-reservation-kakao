@@ -1,8 +1,9 @@
 package nextstep.repository;
 
-import static nextstep.entity.ThemeConstants.THEME_DESC;
-import static nextstep.entity.ThemeConstants.THEME_NAME;
-import static nextstep.entity.ThemeConstants.THEME_PRICE;
+import static nextstep.repository.ReservationJdbcSql.DELETE_BY_ID_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.EXIST_BY_THEME_ID_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_DATE_AND_TIME_STATEMENT;
+import static nextstep.repository.ReservationJdbcSql.FIND_BY_ID_STATEMENT;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -11,8 +12,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
-import nextstep.dto.ReservationRequestDTO;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,54 +24,52 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ReservationRepositoryImpl(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Reservation save(ReservationRequestDTO reservationRequestDTO) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("date", Date.valueOf(reservationRequestDTO.getDate()));
-        parameters.put("time", Time.valueOf(reservationRequestDTO.getTime()));
-        parameters.put("name", reservationRequestDTO.getName());
-        parameters.put("theme_name", THEME_NAME);
-        parameters.put("theme_desc", THEME_DESC);
-        parameters.put("theme_price", THEME_PRICE);
-        long id = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("RESERVATION")
-                .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(parameters)
-                .longValue();
-        return new Reservation(id, reservationRequestDTO.getDate(), reservationRequestDTO.getTime(),
-                reservationRequestDTO.getName(),
-                new Theme(THEME_NAME, THEME_DESC, THEME_PRICE));
+    public Reservation save(Reservation reservation) {
 
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("date", Date.valueOf(reservation.getDate()));
+        parameters.put("time", Time.valueOf(reservation.getTime()));
+        parameters.put("name", reservation.getName());
+        parameters.put("theme_id", reservation.getTheme().getId());
+        long id = new SimpleJdbcInsert(jdbcTemplate).withTableName("RESERVATION").usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(parameters).longValue();
+        return Reservation.creteReservation(reservation, id);
     }
 
     @Override
     public Optional<Reservation> findById(Long id) throws DataAccessException {
-        String sql = ReservationJdbcSql.FIND_BY_ID;
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime(), rs.getString("name"),
-                        new Theme(rs.getString("theme_name"),
-                                rs.getString("theme_desc"), rs.getInt("theme_price"))), id).stream().findAny();
+        return jdbcTemplate.query(FIND_BY_ID_STATEMENT,
+                (rs, rowNum) -> Reservation.creteReservation(Reservation.builder()
+                        .date(rs.getDate("date").toLocalDate())
+                        .time(rs.getTime("time").toLocalTime())
+                        .name(rs.getString("name"))
+                        .theme(Theme.builder()
+                                .name(rs.getString("theme_name"))
+                                .description(rs.getString("theme_desc"))
+                                .price(rs.getInt("theme_price")).build()).build(), rs.getLong("id")),
+                id).stream().findAny();
     }
 
     @Override
-    public boolean existByDateAndTime(LocalDate date, LocalTime time)
+    public boolean existByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId)
             throws DataAccessException {
-        String sql = "SELECT * from reservation WHERE date = ? AND time = ?";
-        return !jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
-                                rs.getTime("time").toLocalTime(), rs.getString("name"),
-                                new Theme(rs.getString("theme_name"),
-                                        rs.getString("theme_desc"), rs.getInt("theme_price"))), date, time)
+        return !jdbcTemplate.query(FIND_BY_DATE_AND_TIME_STATEMENT, (rs, rowNum) -> rs.getString(1), date, time, themeId)
                 .isEmpty();
     }
 
     @Override
     public int deleteById(Long id) throws DataAccessException {
-        return jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
+        return jdbcTemplate.update(DELETE_BY_ID_STATEMENT, id);
     }
+
+    @Override
+    public boolean existByThemeId(Long id) {
+        return jdbcTemplate.query(EXIST_BY_THEME_ID_STATEMENT, (rs, rowNum) -> rs.getLong(1), id).size()!=0;
+    }
+
 }

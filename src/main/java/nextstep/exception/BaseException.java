@@ -20,11 +20,6 @@ public class BaseException extends RuntimeException {
     @JsonIgnore
     protected HttpStatus errorStatus;
 
-    public BaseException(HttpStatus errorStatus, List<String> errorMessages) {
-        this.errorStatus = errorStatus;
-        this.errorMessages = errorMessages;
-    }
-
     public BaseException(HttpStatus errorStatus, String... errorMessage) {
         this.errorStatus = errorStatus;
         errorMessages.addAll(Arrays.asList(errorMessage));

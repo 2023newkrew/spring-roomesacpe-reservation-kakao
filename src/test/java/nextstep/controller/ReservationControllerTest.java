@@ -11,22 +11,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
-import nextstep.dto.ReservationRequestDTO;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import nextstep.dto.ReservationRequestDto;
 import nextstep.entity.Reservation;
 import nextstep.entity.Theme;
 import nextstep.entity.ThemeConstants;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -44,19 +46,26 @@ class ReservationControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-
-    ReservationRequestDTO requestDTO = new ReservationRequestDTO(LocalDate.parse("2022-08-11"),
-            LocalTime.parse("13:00:00"), "류성현");
-
     Long id = null;
+
+    ReservationRequestDto requestDTO = new ReservationRequestDto(LocalDate.parse("2022-08-11"),
+            LocalTime.parse("13:00:00"), "류성현", 1L);
+
+    @PostConstruct
+    void initTheme() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("desc", ThemeConstants.THEME_DESC);
+        parameters.put("name", ThemeConstants.THEME_NAME);
+        parameters.put("price", ThemeConstants.THEME_PRICE);
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("THEME").usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(parameters).longValue();
+    }
 
     @BeforeEach
     void init() throws Exception {
         jdbcTemplate.update("DELETE FROM RESERVATION");
         id = getId(objectMapper.writeValueAsString(requestDTO));
     }
-
 
     @Test
     @DisplayName("/reservations post 중복되는 요청시 에러가 발생한다.")
@@ -75,8 +84,8 @@ class ReservationControllerTest {
     @DisplayName("/reservations post 성공")
     void reservations_POST_성공_테스트() throws Exception {
         //given
-        ReservationRequestDTO requestDTO2 = new ReservationRequestDTO(LocalDate.parse("2022-08-12"),
-                LocalTime.parse("13:00:00"), "류성현");
+        ReservationRequestDto requestDTO2 = new ReservationRequestDto(LocalDate.parse("2022-08-12"),
+                LocalTime.parse("13:00:00"), "류성현", 1L);
         String json2 = objectMapper.writeValueAsString(requestDTO2);
 
         //expected
@@ -84,7 +93,6 @@ class ReservationControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.redirectedUrl(String.format("/reservations/%d", id + 1L)))
                 .andDo(print());
-
 
         List<Reservation> result = jdbcTemplate.query("SELECT * FROM RESERVATION WHERE id = ?",
                 reservationRowMapper(), id + 1);
@@ -102,7 +110,8 @@ class ReservationControllerTest {
     void reservations_get_성공_테스트() throws Exception {
         //expected
         mockMvc.perform(get("/reservations/{id}", id)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.date").value("2022-08-11")).andExpect(jsonPath("$.time").value("13:00:00"))
+                .andExpect(jsonPath("$.date").value("2022-08-11"))
+                .andExpect(jsonPath("$.time").value("13:00:00"))
                 .andExpect(jsonPath("$.name").value("류성현"))
                 .andExpect(jsonPath("$.themeName").value(ThemeConstants.THEME_NAME))
                 .andExpect(jsonPath("$.themeDesc").value(ThemeConstants.THEME_DESC))
@@ -131,11 +140,13 @@ class ReservationControllerTest {
     }
 
     private static RowMapper<Reservation> reservationRowMapper() {
-        return (rs, rowNum) -> new Reservation(rs.getLong("id"), rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime(), rs.getString("name"),
-                new Theme(rs.getString("theme_name"), rs.getString("theme_desc"), rs.getInt("theme_price")));
-    }
+        return (rs, rowNum) ->
+                Reservation.creteReservation(new Reservation(rs.getDate("date").toLocalDate(),
+                                rs.getTime("time").toLocalTime(), rs.getString("name"),
+                                new Theme(ThemeConstants.THEME_NAME, ThemeConstants.THEME_DESC, ThemeConstants.THEME_PRICE)),
+                        rs.getLong("id"));
 
+    }
 
 
 }

@@ -1,0 +1,70 @@
+package nextstep.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import nextstep.dto.ThemeCreateDto;
+import nextstep.dto.ThemeResponseDto;
+import nextstep.entity.Theme;
+import nextstep.repository.ThemeRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+@SpringBootTest
+class ThemeServiceImplTest {
+
+    @Autowired
+    ThemeService themeService;
+    @Autowired
+    ThemeRepository themeRepository;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    final String NAME = "NAME";
+    final String DESC = "DESC";
+    final Integer PRICE = 1234;
+    Long id = null;
+
+    @BeforeEach
+    void init() {
+        jdbcTemplate.update("DELETE FROM THEME");
+        id = themeRepository.save(new ThemeCreateDto(NAME, DESC, PRICE).toEntity()).getId();
+
+    }
+
+    @Test
+    void create_theme_test() {
+        //given
+        themeService.createTheme(new ThemeCreateDto("name1", "desc", 1234));
+
+        //when
+        Long count = jdbcTemplate.query("SELECT COUNT(*) FROM THEME;", (rs, rowNum) -> rs.getLong(1)).get(0);
+
+        //then
+        assertThat(count).isEqualTo(2);
+    }
+
+    @Test
+    void find_theme_test() {
+        //when
+        Theme theme = themeService.findById(id);
+
+        //expected
+        assertThat(theme.getName()).isEqualTo(NAME);
+        assertThat(theme.getDescription()).isEqualTo(DESC);
+        assertThat(theme.getPrice()).isEqualTo(PRICE);
+    }
+
+    @Test
+    void delete_theme_test(){
+        //when
+        themeService.deleteById(id);
+
+        //expected
+        Long count = jdbcTemplate.query("SELECT COUNT(*) FROM THEME;", (rs, rowNum) -> rs.getLong(1)).get(0);
+        assertThat(count).isEqualTo(0);
+    }
+
+
+}

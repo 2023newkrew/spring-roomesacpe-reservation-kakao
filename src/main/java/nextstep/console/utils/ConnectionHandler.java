@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.console.utils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -52,7 +52,6 @@ public class ConnectionHandler {
         }
         return tokens[1];
     }
-
 
     public ConnectionHandler() {
         this.connection = connect();

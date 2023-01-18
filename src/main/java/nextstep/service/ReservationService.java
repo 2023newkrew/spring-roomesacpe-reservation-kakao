@@ -1,18 +1,21 @@
 package nextstep.service;
 
-import java.sql.SQLException;
-import nextstep.dto.ReservationRequestDTO;
-import nextstep.dto.ReservationResponseDTO;
+import nextstep.dto.ReservationRequestDto;
 import nextstep.entity.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
+import nextstep.entity.Theme;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface ReservationService {
 
-    Reservation createReservation(ReservationRequestDTO reservationRequestDTO) throws SQLException;
+    Reservation createReservation(ReservationRequestDto reservationRequestDTO, Theme theme);
 
-    ReservationResponseDTO findReservation(Long id) throws SQLException;
+    void validateCreateReservation(ReservationRequestDto reservationRequestDTO);
 
-    void deleteById(Long id) throws SQLException;
+    Reservation findReservationByID(Long id);
+
+    void deleteById(Long id);
+
+    boolean existByThemeId(Long id);
+
 }

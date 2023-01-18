@@ -7,23 +7,30 @@ plugins {
 group 'nextstep'
 version '1.0-SNAPSHOT'
 
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    // product
+
+    // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+    // lombok
     runtimeOnly 'com.h2database:h2'
-    implementation group: 'joda-time', name: 'joda-time', version: '2.12.2'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    implementation group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.5.3.Final'
-    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    // joda-time
+    implementation group: 'joda-time', name: 'joda-time', version: '2.12.2'
+
+
+    // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
 
 

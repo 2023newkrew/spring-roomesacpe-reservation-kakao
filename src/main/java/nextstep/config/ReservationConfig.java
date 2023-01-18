@@ -1,22 +1,29 @@
 package nextstep.config;
 
-import javax.sql.DataSource;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ReservationRepositoryImpl;
 import nextstep.service.ReservationService;
 import nextstep.service.ReservationServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ReservationConfig {
-    @Bean
-    ReservationRepository reservationRepository(DataSource dataSource) {
-        return new ReservationRepositoryImpl(dataSource);
+
+    final JdbcTemplate jdbcTemplate;
+
+    public ReservationConfig(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Bean
-    ReservationService reservationService(DataSource dataSource) {
-        return new ReservationServiceImpl(reservationRepository(dataSource));
+    ReservationRepository reservationRepository() {
+        return new ReservationRepositoryImpl(jdbcTemplate);
+    }
+
+    @Bean
+    ReservationService reservationService() {
+        return new ReservationServiceImpl(reservationRepository());
     }
 }

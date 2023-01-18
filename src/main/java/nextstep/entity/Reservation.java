@@ -2,14 +2,13 @@ package nextstep.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class Reservation {
 
-    private final Long id;
+    private Long id;
 
     private final LocalDate date;
 
@@ -18,4 +17,24 @@ public class Reservation {
     private final String name;
 
     private final Theme theme;
+
+    @Builder
+    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.theme = theme;
+    }
+
+    public static Reservation creteReservation(Reservation other, Long id) {
+        Reservation reservation = Reservation.builder()
+                .date(other.getDate())
+                .time(other.getTime())
+                .theme(other.getTheme())
+                .name(other.name)
+                .build();
+        reservation.id = id;
+        return reservation;
+    }
+
 }
