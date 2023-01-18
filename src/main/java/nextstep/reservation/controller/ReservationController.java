@@ -1,8 +1,9 @@
 package nextstep.reservation.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import nextstep.reservation.dto.ReservationRequestDto;
-import nextstep.reservation.dto.ReservationResponseDto;
+import nextstep.reservation.dto.request.ReservationRequestDto;
+import nextstep.reservation.dto.response.ReservationResponseDto;
 import nextstep.reservation.service.ReservationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> addReservation(@RequestBody ReservationRequestDto requestDto) {
-        reservationService.addReservation(requestDto);
+        Long id = reservationService.addReservation(requestDto);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/reservations/1");
+        headers.add("Location", "/reservations/" + id);
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
@@ -32,5 +33,10 @@ public class ReservationController {
     public ResponseEntity<Object> cancelReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponseDto>> getReservations() {
+        return ResponseEntity.ok().body(reservationService.getAllReservation());
     }
 }

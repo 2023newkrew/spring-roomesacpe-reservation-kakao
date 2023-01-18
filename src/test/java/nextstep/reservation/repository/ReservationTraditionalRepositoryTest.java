@@ -10,27 +10,43 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import nextstep.reservation.entity.Reservation;
 import nextstep.reservation.entity.Theme;
+import nextstep.reservation.repository.reservation.ReservationRepository;
+import nextstep.reservation.repository.reservation.ReservationTraditionalRepository;
+import nextstep.reservation.repository.theme.ThemeRepository;
+import nextstep.reservation.repository.theme.ThemeTraditionalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql(scripts = {"classpath:schema.sql"})
 class ReservationTraditionalRepositoryTest {
 
     private final String URL = "jdbc:h2:~/tmp/test";
     private final String USER = "tester";
     private final String PASSWORD = "";
-    private final ReservationRepository repository = new ReservationTraditionalRepository(
-            URL, USER, PASSWORD);
+    private final ReservationRepository reservationRepository
+            = new ReservationTraditionalRepository(URL, USER, PASSWORD);
+    private final ThemeRepository themeRepository
+            = new ThemeTraditionalRepository(URL, USER, PASSWORD);
+
+    private final Theme testTheme = Theme.builder()
+            .id(1L)
+            .name("워너고홈")
+            .desc("병맛 어드벤처 회사 코믹물")
+            .price(29_000)
+            .build();
 
     private final Reservation testReservation = Reservation.builder()
             .date(LocalDate.of(1982, 2, 19))
             .time(LocalTime.of(2, 2))
             .name("name")
-                .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+            .theme(testTheme)
             .build();
 
     @BeforeEach
     void setUp() {
         initTable();
+        themeRepository.add(testTheme);
     }
 
     private void initTable(){
@@ -41,14 +57,28 @@ class ReservationTraditionalRepositoryTest {
             ps.executeUpdate();
             ps.close();
 
-            sql = "CREATE TABLE IF NOT EXISTS RESERVATION ( " +
+            sql = "CREATE TABLE RESERVATION ( " +
                     "id bigint not null auto_increment, " +
+                    "name     varchar(20)," +
                     "date date, " +
                     "time time, " +
-                    "name varchar(20), " +
-                    "theme_name varchar(20), " +
-                    "theme_desc varchar(255), " +
-                    "theme_price int, " +
+                    "theme_id bigint not null, " +
+                    "primary key (id))";
+
+            ps = connection.prepareStatement(sql);
+            ps.executeUpdate();
+            ps.close();
+
+            sql = "DROP TABLE IF EXISTS THEME";
+            ps = connection.prepareStatement(sql);
+            ps.executeUpdate();
+            ps.close();
+
+            sql = "CREATE TABLE THEME (" +
+                    "id      bigint not null auto_increment," +
+                    "name    varchar(20)," +
+                    "desc    varchar(255)," +
+                    "price   int," +
                     "primary key (id))";
 
             ps = connection.prepareStatement(sql);
@@ -62,54 +92,56 @@ class ReservationTraditionalRepositoryTest {
 
     @Test
     void 예약을_추가하면_예약_아이디가_반환됩니다() {
-        assertThat(repository.add(testReservation)).isInstanceOf(Long.class);
+        assertThat(reservationRepository.add(testReservation)).isInstanceOf(Long.class);
     }
 
     @Test
     void 예약을_조회할_수_있습니다() {
         // when & given
-        Long id = repository.add(testReservation);
+        Long id = reservationRepository.add(testReservation);
 
         // then
-        assertThat(repository.findById(id).get()).isInstanceOf(Reservation.class);
+        assertThat(reservationRepository.findById(id).get()).isInstanceOf(Reservation.class);
     }
 
     @Test
     void 전체_예약을_가져올_수_있습니다() {
         // when
-        repository.add(Reservation.builder()
-                .date(LocalDate.of(1982, 2, 19))
+        reservationRepository.add(Reservation.builder()
+                .date(LocalDate.of(1982, 3, 19))
                 .time(LocalTime.of(2, 2))
                 .name("name")
-                .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+                .theme(testTheme)
                 .build());
-        repository.add(Reservation.builder()
+        
+        reservationRepository.add(Reservation.builder()
                 .date(LocalDate.of(1982, 2, 19))
                 .time(LocalTime.of(2, 3))
                 .name("name")
-                .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+                .theme(testTheme)
                 .build());
-        repository.add(Reservation.builder()
+
+        reservationRepository.add(Reservation.builder()
                 .date(LocalDate.of(1982, 2, 19))
                 .time(LocalTime.of(2, 4))
                 .name("name")
-                .theme(new Theme("워너고홈 ", "병맛 어드벤처 회사 코믹물", 29000))
+                .theme(testTheme)
                 .build());
 
         // given & then
-        assertThat(repository.findAll().size()).isEqualTo(3);
+        assertThat(reservationRepository.findAll().size()).isEqualTo(3);
     }
 
 
     @Test
     void 예약을_삭제할_수_있습니다() {
         // when
-        Long id = repository.add(testReservation);
+        Long id = reservationRepository.add(testReservation);
 
         // given
-        assertThat(repository.delete(id)).isTrue();
+        assertThat(reservationRepository.delete(id)).isTrue();
 
         // then
-        assertThat(repository.findById(id).isEmpty()).isTrue();
+        assertThat(reservationRepository.findById(id).isEmpty()).isTrue();
     }
 }

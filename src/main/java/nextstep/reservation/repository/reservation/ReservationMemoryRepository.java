@@ -1,5 +1,7 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.reservation;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,4 +36,23 @@ public class ReservationMemoryRepository implements ReservationRepository {
     public boolean delete(Long id) {
         return repository.remove(id) != null;
     }
+
+    @Override
+    public Optional<Reservation> getReservationByDateAndTime(LocalDate date, LocalTime time) {
+        return repository.values()
+                .stream()
+                .filter(reservation -> reservation.getDate().equals(date) &&
+                                       reservation.getTime().equals(time))
+                .findAny();
+    }
+
+    @Override
+    public Optional<Reservation> getReservationByName(String name) {
+        return repository.values()
+                .stream()
+                .filter(reservation -> reservation.getName().equals(name))
+                .findAny();
+    }
+
+
 }

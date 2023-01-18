@@ -1,4 +1,4 @@
-package nextstep.reservation.dto;
+package nextstep.reservation.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,18 +16,14 @@ public class ReservationResponseDto {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private String themeName;
-    private String themeDesc;
-    private int themePrice;
+    private ThemeResponseDto theme;
 
     public ReservationResponseDto(Reservation reservation) {
         this.id = reservation.getId();
         this.date = reservation.getDate();
         this.time = reservation.getTime();
         this.name = reservation.getName();
-        this.themeName = reservation.getTheme().getName();
-        this.themeDesc = reservation.getTheme().getDesc();
-        this.themePrice = reservation.getTheme().getPrice();
+        this.theme = new ThemeResponseDto(reservation.getTheme());
     }
 
 }
