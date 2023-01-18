@@ -13,7 +13,7 @@ import java.util.List;
 public class ThemeController {
     private final ThemeService themeService;
 
-    ThemeController(ThemeService themeService) {
+    public ThemeController(ThemeService themeService) {
         this.themeService = themeService;
     }
 

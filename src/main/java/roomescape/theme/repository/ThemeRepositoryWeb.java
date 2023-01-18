@@ -45,7 +45,7 @@ public class ThemeRepositoryWeb extends AbstractThemeH2Repository {
 
     @Override
     public Theme get(String name) {
-        List<Theme> themes =  jdbcTemplate.query(selectByNameQuery, new ThemeMapper(), name);
+        List<Theme> themes = jdbcTemplate.query(selectByNameQuery, new ThemeMapper(), name);
         if (themes.isEmpty()) {
             return null;
         }
