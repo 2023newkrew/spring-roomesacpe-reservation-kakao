@@ -12,7 +12,7 @@ public class ReservationRepositoryConsole extends AbstractReservationH2Repositor
         Connection con = null;
         try {
             con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
+            //System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
             e.printStackTrace();
