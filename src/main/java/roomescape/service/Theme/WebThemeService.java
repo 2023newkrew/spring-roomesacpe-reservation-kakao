@@ -26,7 +26,7 @@ public class WebThemeService implements ThemeService {
 
     @Override
     public Theme createTheme(Theme theme) {
-        if (jdbcThemeRepository.findIdByDateAndTime(theme) == 1) {
+        if (jdbcThemeRepository.findCountByNameAndPrice(theme) == 1) {
             logger.error(CREATE_DUPLICATED.getMessage() + THEME_NAME.getMessage() + theme.getName()
                         + THEME_PRICE.getMessage() + theme.getPrice());
             throw new DuplicateRequestException(THEME_CREATE_ERROR.getMessage());
@@ -39,7 +39,7 @@ public class WebThemeService implements ThemeService {
     @Override
     public Theme lookUpTheme(Long themeId) {
         try {
-            Optional<Theme> theme = jdbcThemeRepository.findById(themeId);
+            Optional<Theme> theme = jdbcThemeRepository.findThemeById(themeId);
             if (theme.isPresent()) {
                 return theme.get();
             }

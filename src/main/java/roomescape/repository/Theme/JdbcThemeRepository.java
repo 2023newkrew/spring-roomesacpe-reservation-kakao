@@ -34,14 +34,14 @@ public class JdbcThemeRepository implements ThemeRepository{
     }
 
     @Override
-    public Optional<Theme> findById(long themeId) {
+    public Optional<Theme> findThemeById(long themeId) {
         String sql = "select name, desc, price from THEME where id = ?";
         Theme theme = jdbcTemplate.queryForObject(sql, databaseMapper.themeRowMapper(themeId), themeId);
         return Optional.ofNullable(theme);
     }
 
     @Override
-    public Long findIdByDateAndTime(Theme theme) {
+    public Long findCountByNameAndPrice(Theme theme) {
         String sql = "select count(*) from THEME where name = ? AND price = ?";
         return jdbcTemplate.queryForObject(sql, Long.class,
                 theme.getName(), theme.getPrice());
