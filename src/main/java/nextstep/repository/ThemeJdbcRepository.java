@@ -48,7 +48,8 @@ public class ThemeJdbcRepository implements ThemeRepository{
 
     @Override
     public boolean delete(long id) {
-        return false;
+        String sql = "DELETE FROM theme WHERE id = ?";
+        return jdbcTemplate.update(sql, id) > 0;
     }
 
     private RowMapper<Theme> themeRowMapper = (rs, rowNum) -> {
