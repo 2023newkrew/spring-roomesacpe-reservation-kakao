@@ -27,10 +27,10 @@ public class ThemeController {
         return ResponseEntity.ok().body(themes);
     }
 
-//    @DeleteMapping("themes/{id}")
-//    public ResponseEntity deleteTheme(@PathVariable Long id) { //테마를 삭제한다
-//        themeDao.removeTheme(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @DeleteMapping("themes/{id}")
+    public ResponseEntity deleteTheme(@PathVariable Long id) { //테마를 삭제한다
+        themeDao.removeTheme(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

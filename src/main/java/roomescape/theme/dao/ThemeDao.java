@@ -33,4 +33,9 @@ public class ThemeDao {
         String sql = "SELECT * FROM THEME";
         return jdbcTemplate.query(sql, new ThemeMapper());
     }
+
+    public void removeTheme(Long id) {
+        String sql = "DELETE FROM THEME WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
