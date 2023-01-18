@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,9 @@ import roomescape.service.Reservation.WebReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Console Test")
 @SpringBootTest
@@ -20,7 +24,6 @@ import java.time.LocalTime;
 public class ConsoleReservationControllerTest {
     Reservation reservation;
     ConsoleReservationController consoleReservationController;
-
 
     @Autowired
     public ConsoleReservationControllerTest() throws ClassNotFoundException {
@@ -54,23 +57,23 @@ public class ConsoleReservationControllerTest {
     void deleteReservationTest() {
         Reservation createReservation = consoleReservationController.createReservation(reservation);
         consoleReservationController.deleteReservation(createReservation.getId());
-//        Reservation reservation1 = consoleReservationController.lookUpReservation(reservation.getId());
+        assertThrows(NoSuchElementException.class, () ->
+                consoleReservationController.lookUpReservation(reservation.getId()));
     }
 
     @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생")
     @Test
-    void duplicatedReservationTest(){
+    void duplicatedReservationTest() {
         consoleReservationController.createReservation(reservation);
-        Reservation testReservation = consoleReservationController.createReservation(reservation);
-        Assertions.assertThat(testReservation).isNull();
+        assertThrows(DuplicateRequestException.class, () ->
+                consoleReservationController.createReservation(reservation));
     }
 
     @DisplayName("등록되지 않은 ID를 조회할 경우, 예외가 발생")
     @Test
     void notFoundReservationTest(){
-        Reservation findReservation = consoleReservationController.lookUpReservation(12121L);
-        Assertions.assertThat(findReservation).isNull();
-
+        assertThrows(NoSuchElementException.class, () ->
+                consoleReservationController.lookUpReservation(12121L));
     }
 }
 

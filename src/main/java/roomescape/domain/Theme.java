@@ -37,7 +37,6 @@ public class Theme {
         return price;
     }
 
-
     public String createMessage(long themeId){
         return "Location: /themes/" + themeId;
     }
@@ -51,7 +50,7 @@ public class Theme {
 
     private void checkEmptyName(String name){
         if (name.length() == 0) {
-            throw new NullPointerException("name에 문자가 포함되어야 합니다");
+            throw new NullPointerException(NAME_NOT_EMPTY_STRING.getMessage());
         }
     }
 }

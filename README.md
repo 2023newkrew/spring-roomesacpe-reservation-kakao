@@ -21,6 +21,12 @@
 * 요구사항에 없는 내용이 있다면 직접 요구사항을 추가해서 애플리케이션을 완성
   * 실제 애플리케이션이라고 생각했을 때 발생할 수 있는 예외 상황을 고려하고 처리한다.
 ---------------------------------------------------------------
+### 사용 방법
+* Java Main (RoomEscapeApplication) 실행
+  * API 명세에 있는 Rest API 사용
+  * Console(ConsoleApplication)을 이용
+* http://localhost:8080/h2-console 에서 DB 조회 가능
+
 
 ### API
 

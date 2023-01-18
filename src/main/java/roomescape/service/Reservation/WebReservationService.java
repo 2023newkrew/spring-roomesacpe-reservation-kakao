@@ -49,7 +49,7 @@ public class WebReservationService implements ReservationService{
         } catch (Exception e) {
             logger.error(NOT_FOUND_ERROR.getMessage() + reserveId + ", " + e);
         }
-        throw new NoSuchElementException("요청한 ID " + reserveId + "를 조회할 수 없습니다");
+        throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + reserveId);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class WebReservationService implements ReservationService{
         Integer deleteResult = jdbcReservationRepository.deleteReservation(deleteId);
         if (deleteResult == 0){
             logger.error(DELETE_NOT_FOUND_ERROR.getMessage() + deleteId);
-            throw new NoSuchElementException("요청한 ID " + deleteId + "를 조회할 수 없습니다");
+            throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + deleteId);
         }
         logger.info(DELETE_SUCCESS.getMessage());
     }

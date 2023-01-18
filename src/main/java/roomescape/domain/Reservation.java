@@ -59,13 +59,13 @@ public class Reservation {
 
     private void checkNegativeId(Long themeId){
         if (themeId < 0) {
-            throw new ArithmeticException("themeId가 0보다 큰 수여야 합니다");
+            throw new ArithmeticException(ID_BIGGER_THAN_ZERO.getMessage());
         }
     }
 
     private void checkEmptyName(String name){
         if (name.length() == 0) {
-            throw new NullPointerException("name에 문자가 포함되어야 합니다");
+            throw new NullPointerException(NAME_NOT_EMPTY_STRING.getMessage());
         }
     }
 }
