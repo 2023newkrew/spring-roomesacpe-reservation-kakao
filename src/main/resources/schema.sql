@@ -7,7 +7,7 @@ CREATE TABLE RESERVATION
     date     date,
     time     time,
     name     varchar(20),
-    themeId bigint,
+    theme_id bigint not null,
     primary key (id)
 );
 
