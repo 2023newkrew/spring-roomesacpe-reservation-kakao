@@ -1,6 +1,4 @@
-package nextstep.dto.response;
-
-import nextstep.Reservation;
+package nextstep.dto.web.response;
 
 public class ReservationResponse {
 
@@ -22,16 +20,8 @@ public class ReservationResponse {
         this.themePrice = themePrice;
     }
 
-    public static ReservationResponse fromEntity(Reservation reservation) {
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getDate().toString(),
-                reservation.getTime().toString(),
-                reservation.getName(),
-                reservation.getTheme().getName(),
-                reservation.getTheme().getDesc(),
-                reservation.getTheme().getPrice()
-        );
+    public static ReservationResponse of(Long id, String date, String time, String name, String themeName, String themeDesc, Integer themePrice) {
+        return new ReservationResponse(id, date, time, name, themeName, themeDesc, themePrice);
     }
 
     public Long getId() {

@@ -1,7 +1,7 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
-import nextstep.Reservation;
-import nextstep.Theme;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,9 +15,10 @@ public class ReservationResultSetMapper {
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
                 Theme.of(
-                        rs.getString("theme_name"),
-                        rs.getString("theme_desc"),
-                        rs.getInt("theme_price")
+                        rs.getLong("theme.id"),
+                        rs.getString("theme.name"),
+                        rs.getString("theme.desc"),
+                        rs.getInt("theme.price")
                 )
         );
     }

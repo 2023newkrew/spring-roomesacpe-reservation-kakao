@@ -1,6 +1,6 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.exception.ReservationNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,16 +27,14 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public Reservation add(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             return ps;
         }, keyHolder);
 
@@ -46,7 +44,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public Reservation get(Long id)  throws ReservationNotFoundException {
-        String sql = "SELECT * FROM reservation where id = ?";
+        String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
         try {
             return jdbcTemplate.queryForObject(
                     sql,
@@ -65,7 +63,7 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
     @Override
     public boolean hasReservationAt(LocalDate date, LocalTime time) {
-        String sql = "SELECT id AS cnt FROM reservation WHERE date = ? AND time = ? LIMIT 1";
+        String sql = "SELECT id FROM reservation WHERE date = ? AND time = ? LIMIT 1";
         List<Long> reservationIds = jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> rs.getLong("id"),
@@ -74,5 +72,17 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
         );
 
         return reservationIds.size() == 1;
+    }
+
+    @Override
+    public boolean hasReservationWithTheme(Long themeId) {
+        String sql = "SELECT id FROM reservation WHERE theme_id = ? LIMIT 1";
+        List<Long> themeIds = jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> rs.getLong("id"),
+                themeId
+        );
+
+        return themeIds.size() == 1;
     }
 }

@@ -1,13 +1,16 @@
-package nextstep.repository;
+package nextstep.repository.reservation;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.exception.DatabaseException;
 import nextstep.exception.ReservationNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Deprecated(since = "step3")
+@Repository
 public class ReservationH2Repository implements ReservationRepository {
 
     @Override
@@ -50,7 +53,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
         try {
             con = getConnection();
-            String sql = "SELECT * FROM reservation WHERE id = ?";
+            String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -61,6 +64,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 throw new ReservationNotFoundException();
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e);
         } finally {
             closeResources(con, ps, rs);
@@ -105,6 +109,12 @@ public class ReservationH2Repository implements ReservationRepository {
         } finally {
             closeResources(con, ps, rs);
         }
+    }
+
+    @Deprecated(since = "step3")
+    @Override
+    public boolean hasReservationWithTheme(Long themeId) {
+        return false;
     }
 
     private Connection getConnection() {
