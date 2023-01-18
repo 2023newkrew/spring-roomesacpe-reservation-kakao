@@ -10,17 +10,17 @@
 - 예약 생성 기능
   - POST /reservations, {"date", "time", "name", "theme_id"}
   - 201 Created
-  - 날짜와 시간이 동일한 예약은 생성할 수 없다()
+  - 날짜와 시간이 동일한 예약은 생성할 수 없다(422 UnprocessableEntity)
 
 - 예약 조회 기능
   - GET /reservations/"id" 
   - 200 Ok
-  - 존재하지 않는 예약을 조회할 수 없다()
+  - 존재하지 않는 예약을 조회할 수 없다(404 NotFound)
 
 - 예약 삭제 기능
   - DELETE /reservations/"id"
   - 204 NoContent
-  - 존재하지 않는 예약을 조회할 수 없다()
+  - 존재하지 않는 예약을 조회할 수 없다(404 NotFound)
 
 ##### 3단계(테마 기능)
 - 테마 테이블 스키마
@@ -32,7 +32,7 @@
 - 테마 생성 기능
   - POST /themes, {"name", "desc", "price"}
   - 201 Created
-  - 동일한 테마 이름이 이미 존재하면 생성할 수 없다()
+  - 동일한 테마 이름이 이미 존재하면 생성할 수 없다(422 UnprocessableEntity)
   
 - 테마 목록 조회 기능
   - GET /themes
@@ -41,7 +41,7 @@
 - 테마 삭제 기능
   - DELETE /themes/"id"
   - 204 NoContent
-  - 존재하지 않는 테마를 조회할 수 없다()
+  - 존재하지 않는 테마를 조회할 수 없다(404 NotFound)
 
 ---
 
