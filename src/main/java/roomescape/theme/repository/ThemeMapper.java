@@ -1,4 +1,4 @@
-package roomescape.theme.dao;
+package roomescape.theme.repository;
 
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.theme.domain.Theme;
