@@ -15,13 +15,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import web.dto.ReservationResponseDto;
+import web.dto.ThemeResponseDto;
 import web.entity.Reservation;
+import web.entity.Theme;
 import web.exception.ReservationDuplicateException;
 import web.exception.ReservationNotFoundException;
+import web.exception.ThemeNotFoundException;
 import web.service.RoomEscapeService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -175,7 +179,8 @@ public class RoomEscapeControllerTest {
                     Reservation.of(
                             LocalDate.of(2022, 8, 11),
                             LocalTime.of(13, 0),
-                            "name"));
+                            "name",
+                            1), Theme.of(1, "워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
             when(roomEscapeService.findReservationById(anyLong())).thenReturn(responseDto);
             mockMvc.perform(get("/reservations/1"))
                     .andExpect(status().isOk())
@@ -201,18 +206,95 @@ public class RoomEscapeControllerTest {
     @Nested
     class CancelReservation {
         @Test
-        void shoud_succefully_when_validRequest() throws Exception {
+        void should_successfully_when_validRequest() throws Exception {
             doNothing().when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/1"))
                     .andExpect(status().isNoContent());
         }
 
         @Test
-        void shoud_status404_then_notExistId() throws Exception {
+        void should_status404_then_notExistId() throws Exception {
             doThrow(ReservationNotFoundException.class).when(roomEscapeService).cancelReservation(anyLong());
             mockMvc.perform(delete("/reservations/-1"))
                     .andExpect(status().isNotFound());
         }
     }
 
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class CreateThemes {
+
+        @BeforeEach
+        void setupMockingService() {
+        }
+
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            String content = getValidContent();
+            mockMvc.perform(post("/themes")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content))
+                    .andExpect(status().isCreated());
+        }
+
+        @Test
+        void should_responseBadRequest_then_invalidRequest() throws Exception {
+
+        }
+
+        private String getValidContent() {
+            return "{\n" +
+                    "\t\"name\": \"테마이름\",\n" +
+                    "\t\"desc\": \"테마설명\",\n" +
+                    "\t\"price\": 22000\n" +
+                    "}";
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class DeleteTheme {
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            doNothing().when(roomEscapeService).deleteTheme(anyLong());
+            mockMvc.perform(delete("/themes/1"))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        void should_responseBadRequest_when_invalidRequest() throws Exception {
+            doThrow(ThemeNotFoundException.class).when(roomEscapeService).deleteTheme(anyLong());
+            mockMvc.perform(delete("/themes/-1"))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @Nested
+    class GetTheme {
+        @Test
+        void should_successfully_when_validRequest() throws Exception {
+            ThemeResponseDto responseDto = ThemeResponseDto.of(
+                    Theme.of(1,
+                            "워너고홈",
+                            "병맛 어드벤처 회사 코믹물",
+                            29000
+                    ));
+            when(roomEscapeService.getThemes()).thenReturn(List.of(responseDto));
+            mockMvc.perform(get("/themes"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(1))
+                    .andExpect(jsonPath("$[0].name").value("워너고홈"))
+                    .andExpect(jsonPath("$[0].desc").value("병맛 어드벤처 회사 코믹물"))
+                    .andExpect(jsonPath("$[0].price").value(29000));
+        }
+
+        @Test
+        void should_status404_when_notExistId() throws Exception {
+            when(roomEscapeService.getThemes()).thenThrow(ThemeNotFoundException.class);
+            mockMvc.perform(get("/themes")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+    }
 }

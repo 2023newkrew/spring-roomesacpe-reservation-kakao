@@ -6,16 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.dto.ReservationRequestDto;
 import web.dto.ReservationResponseDto;
+import web.dto.ThemeRequestDto;
+import web.dto.ThemeResponseDto;
 import web.service.RoomEscapeService;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 public class RoomEscapeController {
-    private static final LocalTime BEGIN_TIME = LocalTime.of(11, 0, 0);
-    private static final LocalTime LAST_TIME = LocalTime.of(20, 30, 0);
 
     private final RoomEscapeService roomEscapeService;
 
@@ -25,33 +25,15 @@ public class RoomEscapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Void> reservation(@RequestBody @Valid ReservationRequestDto requestDto) {
-        if (isInvalidTime(requestDto.getTime())) {
+        try {
+            long createdId = roomEscapeService.reservation(requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .location(URI.create("/reservations/" + createdId))
+                    .build();
+
+        } catch (IllegalArgumentException E) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        long createdId = roomEscapeService.reservation(requestDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .location(URI.create("/reservations/" + createdId))
-                .build();
-    }
-
-    private boolean isInvalidTime(LocalTime reservationTime) {
-        if (isOutOfBusinessHours(reservationTime)) {
-            return true;
-        }
-        if (isUnitOf30Minutes(reservationTime)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOutOfBusinessHours(LocalTime time) {
-        return time.isBefore(BEGIN_TIME) || time.isAfter(LAST_TIME);
-    }
-
-    private boolean isUnitOf30Minutes(LocalTime time) {
-        return time.getMinute() % 30 != 0;
     }
 
     @GetMapping("/reservations/{reservationId}")
@@ -67,5 +49,31 @@ public class RoomEscapeController {
         roomEscapeService.cancelReservation(reservationId);
         return ResponseEntity.noContent()
                 .build();
+    }
+
+    @PostMapping("/themes")
+    public ResponseEntity<Void> createTheme(@RequestBody @Valid ThemeRequestDto requestDto) {
+        Long createdId = roomEscapeService.createTheme(requestDto);
+        if (createdId == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/themes/" + createdId))
+                .build();
+    }
+
+    @GetMapping("/themes")
+    public ResponseEntity<List<ThemeResponseDto>> getThemes() {
+        List<ThemeResponseDto> themeResponseDtoList = roomEscapeService.getThemes();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(themeResponseDtoList);
+    }
+
+    @DeleteMapping("/themes/{themeId}")
+    public ResponseEntity<Void> deleteTheme(@PathVariable long themeId) {
+        roomEscapeService.deleteTheme(themeId);
+        return ResponseEntity.noContent().build();
     }
 }

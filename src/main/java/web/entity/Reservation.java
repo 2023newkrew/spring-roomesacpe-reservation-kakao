@@ -4,19 +4,20 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final long themeId;
 
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-
-    private Reservation(LocalDate date, LocalTime time, String name) {
+    private Reservation(LocalDate date, LocalTime time, String name, long themeId) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeId = themeId;
     }
 
-    public static Reservation of(LocalDate date, LocalTime time, String name) {
-        return new Reservation(date, time, name);
+    public static Reservation of(LocalDate date, LocalTime time, String name, long themeId) {
+        return new Reservation(date, time, name, themeId);
     }
 
     public LocalDate getDate() {
@@ -29,6 +30,10 @@ public class Reservation {
 
     public String getName() {
         return name;
+    }
+
+    public long getThemeId() {
+        return themeId;
     }
 
     public boolean isDuplicate(Reservation other) {

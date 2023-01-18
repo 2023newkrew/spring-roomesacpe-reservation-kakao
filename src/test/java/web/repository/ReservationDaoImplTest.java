@@ -17,13 +17,13 @@ import java.time.temporal.ChronoUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ReservationRepositoryTest {
+public class ReservationDaoImplTest {
 
     DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
             .addScript("classpath:schema.sql")
             .build();
 
-    private ReservationRepository reservationRepository = new DatabaseReservationRepository(dataSource);
+    private ReservationDaoImpl reservationDaoImpl = new ReservationDaoImpl(dataSource);
 
     @Nested
     class Save {
@@ -33,11 +33,12 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
 
-            long reservationId = reservationRepository.save(reservation);
+            long reservationId = reservationDaoImpl.save(reservation);
 
-            Reservation savedReservation = reservationRepository.findById(reservationId).orElseThrow();
+            Reservation savedReservation = reservationDaoImpl.findById(reservationId).orElseThrow();
             assertThat(savedReservation.getDate()).isEqualTo(today);
             assertThat(savedReservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"))).isEqualTo(now.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
             assertThat(savedReservation.getName()).isEqualTo(name);
@@ -48,11 +49,12 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
 
-            reservationRepository.save(reservation);
+            reservationDaoImpl.save(reservation);
 
-            assertThatThrownBy(() -> reservationRepository.save(reservation))
+            assertThatThrownBy(() -> reservationDaoImpl.save(reservation))
                     .isInstanceOf(ReservationDuplicateException.class);
         }
     }
@@ -65,10 +67,11 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
-            long reservationId = reservationRepository.save(reservation);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
+            long reservationId = reservationDaoImpl.save(reservation);
 
-            Reservation findReservation = reservationRepository.findById(reservationId)
+            Reservation findReservation = reservationDaoImpl.findById(reservationId)
                     .orElseThrow();
 
             assertThat(findReservation.getDate()).isEqualTo(today);
@@ -78,7 +81,7 @@ public class ReservationRepositoryTest {
 
         @Test
         void should_throwException_when_notExistReservation() {
-            assertThat(reservationRepository.findById(-1)).isEmpty();
+            assertThat(reservationDaoImpl.findById(-1)).isEmpty();
         }
     }
 
@@ -90,22 +93,23 @@ public class ReservationRepositoryTest {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
             String name = "name";
-            Reservation reservation = Reservation.of(today, now, name);
-            long reservationId = reservationRepository.save(reservation);
+            long themeId = 1;
+            Reservation reservation = Reservation.of(today, now, name, themeId);
+            long reservationId = reservationDaoImpl.save(reservation);
 
-            long deleteReservationCount = reservationRepository.delete(reservationId);
+            long deleteReservationCount = reservationDaoImpl.delete(reservationId);
             assertThat(deleteReservationCount).isEqualTo(1L);
-            assertThat(reservationRepository.findById(reservationId)).isEmpty();
+            assertThat(reservationDaoImpl.findById(reservationId)).isEmpty();
         }
 
         @Test
         void should_throwException_when_notExistReservation() {
-            assertThat(reservationRepository.delete(-1)).isEqualTo(0L);
+            assertThat(reservationDaoImpl.delete(-1)).isEqualTo(0L);
         }
     }
 
     @AfterEach
     void deleteAllReservation() {
-        reservationRepository.clearAll();
+        reservationDaoImpl.clearAll();
     }
 }
