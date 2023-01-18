@@ -60,6 +60,13 @@ public class ReservationTest {
                 .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
     }
 
+    @Test
+    @DisplayName("테마가 존재하지 않을 경우 생성 거졀")
+    void rejectCreateReservation2() {
+        createReservation(new ReservationDto("2022-01-01", "13:00", "kayla", 100L))
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
     @DisplayName("예약 조회")
     @Test
     void showReservation() {
