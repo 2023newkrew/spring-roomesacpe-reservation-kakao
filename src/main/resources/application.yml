@@ -1,0 +1,14 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/roomescape
+    username: kakao
+    password:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema/schema.sql
+      data-locations: classpath:data/init.sql

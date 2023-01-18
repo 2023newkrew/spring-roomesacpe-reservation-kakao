@@ -1,0 +1,36 @@
+package nextstep.reservations.domain.service.reservation;
+
+import nextstep.reservations.domain.entity.reservation.Reservation;
+import nextstep.reservations.dto.reservation.ReservationRequestDto;
+import nextstep.reservations.dto.reservation.ReservationResponseDto;
+import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
+import nextstep.reservations.repository.reservation.ReservationRepository;
+import nextstep.reservations.util.mapper.ReservationMapper;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ReservationService {
+    private final ReservationRepository reservationRepository;
+    private final ReservationMapper reservationMapper;
+
+    public ReservationService(final ReservationRepository reservationRepository, final ReservationMapper reservationMapper) {
+        this.reservationRepository = reservationRepository;
+        this.reservationMapper = reservationMapper;
+    }
+
+    public Long addReservation(final ReservationRequestDto requestDto) {
+        return reservationRepository.add(reservationMapper.requestDtoToReservation(requestDto));
+    }
+
+    public ReservationResponseDto getReservation(final Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        if (reservation == null) throw new NoSuchReservationException();
+        return reservationMapper.reservationToResponseDto(reservation);
+    }
+
+    public void deleteReservation(final Long id) {
+        int removeCount = reservationRepository.remove(id);
+
+        if (removeCount == 0) throw new NoSuchReservationException();
+    }
+}
