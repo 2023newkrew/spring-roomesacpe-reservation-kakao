@@ -18,7 +18,7 @@ public class ConsoleApplication {
     private static final String DELETE = "delete";
     private static final String SHOW = "show";
     private static final String QUIT = "quit";
-    private static final ReservationService reservationService = new ReservationService(new ReservationRepositoryConsole());
+    private static final ReservationService reservationService = new ReservationService(new ReservationRepositoryConsole(), new ThemeRepositoryConsole());
     private static final ThemeService themeService = new ThemeService(new ThemeRepositoryConsole());
 
     public static void main(String[] args) {

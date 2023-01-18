@@ -38,7 +38,7 @@ public class ThemeService {
         return themeRepository.get(name) != null;
     }
 
-    private boolean checkExistence(Long id) {
+    public boolean checkExistence(Long id) {
         return themeRepository.get(id) != null;
     }
 }
