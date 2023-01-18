@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.theme.domain.Theme;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class ThemeDao {
@@ -26,5 +27,10 @@ public class ThemeDao {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(theme);
         theme.setId(insertActor.executeAndReturnKey(parameters).longValue());
         return theme;
+    }
+
+    public List<Theme> findAllTheme() {
+        String sql = "SELECT * FROM THEME";
+        return jdbcTemplate.query(sql, new ThemeMapper());
     }
 }
