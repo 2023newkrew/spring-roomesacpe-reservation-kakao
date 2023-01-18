@@ -1,6 +1,8 @@
 package roomescape.reservation.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.exception.BusinessException;
+import roomescape.exception.ErrorCode;
 import roomescape.reservation.repository.common.ThemeRepository;
 import roomescape.reservation.domain.Theme;
 import roomescape.reservation.dto.ThemeDto;
@@ -17,7 +19,8 @@ public class ThemeService {
     }
 
     public Long addTheme(ThemeDto themeDto) {
-        if (checkExistence(themeDto.getName())) throw new IllegalArgumentException("이미 있는 테마 이름");
+        if (checkExistence(themeDto.getName()))
+            throw new BusinessException(ErrorCode.DUPLICATE_THEME);
         return themeRepository.add(new Theme(themeDto)).getId();
     }
 
@@ -26,7 +29,8 @@ public class ThemeService {
     }
 
     public void removeTheme(Long id) {
-        if (!checkExistence(id)) throw new IllegalArgumentException("없는 테마임");
+        if (!checkExistence(id))
+            throw new BusinessException(ErrorCode.NOT_FOUND_THEME);
         themeRepository.remove(id);
     }
 

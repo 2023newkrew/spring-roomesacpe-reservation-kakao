@@ -57,7 +57,7 @@ public class ReservationTest {
     void rejectCreateReservation() {
         createReservation(new ReservationDto("2022-01-01", "13:00", "kayla", 1L));
         createReservation(new ReservationDto("2022-01-01", "13:00", "jerrie", 2L))
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
     }
 
     @DisplayName("예약 조회")
@@ -77,7 +77,7 @@ public class ReservationTest {
         RestAssured.given().log().all()
                 .when().get("/reservations/1000")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("예약 삭제")
@@ -97,7 +97,7 @@ public class ReservationTest {
 
         //check
         RestAssured.given().when().get("/reservations/" + id).then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("예약 아이디가 존재하지 않을 경우 삭제 거절")
@@ -106,7 +106,7 @@ public class ReservationTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1000")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
 }

@@ -47,7 +47,7 @@ public class ThemeTest {
     void rejectCreateTheme() {
         createTheme(new ThemeDto("나홀로집에", "크리스마스 코믹물", 30000));
         ValidatableResponse response = createTheme(new ThemeDto("나홀로집에", "공포물", 50000));
-        response.statusCode(HttpStatus.BAD_REQUEST.value());
+        response.statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 
     }
 
@@ -94,7 +94,7 @@ public class ThemeTest {
         RestAssured.given().log().all()
                 .when().delete("/themes/1000")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
 }
