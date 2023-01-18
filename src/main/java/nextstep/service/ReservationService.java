@@ -4,8 +4,8 @@ import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.dto.ReservationRequest;
 import nextstep.dto.ReservationResponse;
+import nextstep.dto.ThemeResponse;
 import nextstep.repository.ReservationRepository;
-import nextstep.repository.ThemeJdbcRepository;
 import nextstep.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,8 @@ public class ReservationService {
     public ReservationResponse findReservation(long id){
         Reservation result = this.reservationRepository.find(id);
         Theme theme = this.themeRepository.find(result.getThemeId());
-        return new ReservationResponse(result.getId(),result.getDate(),result.getTime(),result.getName(),theme);
+        ThemeResponse themeResponse = theme.generateResponse();
+        return new ReservationResponse(result.getId(),result.getDate(),result.getTime(),result.getName(),themeResponse);
     }
 
     public boolean deleteReservation(long id){
