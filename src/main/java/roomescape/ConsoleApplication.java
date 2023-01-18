@@ -1,5 +1,6 @@
 package roomescape;
 
+import roomescape.exception.BusinessException;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Theme;
 import roomescape.reservation.dto.ReservationDto;
@@ -44,8 +45,8 @@ public class ConsoleApplication {
                 Long id;
                 try {
                     id = reservationService.addReservation(new ReservationDto(date, time, name, Long.parseLong(theme_id)));
-                } catch (IllegalArgumentException e) {
-                    System.out.println("이미 예약된 시간입니다.");
+                } catch (BusinessException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
                 Reservation reservation = reservationService.getReservation(id);
@@ -66,8 +67,8 @@ public class ConsoleApplication {
                 Reservation reservation;
                 try {
                     reservation = reservationService.getReservation(id);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("해당 예약은 없는 예약입니다.");
+                } catch (BusinessException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
 
@@ -84,8 +85,8 @@ public class ConsoleApplication {
 
                 try {
                     reservationService.removeReservation(id);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("해당 예약은 없는 예약입니다.");
+                } catch (BusinessException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
 
@@ -95,12 +96,7 @@ public class ConsoleApplication {
             if (input.startsWith(SHOW)) {
                 List<Theme> themes;
 
-                try {
-                    themes = themeService.getAllTheme();
-                } catch (IllegalArgumentException e) {
-                    System.out.println("테마가 하나도 없습니다.");
-                    continue;
-                }
+                themes = themeService.getAllTheme();
 
                 for (Theme theme : themes) {
                     System.out.println("테마 번호: " + theme.getId());
