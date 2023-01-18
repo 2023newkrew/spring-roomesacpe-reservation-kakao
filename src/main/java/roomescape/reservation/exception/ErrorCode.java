@@ -1,4 +1,4 @@
-package roomescape.exception;
+package roomescape.reservation.exception;
 
 public enum ErrorCode {
     DUPLICATE_RESERVATION(422, "이미 예약된 시간입니다"),

@@ -1,6 +1,6 @@
 package roomescape;
 
-import roomescape.exception.BusinessException;
+import roomescape.reservation.exception.BusinessException;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Theme;
 import roomescape.reservation.dto.ReservationDto;

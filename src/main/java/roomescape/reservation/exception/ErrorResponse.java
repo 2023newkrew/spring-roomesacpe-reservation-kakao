@@ -1,4 +1,4 @@
-package roomescape.exception;
+package roomescape.reservation.exception;
 
 public class ErrorResponse {
     private int status;

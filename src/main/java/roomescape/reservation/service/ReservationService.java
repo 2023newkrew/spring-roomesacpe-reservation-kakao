@@ -1,8 +1,8 @@
 package roomescape.reservation.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.exception.BusinessException;
-import roomescape.exception.ErrorCode;
+import roomescape.reservation.exception.BusinessException;
+import roomescape.reservation.exception.ErrorCode;
 import roomescape.reservation.repository.common.ReservationRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationDto;
