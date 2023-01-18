@@ -14,7 +14,7 @@ public class ReservationMapper implements RowMapper<Reservation> {
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
                 rs.getString("name"),
-                rs.getLong("themeid")
+                rs.getLong("theme_id")
         );
     }
 }
