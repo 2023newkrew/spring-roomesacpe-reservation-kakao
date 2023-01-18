@@ -53,7 +53,7 @@ public class ThemeTest {
 
     @Test
     @DisplayName("테마 목록 조회")
-    void showAllTheme() {
+    void showAllThemes() {
         //create
         createTheme(new ThemeDto("정글 탈출", "정글에서 탈출하기", 30000));
         createTheme(new ThemeDto("무인도 탈출", "무인도에서 탈출하기", 50000));
@@ -73,6 +73,10 @@ public class ThemeTest {
         //create
         String id = getId(createTheme(new ThemeDto("비행기", "비행기에서 탈출하기", 50000)));
 
+        //check
+        RestAssured.given().when().get("/themes").then()
+                .body("name", hasItem("비행기"));
+
         //delete
         RestAssured.given().log().all()
                 .when().delete("/themes/" + id)
@@ -85,7 +89,7 @@ public class ThemeTest {
     }
 
     @Test
-    @DisplayName("테마 아이디가 존재하지 않는 경우 삭제 거절")
+    @DisplayName("테마 아이디가 존재하지 않을 경우 삭제 거절")
     void rejectDeleteTheme() {
         RestAssured.given().log().all()
                 .when().delete("/themes/1000")
