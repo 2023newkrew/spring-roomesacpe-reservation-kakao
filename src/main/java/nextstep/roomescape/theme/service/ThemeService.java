@@ -13,4 +13,6 @@ public interface ThemeService {
 
     void delete(long id);
 
+    Theme find(Theme theme);
+
 }

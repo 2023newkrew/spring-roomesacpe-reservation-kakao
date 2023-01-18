@@ -65,7 +65,7 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository {
 
     @Override
     public Reservation findById(long id) {
-        String sql = "SELECT reservation.id, reservation.name, reservation.date, reservation.time, theme.id, theme.name, theme.desc, theme.price " +
+        String sql = "SELECT reservation.id, reservation.date, reservation.time, reservation.name, theme.id, theme.name, theme.desc, theme.price " +
                 "from reservation " +
                 "inner join theme on reservation.theme_id = theme.id " +
                 "where reservation.id = ?;";
@@ -96,11 +96,11 @@ public class ReservationRepositoryJdbcImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findByThemeId(Long themeId) {
-        String sql = "SELECT reservation.id, reservation.name, reservation.date, reservation.time, theme.id, theme.name, theme.desc, theme.price " +
+        String sql = "SELECT reservation.id, reservation.date, reservation.time, reservation.name, theme.id, theme.name, theme.desc, theme.price " +
                 "from reservation " +
                 "inner join theme on reservation.theme_id = theme.id " +
-                "where theme.id .id = ?;";
-        return jdbcTemplate.query(sql, rowMapper);
+                "where theme.id = ?;";
+        return jdbcTemplate.query(sql, rowMapper, themeId);
     }
 
 }

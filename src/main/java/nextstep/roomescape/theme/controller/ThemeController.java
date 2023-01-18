@@ -1,5 +1,7 @@
 package nextstep.roomescape.theme.controller;
 
+import nextstep.roomescape.exception.UsedExistEntityException;
+import nextstep.roomescape.reservation.service.ReservationService;
 import nextstep.roomescape.theme.controller.dto.ThemeRequestDTO;
 import nextstep.roomescape.theme.repository.model.Theme;
 import nextstep.roomescape.theme.service.ThemeService;
@@ -13,9 +15,11 @@ import java.util.List;
 @RequestMapping("/themes")
 public class ThemeController {
     private final ThemeService themeService;
+    private final ReservationService reservationService;
 
-    public ThemeController(ThemeService themeService) {
+    public ThemeController(ThemeService themeService, ReservationService reservationService) {
         this.themeService = themeService;
+        this.reservationService = reservationService;
     }
 
     @PostMapping
@@ -32,6 +36,9 @@ public class ThemeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTheme(@PathVariable Long id) {
+        if (reservationService.findByThemeId(id).size() > 0){
+            throw new UsedExistEntityException("해당 테마는 예약이 있어 삭제가 불가능합니다.");
+        }
         themeService.delete(id);
         return ResponseEntity.noContent().build();
     }

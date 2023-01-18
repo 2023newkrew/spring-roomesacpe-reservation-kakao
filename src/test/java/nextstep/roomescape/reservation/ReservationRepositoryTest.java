@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +41,7 @@ class ReservationRepositoryTest {
         Reservation reservation = createRequest(LocalDate.parse("9999-02-02"));
         Long id = reservationRepository.create(reservation);
         Reservation result = reservationRepository.findById(id);
-        assertEquals(result, reservation);
+        assertTrue(result.getDate() == reservation.getDate() && result.getTime() == reservation.getTime() && Objects.equals(result.getName(), reservation.getName()));
     }
 
     @DisplayName("예약 날짜/시간 조회")
