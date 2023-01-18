@@ -57,7 +57,8 @@ public class ConsoleReservationControllerTest {
     void deleteReservationTest() {
         Reservation createReservation = consoleReservationController.createReservation(reservation);
         consoleReservationController.deleteReservation(createReservation.getId());
-//        Reservation reservation1 = consoleReservationController.lookUpReservation(reservation.getId());
+        assertThrows(NoSuchElementException.class, () ->
+                consoleReservationController.lookUpReservation(reservation.getId()));
     }
 
     @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생")
