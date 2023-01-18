@@ -1,5 +1,6 @@
 package nextstep.console.service;
 
+import nextstep.console.repository.ThemeConnRepository;
 import nextstep.domain.Theme;
 import nextstep.domain.repository.ThemeRepository;
 import nextstep.domain.service.ThemeService;
@@ -12,8 +13,8 @@ import java.util.stream.Collectors;
 public class ThemeConsoleService implements ThemeService {
     private final ThemeRepository themeRepository;
 
-    public ThemeConsoleService(ThemeRepository themeRepository) {
-        this.themeRepository = themeRepository;
+    public ThemeConsoleService() {
+        this.themeRepository = new ThemeConnRepository();
     }
 
     public Theme newTheme(ThemeRequest themeRequest){

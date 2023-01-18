@@ -1,5 +1,7 @@
 package nextstep.console.service;
 
+import nextstep.console.repository.ReservationConnRepository;
+import nextstep.console.repository.ThemeConnRepository;
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.domain.repository.ReservationRepository;
@@ -13,9 +15,9 @@ public class ReservationConsoleService implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
 
-    public ReservationConsoleService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.themeRepository = themeRepository;
+    public ReservationConsoleService() {
+        this.reservationRepository = new ReservationConnRepository();
+        this.themeRepository = new ThemeConnRepository();
     }
 
     public Reservation newReservation(ReservationRequest reservationRequest){
