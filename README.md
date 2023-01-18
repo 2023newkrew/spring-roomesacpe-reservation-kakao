@@ -10,7 +10,8 @@
 - 예약 생성 기능
   - POST /reservations, {"date", "time", "name", "theme_id"}
   - 201 Created
-  - 날짜와 시간이 동일한 예약은 생성할 수 없다(422 UnprocessableEntity)
+  - 날짜와 시간이 동일한 예약을 생성할 수 없다(422 UnprocessableEntity)
+  - 테마가 존재하지 않을 경우 예약을 생성할 수 없다(404 NotFound)
 
 - 예약 조회 기능
   - GET /reservations/"id" 
