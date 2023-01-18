@@ -1,6 +1,6 @@
 package nextstep.domain;
 
-import nextstep.dto.ThemeResponse;
+import nextstep.domain.dto.ThemeResponse;
 
 public class Theme {
 

@@ -1,13 +1,16 @@
-package nextstep;
+package nextstep.console;
 
+import nextstep.console.service.ReservationConsoleService;
+import nextstep.console.service.ThemeConsoleService;
 import nextstep.domain.Reservation;
-import nextstep.dto.ReservationRequest;
-import nextstep.dto.ReservationResponse;
-import nextstep.repository.ReservationConnRepository;
-import nextstep.repository.ReservationRepository;
-import nextstep.repository.ThemeConnRepository;
-import nextstep.repository.ThemeRepository;
-import nextstep.service.ReservationService;
+import nextstep.domain.service.ReservationService;
+import nextstep.domain.service.ThemeService;
+import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.dto.ReservationResponse;
+import nextstep.console.repository.ReservationConnRepository;
+import nextstep.domain.repository.ReservationRepository;
+import nextstep.console.repository.ThemeConnRepository;
+import nextstep.domain.repository.ThemeRepository;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -24,8 +27,8 @@ public class RoomEscapeConsoleApplication {
     public static void main(String[] args) throws SQLException {
         ReservationRepository reservationRepository = new ReservationConnRepository();
         ThemeRepository themeRepository = new ThemeConnRepository();
-        ReservationService service = new ReservationService(reservationRepository, themeRepository);
-
+        ReservationService service = new ReservationConsoleService(reservationRepository, themeRepository);
+        ThemeService themeService = new ThemeConsoleService(themeRepository);
         Scanner scanner = new Scanner(System.in);
 
         while (true) {

@@ -1,6 +1,4 @@
-package nextstep.dto;
-
-import nextstep.domain.Theme;
+package nextstep.domain.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

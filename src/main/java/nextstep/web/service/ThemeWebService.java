@@ -1,19 +1,20 @@
-package nextstep.service;
+package nextstep.web.service;
 
 import nextstep.domain.Theme;
-import nextstep.dto.ThemeRequest;
-import nextstep.dto.ThemeResponse;
-import nextstep.repository.ThemeRepository;
+import nextstep.domain.service.ThemeService;
+import nextstep.domain.dto.ThemeRequest;
+import nextstep.domain.dto.ThemeResponse;
+import nextstep.domain.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ThemeService {
+public class ThemeWebService implements ThemeService {
     private final ThemeRepository themeRepository;
 
-    public ThemeService(ThemeRepository themeRepository) {
+    public ThemeWebService(ThemeRepository themeRepository) {
         this.themeRepository = themeRepository;
     }
 

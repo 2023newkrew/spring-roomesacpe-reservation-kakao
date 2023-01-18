@@ -1,9 +1,9 @@
-package nextstep.controller;
+package nextstep.web.controller;
 
 import nextstep.domain.Reservation;
-import nextstep.dto.ReservationRequest;
-import nextstep.dto.ReservationResponse;
-import nextstep.service.ReservationService;
+import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.dto.ReservationResponse;
+import nextstep.web.service.ReservationWebService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +14,15 @@ import java.net.URI;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationWebService reservationWebService;
 
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationController(ReservationWebService reservationWebService) {
+        this.reservationWebService = reservationWebService;
     }
 
     @PostMapping
     public ResponseEntity createReservation(@RequestBody ReservationRequest reservation){
-        Reservation ret = this.reservationService.newReservation(reservation);
+        Reservation ret = this.reservationWebService.newReservation(reservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + ret.getId())).build();
     }
@@ -30,13 +30,13 @@ public class ReservationController {
     @GetMapping("/{id}")
     @ResponseBody
     public ReservationResponse getReservation(@PathVariable long id){
-        ReservationResponse reservationResponse = this.reservationService.findReservation(id);
+        ReservationResponse reservationResponse = this.reservationWebService.findReservation(id);
         return reservationResponse;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable long id){
-        this.reservationService.deleteReservation(id);
+        this.reservationWebService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 

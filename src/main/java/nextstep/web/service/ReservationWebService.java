@@ -1,20 +1,21 @@
-package nextstep.service;
+package nextstep.web.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.dto.ReservationRequest;
-import nextstep.dto.ReservationResponse;
-import nextstep.dto.ThemeResponse;
-import nextstep.repository.ReservationRepository;
-import nextstep.repository.ThemeRepository;
+import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.dto.ReservationResponse;
+import nextstep.domain.dto.ThemeResponse;
+import nextstep.domain.repository.ReservationRepository;
+import nextstep.domain.repository.ThemeRepository;
+import nextstep.domain.service.ReservationService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReservationService {
+public class ReservationWebService implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ThemeRepository themeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
+    public ReservationWebService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
         this.themeRepository = themeRepository;
     }

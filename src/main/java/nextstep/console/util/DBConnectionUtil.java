@@ -1,4 +1,4 @@
-package nextstep.util;
+package nextstep.console.util;
 
 import java.sql.*;
 

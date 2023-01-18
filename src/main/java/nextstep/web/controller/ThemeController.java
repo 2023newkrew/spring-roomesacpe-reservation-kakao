@@ -1,10 +1,9 @@
-package nextstep.controller;
+package nextstep.web.controller;
 
 import nextstep.domain.Theme;
-import nextstep.dto.ReservationResponse;
-import nextstep.dto.ThemeRequest;
-import nextstep.dto.ThemeResponse;
-import nextstep.service.ThemeService;
+import nextstep.domain.dto.ThemeRequest;
+import nextstep.domain.dto.ThemeResponse;
+import nextstep.web.service.ThemeWebService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +15,15 @@ import java.util.List;
 @RequestMapping("/themes")
 public class ThemeController {
 
-    private final ThemeService themeService;
+    private final ThemeWebService themeWebService;
 
-    public ThemeController(ThemeService themeService) {
-        this.themeService = themeService;
+    public ThemeController(ThemeWebService themeWebService) {
+        this.themeWebService = themeWebService;
     }
 
     @PostMapping
     public ResponseEntity createTheme(@RequestBody ThemeRequest themeRequest){
-        Theme theme = this.themeService.newTheme(themeRequest);
+        Theme theme = this.themeWebService.newTheme(themeRequest);
 
         return ResponseEntity.created(URI.create("/themes/" + theme.getId())).build();
     }
@@ -32,19 +31,19 @@ public class ThemeController {
     @GetMapping("/{id}")
     @ResponseBody
     public ThemeResponse getTheme(@PathVariable long id){
-        ThemeResponse themeResponse = this.themeService.findTheme(id);
+        ThemeResponse themeResponse = this.themeWebService.findTheme(id);
         return themeResponse;
     }
 
     @GetMapping()
     @ResponseBody
     public List<ThemeResponse> getAllTheme(){
-        return this.themeService.findAllTheme();
+        return this.themeWebService.findAllTheme();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteTheme(@PathVariable long id){
-        this.themeService.deleteTheme(id);
+        this.themeWebService.deleteTheme(id);
         return ResponseEntity.noContent().build();
     }
 

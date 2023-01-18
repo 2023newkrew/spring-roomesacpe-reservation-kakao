@@ -1,4 +1,4 @@
-package nextstep.dto;
+package nextstep.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,21 +1,17 @@
-package nextstep.dto;
+package nextstep.domain.dto;
 
-public class ThemeResponse {
-
-    private final long id;
+public class ThemeRequest {
     private String name;
     private String desc;
     private Integer price;
 
-    public ThemeResponse(long id, String name, String desc, Integer price) {
-        this.id = id;
+    public ThemeRequest() {
+    }
+
+    public ThemeRequest(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-package nextstep.repository;
+package nextstep.domain.repository;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;

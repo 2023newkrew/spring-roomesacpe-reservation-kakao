@@ -1,7 +1,7 @@
-package nextstep.repository;
+package nextstep.console.repository;
 
 import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
+import nextstep.domain.repository.ReservationRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nextstep.util.DBConnectionUtil.*;
+import static nextstep.console.util.DBConnectionUtil.*;
 
 public class ReservationConnRepository implements ReservationRepository {
 

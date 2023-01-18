@@ -1,6 +1,7 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import nextstep.domain.Reservation;
+import nextstep.domain.repository.ReservationRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +16,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-public class ReservationJdbcRepository implements ReservationRepository{
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

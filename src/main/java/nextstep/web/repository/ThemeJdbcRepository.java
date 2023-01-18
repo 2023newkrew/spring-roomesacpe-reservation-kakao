@@ -1,6 +1,7 @@
-package nextstep.repository;
+package nextstep.web.repository;
 
 import nextstep.domain.Theme;
+import nextstep.domain.repository.ThemeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class ThemeJdbcRepository implements ThemeRepository{
+public class ThemeJdbcRepository implements ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

@@ -2,7 +2,7 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import nextstep.dto.ReservationRequest;
+import nextstep.domain.dto.ReservationRequest;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
