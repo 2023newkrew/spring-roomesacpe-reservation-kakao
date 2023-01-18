@@ -3,10 +3,8 @@ package nextstep.reservations.repository.reservation;
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
-import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.stereotype.Repository;
@@ -20,10 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static nextstep.reservations.repository.reservation.ReservationSqlRepository.*;
-
 @Repository
-//@Primary
 public class JdbcReservationRepository extends ReservationSqlRepository{
     public static final int DuplicateReservationError = 23505;
     public static final int NoSuchThemeError = 23506;

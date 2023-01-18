@@ -6,8 +6,6 @@ public class ThemeResponseDto {
     private String desc;
     private Integer price;
 
-    public ThemeResponseDto() {}
-
     public ThemeResponseDto(final Long id, final String name, final String desc, final Integer price) {
         this.id = id;
         this.name = name;

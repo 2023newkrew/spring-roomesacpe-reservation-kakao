@@ -16,8 +16,6 @@ public class ReservationResponseDto {
     private String themeDesc;
     private Integer themePrice;
 
-    public ReservationResponseDto() {}
-
     public ReservationResponseDto(final Long id, final LocalDate date, final LocalTime time, final String name, final String themeName, final String themeDesc, final Integer themePrice) {
         this.id = id;
         this.date = date;
@@ -44,6 +42,7 @@ public class ReservationResponseDto {
         return name;
     }
 
+    /* RestAssured에서 reflection에 사용 */
     public String getThemeName() {
         return themeName;
     }

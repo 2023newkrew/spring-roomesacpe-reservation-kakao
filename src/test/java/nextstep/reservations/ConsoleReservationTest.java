@@ -3,7 +3,6 @@ package nextstep.reservations;
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
 import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
-import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
 import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.repository.reservation.JdbcReservationRepository;
 import org.assertj.core.api.Assertions;

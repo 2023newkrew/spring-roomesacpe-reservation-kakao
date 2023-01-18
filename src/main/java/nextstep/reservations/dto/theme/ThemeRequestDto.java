@@ -5,6 +5,7 @@ public class ThemeRequestDto {
     private String desc;
     private Integer price;
 
+    /* requestbody에서 사용 */
     public ThemeRequestDto() {}
 
     public ThemeRequestDto(final String name, final String desc, final Integer price) {

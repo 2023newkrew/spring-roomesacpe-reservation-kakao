@@ -20,16 +20,8 @@ public class ReservationRequestDto {
 
     Integer themePrice;
 
+    /* requestBody에서 사용 */
     public ReservationRequestDto() {}
-
-    public ReservationRequestDto(final LocalDate date, final LocalTime time, final String name, final String themeName, final String themeDesc, final Integer themePrice) {
-        this.date = date;
-        this.time = time;
-        this.name = name;
-        this.themeName = themeName;
-        this.themeDesc = themeDesc;
-        this.themePrice = themePrice;
-    }
 
     public LocalDate getDate() {
         return date;
