@@ -3,15 +3,14 @@ package roomescape.repository;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class ReservationMemoryRepository implements ReservationRepository{
+public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations;
     private final AtomicLong reservationIdIndex;
 
@@ -21,28 +20,27 @@ public class ReservationMemoryRepository implements ReservationRepository{
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Long id = reservationIdIndex.getAndIncrement();
-        reservation.setId(id);
-        reservations.put(id, reservation);
-        return id;
+        Reservation inserted = new Reservation(id, reservation.getDateTime(), reservation.getName(), reservation.getThemeId());
+        reservations.put(id, inserted);
+        return inserted;
     }
 
     @Override
-    public Optional<Reservation> findOneById(long reservationId) {
-        return Optional.ofNullable(reservations.get(reservationId));
+    public Optional<Reservation> find(Long id) {
+        return Optional.ofNullable(reservations.get(id));
     }
 
     @Override
-    public Integer delete(long reservationId) {
-        reservations.remove(reservationId);
-        return 1;
+    public Boolean delete(Long id) {
+        return reservations.remove(id) != null;
     }
 
     @Override
-    public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
+    public Boolean existsByDateTime(LocalDateTime dateTime) {
         return reservations.values()
                 .stream()
-                .anyMatch(reservation -> reservation.getDate().equals(date) && reservation.getTime().equals(time));
+                .anyMatch(reservation -> reservation.getDateTime().equals(dateTime));
     }
 }

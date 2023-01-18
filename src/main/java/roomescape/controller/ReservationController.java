@@ -5,36 +5,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.model.Reservation;
 import roomescape.service.ReservationService;
 
 import java.net.URI;
 
 @Controller
 public class ReservationController {
-
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable("id") Long reservationId) {
-        ReservationResponseDto reservationResponseDto = reservationService.findReservation(reservationId);
-        return ResponseEntity.ok(reservationResponseDto);
+    public ResponseEntity<ReservationResponseDto> findReservation(@PathVariable("id") Long id) {
+        ReservationResponseDto res = reservationService.findReservation(id);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto dto) {
-        Reservation reservation = reservationService.createReservation(dto);
-        ReservationResponseDto res = new ReservationResponseDto(reservation);
-        return ResponseEntity.created(URI.create("/reservations").resolve(res.getId().toString())).body(res);
+    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto req) {
+        ReservationResponseDto res = reservationService.createReservation(req);
+        String id = res.getId().toString();
+        return ResponseEntity.created(URI.create("/reservations/").resolve(id)).body(res);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity cancelReservation(@PathVariable("id") Long reservationId) {
-        reservationService.cancelReservation(reservationId);
+    public ResponseEntity cancelReservation(@PathVariable("id") Long id) {
+        reservationService.cancelReservation(id);
         return ResponseEntity.noContent().build();
     }
 }

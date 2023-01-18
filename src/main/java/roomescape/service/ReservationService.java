@@ -1,47 +1,56 @@
 package roomescape.service;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.RoomEscapeException;
 import roomescape.model.Reservation;
 import roomescape.model.Theme;
 import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ThemeRepository;
 
-import java.util.NoSuchElementException;
+import java.time.LocalDateTime;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ThemeRepository themeRepository;
+    private final ThemeService themeService;
 
-    public ReservationService(ReservationJdbcRepository reservationRepository, ThemeRepository themeRepository) {
+    public ReservationService(ReservationJdbcRepository reservationRepository, ThemeService themeService) {
         this.reservationRepository = reservationRepository;
-        this.themeRepository = themeRepository;
+        this.themeService = themeService;
     }
 
-    public Reservation createReservation(ReservationRequestDto reservationRequest) {
-        Theme theme = themeRepository
-                .findOneByName("워너고홈")
-                .orElseThrow(() -> {throw new NoSuchElementException("No Theme by that Name");});
-        if (reservationRepository.hasOneByDateAndTime(reservationRequest.getDate(), reservationRequest.getTime())) {
-            throw new IllegalArgumentException("Already have reservation at that date & time");
+    public ReservationResponseDto createReservation(ReservationRequestDto req) {
+        LocalDateTime dateTime = LocalDateTime.of(req.getDate(), req.getTime());
+        Reservation reservation = new Reservation(null, dateTime, req.getName(), req.getThemeId());
+        try {
+            reservation = reservationRepository.save(reservation);
+        } catch (DuplicateKeyException e) {
+            throw new RoomEscapeException(ErrorCode.RESERVATION_DATETIME_ALREADY_EXISTS);
         }
-        Reservation reservation = new Reservation(reservationRequest, theme);
-        Long id = reservationRepository.save(reservation);
-        reservation.setId(id);  //
-        return reservation;
+        Theme theme = themeService.getTheme(reservation.getThemeId());
+        return new ReservationResponseDto(reservation, theme);
     }
 
-    public ReservationResponseDto findReservation(Long reservationId) {
-        Reservation reservation = reservationRepository
-                .findOneById(reservationId)
-                .orElseThrow(() -> {throw new NoSuchElementException("No Reservation by that Id");});
-        return new ReservationResponseDto(reservation);
+    public ReservationResponseDto findReservation(Long id) {
+        Reservation reservation = getReservation(id);
+        Theme theme = themeService.getTheme(reservation.getThemeId());
+        return new ReservationResponseDto(reservation, theme);
     }
 
-    public void cancelReservation(Long reservationId) {
-        reservationRepository.delete(reservationId);
+    public void cancelReservation(Long id) {
+        Boolean isCanceled = reservationRepository.delete(id);
+        if (!isCanceled) {
+            throw new RoomEscapeException(ErrorCode.NO_SUCH_ELEMENT);
+        }
+    }
+
+    Reservation getReservation(Long id) {
+        return reservationRepository.find(id).orElseThrow(() -> {
+            throw new RoomEscapeException(ErrorCode.NO_SUCH_ELEMENT);
+        });
     }
 }

@@ -5,18 +5,15 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
-import roomescape.model.Theme;
 
 import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
-
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertActor;
 
@@ -27,48 +24,41 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime(),
-                resultSet.getString("name"),
-                new Theme(
-                        resultSet.getString("theme_name"),
-                        resultSet.getString("theme_desc"),
-                        resultSet.getInt("theme_price")
-                )
+    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> (
+            new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getTimestamp("datetime").toLocalDateTime(),
+                    resultSet.getString("name"),
+                    resultSet.getLong("theme_id")
+            )
+    );
+
+    @Override
+    public Reservation save(Reservation reservation) {
+        Map<String, String> parameters = Map.of(
+                "datetime", reservation.getDateTime().toString(),
+                "name", reservation.getName(),
+                "theme_id", reservation.getThemeId().toString()
         );
-        return reservation;
-    };
-
-    @Override
-    public Long save(Reservation reservation) {
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("date", reservation.getDate().toString());
-        parameters.put("time", reservation.getTime().toString());
-        parameters.put("name", reservation.getName());
-        parameters.put("theme_name", reservation.getTheme().getName());
-        parameters.put("theme_desc", reservation.getTheme().getDesc());
-        parameters.put("theme_price", reservation.getTheme().getPrice().toString());
-        return insertActor.executeAndReturnKey(parameters).longValue();
+        Long id = insertActor.executeAndReturnKey(parameters).longValue();
+        return new Reservation(id, reservation.getDateTime(), reservation.getName(), reservation.getThemeId());
     }
 
     @Override
-    public Optional<Reservation> findOneById(long reservationId) {
+    public Optional<Reservation> find(Long id) {
         String sql = "select * from reservation where id = ? limit 1";
-        return jdbcTemplate.query(sql, actorRowMapper, reservationId).stream().findFirst();
+        return jdbcTemplate.query(sql, actorRowMapper, id).stream().findFirst();
     }
 
     @Override
-    public Integer delete(long reservationId) {
+    public Boolean delete(Long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, reservationId);
+        return jdbcTemplate.update(sql, id) > 0;
     }
 
     @Override
-    public Boolean hasOneByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "select * from reservation where date = ? and time = ? limit 1";
-        return jdbcTemplate.query(sql, actorRowMapper, date, time).size() > 0;
+    public Boolean existsByDateTime(LocalDateTime dateTime) {
+        String sql = "select * from reservation where datetime = ? limit 1";
+        return jdbcTemplate.query(sql, actorRowMapper, dateTime).size() > 0;
     }
 }
