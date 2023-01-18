@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationJdbcTemplateDAO implements ReservationDAO {
+public class ReservationJdbcTemplateDAO extends ReservationDAO {
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationJdbcTemplateDAO(JdbcTemplate jdbcTemplate) {
@@ -25,7 +25,7 @@ public class ReservationJdbcTemplateDAO implements ReservationDAO {
     @Override
     public Long save(ReservationSaveForm reservationSaveForm) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservationSaveForm);
+        PreparedStatementCreator insertPreparedStatementCreator = getInsertPreparedStatementCreator(reservationSaveForm);
 
         jdbcTemplate.update(insertPreparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();

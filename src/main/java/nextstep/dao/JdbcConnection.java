@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public interface JdbcApiDAO {
-    String DATASOURCE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
-    String DATASOURCE_USER = "sa";
-    String DATASOURCE_PASSWORD = "";
+public class JdbcConnection {
+    private static final String DATASOURCE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
+    private static final String DATASOURCE_USER = "sa";
+    private static final String DATASOURCE_PASSWORD = "";
 
-    default Connection getConnection() {
+    public static Connection getConnection() {
         Connection con = null;
         try {
             con = DriverManager.getConnection(DATASOURCE_URL, DATASOURCE_USER, DATASOURCE_PASSWORD);

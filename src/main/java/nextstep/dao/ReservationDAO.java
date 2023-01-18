@@ -14,17 +14,17 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReservationDAO {
-    String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
-    String FIND_ALL_SQL = "SELECT reservation.*, t.name AS theme_name, t.desc AS theme_desc, t.price AS theme_price"
+public abstract class ReservationDAO {
+    protected String INSERT_SQL = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
+    protected String FIND_ALL_SQL = "SELECT reservation.*, t.name AS theme_name, t.desc AS theme_desc, t.price AS theme_price"
             + " FROM reservation INNER JOIN theme AS t"
             + " ON reservation.theme_id = t.id";
-    String FIND_BY_ID_SQL = FIND_ALL_SQL + " WHERE reservation.id = ?";
-    String FIND_BY_DATE_TIME_THEME_SQL = FIND_ALL_SQL + " WHERE date = ? AND time = ? AND theme_id = ?";
-    String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
-    String COUNT_BY_THEME_ID_SQL = "SELECT COUNT(*) FROM reservation WHERE theme_id = ?";
+    protected String FIND_BY_ID_SQL = FIND_ALL_SQL + " WHERE reservation.id = ?";
+    protected String FIND_BY_DATE_TIME_THEME_SQL = FIND_ALL_SQL + " WHERE date = ? AND time = ? AND theme_id = ?";
+    protected String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
+    protected String COUNT_BY_THEME_ID_SQL = "SELECT COUNT(*) FROM reservation WHERE theme_id = ?";
 
-    RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
+    protected RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getDate("date").toLocalDate(),
             resultSet.getTime("time").toLocalTime(),
@@ -37,17 +37,17 @@ public interface ReservationDAO {
             )
     );
 
-    Long save(ReservationSaveForm reservationSaveForm);
+    public abstract Long save(ReservationSaveForm reservationSaveForm);
 
-    Optional<Reservation> findById(Long id);
+    public abstract Optional<Reservation> findById(Long id);
 
-    List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
+    public abstract List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId);
 
-    int deleteById(Long id);
+    public abstract int deleteById(Long id);
 
-    boolean existsByThemeId(Long themeId);
+    public abstract boolean existsByThemeId(Long themeId);
 
-    static PreparedStatementCreator getInsertPreparedStatementCreator(ReservationSaveForm reservationSaveForm) {
+    protected PreparedStatementCreator getInsertPreparedStatementCreator(ReservationSaveForm reservationSaveForm) {
         return connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservationSaveForm.getDate()));

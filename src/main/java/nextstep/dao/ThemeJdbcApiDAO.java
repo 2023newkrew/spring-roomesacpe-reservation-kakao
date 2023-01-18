@@ -10,11 +10,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThemeJdbcApiDAO implements ThemeDAO, JdbcApiDAO {
+public class ThemeJdbcApiDAO extends ThemeDAO {
     @Override
     public Long save(Theme theme) {
-        try (Connection con = getConnection()) {
-            PreparedStatementCreator insertPreparedStatementCreator = ThemeDAO.getInsertPreparedStatementCreator(theme);
+        try (Connection con = JdbcConnection.getConnection()) {
+            PreparedStatementCreator insertPreparedStatementCreator = getInsertPreparedStatementCreator(theme);
             PreparedStatement ps = insertPreparedStatementCreator.createPreparedStatement(con);
 
             ps.executeUpdate();
@@ -30,7 +30,7 @@ public class ThemeJdbcApiDAO implements ThemeDAO, JdbcApiDAO {
 
     @Override
     public List<Theme> findAll() {
-        try (Connection con = getConnection()) {
+        try (Connection con = JdbcConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement(FIND_ALL_SQL);
 
             ResultSet rs = ps.executeQuery();
@@ -46,7 +46,7 @@ public class ThemeJdbcApiDAO implements ThemeDAO, JdbcApiDAO {
 
     @Override
     public int deleteById(Long id) {
-        try (Connection con = getConnection()) {
+        try (Connection con = JdbcConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement(DELETE_BY_ID_SQL);
             ps.setLong(1, id);
 

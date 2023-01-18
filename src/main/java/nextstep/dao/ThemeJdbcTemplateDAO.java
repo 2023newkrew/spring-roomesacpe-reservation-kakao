@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ThemeJdbcTemplateDAO implements ThemeDAO {
+public class ThemeJdbcTemplateDAO extends ThemeDAO {
     private final JdbcTemplate jdbcTemplate;
 
     public ThemeJdbcTemplateDAO(JdbcTemplate jdbcTemplate) {
@@ -20,7 +20,7 @@ public class ThemeJdbcTemplateDAO implements ThemeDAO {
     @Override
     public Long save(Theme theme) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        PreparedStatementCreator insertPreparedStatementCreator = ThemeDAO.getInsertPreparedStatementCreator(theme);
+        PreparedStatementCreator insertPreparedStatementCreator = getInsertPreparedStatementCreator(theme);
 
         jdbcTemplate.update(insertPreparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();

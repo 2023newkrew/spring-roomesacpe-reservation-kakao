@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
+public class ReservationJdbcApiDAO extends ReservationDAO {
     @Override
     public Long save(ReservationSaveForm reservationSaveForm) {
-        try (Connection con = getConnection()) {
-            PreparedStatementCreator insertPreparedStatementCreator = ReservationDAO.getInsertPreparedStatementCreator(reservationSaveForm);
+        try (Connection con = JdbcConnection.getConnection()) {
+            PreparedStatementCreator insertPreparedStatementCreator = getInsertPreparedStatementCreator(reservationSaveForm);
             PreparedStatement ps = insertPreparedStatementCreator.createPreparedStatement(con);
 
             ps.executeUpdate();
@@ -31,7 +31,7 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        try (Connection con = getConnection()) {
+        try (Connection con = JdbcConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement(FIND_BY_ID_SQL);
             ps.setLong(1, id);
 
@@ -47,7 +47,7 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
 
     @Override
     public List<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
-        try (Connection con = getConnection()) {
+        try (Connection con = JdbcConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement(FIND_BY_DATE_TIME_THEME_SQL);
             ps.setDate(1, Date.valueOf(date));
             ps.setTime(2, Time.valueOf(time));
@@ -66,7 +66,7 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
 
     @Override
     public int deleteById(Long id) {
-        try (Connection con = getConnection()) {
+        try (Connection con = JdbcConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement(DELETE_BY_ID_SQL);
             ps.setLong(1, id);
 
@@ -78,7 +78,7 @@ public class ReservationJdbcApiDAO implements ReservationDAO, JdbcApiDAO {
 
     @Override
     public boolean existsByThemeId(Long themeId) {
-        try (Connection con = getConnection()) {
+        try (Connection con = JdbcConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement(COUNT_BY_THEME_ID_SQL);
             ps.setLong(1, themeId);
 
