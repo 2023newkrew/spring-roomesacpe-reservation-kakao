@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 @Repository
-@Primary
+//@Primary
 public class JdbcTemplateReservationRepository extends ReservationSqlRepository{
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,28 +30,14 @@ public class JdbcTemplateReservationRepository extends ReservationSqlRepository{
     public Long add(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        try {
-            jdbcTemplate.update(connection -> getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY), keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        }
-        catch (DuplicateKeyException e) {
-            throw new DuplicateReservationException();
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new NoSuchThemeException();
-        }
+        jdbcTemplate.update(connection -> getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY), keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Override
     public Reservation findById(Long id) {
         RowMapper<Reservation> rowMapper = getReservationRowMapper();
-
-        try {
-            return Objects.requireNonNull(jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rowMapper, id));
-        }
-        catch (EmptyResultDataAccessException e) {
-            throw new NoSuchReservationException();
-        }
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rowMapper, id));
     }
 
     @Override

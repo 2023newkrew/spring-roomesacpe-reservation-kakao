@@ -2,10 +2,14 @@ package nextstep;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
+import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
+import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.repository.reservation.JdbcReservationRepository;
 import nextstep.reservations.repository.reservation.ReservationRepository;
 import nextstep.reservations.util.jdbc.JdbcUtil;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -55,7 +59,18 @@ public class RoomEscapeConsoleApplication {
                         theme
                 );
 
-                Long createdId = consoleReservationRepository.add(reservation);
+                Long createdId;
+                try {
+                    createdId = consoleReservationRepository.add(reservation);
+                }
+                catch (DuplicateKeyException e) {
+                    System.out.println("해당 시간에 해당 테마의 중복된 예약이 있습니다.");
+                    throw new DuplicateReservationException();
+                }
+                catch (DataIntegrityViolationException e) {
+                    System.out.println("존재하지 않는 테마입니다.");
+                    throw new NoSuchThemeException();
+                }
 
                 System.out.println("예약이 등록되었습니다.");
                 System.out.println("예약 번호: " + createdId);
