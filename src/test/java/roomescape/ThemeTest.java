@@ -43,10 +43,19 @@ public class ThemeTest {
     }
 
     @Test
+    @DisplayName("테마 이름이 같을 경우 생성 거절")
+    void rejectCreateTheme() {
+        createTheme(new ThemeDto("나홀로집에", "크리스마스 코믹물", 30000));
+        ValidatableResponse response = createTheme(new ThemeDto("나홀로집에", "공포물", 50000));
+        response.statusCode(HttpStatus.BAD_REQUEST.value());
+
+    }
+
+    @Test
     @DisplayName("테마 목록 조회")
     void showAllTheme() {
         //create
-        createTheme(new ThemeDto("워너고홈", "병맛 어드벤처 회사 코믹물", 29000));
+        createTheme(new ThemeDto("정글 탈출", "정글에서 탈출하기", 30000));
         createTheme(new ThemeDto("무인도 탈출", "무인도에서 탈출하기", 50000));
 
         //check
@@ -54,13 +63,13 @@ public class ThemeTest {
                 .when().get("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", hasItem("워너고홈"))
+                .body("name", hasItem("정글 탈출"))
                 .body("name", hasItem("무인도 탈출"));
     }
 
     @Test
     @DisplayName("테마 삭제")
-    void removeTheme() {
+    void deleteTheme() {
         //create
         String id = getId(createTheme(new ThemeDto("비행기", "비행기에서 탈출하기", 50000)));
 
@@ -74,4 +83,14 @@ public class ThemeTest {
         RestAssured.given().when().get("/themes").then()
                 .body("name", not(hasItem("비행기")));
     }
+
+    @Test
+    @DisplayName("테마 아이디가 존재하지 않는 경우 삭제 거절")
+    void rejectDeleteTheme() {
+        RestAssured.given().log().all()
+                .when().delete("/themes/1000")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }
