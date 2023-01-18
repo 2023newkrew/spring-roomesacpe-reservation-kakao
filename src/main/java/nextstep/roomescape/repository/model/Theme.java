@@ -1,4 +1,4 @@
-package nextstep.roomescape.theme.repository.model;
+package nextstep.roomescape.repository.model;
 
 import lombok.*;
 import org.springframework.lang.Nullable;

@@ -1,7 +1,7 @@
 package nextstep.roomescape.theme;
 
-import nextstep.roomescape.theme.repository.model.Theme;
-import nextstep.roomescape.theme.repository.ThemeRepository;
+import nextstep.roomescape.repository.model.Theme;
+import nextstep.roomescape.repository.ThemeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

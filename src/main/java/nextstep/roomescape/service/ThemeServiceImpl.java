@@ -1,9 +1,9 @@
-package nextstep.roomescape.theme.service;
+package nextstep.roomescape.service;
 
 import nextstep.roomescape.exception.NotExistEntityException;
-import nextstep.roomescape.theme.controller.dto.ThemeRequestDTO;
-import nextstep.roomescape.theme.repository.ThemeRepository;
-import nextstep.roomescape.theme.repository.model.Theme;
+import nextstep.roomescape.controller.RequestDTO.ThemeRequestDTO;
+import nextstep.roomescape.repository.ThemeRepository;
+import nextstep.roomescape.repository.model.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

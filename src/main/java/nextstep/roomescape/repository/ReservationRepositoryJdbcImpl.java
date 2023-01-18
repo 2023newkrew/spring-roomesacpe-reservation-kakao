@@ -1,7 +1,7 @@
-package nextstep.roomescape.reservation.repository;
+package nextstep.roomescape.repository;
 
-import nextstep.roomescape.reservation.repository.model.Reservation;
-import nextstep.roomescape.theme.repository.model.Theme;
+import nextstep.roomescape.repository.model.Reservation;
+import nextstep.roomescape.repository.model.Theme;
 import nextstep.roomescape.exception.DuplicateEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

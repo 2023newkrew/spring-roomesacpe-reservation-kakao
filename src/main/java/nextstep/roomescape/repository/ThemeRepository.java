@@ -1,6 +1,6 @@
-package nextstep.roomescape.theme.repository;
+package nextstep.roomescape.repository;
 
-import nextstep.roomescape.theme.repository.model.Theme;
+import nextstep.roomescape.repository.model.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,6 +1,6 @@
-package nextstep.roomescape.reservation.repository;
+package nextstep.roomescape.repository;
 
-import nextstep.roomescape.reservation.repository.model.Reservation;
+import nextstep.roomescape.repository.model.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

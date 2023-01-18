@@ -1,10 +1,10 @@
-package nextstep.roomescape.reservation.service;
+package nextstep.roomescape.service;
 
 import nextstep.roomescape.exception.NotExistEntityException;
-import nextstep.roomescape.reservation.repository.ReservationRepository;
-import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
-import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.repository.model.Reservation;
+import nextstep.roomescape.repository.ReservationRepository;
+import nextstep.roomescape.controller.ResponseDTO.ReservationResponseDTO;
+import nextstep.roomescape.controller.RequestDTO.ReservationRequestDTO;
+import nextstep.roomescape.repository.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

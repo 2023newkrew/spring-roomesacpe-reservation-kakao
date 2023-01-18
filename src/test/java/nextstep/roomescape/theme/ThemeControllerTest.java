@@ -1,7 +1,7 @@
 package nextstep.roomescape.theme;
 
 import io.restassured.RestAssured;
-import nextstep.roomescape.theme.controller.dto.ThemeRequestDTO;
+import nextstep.roomescape.controller.RequestDTO.ThemeRequestDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

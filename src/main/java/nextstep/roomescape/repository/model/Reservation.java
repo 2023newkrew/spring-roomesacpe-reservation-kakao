@@ -1,10 +1,9 @@
-package nextstep.roomescape.reservation.repository.model;
+package nextstep.roomescape.repository.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nextstep.roomescape.theme.repository.model.Theme;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;

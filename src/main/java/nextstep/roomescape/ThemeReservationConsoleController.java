@@ -2,10 +2,10 @@ package nextstep.roomescape;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.roomescape.exception.NotExistEntityException;
-import nextstep.roomescape.reservation.controller.dto.ReservationRequestDTO;
-import nextstep.roomescape.reservation.controller.dto.ReservationResponseDTO;
-import nextstep.roomescape.reservation.service.ReservationService;
-import nextstep.roomescape.theme.repository.model.Theme;
+import nextstep.roomescape.controller.RequestDTO.ReservationRequestDTO;
+import nextstep.roomescape.controller.ResponseDTO.ReservationResponseDTO;
+import nextstep.roomescape.service.ReservationService;
+import nextstep.roomescape.repository.model.Theme;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
