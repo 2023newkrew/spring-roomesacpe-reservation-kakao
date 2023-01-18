@@ -1,5 +1,6 @@
 package nextstep.reservations.domain.service.reservation;
 
+import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.dto.reservation.ReservationRequestDto;
 import nextstep.reservations.dto.reservation.ReservationResponseDto;
 import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
@@ -22,7 +23,9 @@ public class ReservationService {
     }
 
     public ReservationResponseDto getReservation(final Long id) {
-        return reservationMapper.reservationToResponseDto(reservationRepository.findById(id));
+        Reservation reservation = reservationRepository.findById(id);
+        if (reservation == null) throw new NoSuchReservationException();
+        return reservationMapper.reservationToResponseDto(reservation);
     }
 
     public void deleteReservation(final Long id) {

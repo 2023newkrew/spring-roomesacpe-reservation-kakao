@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Objects;
 
 @Repository
-//@Primary
+@Primary
 public class JdbcTemplateReservationRepository extends ReservationSqlRepository{
     private final JdbcTemplate jdbcTemplate;
 

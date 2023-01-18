@@ -82,12 +82,6 @@ public class ConsoleReservationTest {
     }
 
     @Test
-    void 존재하지_않는_예약_조회_오류() {
-        Assertions.assertThatThrownBy(() -> reservationRepository.findById(100L))
-                .isInstanceOf(NoSuchReservationException.class);
-    }
-
-    @Test
     void 존재하지_않는_테마_예약_오류() {
         Reservation reservation = new Reservation(
                 3L,
