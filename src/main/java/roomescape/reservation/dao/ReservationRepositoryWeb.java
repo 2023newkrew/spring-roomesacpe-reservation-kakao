@@ -11,33 +11,45 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class ReservationDaoWeb implements ReservationDao {
+public class ReservationRepositoryWeb extends AbstractReservationH2Repository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 
-    public ReservationDaoWeb(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationRepositoryWeb(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation addReservation(Reservation reservation) {
+    @Override
+    public Reservation add(Reservation reservation) {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
         reservation.setId(insertActor.executeAndReturnKey(parameters).longValue());
         return reservation;
     }
 
-    public List<Reservation> findReservationById(Long id) {
-        return jdbcTemplate.query(selectById, new ReservationMapper(), id);
+    @Override
+    public Reservation get(Long id) {
+        List<Reservation> reservations = jdbcTemplate.query(selectByIdQuery, new ReservationMapper(), id);
+        if (reservations.isEmpty()) {
+            return null;
+        }
+        return reservations.get(0);
     }
 
-    public List<Reservation> findReservationByDateAndTime(String date, String time) {
-        return jdbcTemplate.query(selectByDateAndTime, new ReservationMapper(), date, time);
+    @Override
+    public Reservation get(String date, String time) {
+        List<Reservation> reservations = jdbcTemplate.query(selectByDateAndTimeQuery, new ReservationMapper(), date, time);
+        if (reservations.isEmpty()) {
+            return null;
+        }
+        return reservations.get(0);
     }
 
-    public void removeReservation(Long id) {
-        jdbcTemplate.update(deleteById, id);
+    @Override
+    public void remove(Long id) {
+        jdbcTemplate.update(deleteByIdQuery, id);
     }
 
 }
