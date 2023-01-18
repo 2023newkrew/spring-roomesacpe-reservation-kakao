@@ -1,5 +1,7 @@
 package nextstep.domain;
 
+import nextstep.dto.ThemeResponse;
+
 public class Theme {
 
     private long id;
@@ -7,7 +9,10 @@ public class Theme {
     private String desc;
     private Integer price;
 
-    public Theme() {
+    public Theme(String name, String desc, Integer price) {
+        this.name = name;
+        this.desc = desc;
+        this.price = price;
     }
 
     public Theme(long id, String name, String desc, Integer price) {
@@ -47,5 +52,9 @@ public class Theme {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public ThemeResponse generateResponse(){
+        return new ThemeResponse(id, name, desc, price);
     }
 }

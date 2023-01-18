@@ -25,11 +25,11 @@ public class ReservationService {
             throw new IllegalArgumentException();
         }
 
-        Reservation reservation = new Reservation();
-        reservation.setTime(reservationRequest.getTime());
-        reservation.setDate(reservationRequest.getDate());
-        reservation.setName(reservationRequest.getName());
-        reservation.setThemeId(reservationRequest.getThemeId());
+        Reservation reservation = new Reservation(
+                reservationRequest.getDate(),
+                reservationRequest.getTime(),
+                reservationRequest.getName(),
+                reservationRequest.getThemeId());
         return this.reservationRepository.create(reservation);
     }
 

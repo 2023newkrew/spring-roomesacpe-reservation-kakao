@@ -18,10 +18,7 @@ public class ThemeService {
     }
 
     public Theme newTheme(ThemeRequest themeRequest){
-        Theme theme = new Theme();
-        theme.setName(themeRequest.getName());
-        theme.setDesc(themeRequest.getDesc());
-        theme.setPrice(themeRequest.getPrice());
+        Theme theme = new Theme(themeRequest.getName(),themeRequest.getDesc(),themeRequest.getPrice());
         return this.themeRepository.create(theme);
     }
 
