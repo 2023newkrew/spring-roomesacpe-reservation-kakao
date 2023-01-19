@@ -1,7 +1,7 @@
 package roomescapeconsole;
 
-import roomescape.reservation.domain.Reservation;
-import roomescape.theme.domain.Theme;
+import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
 import java.rmi.NoSuchObjectException;
 import java.time.LocalDate;
@@ -13,12 +13,10 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final Theme DUMMY_THEME = new Theme(1L, "워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationDAO reservationDAO = new ReservationDAO();
-        Long reservationIdIndex = (long) reservationDAO.getNumberOfExistReservation();
+        long reservationIdIndex = reservationDAO.getNumberOfExistReservation();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");

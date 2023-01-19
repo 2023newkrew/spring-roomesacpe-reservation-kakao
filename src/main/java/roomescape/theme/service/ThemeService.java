@@ -1,7 +1,7 @@
 package roomescape.theme.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.theme.domain.Theme;
+import roomescape.domain.Theme;
 import roomescape.theme.repository.ThemeRepository;
 
 @Service

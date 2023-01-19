@@ -1,7 +1,6 @@
 package roomescapeconsole;
 
-import roomescape.reservation.domain.Reservation;
-import roomescape.theme.domain.Theme;
+import roomescape.domain.Reservation;
 
 import java.rmi.NoSuchObjectException;
 import java.sql.*;

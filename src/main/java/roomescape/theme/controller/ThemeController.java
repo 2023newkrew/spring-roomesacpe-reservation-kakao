@@ -3,7 +3,7 @@ package roomescape.theme.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.theme.domain.Theme;
+import roomescape.domain.Theme;
 import roomescape.theme.service.ThemeService;
 
 import javax.validation.Valid;

@@ -1,6 +1,6 @@
 package roomescape.theme.repository;
 
-import roomescape.theme.domain.Theme;
+import roomescape.domain.Theme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

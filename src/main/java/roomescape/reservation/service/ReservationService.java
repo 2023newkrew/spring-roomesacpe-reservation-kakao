@@ -2,7 +2,7 @@ package roomescape.reservation.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import roomescape.reservation.domain.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 
 import java.time.LocalDate;
