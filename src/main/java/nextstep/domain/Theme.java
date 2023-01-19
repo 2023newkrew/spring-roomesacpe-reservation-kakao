@@ -1,12 +1,14 @@
 package nextstep.domain;
 
 public class Theme {
-    private Long id;
+    private final Long id;
     private String name;
     private String desc;
     private Integer price;
 
     public Theme(String name, String desc, Integer price) {
+
+        this.id = null;
         this.name = name;
         this.desc = desc;
         this.price = price;
