@@ -2,14 +2,17 @@ package nextstep.service;
 
 import nextstep.domain.Theme;
 import nextstep.dto.ThemeDto;
+import nextstep.exception.ThemeNotFoundException;
 import nextstep.exception.ThemeReservedException;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ThemeService {
 
     private final ThemeRepository themeRepository;
@@ -25,7 +28,9 @@ public class ThemeService {
         themeRepository.save(theme);
     }
 
-    public Theme findById(Long id) { return themeRepository.findById(id); }
+    public Theme findById(Long id) {
+        return themeRepository.findById(id).orElseThrow(ThemeNotFoundException::new);
+    }
 
     public List<Theme> findAll() { return themeRepository.findAll(); }
 

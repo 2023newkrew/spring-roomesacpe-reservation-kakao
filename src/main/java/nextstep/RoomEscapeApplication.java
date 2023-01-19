@@ -3,8 +3,6 @@ package nextstep;
 import nextstep.console.Printer;
 import nextstep.domain.Reservation;
 import nextstep.dto.ReservationCreateRequest;
-import nextstep.exception.DuplicateReservationException;
-import nextstep.exception.ReservationNotFoundException;
 import nextstep.repository.ReservationH2Repository;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ThemeH2Repository;
@@ -42,7 +40,7 @@ public class RoomEscapeApplication {
                 try {
                     Reservation reservation = reservationService.save(reservationRequest);
                     Printer.printReservationConfirmMessage(reservation);
-                } catch (DuplicateReservationException e) {
+                } catch (RuntimeException e) {
                     System.out.println(e.getMessage());
                 }
 
@@ -56,8 +54,8 @@ public class RoomEscapeApplication {
                 try {
                     Reservation reservation = reservationService.findById(roomId);
                     Printer.printReservationInfo(reservation);
-                } catch (ReservationNotFoundException e) {
-                    System.out.println(e.getMessage());
+                } catch (RuntimeException e) {
+                    Printer.printErrorMessage(e);
                 }
             }
 
@@ -65,10 +63,13 @@ public class RoomEscapeApplication {
                 String params = input.split(" ")[1];
 
                 Long roomId = Long.parseLong(params.split(",")[0]);
+                try {
+                    reservationService.deleteById(roomId);
+                    Printer.printReservationCancelMessage();
+                } catch (RuntimeException e) {
+                    Printer.printErrorMessage(e);
+                }
 
-                reservationService.deleteById(roomId);
-
-                Printer.printReservationCancelMessage();
             }
 
             if (input.equals(QUIT)) {

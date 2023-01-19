@@ -7,6 +7,7 @@ import nextstep.exception.ReservationNotFoundException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static nextstep.repository.ConnectionHandler.closeConnection;
 import static nextstep.repository.ConnectionHandler.getConnection;
@@ -41,7 +42,7 @@ public class ReservationH2Repository implements ReservationRepository{
     }
 
     @Override
-    public Reservation findById(Long id) throws ReservationNotFoundException {
+    public Optional<Reservation> findById(Long id) throws ReservationNotFoundException {
         Connection con = getConnection();
         Reservation result;
 
@@ -64,7 +65,7 @@ public class ReservationH2Repository implements ReservationRepository{
 
                 result = new Reservation(reservationId, reservationDate, reservationTime, reservationName, reservationTheme);
             } else {
-                throw new ReservationNotFoundException();
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -72,7 +73,7 @@ public class ReservationH2Repository implements ReservationRepository{
             closeConnection(con);
         }
 
-        return result;
+        return Optional.of(result);
     }
 
     @Override
@@ -83,7 +84,10 @@ public class ReservationH2Repository implements ReservationRepository{
             String sql = "DELETE FROM reservation WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            ps.executeUpdate();
+            int deleteCount = ps.executeUpdate();
+            if (deleteCount == 0) {
+                throw new ReservationNotFoundException();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

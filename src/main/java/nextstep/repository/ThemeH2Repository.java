@@ -1,7 +1,7 @@
 package nextstep.repository;
 
 import nextstep.domain.Theme;
-import nextstep.exception.ThemeNotFoundException;
+import nextstep.exception.ReservationNotFoundException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static nextstep.repository.ConnectionHandler.closeConnection;
 import static nextstep.repository.ConnectionHandler.getConnection;
@@ -34,7 +35,7 @@ public class ThemeH2Repository implements ThemeRepository {
     }
 
     @Override
-    public Theme findById(Long id) {
+    public Optional<Theme> findById(Long id) {
         Connection con = getConnection();
         Theme result;
 
@@ -51,7 +52,7 @@ public class ThemeH2Repository implements ThemeRepository {
                 Integer price = rs.getInt(4);
                 result = new Theme(themeId, name, desc, price);
             } else {
-                throw new ThemeNotFoundException();
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -59,7 +60,7 @@ public class ThemeH2Repository implements ThemeRepository {
             closeConnection(con);
         }
 
-        return result;
+        return Optional.of(result);
     }
 
     @Override
@@ -99,7 +100,10 @@ public class ThemeH2Repository implements ThemeRepository {
             ps.setString(2, theme.getDesc());
             ps.setInt(3, theme.getPrice());
             ps.setLong(4, id);
-            ps.executeUpdate();
+            int updateCount = ps.executeUpdate();
+            if (updateCount == 0) {
+                throw new ReservationNotFoundException();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -115,7 +119,10 @@ public class ThemeH2Repository implements ThemeRepository {
             String sql = "DELETE FROM theme WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            ps.executeUpdate();
+            int deleteCount = ps.executeUpdate();
+            if (deleteCount == 0) {
+                throw new ReservationNotFoundException();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

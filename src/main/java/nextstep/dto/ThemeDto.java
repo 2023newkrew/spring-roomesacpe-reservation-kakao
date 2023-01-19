@@ -1,6 +1,9 @@
 package nextstep.dto;
 
 import nextstep.domain.Theme;
+import nextstep.exception.InvalidRequestException;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 public class ThemeDto {
 
@@ -15,6 +18,13 @@ public class ThemeDto {
     }
 
     public Theme toTheme() {
+        validateInput(name, desc, price);
         return new Theme(name, desc, price);
+    }
+
+    private void validateInput(String name, String desc, Integer price) {
+        if (!StringUtils.hasText(name) || !StringUtils.hasText(desc) || ObjectUtils.isEmpty(price)) {
+            throw new InvalidRequestException();
+        }
     }
 }

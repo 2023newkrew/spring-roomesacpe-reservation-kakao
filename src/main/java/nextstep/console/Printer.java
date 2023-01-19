@@ -34,4 +34,8 @@ public class Printer {
     public static void printReservationCancelMessage() {
         System.out.println("예약이 취소되었습니다.");
     }
+
+    public static void printErrorMessage(Exception e) {
+        System.out.println(e.getMessage());
+    }
 }

@@ -1,9 +1,6 @@
 package nextstep.controller;
 
-import nextstep.exception.DuplicateReservationException;
-import nextstep.exception.ReservationNotFoundException;
-import nextstep.exception.ThemeNotFoundException;
-import nextstep.exception.ThemeReservedException;
+import nextstep.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,29 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class RoomEscapeControllerAdvice {
 
-    @ExceptionHandler(DuplicateReservationException.class)
-    public ResponseEntity<String> handleDuplicateReservationException(DuplicateReservationException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(exception.getMessage());
-    }
-
-    @ExceptionHandler(ReservationNotFoundException.class)
-    public ResponseEntity<String> handleReservationNotFoundException(ReservationNotFoundException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(exception.getMessage());
-    }
-
-    @ExceptionHandler(ThemeNotFoundException.class)
-    public ResponseEntity<String> handleThemeNotFoundException(ThemeNotFoundException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(exception.getMessage());
-    }
-
-    @ExceptionHandler(ThemeReservedException.class)
-    public ResponseEntity<String> handleThemeReservedException(ThemeReservedException exception) {
+    @ExceptionHandler(value = {
+            DuplicateReservationException.class,
+            ReservationNotFoundException.class,
+            ThemeNotFoundException.class,
+            ThemeReservedException.class,
+            InvalidRequestException.class})
+    public ResponseEntity<String> handleBadRequest(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());

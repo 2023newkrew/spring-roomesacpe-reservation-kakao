@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
@@ -34,18 +35,16 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id)  throws ReservationNotFoundException {
+    public Optional<Reservation> findById(Long id)  throws ReservationNotFoundException {
         Reservation reservation = reservations.get(id);
-
-        if (reservation == null) {
-            throw new ReservationNotFoundException();
-        }
-
-        return reservation;
+        return Optional.ofNullable(reservation);
     }
 
     @Override
     public void deleteById(Long id) {
-        reservations.remove(id);
+            Reservation remove = reservations.remove(id);
+            if (Objects.isNull(remove)) {
+                throw new ReservationNotFoundException();
+        }
     }
 }

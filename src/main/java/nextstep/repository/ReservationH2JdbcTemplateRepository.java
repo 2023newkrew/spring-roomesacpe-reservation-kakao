@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public class ReservationH2JdbcTemplateRepository implements ReservationRepository {
@@ -43,10 +44,10 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public Reservation findById(Long id)  throws ReservationNotFoundException {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
         try {
-            return jdbcTemplate.queryForObject(
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) -> new Reservation(
                                 resultSet.getLong("id"),
@@ -60,16 +61,19 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
                                         resultSet.getInt(9)
                                 )
                         ),
-                    id);
+                    id));
         } catch (EmptyResultDataAccessException e) {
-            throw new ReservationNotFoundException();
+            return Optional.empty();
         }
     }
 
     @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        int updateCount = jdbcTemplate.update(sql, id);
+        if (updateCount == 0) {
+            throw new ReservationNotFoundException();
+        }
     }
 
     @Override

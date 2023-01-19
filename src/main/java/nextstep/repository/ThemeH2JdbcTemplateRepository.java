@@ -1,6 +1,7 @@
 package nextstep.repository;
 
 import nextstep.domain.Theme;
+import nextstep.exception.ReservationNotFoundException;
 import nextstep.exception.ThemeNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
@@ -31,19 +33,19 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
     }
 
     @Override
-    public Theme findById(Long id) {
+    public Optional<Theme> findById(Long id) {
         String sql = "SELECT * FROM theme where id = ?";
         try {
-            return jdbcTemplate.queryForObject(
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) -> new Theme(
                         resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getInt(4)),
-                    id);
+                id));
         } catch (EmptyResultDataAccessException e) {
-            throw new ThemeNotFoundException();
+            return Optional.empty();
         }
     }
 
@@ -75,6 +77,9 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
     @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM theme where id = ?";
-        jdbcTemplate.update(sql, id);
+        int updateCount = jdbcTemplate.update(sql, id);
+        if (updateCount == 0) {
+            throw new ReservationNotFoundException();
+        }
     }
 }
