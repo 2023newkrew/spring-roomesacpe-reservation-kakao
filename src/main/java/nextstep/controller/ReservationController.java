@@ -26,7 +26,7 @@ public class ReservationController {
         this.themeService = themeService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
         try {
             Theme theme = themeService.findById(request.themeId);
@@ -49,7 +49,7 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity findAllReservation() {
         try {
             List<FindReservation> reservation = reservationService.findAll();

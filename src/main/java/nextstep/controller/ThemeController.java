@@ -22,14 +22,14 @@ public class ThemeController {
         this.themeService = themeService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity createTheme(@RequestBody Theme theme) {
         Long id = themeService.createTheme(theme);
         return ResponseEntity.created(URI.create("/themes/" + id))
                 .build();
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity findAll() {
         try {
             List<Theme> themeList = themeService.findAll();

@@ -6,9 +6,6 @@ public class Theme {
     private String desc;
     private Integer price;
 
-    public Theme() {
-    }
-
     public Theme(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;

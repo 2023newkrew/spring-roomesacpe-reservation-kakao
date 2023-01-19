@@ -14,7 +14,7 @@ public class JdbcTemplateConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUsername("sa");
-        dataSource.setPassword("");
+        dataSource.setPassword;
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUrl("jdbc:h2:tcp://localhost/~/test");
         return dataSource;
