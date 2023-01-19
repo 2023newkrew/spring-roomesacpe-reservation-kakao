@@ -1,8 +1,10 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.domain.Reservation;
-import org.junit.jupiter.api.*;
+import nextstep.domain.ReservationSaveForm;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,10 @@ import org.springframework.http.MediaType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class ReservationControllerTest {
     @LocalServerPort
     int port;
@@ -24,37 +26,44 @@ class ReservationControllerTest {
         RestAssured.port = port;
     }
 
-    @Order(1)
     @DisplayName("예약 생성")
     @Test
     void createReservation() {
-        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+        ReservationSaveForm reservationSaveForm = new ReservationSaveForm(
+                LocalDate.of(2022, 8, 11),
+                LocalTime.of(15, 0),
+                "name3",
+                1L
+        );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(reservationSaveForm)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .header("Location", matchesPattern("/reservations/\\d+"));
     }
 
-    @Order(2)
-    @DisplayName("예약 생성 시 날짜와 시간이 똑같은 예약이 있다면 예약을 생성할 수 없음")
+    @DisplayName("예약 생성 시 같은 시간대, 같은 테마에 예약이 있다면 예약을 생성할 수 없음")
     @Test
     void reservationException() {
-        Reservation reservation = new Reservation(LocalDate.of(2022, 8, 11), LocalTime.of(13, 0), "name");
+        ReservationSaveForm reservationSaveForm = new ReservationSaveForm(
+                LocalDate.of(2022, 8, 11),
+                LocalTime.of(13, 0),
+                "name3",
+                1L
+        );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservation)
+                .body(reservationSaveForm)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CONFLICT.value())
-                .body(is("동일한 시간대에 예약이 이미 존재합니다."));
+                .body(is("동일한 시간대, 동일한 테마에 예약이 이미 존재합니다."));
     }
 
-    @Order(3)
     @DisplayName("예약 조회")
     @Test
     void lookupReservation() {
@@ -67,18 +76,38 @@ class ReservationControllerTest {
                 .body("date", is("2022-08-11"))
                 .body("time", is("13:00"))
                 .body("name", is("name"))
-                .body("themeName", is("워너고홈"))
-                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
-                .body("themePrice", is(29000));
+                .body("themeName", is("테마이름"))
+                .body("themeDesc", is("테마설명"))
+                .body("themePrice", is(22_000));
     }
 
-    @Order(4)
+    @DisplayName("존재하지 않는 예약 조회")
+    @Test
+    void reservationNotExistsWhenFind() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/10")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(is("예약이 존재하지 않습니다."));
+    }
+
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/2")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("존재하지 않는 예약 삭제")
+    @Test
+    void reservationNotExistsWhenDelete() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/10")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(is("예약이 존재하지 않습니다."));
     }
 }

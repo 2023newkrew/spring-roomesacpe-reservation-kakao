@@ -7,8 +7,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class CustomAdvice {
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity handle(CustomException ex) {
+    @ExceptionHandler(DataConflictException.class)
+    public ResponseEntity handle(DataConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DataNotExistException.class)
+    public ResponseEntity handle(DataNotExistException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(JobNotAllowedException.class)
+    public ResponseEntity handle(JobNotAllowedException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getMessage());
     }
 }
