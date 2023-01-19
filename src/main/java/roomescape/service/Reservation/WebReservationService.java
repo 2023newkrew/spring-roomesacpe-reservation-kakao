@@ -28,10 +28,15 @@ public class WebReservationService implements ReservationService{
 
     @Override
     public Reservation createReservation(Reservation reservation) {
-        if (jdbcReservationRepository.findCountByDateAndTime(reservation) == 1) {
+        if (jdbcReservationRepository.isExistsByDateAndTime(reservation)) {
             logger.error(CREATE_DUPLICATED.getMessage() + RESERVATION_DATE.getMessage() + reservation.getDate() +
                     RESERVATION_TIME.getMessage() + reservation.getTime());
             throw new DuplicateRequestException(RESERVATION_CREATE_ERROR.getMessage());
+        }
+        Boolean themeExists = jdbcReservationRepository.isThemeExists(reservation.getThemeId());
+        if (!themeExists) {
+            logger.error(CREATE_NOT_FOUND_THEME.getMessage() + reservation.getThemeId());
+            throw new NoSuchElementException(THEME_NOT_EXISTS.getMessage());
         }
         Long reserveId = jdbcReservationRepository.createReservation(reservation);
         logger.info(CREATE_SUCCESS.getMessage() + reserveId);

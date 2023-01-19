@@ -62,4 +62,13 @@ public class JdbcThemeRepository implements ThemeRepository{
             return ps;
         };
     }
+
+    public Boolean isReservation(Long deleteId) {
+        // ReservationRepository?
+        String sql = "SELECT EXISTS(SELECT 1 FROM RESERVATION WHERE theme_id = ?)";
+//        String sql = "SELECT EXISTS(SELECT 1 FROM THEME t " +
+//                          "INNER JOIN RESERVATION r WHERE r.theme_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, deleteId);
+    }
+
 }

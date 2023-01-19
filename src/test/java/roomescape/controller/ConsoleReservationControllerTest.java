@@ -7,14 +7,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestExecutionListeners;
 import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 import roomescape.repository.Reservation.JdbcReservationRepository;
 import roomescape.service.Reservation.WebReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -23,7 +26,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class ConsoleReservationControllerTest {
     Reservation reservation;
+    Theme theme;
     ConsoleReservationController consoleReservationController;
+    @Autowired
+    ThemeController themeController;
 
     @Autowired
     public ConsoleReservationControllerTest() throws ClassNotFoundException {
@@ -34,11 +40,16 @@ public class ConsoleReservationControllerTest {
 
     @BeforeEach
     void setUp() {
+        theme = new Theme(1L,
+                "testTheme",
+                "description",
+                10000);
+        ResponseEntity<String> themeUrl = themeController.createTheme(theme);
         reservation = new Reservation(0L,
                 LocalDate.of(2013,1,12),
                 LocalTime.of(14,0,0),
                 "name23",
-                12L);
+                Long.valueOf(Objects.requireNonNull(themeUrl.getBody()).split("/")[2]));
     }
 
     @DisplayName("방탈출 예약이 가능하고 조회할 수 있음")

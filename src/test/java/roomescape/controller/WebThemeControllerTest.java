@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestExecutionListeners;
+import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @DisplayName("Theme Test")
@@ -24,6 +29,9 @@ public class WebThemeControllerTest {
     Theme theme;
     @Autowired
     ThemeController themeController;
+
+    @Autowired
+    WebReservationController webReservationController;
 
     @BeforeEach
     void setUp() {
@@ -87,9 +95,25 @@ public class WebThemeControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(theme)
-                .when().get("/themes/"+ 12121L)
+                .when().get("/themes/" + 12121L)
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("예약이 존재하는 테마는 삭제할 수 없음")
+    @Test
+    void notDeleteHasReservationsTest(){
+        ResponseEntity<String> themeUrl = themeController.createTheme(theme);
+        String themeId = Objects.requireNonNull(themeUrl.getBody()).split("/")[2];
+        Reservation reservation = new Reservation(0L,
+                LocalDate.of(2013, 1, 12),
+                LocalTime.of(14, 0, 0),
+                "name23",
+                Long.valueOf(themeId));
+        webReservationController.createReservation(reservation);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                themeController.deleteTheme(themeId)
+        );
     }
 }
 

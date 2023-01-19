@@ -9,7 +9,9 @@ public interface ReservationRepository {
 
     Optional<Reservation> findReservationById(long reservationId);
 
-    Integer findCountByDateAndTime(Reservation reservation);
+    Boolean isExistsByDateAndTime(Reservation reservation);
 
     Integer deleteReservation(long deleteId);
+
+    Boolean isThemeExists(long themeId);
 }

@@ -15,7 +15,7 @@ public enum Messages {
     THEME_ID("ID: "),
     THEME_NAME("Name: "),
     THEME_DESC("Desc: "),
-    THEME_PRICE("Price"),
+    THEME_PRICE("Price: "),
     CREATE_REQUEST("Create Request, "),
     CREATE_RESPONSE("Create Response, "),
     LOOKUP_REQUEST("LookUp Request, Id: "),
@@ -24,14 +24,17 @@ public enum Messages {
     DELETE_RESPONSE("Delete Response, Id: "),
     CREATE_DUPLICATED("Create DuplicatedError, "),
     CREATE_SUCCESS("Create Success, ID: "),
-    CREATE_QUERY_FAIL("Create Query Error"),
     NOT_FOUND_ERROR("NotFound Error Id: "),
+    CREATE_NOT_FOUND_THEME("NotFound Theme Id: "),
+    DELETE_THEME_ERROR("Reservation Exists in Theme"),
     DELETE_NOT_FOUND_ERROR("Delete NotFound Error Id: "),
     DELETE_SUCCESS("Delete Success"),
     RESERVATION_CREATE_ERROR("요청한 날짜/시간에 이미 예약이 존재"),
     THEME_CREATE_ERROR("요청한 이름/가격의 테마가 이미 등록되어 있음"),
+    THEME_EXISTS_RESERVATION("요청한 테마에 예약정보가 들어있음. Delete Theme ID: "),
     ID_NOT_FOUND_ERROR("요청한 ID의 정보가 존재하지 않음. ID: "),
     NAME_NOT_EMPTY_STRING("이름을 빈 문자열로 저장할 수 없습니다."),
+    THEME_NOT_EXISTS("요청한 예약의 테마가 존재하지 않습니다"),
     ID_BIGGER_THAN_ZERO("Id가 0보다 큰 수여야 합니다");
 
 

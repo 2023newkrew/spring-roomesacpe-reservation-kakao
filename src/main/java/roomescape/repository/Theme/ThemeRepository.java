@@ -9,4 +9,5 @@ public interface ThemeRepository {
     Optional<Theme> findThemeById(long themeId);
     Long findCountByNameAndPrice(Theme theme);
     Integer deleteTheme(long deleteId);
+    Boolean isReservation(Long deleteId);
 }

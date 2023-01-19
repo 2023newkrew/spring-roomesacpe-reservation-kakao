@@ -51,6 +51,11 @@ public class WebThemeService implements ThemeService {
 
     @Override
     public void deleteTheme(Long deleteId) {
+        Boolean isReserved = jdbcThemeRepository.isReservation(deleteId);
+        if (isReserved) {
+            logger.error(DELETE_THEME_ERROR.getMessage() + deleteId);
+            throw new IllegalArgumentException(THEME_EXISTS_RESERVATION.getMessage() + deleteId);
+        }
         Integer deleteResult = jdbcThemeRepository.deleteTheme(deleteId);
         if (deleteResult == 0){
             logger.error(DELETE_NOT_FOUND_ERROR.getMessage() + deleteId);

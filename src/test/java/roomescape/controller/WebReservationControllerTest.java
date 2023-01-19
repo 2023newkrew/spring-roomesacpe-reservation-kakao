@@ -8,8 +8,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestExecutionListeners;
 import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,27 +21,32 @@ import java.util.Objects;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class WebReservationControllerTest {
-
     @LocalServerPort
     int port;
 
+    Theme theme;
     Reservation reservation;
     @Autowired
+    ThemeController themeController;
+    @Autowired
     WebReservationController roomEscapeController;
-
     @BeforeEach
     void setUp() {
+        theme = new Theme(0L,
+                "testTheme",
+                "description",
+                10000);
         RestAssured.port = port;
+        ResponseEntity<String> themeUrl = themeController.createTheme(theme);
         reservation = new Reservation(0L,
                 LocalDate.of(2013,1,12),
                 LocalTime.of(14,0,0),
                 "name23",
-                12L);
+                Long.valueOf(Objects.requireNonNull(themeUrl.getBody()).split("/")[2]));
     }
 
     @DisplayName("방탈출 예약이 가능함")
     @Test
-//    @Transactional
     void createReservationTest() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

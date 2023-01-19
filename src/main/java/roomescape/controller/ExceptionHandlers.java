@@ -29,7 +29,13 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(NullPointerException.class )
     public ResponseEntity<Object> lengthRequiredException(final NullPointerException ex) {
-        logger.info(ex.getClass().getName());
+        logger.info(ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.LENGTH_REQUIRED);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> remainElement(final IllegalArgumentException ex) {
+        logger.info(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 }

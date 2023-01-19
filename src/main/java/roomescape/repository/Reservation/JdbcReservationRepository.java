@@ -44,9 +44,10 @@ public class JdbcReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public Integer findCountByDateAndTime(Reservation reservation) {
-        String sql = "select count(*) from RESERVATION where date = ? AND time = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class,
+    public Boolean isExistsByDateAndTime(Reservation reservation) {
+        String sql = "SELECT EXISTS(" +
+                "SELECT 1 FROM RESERVATION WHERE date = ? AND time = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class,
                 reservation.getDate(), reservation.getTime());
     }
 
@@ -54,6 +55,13 @@ public class JdbcReservationRepository implements ReservationRepository{
     public Integer deleteReservation(long deleteId) {
         String sql = "DELETE FROM RESERVATION WHERE id=?";
         return jdbcTemplate.update(sql, deleteId);
+    }
+
+    @Override
+    public Boolean isThemeExists(long themeId) {
+        // ThemeRepository ?
+        String sql = "SELECT EXISTS(SELECT 1 FROM THEME where id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, themeId);
     }
 
     private PreparedStatementCreator autoIncrementKeyStatement(String sql, Reservation reservation) {
