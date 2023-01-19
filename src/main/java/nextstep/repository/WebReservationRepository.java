@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 import nextstep.model.Reservation;
-import nextstep.model.Theme;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -18,17 +17,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class WebReservationRepository implements ReservationRepository {
-    private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
-        Long id = rs.getLong("reservation_id");
-        LocalDate date = rs.getDate("reservation_date").toLocalDate();
-        LocalTime time = rs.getTime("reservation_time").toLocalTime();
-        String name = rs.getString("reservation_name");
-        Long themeId = rs.getLong("theme_id");
-        String themeName = rs.getString("theme_name");
-        String themeDesc = rs.getString("theme_desc");
-        Integer themePrice = rs.getInt("theme_price");
-        return new Reservation(id, date, time, name, new Theme(themeId, themeName, themeDesc, themePrice));
-    };
+    private static final RowMapper<Reservation> ROW_MAPPER = new ReservationRowMapper();
     private final JdbcTemplate jdbcTemplate;
 
     public WebReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -62,7 +51,7 @@ public class WebReservationRepository implements ReservationRepository {
             String sql =
                     "SELECT r.id reservation_id, r.date reservation_date, r.time reservation_time, r.name reservation_name, "
                             + "t.name theme_name, t.desc theme_desc, t.price theme_price, t.id theme_id "
-                            + "FROM reservation r JOIN theme t ON r.id = t.id "
+                            + "FROM reservation r JOIN theme t ON r.theme_id = t.id "
                             + "WHERE r.id = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {

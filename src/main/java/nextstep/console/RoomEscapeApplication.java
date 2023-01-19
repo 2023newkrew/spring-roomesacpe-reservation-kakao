@@ -32,7 +32,7 @@ public class RoomEscapeApplication {
         DataSource dataSource = createHikariDataSource();
         createDataBaseTables(dataSource);
 
-        ThemeRepository themeRepository = new ConsoleThemeRepository();
+        ThemeRepository themeRepository = new ConsoleThemeRepository(dataSource);
         Theme theme = themeRepository.save(new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
 
         ReservationRepository reservationRepository = new ConsoleReservationRepository(dataSource);
@@ -65,18 +65,27 @@ public class RoomEscapeApplication {
 
     private static void createDataBaseTables(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS RESERVATION\n"
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS RESERVATION\n"
                     + "(\n"
                     + "    id          bigint not null auto_increment,\n"
                     + "    date        date,\n"
                     + "    time        time,\n"
                     + "    name        varchar(20),\n"
-                    + "    theme_name  varchar(20),\n"
-                    + "    theme_desc  varchar(255),\n"
-                    + "    theme_price int,\n"
+                    + "    theme_id    bigint,\n"
                     + "    primary key (id)\n"
                     + ");");
+            preparedStatement.execute();
 
+            preparedStatement = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS THEME\n"
+                    + "(\n"
+                    + "    id    bigint not null auto_increment,\n"
+                    + "    name  varchar(20),\n"
+                    + "    desc  varchar(255),\n"
+                    + "    price int,\n"
+                    + "    primary key (id)\n"
+                    + ");");
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
