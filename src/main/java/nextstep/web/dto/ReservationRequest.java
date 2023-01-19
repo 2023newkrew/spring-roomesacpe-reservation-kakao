@@ -2,9 +2,14 @@ package nextstep.web.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 public class ReservationRequest {
 
+    @NotBlank
+    @Length(max = 255)
     private final String name;
     private final LocalDate date;
     private final LocalTime time;

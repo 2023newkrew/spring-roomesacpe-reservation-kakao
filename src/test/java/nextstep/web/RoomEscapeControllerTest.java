@@ -2,14 +2,24 @@ package nextstep.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import nextstep.model.Reservation;
 import nextstep.repository.ReservationRepository;
+import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
+import nextstep.web.dto.ThemeRequest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 public class RoomEscapeControllerTest extends AbstractControllerTest {
 
@@ -69,5 +79,29 @@ public class RoomEscapeControllerTest extends AbstractControllerTest {
         예약을_삭제한다(id);
 
         assertThat(repository.findById(id)).isEmpty();
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void createReservationByInvalidFormatRequest(String name) {
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
+
+        ReservationRequest request = new ReservationRequest(name, LocalDate.now(), LocalTime.now(), themeId);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private static List<Arguments> createReservationByInvalidFormatRequest() {
+        return List.of(
+                Arguments.of("n".repeat(256)),
+                Arguments.of("  "),
+                Arguments.of("\t\n")
+        );
     }
 }

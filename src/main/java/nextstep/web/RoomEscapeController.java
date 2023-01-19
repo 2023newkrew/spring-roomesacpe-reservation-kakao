@@ -1,6 +1,7 @@
 package nextstep.web;
 
 import java.net.URI;
+import javax.validation.Valid;
 import nextstep.model.Reservation;
 import nextstep.service.RoomEscapeService;
 import nextstep.web.dto.ReservationRequest;
@@ -22,7 +23,7 @@ public class RoomEscapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<Void> createReservation(@Valid @RequestBody ReservationRequest request) {
         Reservation reservation = roomEscapeService.createReservation(request);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
     }

@@ -3,15 +3,24 @@ package nextstep.web;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import java.util.List;
 import nextstep.model.Theme;
 import nextstep.repository.ThemeRepository;
 import nextstep.repository.WebThemeRepository;
+import nextstep.web.dto.ThemeRequest;
 import nextstep.web.dto.ThemeResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 public class ThemeControllerTest extends AbstractControllerTest {
 
@@ -58,4 +67,26 @@ public class ThemeControllerTest extends AbstractControllerTest {
         Assertions.assertThat(themes).isEmpty();
     }
 
+    @ParameterizedTest
+    @MethodSource
+    void createByInvalidFormatRequest(String name, String desc, int price) {
+        ThemeRequest request = new ThemeRequest(name, desc, price);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private static List<Arguments> createByInvalidFormatRequest() {
+        return List.of(
+                Arguments.of("n".repeat(256), "desc", 10_000),
+                Arguments.of("name", "d".repeat(256), 10_000),
+                Arguments.of("name", "desc", -1),
+                Arguments.of("name", "desc", 100_001)
+        );
+    }
 }

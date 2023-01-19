@@ -3,6 +3,7 @@ package nextstep.web;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import nextstep.model.Theme;
 import nextstep.service.ThemeService;
 import nextstep.web.dto.ThemeRequest;
@@ -25,7 +26,7 @@ public class ThemeController {
     }
 
     @PostMapping("/themes")
-    public ResponseEntity<Void> createTheme(@RequestBody ThemeRequest request) {
+    public ResponseEntity<Void> createTheme(@Valid @RequestBody ThemeRequest request) {
         Theme theme = themeService.save(request);
         return ResponseEntity.created(URI.create("/themes/" + theme.getId())).build();
     }
