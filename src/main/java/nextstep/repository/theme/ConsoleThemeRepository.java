@@ -87,26 +87,6 @@ public class ConsoleThemeRepository implements ThemeRepository {
         }
     }
 
-    @Override
-    public void dropThemeTable() {
-        try {
-            Statement statement = con.createStatement();
-            statement.execute(dropTableSql);
-        } catch (Exception e) {
-            throw new RuntimeException("테이블 삭제 오류");
-        }
-    }
-
-    @Override
-    public void createThemeTable() {
-        try {
-            Statement statement = con.createStatement();
-            statement.execute(createTableSql);
-        } catch (Exception e) {
-            throw new RuntimeException("테이블 생성 오류");
-        }
-    }
-
     private void validateReservation(Theme theme) throws SQLException {
         try {
             PreparedStatement ps = con.prepareStatement(checkDuplicationSql, ResultSet.TYPE_SCROLL_INSENSITIVE,

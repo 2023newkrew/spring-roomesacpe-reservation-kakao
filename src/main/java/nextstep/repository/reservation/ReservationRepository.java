@@ -70,9 +70,4 @@ public interface ReservationRepository {
     void deleteByThemeId(Long themeId);
 
     Long save(LocalDate date, LocalTime time, String name, Theme theme);
-
-    void createTable() throws SQLException;
-
-    void dropTable() throws SQLException;
-
 }

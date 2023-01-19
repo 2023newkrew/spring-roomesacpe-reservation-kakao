@@ -2,13 +2,14 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.repository.ResetTable;
 import nextstep.repository.theme.ConsoleThemeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -21,6 +22,9 @@ class ConsoleReservationRepositoryTest {
     ConsoleReservationRepository consoleReservationRepository = new ConsoleReservationRepository();
     ConsoleThemeRepository consoleThemeRepository = new ConsoleThemeRepository();
     static Theme theme;
+    JdbcTemplate jdbcTemplate = new JdbcTemplate();
+
+    ResetTable resetTable = new ResetTable(jdbcTemplate);
 
     @BeforeAll
     static void setUpTheme() {
@@ -28,21 +32,17 @@ class ConsoleReservationRepositoryTest {
     }
 
     @BeforeEach
-    void setUp() throws SQLException {
-        consoleReservationRepository.dropTable();
-        consoleReservationRepository.createTable();
+    void setUp() {
+        resetTable.consoleReservationReset();
+        resetTable.consoleThemeTableReset();
         consoleThemeRepository.save(theme);
-
         theme = consoleThemeRepository.findByTheme(theme);
     }
 
     @AfterEach
-    void setUpTable() throws Exception {
-        consoleReservationRepository.dropTable();
-        consoleReservationRepository.createTable();
-
-        consoleThemeRepository.dropThemeTable();
-        consoleThemeRepository.createThemeTable();
+    void setUpTable() {
+        resetTable.consoleReservationReset();
+        resetTable.consoleThemeTableReset();
     }
 
     @Test

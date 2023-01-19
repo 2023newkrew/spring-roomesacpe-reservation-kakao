@@ -50,18 +50,4 @@ public class ReservationService {
         Theme theme = themeRepository.findByThemeId(reservation.getThemeId());
         return reservationRepository.save(reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
     }
-
-    @Transactional
-    public void resetTable() {
-        try {
-            reservationRepository.dropTable();
-            themeRepository.dropThemeTable();
-
-            reservationRepository.createTable();
-            themeRepository.createThemeTable();
-        } catch (Exception e){
-            throw new RuntimeException("테이블 reset 실패");
-        }
-
-    }
 }

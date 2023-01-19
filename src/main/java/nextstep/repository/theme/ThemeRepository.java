@@ -54,8 +54,4 @@ public interface ThemeRepository {
     Long save(Theme theme);
 
     Theme findByTheme(Theme theme);
-
-    void dropThemeTable();
-
-    void createThemeTable();
 }

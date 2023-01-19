@@ -1,8 +1,11 @@
 package nextstep.repository.theme;
 
 import nextstep.domain.Theme;
+import nextstep.repository.ResetTable;
 import nextstep.repository.reservation.ConsoleReservationRepository;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -14,6 +17,11 @@ public class ConsoleThemeRepositoryTest {
 
     private static Theme theme;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    ResetTable resetTable = new ResetTable(jdbcTemplate);
+
     @BeforeAll
     static void setUpTheme() {
         theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
@@ -21,14 +29,12 @@ public class ConsoleThemeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        consoleThemeRepository.dropThemeTable();
-        consoleThemeRepository.createThemeTable();
+        resetTable.consoleThemeTableReset();
     }
 
     @AfterEach
     void setUpTable() {
-        consoleThemeRepository.dropThemeTable();
-        consoleThemeRepository.createThemeTable();
+        resetTable.consoleThemeTableReset();
     }
 
     @DisplayName("테마를 생성 할 수 있다.")

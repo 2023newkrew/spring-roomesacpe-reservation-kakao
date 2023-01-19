@@ -1,10 +1,11 @@
 package nextstep.repository.theme;
 
 import nextstep.domain.Theme;
-import nextstep.repository.reservation.JdbcReservationRepository;
+import nextstep.repository.ResetTable;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +18,10 @@ public class JdbcThemeRepositoryTest {
 
     @Autowired
     JdbcThemeRepository jdbcThemeRepository;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
+    ResetTable resetTable;
     private static Theme theme;
 
     @BeforeAll
@@ -27,14 +31,13 @@ public class JdbcThemeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcThemeRepository.dropThemeTable();
-        jdbcThemeRepository.createThemeTable();
+        resetTable = new ResetTable(jdbcTemplate);
+        resetTable.jdbcThemeReset();
     }
 
     @AfterEach
     void setUpTable() {
-        jdbcThemeRepository.dropThemeTable();
-        jdbcThemeRepository.createThemeTable();
+        resetTable.jdbcThemeReset();
     }
 
     @DisplayName("테마를 생성 할 수 있다.")

@@ -61,17 +61,6 @@ public class JdbcReservationRepository implements ReservationRepository {
         return keyHolder.getKey().longValue();
     }
 
-
-    @Override
-    public void createTable() {
-        jdbcTemplate.execute(createTableSql);
-    }
-
-    @Override
-    public void dropTable() {
-        jdbcTemplate.execute(dropTableSql);
-    }
-
     private void validateReservation(LocalDate date, LocalTime time) {
         Integer count = jdbcTemplate.queryForObject(checkDuplicationSql, Integer.class, date, time);
         if (count > 0) throw new IllegalArgumentException("이미 예약된 일시에는 예약이 불가능합니다.");

@@ -2,10 +2,13 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
+import nextstep.repository.ResetTable;
 import nextstep.repository.theme.JdbcThemeRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -16,14 +19,16 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
-@Transactional
 class JdbcReservationRepositoryTest {
 
     @Autowired
     JdbcReservationRepository jdbcReservationRepository;
     @Autowired
     JdbcThemeRepository jdbcThemeRepository;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
+    ResetTable resetTable;
     static Theme theme;
 
     @BeforeAll
@@ -33,19 +38,20 @@ class JdbcReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcReservationRepository.dropTable();
-        jdbcReservationRepository.createTable();
-        jdbcThemeRepository.save(theme);
+        resetTable = new ResetTable(jdbcTemplate);
+        resetTable.jdbcReservationReset();
+        resetTable.jdbcThemeReset();
+//        resetTable.consoleReservationReset();
+//        resetTable.consoleThemeTableReset();
 
+        jdbcThemeRepository.save(theme);
         theme = jdbcThemeRepository.findByTheme(theme);
     }
 
     @AfterEach
     void setUpTable() {
-        jdbcReservationRepository.dropTable();
-        jdbcReservationRepository.createTable();
-        jdbcThemeRepository.dropThemeTable();
-        jdbcThemeRepository.createThemeTable();
+        resetTable.jdbcReservationReset();
+        resetTable.jdbcThemeReset();
     }
 
     @DisplayName("예약을 저장할 수 있다.")

@@ -74,18 +74,6 @@ public class ConsoleReservationRepository implements ReservationRepository {
         }
     }
 
-    @Override
-    public void createTable() throws SQLException {
-        Statement statement = con.createStatement();
-        statement.execute(createTableSql);
-    }
-
-    @Override
-    public void dropTable() throws SQLException {
-        Statement statement = con.createStatement();
-        statement.execute(dropTableSql);
-    }
-
     private void validateReservation(LocalDate date, LocalTime time) throws SQLException {
         try {
             PreparedStatement ps = con.prepareStatement(checkDuplicationSql, ResultSet.TYPE_SCROLL_INSENSITIVE,
