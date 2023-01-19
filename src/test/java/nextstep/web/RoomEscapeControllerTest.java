@@ -1,12 +1,17 @@
 package nextstep.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import nextstep.exception.ReservationDuplicateException;
+import nextstep.exception.ReservationNotFoundException;
+import nextstep.exception.ThemeNotFoundException;
 import nextstep.model.Reservation;
+import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
@@ -103,5 +108,49 @@ public class RoomEscapeControllerTest extends AbstractControllerTest {
                 Arguments.of("  "),
                 Arguments.of("\t\n")
         );
+    }
+
+    @DisplayName("존재하지 않는 예약을 조회할 경우 예외가 발생한다")
+    @Test
+    void getNotFoundReservation() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().log().all()
+                .get("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("예약 생성시 같은 날짜와 시간의 예약이 존재할 경우 예외가 발생한다")
+    @Test
+    void createDuplicateReservation() {
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
+        LocalDate date = LocalDate.of(2023, 1, 23);
+        LocalTime time = LocalTime.of(13, 0);
+        예약을_생성한다(themeId, "name", date, time);
+
+        ReservationRequest request = new ReservationRequest("name", date, time, themeId);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("존재하지 않는 테마로 예약을 생성할 수 없다.")
+    @Test
+    void createReservationByNotExistTheme() {
+        ReservationRequest request = new ReservationRequest("name", LocalDate.now(), LocalTime.now(), 1L);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
