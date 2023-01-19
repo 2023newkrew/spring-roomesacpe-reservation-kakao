@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 
 
-@Repository
 public interface ThemeReservationDao {
 
     int insert(Reservation reservation) throws SQLException;

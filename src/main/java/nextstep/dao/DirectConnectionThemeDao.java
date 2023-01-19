@@ -62,7 +62,7 @@ public class DirectConnectionThemeDao implements ThemeDao {
         return insertCount;
     }
 
-    private static List<Theme> getTheme(Long id, ResultSet resultSet) throws SQLException {
+    private List<Theme> getTheme(Long id, ResultSet resultSet) throws SQLException {
         List<Theme> themes = new ArrayList<>();
         while (resultSet.next()) {
             String name = resultSet.getString("NAME");
