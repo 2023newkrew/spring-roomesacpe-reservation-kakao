@@ -9,13 +9,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class FindReservation {
-    private long id;
-    private LocalDate date;
-    private LocalTime time;
-    private String name;
-    private String themeName;
-    private String themeDesc;
-    private int themePrice;
+    private final long id;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final String name;
+    private final String themeName;
+    private final String themeDesc;
+    private final int themePrice;
 
     public FindReservation(long id, LocalDate date, LocalTime time, String name, String themeName, String themeDesc, int themePrice) {
         this.id = id;
