@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
 
 public class ConsoleReservationRepository implements ReservationRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleReservationRepository.class);
+
     private final DataSource dataSource;
-    private final Logger logger;
 
     public ConsoleReservationRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.logger = LoggerFactory.getLogger(ConsoleReservationRepository.class);
     }
 
     @Override
@@ -115,10 +115,10 @@ public class ConsoleReservationRepository implements ReservationRepository {
     private Connection createConnection() {
         try {
             Connection con = dataSource.getConnection();
-            logger.debug("정상적으로 연결되었습니다.");
+            LOGGER.debug("정상적으로 연결되었습니다.");
             return con;
         } catch (SQLException e) {
-            logger.error("연결 오류: " + e.getMessage());
+            LOGGER.error("연결 오류: " + e.getMessage());
             throw new IllegalStateException(e);
         }
     }
