@@ -8,7 +8,6 @@ import nextstep.repository.theme.ConsoleThemeRepository;
 import nextstep.service.ReservationService;
 import nextstep.service.ThemeService;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -26,7 +25,6 @@ public class ConsoleApplication {
 
     public static void main() {
         Scanner scanner = new Scanner(System.in);
-
 
         while (true) {
             Theme theme = null;
@@ -67,37 +65,14 @@ public class ConsoleApplication {
 
             if (input.startsWith(FIND)) {
                 String params = input.split(" ")[1];
-                if (params.equals(LIST)) {
-                    try {
-
-                        for (FindReservation reservation : reservationService.findAll()) {
-                            System.out.println("예약 번호: " + reservation.getId());
-                            System.out.println("예약 날짜: " + reservation.getDate());
-                            System.out.println("예약 시간: " + reservation.getTime());
-                            System.out.println("예약자 이름: " + reservation.getName());
-                            System.out.println("예약 테마 이름: " + reservation.getThemeName());
-                            System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
-                            System.out.println("예약 테마 가격: " + reservation.getThemePrice());
-                        }
-
-                        continue;
-                    } catch (Exception e){
-                        throw new RuntimeException("예약이 없습니다.");
-                    }
-                }
+                if (selectReservationList(params)) continue;
 
                 Long id = Long.parseLong(params.split(",")[0]);
 
                 try {
                     FindReservation reservation = reservationService.findById(id);
 
-                    System.out.println("예약 번호: " + reservation.getId());
-                    System.out.println("예약 날짜: " + reservation.getDate());
-                    System.out.println("예약 시간: " + reservation.getTime());
-                    System.out.println("예약자 이름: " + reservation.getName());
-                    System.out.println("예약 테마 이름: " + reservation.getThemeName());
-                    System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
-                    System.out.println("예약 테마 가격: " + reservation.getThemePrice());
+                    printReservationInfo(reservation);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
@@ -137,10 +112,7 @@ public class ConsoleApplication {
                         theme = themeService.findById(id);
 
                         System.out.println("테마가 등록되었습니다.");
-                        System.out.println("테마 번호: " + theme.getId());
-                        System.out.println("테마 이름: " + theme.getName());
-                        System.out.println("테마 설명: " + theme.getDesc());
-                        System.out.println("테마 가격: " + theme.getPrice());
+                        printTheme(theme);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -148,28 +120,12 @@ public class ConsoleApplication {
 
                 if (input.startsWith(FIND)) {
                     String params = input.split(" ")[1];
-                    if (params.equals(LIST)) {
-                        try {
-                            for (Theme one : themeService.findAll()) {
-                                System.out.println("테마 번호: " + one.getId());
-                                System.out.println("테마 이름: " + one.getName());
-                                System.out.println("테마 설명: " + one.getDesc());
-                                System.out.println("테마 가격: " + one.getPrice());
-                                System.out.println();
-                            }
-                            continue;
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
+                    if (selectThemeList(params)) continue;
 
                     Long id = Long.parseLong(params.split(",")[0]);
                     try {
                         theme = themeService.findById(id);
-                        System.out.println("테마 번호: " + theme.getId());
-                        System.out.println("테마 이름: " + theme.getName());
-                        System.out.println("테마 설명: " + theme.getDesc());
-                        System.out.println("테마 가격: " + theme.getPrice());
+                        printTheme(theme);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -196,5 +152,52 @@ public class ConsoleApplication {
                 break;
             }
         }
+    }
+
+    private static boolean selectThemeList(String params) {
+        if (params.equals(LIST)) {
+            try {
+                for (Theme one : themeService.findAll()) {
+                    printTheme(one);
+                    System.out.println();
+                }
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    private static void printTheme(Theme theme) {
+        System.out.println("테마 번호: " + theme.getId());
+        System.out.println("테마 이름: " + theme.getName());
+        System.out.println("테마 설명: " + theme.getDesc());
+        System.out.println("테마 가격: " + theme.getPrice());
+    }
+
+    private static boolean selectReservationList(String params) {
+        if (params.equals(LIST)) {
+            try {
+                for (FindReservation reservation : reservationService.findAll()) {
+                    printReservationInfo(reservation);
+                }
+
+                return true;
+            } catch (Exception e) {
+                throw new RuntimeException("예약이 없습니다.");
+            }
+        }
+        return false;
+    }
+
+    private static void printReservationInfo(FindReservation reservation) {
+        System.out.println("예약 번호: " + reservation.getId());
+        System.out.println("예약 날짜: " + reservation.getDate());
+        System.out.println("예약 시간: " + reservation.getTime());
+        System.out.println("예약자 이름: " + reservation.getName());
+        System.out.println("예약 테마 이름: " + reservation.getThemeName());
+        System.out.println("예약 테마 설명: " + reservation.getThemeDesc());
+        System.out.println("예약 테마 가격: " + reservation.getThemePrice());
     }
 }
