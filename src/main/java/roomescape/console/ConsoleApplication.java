@@ -26,20 +26,32 @@ public class ConsoleApplication {
             System.out.println(CONSOLE_DESCRIPTION.getMessage());
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
-                Reservation reservationInfo = inputParsing.createReserveInfo(++reservationIndex, input);
-                Reservation reservation = consoleReservationController.createReservation(reservationInfo);
-                System.out.println(RESERVATION_REGISTERED.getMessage());
-                getReservationInfo(reservation);
+                try {
+                    Reservation reservationInfo = inputParsing.createReserveInfo(++reservationIndex, input);
+                    Reservation reservation = consoleReservationController.createReservation(reservationInfo);
+                    System.out.println(RESERVATION_REGISTERED.getMessage());
+                    getReservationInfo(reservation);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
             if (input.startsWith(FIND)) {
-                long findId = inputParsing.getFindId(input);
-                Reservation reservation = consoleReservationController.lookUpReservation(findId);
-                getReservationInfo(reservation);
+                try {
+                    long findId = inputParsing.getFindId(input);
+                    Reservation reservation = consoleReservationController.lookUpReservation(findId);
+                    getReservationInfo(reservation);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
             if (input.startsWith(DELETE)) {
-                long deleteId = inputParsing.getFindId(input);
-                consoleReservationController.deleteReservation(deleteId);
-                System.out.println(RESERVATION_CANCEL.getMessage());
+                try {
+                    long deleteId = inputParsing.getFindId(input);
+                    consoleReservationController.deleteReservation(deleteId);
+                    System.out.println(RESERVATION_CANCEL.getMessage());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
             if (input.equals(QUIT)) {
                 break;
