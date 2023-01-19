@@ -41,9 +41,9 @@ public class JdbcReservationRepository extends ReservationSqlRepository{
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(SCHEMA_FILE)); Connection connection = JdbcUtil.getConnection()){
 
-            String line = "";
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
-                dropAndCreateQuery.append(line + "\n");
+                dropAndCreateQuery.append(line).append("\n");
             }
             PreparedStatement pstmt = connection.prepareStatement(dropAndCreateQuery.toString());
             pstmt.execute();
@@ -60,9 +60,9 @@ public class JdbcReservationRepository extends ReservationSqlRepository{
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(DATA_FILE)); Connection connection = JdbcUtil.getConnection()){
 
-            String line = "";
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
-                initDataQuery.append(line + "\n");
+                initDataQuery.append(line).append("\n");
             }
             PreparedStatement pstmt = connection.prepareStatement(initDataQuery.toString());
             pstmt.execute();

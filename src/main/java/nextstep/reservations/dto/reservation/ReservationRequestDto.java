@@ -20,7 +20,7 @@ public class ReservationRequestDto {
 
     Integer themePrice;
 
-    /* requestBody에서 사용 */
+    @SuppressWarnings("unused")
     public ReservationRequestDto() {}
 
     public LocalDate getDate() {
