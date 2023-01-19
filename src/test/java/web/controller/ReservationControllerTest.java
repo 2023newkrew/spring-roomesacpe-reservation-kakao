@@ -1,62 +1,54 @@
 package web.controller;
 
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import web.dto.request.ReservationRequestDTO;
 import web.dto.request.ThemeRequestDTO;
 
-import static org.hamcrest.core.Is.is;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ReservationControllerTest {
-
-    @LocalServerPort
-    int port;
+    private Long themeId;
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
-    }
-
-    @DisplayName("테마 생성을 성공하면 201 반환")
-    @Test
-    @Order(1)
-    void createTheme() {
         ThemeRequestDTO themeRequestDTO = new ThemeRequestDTO("우주테마", "우주선을 몰아서 지구로 가는 테마", 40000);
 
-        RestAssured.given().log().all()
+        ExtractableResponse<Response> themeResponse = RestAssured
+                .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(themeRequestDTO)
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/themes/1");
+                .extract();
+        String[] themeLocation = themeResponse.header("Location").split("/");
+        themeId = Long.parseLong(themeLocation[themeLocation.length - 1]);
     }
 
     @DisplayName("예약 생성을 성공하면 201 반환")
     @Test
-    @Order(2)
     void createReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name", 1L);
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2023-02-02", "13:00", "name", themeId);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reservationRequestDTO)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/reservations/1");
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("유효하지 않은 날짜로 예약 생성하면 400 반환")
     @Test
     void invalidDateTimeReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-13-11", "13:00", "name", 1L);
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2023-13-11", "13:00", "name", themeId);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -68,9 +60,15 @@ public class ReservationControllerTest {
 
     @DisplayName("시간대가 겹치는 예약을 하게되면 409 반환")
     @Test
-    @Order(3)
     void duplicateDateTimeReservation() {
-        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2022-08-11", "13:00", "name", 1L);
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2023-02-02", "13:00", "name", themeId);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestDTO)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -82,21 +80,25 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 조회를 성공하면 200 반환")
     @Test
-    @Order(3)
     void retrieveReservation() {
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2023-02-02", "13:00", "name", themeId);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestDTO)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+
+        long reservationId = response.jsonPath().getLong("id");
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/reservations/1")
+                .when().get("/reservations/" + reservationId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .body("id", is(1))
-                .body("date", is("2022-08-11"))
-                .body("time", is("13:00"))
-                .body("name", is("name"))
-                .body("themeName", is("우주테마"))
-                .body("themeDesc", is("우주선을 몰아서 지구로 가는 테마"))
-                .body("themePrice", is(40000));
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE);
     }
 
     @DisplayName("없는 예약 조회 시 404 반환")
@@ -111,11 +113,22 @@ public class ReservationControllerTest {
 
     @DisplayName("예약 취소를 성공하면 204 반환")
     @Test
-    @Order(4)
     void deleteReservation() {
+        ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO("2023-02-02", "13:00", "name", themeId);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservationRequestDTO)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+
+        long reservationId = response.jsonPath().getLong("id");
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + reservationId)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

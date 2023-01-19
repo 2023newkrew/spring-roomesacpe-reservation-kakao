@@ -21,11 +21,12 @@ public class ReservationController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
+    public ResponseEntity<ReservationIdDto> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) {
 
         ReservationIdDto reservationIdDto = reservationService.createReservation(reservationRequestDTO);
 
-        return ResponseEntity.created(URI.create("/reservations/" + reservationIdDto.getId())).build();
+        return ResponseEntity.created(URI.create("/reservations/" + reservationIdDto.getId()))
+                .body(reservationIdDto);
     }
 
     @GetMapping("/{id}")
