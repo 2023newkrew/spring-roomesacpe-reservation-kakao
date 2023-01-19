@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcRepository {
@@ -50,7 +51,7 @@ public class ReservationJdbcRepository {
         return new ReservationIdDto((Long) keyHolder.getKey());
     }
 
-    public Reservation findReservationById(final Long id) throws NoSuchReservationException {
+    public Reservation findReservationById(Long id) throws NoSuchReservationException {
         String sql = "SELECT * FROM reservation WHERE id = (?) LIMIT 1 ";
 
         List<Reservation> reservations = jdbcTemplate.query(sql, ((rs, rowNum) -> new Reservation(
@@ -70,5 +71,22 @@ public class ReservationJdbcRepository {
     public void deleteReservationById(Long id) {
         String deleteSql = "DELETE FROM reservation WHERE id = (?)";
         this.jdbcTemplate.update(deleteSql, id);
+    }
+
+    public Optional<Reservation> findReservationByThemId(Long themeId) {
+        String sql = "SELECT * FROM reservation WHERE theme_id = (?) LIMIT 1 ";
+
+        List<Reservation> reservations = jdbcTemplate.query(sql, ((rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime(),
+                        rs.getString("name"),
+                        rs.getLong("theme_id"))),
+                themeId);
+
+        if (reservations.size() == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(reservations.get(0));
     }
 }

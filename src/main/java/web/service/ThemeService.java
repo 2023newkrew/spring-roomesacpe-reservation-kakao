@@ -1,21 +1,27 @@
 package web.service;
 
 import org.springframework.stereotype.Service;
+import web.domain.Reservation;
 import web.domain.Theme;
 import web.dto.request.ThemeRequestDTO;
 import web.dto.response.ThemeIdDto;
 import web.dto.response.ThemeResponseDTO;
 import web.exception.DuplicatedThemeException;
+import web.repository.ReservationJdbcRepository;
 import web.repository.ThemeJdbcRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ThemeService {
     private final ThemeJdbcRepository themeJdbcRepository;
 
-    public ThemeService(ThemeJdbcRepository themeJdbcRepository) {
+    private final ReservationJdbcRepository reservationJdbcRepository;
+
+    public ThemeService(ThemeJdbcRepository themeJdbcRepository, ReservationJdbcRepository reservationJdbcRepository) {
         this.themeJdbcRepository = themeJdbcRepository;
+        this.reservationJdbcRepository = reservationJdbcRepository;
     }
 
     public ThemeIdDto createTheme(ThemeRequestDTO themeRequestDTO) {
@@ -48,6 +54,10 @@ public class ThemeService {
 
     public void deleteThemeById(Long themeId) {
         themeJdbcRepository.findThemeById(themeId);
+        Optional<Reservation> reservation = reservationJdbcRepository.findReservationByThemId(themeId);
+        if (reservation.isPresent()) {
+            throw new DuplicatedThemeException();
+        }
         themeJdbcRepository.deleteTheme(themeId);
     }
 }
