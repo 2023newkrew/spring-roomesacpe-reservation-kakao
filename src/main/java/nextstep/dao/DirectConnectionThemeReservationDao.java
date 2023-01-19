@@ -83,7 +83,7 @@ public class DirectConnectionThemeReservationDao implements ThemeReservationDao 
         }
     }
 
-    private static List<Reservation> getReservation(Long id, ResultSet resultSet) throws SQLException {
+    private List<Reservation> getReservation(Long id, ResultSet resultSet) throws SQLException {
         List<Reservation> reservations = new ArrayList<>();
         while (resultSet.next()) {
             LocalDate date = resultSet.getDate("DATE").toLocalDate();
