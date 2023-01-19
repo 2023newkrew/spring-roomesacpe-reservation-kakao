@@ -1,18 +1,16 @@
-package nextstep.dto;
-
-import nextstep.domain.Theme;
+package nextstep.domain.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationVO {
+public class ReservationResponse {
     private final Long id;
     private final LocalDate date;
     private final LocalTime time;
     private final String name;
-    private final Theme theme;
+    private final ThemeResponse theme;
 
-    public ReservationVO(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public ReservationResponse(Long id, LocalDate date, LocalTime time, String name, ThemeResponse theme) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -32,7 +30,7 @@ public class ReservationVO {
         return name;
     }
 
-    public Theme getTheme() {
+    public ThemeResponse getTheme() {
         return theme;
     }
 

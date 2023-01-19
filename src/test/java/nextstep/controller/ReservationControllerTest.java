@@ -2,14 +2,12 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import nextstep.dto.ReservationDTO;
+import nextstep.domain.dto.ReservationRequest;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,8 +15,6 @@ import java.time.LocalTime;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@Transactional
 class ReservationControllerTest {
 
     @LocalServerPort
@@ -31,7 +27,7 @@ class ReservationControllerTest {
 
     @Test
     void createReservation() {
-        ReservationDTO reservation = new ReservationDTO(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation).when().post("/reservations").
@@ -41,7 +37,7 @@ class ReservationControllerTest {
 
     @Test
     void getReservation() {
-        ReservationDTO reservation = new ReservationDTO(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all().
@@ -59,7 +55,7 @@ class ReservationControllerTest {
 
     @Test
     void deleteReservation() {
-        ReservationDTO reservation = new ReservationDTO(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all()
@@ -70,7 +66,7 @@ class ReservationControllerTest {
 
     @Test
     void duplicateReservation() {
-        ReservationDTO reservation = new ReservationDTO(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy");
+        ReservationRequest reservation = new ReservationRequest(LocalDate.parse("2022-08-11"),LocalTime.parse("22:24"),"jordy", 1);
         RestAssured.given().contentType(ContentType.JSON).body(reservation).when().post("/reservations");
         RestAssured.given()
                 .log().all()

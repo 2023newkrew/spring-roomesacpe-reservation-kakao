@@ -1,20 +1,25 @@
-package nextstep.dto;
+package nextstep.domain.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDTO {
+public class ReservationRequest {
     private LocalDate date;
     private LocalTime time;
     private String name;
+    @JsonProperty("theme_id")
+    private long themeId;
 
-    public ReservationDTO() {
+    public ReservationRequest() {
     }
 
-    public ReservationDTO(LocalDate date, LocalTime time, String name) {
+    public ReservationRequest(LocalDate date, LocalTime time, String name, long themeId) {
         this.date = date;
         this.time = time;
         this.name = name;
+        this.themeId = themeId;
     }
 
     public LocalDate getDate() {
@@ -27,5 +32,9 @@ public class ReservationDTO {
 
     public String getName() {
         return name;
+    }
+
+    public long getThemeId(){
+        return themeId;
     }
 }
