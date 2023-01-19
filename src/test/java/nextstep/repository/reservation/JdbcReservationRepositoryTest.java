@@ -6,10 +6,8 @@ import nextstep.repository.ResetTable;
 import nextstep.repository.theme.JdbcThemeRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,8 +39,6 @@ class JdbcReservationRepositoryTest {
         resetTable = new ResetTable(jdbcTemplate);
         resetTable.jdbcReservationReset();
         resetTable.jdbcThemeReset();
-//        resetTable.consoleReservationReset();
-//        resetTable.consoleThemeTableReset();
 
         jdbcThemeRepository.save(theme);
         theme = jdbcThemeRepository.findByTheme(theme);
