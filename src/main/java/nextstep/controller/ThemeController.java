@@ -21,7 +21,7 @@ public class ThemeController {
 
     @PostMapping("")
     public ResponseEntity<Void> themeAdd(@RequestBody ThemeDto themeDto) {
-        themeService.add(themeDto);
+        themeService.save(themeDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();

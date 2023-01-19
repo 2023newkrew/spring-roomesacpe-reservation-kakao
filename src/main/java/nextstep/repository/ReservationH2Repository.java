@@ -14,7 +14,7 @@ import static nextstep.repository.ConnectionHandler.getConnection;
 public class ReservationH2Repository implements ReservationRepository{
 
     @Override
-    public Reservation add(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Connection con = getConnection();
 
         try {

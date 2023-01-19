@@ -15,7 +15,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
 
     @Override
-    public Reservation add(Reservation newReservation) {
+    public Reservation save(Reservation newReservation) {
         newReservation.setId(reservationIdIndex++);
         reservations.put(newReservation.getId(), newReservation);
         return newReservation;

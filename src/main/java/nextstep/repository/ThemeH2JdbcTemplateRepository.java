@@ -19,7 +19,7 @@ public class ThemeH2JdbcTemplateRepository implements ThemeRepository {
     }
 
     @Override
-    public void add(Theme theme) {
+    public void save(Theme theme) {
         String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});

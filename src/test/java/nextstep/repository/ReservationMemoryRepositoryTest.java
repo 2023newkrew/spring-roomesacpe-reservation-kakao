@@ -29,7 +29,7 @@ class ReservationMemoryRepositoryTest {
     public void should_createAndIncreaseIndex_when_addRequestGiven() {
         Reservation reservation = getReservationToAdd();
 
-        Reservation addedReservation = repository.add(reservation);
+        Reservation addedReservation = repository.save(reservation);
 
         Reservation expected = new Reservation(
                 1L,
@@ -43,7 +43,7 @@ class ReservationMemoryRepositoryTest {
 
     @Test
     public void should_findRightReservation_when_findRequestGiven() {
-        repository.add(getReservationToAdd());
+        repository.save(getReservationToAdd());
 
         Reservation addedReservation = repository.findById(1L);
 
@@ -59,7 +59,7 @@ class ReservationMemoryRepositoryTest {
 
     @Test
     public void should_deleteReservation_when_deleteRequestGiven() {
-        repository.add(getReservationToAdd());
+        repository.save(getReservationToAdd());
 
         repository.deleteById(1L);
 

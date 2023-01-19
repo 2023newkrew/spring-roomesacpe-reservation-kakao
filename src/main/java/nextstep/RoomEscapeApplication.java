@@ -26,7 +26,7 @@ public class RoomEscapeApplication {
         ThemeRepository themeRepository = new ThemeH2Repository();
         ReservationService reservationService = new ReservationService(reservationRepository, themeRepository);
 
-        themeRepository.add(ReservationService.DEFAULT_THEME);
+        themeRepository.save(ReservationService.DEFAULT_THEME);
         while (true) {
             Printer.printGuideMessage();
             String input = scanner.nextLine();
@@ -40,7 +40,7 @@ public class RoomEscapeApplication {
                 ReservationCreateRequest reservationRequest = new ReservationCreateRequest(date, time, name, Long.parseLong(themeId));
 
                 try {
-                    Reservation reservation = reservationService.add(reservationRequest);
+                    Reservation reservation = reservationService.save(reservationRequest);
                     Printer.printReservationConfirmMessage(reservation);
                 } catch (DuplicateReservationException e) {
                     System.out.println(e.getMessage());

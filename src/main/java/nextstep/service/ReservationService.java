@@ -21,13 +21,13 @@ public class ReservationService {
         this.themeRepository = themeRepository;
     }
 
-    public Reservation add(ReservationCreateRequest request) {
+    public Reservation save(ReservationCreateRequest request) {
         Theme theme = themeRepository.findById(request.getThemeId());
         Reservation reservation = request.toReservation(theme);
         if (reservationRepository.hasReservationAt(reservation.getDate(), reservation.getTime().getHour())) {
             throw new DuplicateReservationException();
         }
-        return reservationRepository.add(reservation);
+        return reservationRepository.save(reservation);
     }
 
     public Reservation findById(Long id) {

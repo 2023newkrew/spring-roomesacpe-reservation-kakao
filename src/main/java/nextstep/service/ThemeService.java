@@ -20,9 +20,9 @@ public class ThemeService {
         this.reservationRepository = reservationRepository;
     }
 
-    public void add(ThemeDto request) {
+    public void save(ThemeDto request) {
         Theme theme = request.toTheme();
-        themeRepository.add(theme);
+        themeRepository.save(theme);
     }
 
     public Theme findById(Long id) { return themeRepository.findById(id); }

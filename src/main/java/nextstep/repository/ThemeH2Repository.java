@@ -16,7 +16,7 @@ import static nextstep.repository.ConnectionHandler.getConnection;
 public class ThemeH2Repository implements ThemeRepository {
 
     @Override
-    public void add(Theme theme) {
+    public void save(Theme theme) {
         Connection con = getConnection();
 
         try {

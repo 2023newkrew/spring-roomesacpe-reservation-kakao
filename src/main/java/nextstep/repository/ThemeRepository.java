@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ThemeRepository {
 
-    void add(Theme theme);
+    void save(Theme theme);
     Theme findById(Long id);
     List<Theme> findAll();
     void update(Long id, Theme theme);
