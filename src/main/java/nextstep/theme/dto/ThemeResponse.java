@@ -1,4 +1,4 @@
-package nextstep.reservation.dto;
+package nextstep.theme.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -9,6 +9,8 @@ import lombok.Setter;
 @Data
 @Setter(AccessLevel.NONE)
 public class ThemeResponse {
+
+    private final Long id;
 
     private final String name;
 

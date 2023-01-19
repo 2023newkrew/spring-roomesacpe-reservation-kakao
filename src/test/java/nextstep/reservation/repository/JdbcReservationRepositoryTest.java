@@ -1,9 +1,12 @@
 package nextstep.reservation.repository;
 
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.mapper.ReservationMapper;
+import nextstep.reservation.repository.jdbc.ReservationResultSetParser;
+import nextstep.reservation.repository.jdbc.ReservationStatementCreator;
+import nextstep.theme.domain.Theme;
+import nextstep.theme.repository.jdbc.ThemeStatementCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -23,24 +27,31 @@ import java.util.List;
 @SqlGroup(
         {
                 @Sql("classpath:/dropTable.sql"),
-                @Sql("classpath:/schema.sql")
+                @Sql("classpath:/schema.sql"),
+                @Sql("classpath:/data.sql")
         })
 @JdbcTest
 class JdbcReservationRepositoryTest {
 
     final JdbcTemplate jdbcTemplate;
 
-    final ReservationStatementCreator statementCreator;
+    final ReservationStatementCreator reservationStatementCreator;
+
+    final ThemeStatementCreator themeStatementCreator;
+
     final ReservationResultSetParser resultSetParser;
+
     final ReservationRepository repository;
+
     final ReservationMapper mapper;
 
     @Autowired
     public JdbcReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.statementCreator = new ReservationStatementCreator();
+        this.reservationStatementCreator = new ReservationStatementCreator();
+        this.themeStatementCreator = new ThemeStatementCreator();
         this.resultSetParser = new ReservationResultSetParser();
-        this.repository = new JdbcReservationRepository(jdbcTemplate, statementCreator, resultSetParser);
+        this.repository = new JdbcReservationRepository(jdbcTemplate, reservationStatementCreator, resultSetParser);
         this.mapper = Mappers.getMapper(ReservationMapper.class);
     }
 
@@ -51,18 +62,19 @@ class JdbcReservationRepositoryTest {
         @BeforeEach
         void setUp() {
             List<ReservationRequest> requests = List.of(
-                    new ReservationRequest("2022-08-12", "13:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "14:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "13:00", "pluto")
+                    new ReservationRequest("2022-08-12", "13:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
-            insertTestReservations(requests);
+            requests.forEach(request -> insertReservation(mapper.fromRequest(request)));
+            insertTheme(new Theme(null, "test", "test", 1000));
         }
 
         @DisplayName("date와 time이 같은 예약이 존재하는지 확인")
         @ParameterizedTest
         @MethodSource
         void should_returnExists_when_givenRequest(ReservationRequest request, boolean exists) {
-            boolean actual = repository.existsByDateAndTime(fromRequest(request));
+            boolean actual = repository.existsByTimetable(mapper.fromRequest(request));
 
             Assertions.assertThat(actual)
                     .isEqualTo(exists);
@@ -70,10 +82,10 @@ class JdbcReservationRepositoryTest {
 
         List<Arguments> should_returnExists_when_givenRequest() {
             return List.of(
-                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현"), true),
-                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "pluto"), true),
-                    Arguments.of(new ReservationRequest("2022-08-11", "16:00", "류성현"), false),
-                    Arguments.of(new ReservationRequest("2022-08-13", "13:00", "pluto"), false)
+                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현", 1L), true),
+                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "pluto", 1L), true),
+                    Arguments.of(new ReservationRequest("2022-08-11", "16:00", "류성현", 1L), false),
+                    Arguments.of(new ReservationRequest("2022-08-13", "13:00", "pluto", 1L), false)
             );
         }
 
@@ -81,11 +93,11 @@ class JdbcReservationRepositoryTest {
         @ParameterizedTest
         @MethodSource
         void should_returnFalse_when_afterInsert(ReservationRequest request) {
-            Reservation reservation = fromRequest(request);
+            Reservation reservation = mapper.fromRequest(request);
 
-            boolean before = repository.existsByDateAndTime(reservation);
-            insertTestReservations(List.of(request));
-            boolean after = repository.existsByDateAndTime(reservation);
+            boolean before = repository.existsByTimetable(reservation);
+            insertReservation(mapper.fromRequest(request));
+            boolean after = repository.existsByTimetable(reservation);
 
             Assertions.assertThat(before)
                     .isFalse();
@@ -95,11 +107,23 @@ class JdbcReservationRepositoryTest {
 
         List<Arguments> should_returnFalse_when_afterInsert() {
             return List.of(
-                    Arguments.of(new ReservationRequest("2023-08-11", "14:00", "류성현"), 1L),
-                    Arguments.of(new ReservationRequest("2023-08-12", "13:00", "pluto"), 2L),
-                    Arguments.of(new ReservationRequest("2023-08-11", "16:00", "류성현"), 3L),
-                    Arguments.of(new ReservationRequest("2023-08-13", "13:00", "pluto"), 4L)
+                    Arguments.of(new ReservationRequest("2023-08-11", "14:00", "류성현", 1L), 1L),
+                    Arguments.of(new ReservationRequest("2023-08-12", "13:00", "pluto", 1L), 2L),
+                    Arguments.of(new ReservationRequest("2023-08-11", "16:00", "류성현", 1L), 3L),
+                    Arguments.of(new ReservationRequest("2023-08-13", "13:00", "pluto", 1L), 4L)
             );
+        }
+
+        @DisplayName("테마가 다를 경우 삽입 가능")
+        @Test
+        void should_returnFalse_when_diffTheme() {
+            ReservationRequest request = new ReservationRequest("2022-08-11", "13:00", "pluto", 2L);
+            Reservation reservation = mapper.fromRequest(request);
+
+            boolean actual = repository.existsByTimetable(reservation);
+
+            Assertions.assertThat(actual)
+                    .isFalse();
         }
     }
 
@@ -110,8 +134,8 @@ class JdbcReservationRepositoryTest {
         @DisplayName("호출 횟수만큼 ID가 증가하는지 확인")
         @Test
         void should_increaseId_when_insertTwice() {
-            ReservationRequest request = new ReservationRequest("2022-08-11", "14:00", "류성현");
-            Reservation reservation = fromRequest(request);
+            ReservationRequest request = new ReservationRequest("2022-08-11", "14:00", "류성현", 1L);
+            Reservation reservation = mapper.fromRequest(request);
 
             Long id1 = repository.insert(reservation)
                     .getId();
@@ -126,7 +150,7 @@ class JdbcReservationRepositoryTest {
         @ParameterizedTest
         @MethodSource
         void should_returnReservation_when_givenRequest(ReservationRequest request) {
-            Reservation reservation = fromRequest(request);
+            Reservation reservation = mapper.fromRequest(request);
 
             Reservation actual = repository.insert(reservation);
 
@@ -145,11 +169,21 @@ class JdbcReservationRepositoryTest {
 
         List<Arguments> should_returnReservation_when_givenRequest() {
             return List.of(
-                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "pluto")),
-                    Arguments.of(new ReservationRequest("2022-08-11", "16:00", "류성현")),
-                    Arguments.of(new ReservationRequest("2022-08-13", "13:00", "pluto"))
+                    Arguments.of(new ReservationRequest("2022-08-11", "14:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-12", "13:00", "pluto", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-11", "16:00", "류성현", 1L)),
+                    Arguments.of(new ReservationRequest("2022-08-13", "13:00", "pluto", 1L))
             );
+        }
+
+        @DisplayName("테마가 존재하지 않을 경우 예외 발생")
+        @Test
+        void should_throwException_when_themeNotExists() {
+            ReservationRequest request = new ReservationRequest("2022-08-11", "14:00", "류성현", 0L);
+            Reservation reservation = mapper.fromRequest(request);
+
+            Assertions.assertThatThrownBy(() -> repository.insert(reservation))
+                    .isInstanceOf(DataIntegrityViolationException.class);
         }
     }
 
@@ -160,18 +194,18 @@ class JdbcReservationRepositoryTest {
         @BeforeEach
         void setUp() {
             List<ReservationRequest> requests = List.of(
-                    new ReservationRequest("2022-08-12", "13:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "14:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "13:00", "pluto")
+                    new ReservationRequest("2022-08-12", "13:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
-            insertTestReservations(requests);
+            requests.forEach(request -> insertReservation(mapper.fromRequest(request)));
         }
 
         @DisplayName("ID와 일치하는 예약 확인")
         @ParameterizedTest
         @MethodSource
         void should_returnReservation_when_givenId(Long id, ReservationRequest request) {
-            Reservation reservation = fromRequest(request);
+            Reservation reservation = mapper.fromRequest(request);
 
             Reservation actual = repository.getById(id);
 
@@ -193,9 +227,9 @@ class JdbcReservationRepositoryTest {
 
         List<Arguments> should_returnReservation_when_givenId() {
             return List.of(
-                    Arguments.of(1L, new ReservationRequest("2022-08-12", "13:00", "류성현")),
-                    Arguments.of(2L, new ReservationRequest("2022-08-11", "14:00", "류성현")),
-                    Arguments.of(3L, new ReservationRequest("2022-08-11", "13:00", "pluto"))
+                    Arguments.of(1L, new ReservationRequest("2022-08-12", "13:00", "류성현", 1L)),
+                    Arguments.of(2L, new ReservationRequest("2022-08-11", "14:00", "류성현", 1L)),
+                    Arguments.of(3L, new ReservationRequest("2022-08-11", "13:00", "pluto", 1L))
             );
         }
     }
@@ -207,11 +241,11 @@ class JdbcReservationRepositoryTest {
         @BeforeEach
         void setUp() {
             List<ReservationRequest> requests = List.of(
-                    new ReservationRequest("2022-08-12", "13:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "14:00", "류성현"),
-                    new ReservationRequest("2022-08-11", "13:00", "pluto")
+                    new ReservationRequest("2022-08-12", "13:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "14:00", "류성현", 1L),
+                    new ReservationRequest("2022-08-11", "13:00", "pluto", 1L)
             );
-            insertTestReservations(requests);
+            requests.forEach(request -> insertReservation(mapper.fromRequest(request)));
         }
 
         @DisplayName("예약이 존재하면 제거하고 결과 반환")
@@ -238,16 +272,12 @@ class JdbcReservationRepositoryTest {
         }
     }
 
-    private void insertTestReservations(List<ReservationRequest> requests) {
-        requests.forEach(req -> {
-            Reservation reservation = fromRequest(req);
-            jdbcTemplate.update(conn -> statementCreator.createInsertStatement(conn, reservation));
-        });
+    void insertReservation(Reservation reservation) {
+        jdbcTemplate.update(conn -> reservationStatementCreator.createInsert(conn, reservation));
     }
 
-    private Reservation fromRequest(ReservationRequest req) {
-        Theme theme = new Theme("", "", 0);
-        return mapper.fromRequest(req, theme);
+    void insertTheme(Theme theme) {
+        jdbcTemplate.update(conn -> themeStatementCreator.createInsert(conn, theme));
     }
 }
 

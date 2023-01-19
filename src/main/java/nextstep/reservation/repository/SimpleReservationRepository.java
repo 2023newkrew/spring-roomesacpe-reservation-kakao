@@ -2,6 +2,8 @@ package nextstep.reservation.repository;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.reservation.domain.Reservation;
+import nextstep.reservation.repository.jdbc.ReservationResultSetParser;
+import nextstep.reservation.repository.jdbc.ReservationStatementCreator;
 
 import java.sql.*;
 
@@ -24,7 +26,7 @@ public class SimpleReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsByDateAndTime(Reservation reservation) {
+    public boolean existsByTimetable(Reservation reservation) {
         return tryQuery(getExistsByDateAndTimeQuery(reservation));
     }
 
@@ -45,14 +47,14 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getExistsByDateAndTimeQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createSelectByDateAndTimeStatement(
+            PreparedStatement ps = statementCreator.createSelectByTimetable(
                     connection,
                     reservation
             );
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
 
-            return resultSetParser.existsRow(rs);
+            return rs.next();
         };
     }
 
@@ -63,7 +65,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Reservation> getInsertQuery(Reservation reservation) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createInsertStatement(connection, reservation);
+            PreparedStatement ps = statementCreator.createInsert(connection, reservation);
             ps.executeUpdate();
             ResultSet keyHolder = ps.getGeneratedKeys();
             reservation.setId(resultSetParser.parseKey(keyHolder));
@@ -79,7 +81,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Reservation> getSelectByIdQuery(Long id) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createSelectByIdStatement(connection, id);
+            PreparedStatement ps = statementCreator.createSelectById(connection, id);
             ResultSet rs = ps.executeQuery();
 
             return resultSetParser.parseReservation(rs);
@@ -93,7 +95,7 @@ public class SimpleReservationRepository implements ReservationRepository {
 
     private QueryFunction<Boolean> getDeleteByIdQuery(Long id) {
         return connection -> {
-            PreparedStatement ps = statementCreator.createDeleteByIdStatement(connection, id);
+            PreparedStatement ps = statementCreator.createDeleteById(connection, id);
             int deletedRow = ps.executeUpdate();
 
             return deletedRow > 0;

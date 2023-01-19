@@ -1,8 +1,9 @@
 package nextstep.reservation.service;
 
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
 import nextstep.reservation.repository.ReservationRepository;
+import nextstep.theme.domain.Theme;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,21 +13,25 @@ public class FakeReservationRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
-    private final Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     private Long reservationIdIndex = 0L;
 
 
     @Override
-    public boolean existsByDateAndTime(Reservation reservation) {
+    public boolean existsByTimetable(Reservation reservation) {
         return reservations.values()
                 .stream()
                 .anyMatch(r -> Objects.equals(reservation.getDate(), r.getDate()) &&
-                        Objects.equals(reservation.getTime(), r.getTime()));
+                        Objects.equals(reservation.getTime(), r.getTime()) &&
+                        Objects.equals(reservation.getThemeId(), r.getThemeId()));
     }
 
     @Override
     public Reservation insert(Reservation reservation) {
+        Theme theme = reservation.getTheme();
+        if (theme
+                .getId() != 1L) {
+            throw new DataIntegrityViolationException("");
+        }
         reservation = new Reservation(
                 ++reservationIdIndex,
                 reservation.getDate(),

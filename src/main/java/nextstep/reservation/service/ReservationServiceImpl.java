@@ -2,13 +2,14 @@ package nextstep.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import nextstep.etc.exception.ErrorMessage;
-import nextstep.etc.exception.ReservationConflictException;
+import nextstep.etc.exception.ReservationException;
+import nextstep.etc.exception.ThemeException;
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
 import nextstep.reservation.dto.ReservationRequest;
 import nextstep.reservation.dto.ReservationResponse;
 import nextstep.reservation.mapper.ReservationMapper;
 import nextstep.reservation.repository.ReservationRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private final Theme THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     private final ReservationRepository repository;
 
     private final ReservationMapper mapper;
@@ -26,11 +25,16 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     @Override
     public ReservationResponse create(ReservationRequest request) {
-        Reservation reservation = mapper.fromRequest(request, THEME);
-        if (repository.existsByDateAndTime(reservation)) {
-            throw new ReservationConflictException(ErrorMessage.RESERVATION_CONFLICT);
+        Reservation reservation = mapper.fromRequest(request);
+        if (repository.existsByTimetable(reservation)) {
+            throw new ReservationException(ErrorMessage.RESERVATION_CONFLICT);
         }
-        reservation = repository.insert(reservation);
+        try {
+            reservation = repository.insert(reservation);
+        }
+        catch (DataIntegrityViolationException ignore) {
+            throw new ThemeException(ErrorMessage.THEME_NOT_EXISTS);
+        }
 
         return mapper.toResponse(reservation);
     }

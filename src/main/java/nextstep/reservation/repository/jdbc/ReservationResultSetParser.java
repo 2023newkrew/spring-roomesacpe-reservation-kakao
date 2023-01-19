@@ -1,7 +1,7 @@
-package nextstep.reservation.repository;
+package nextstep.reservation.repository.jdbc;
 
 import nextstep.reservation.domain.Reservation;
-import nextstep.reservation.domain.Theme;
+import nextstep.theme.domain.Theme;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -12,18 +12,8 @@ import java.sql.Time;
 @Component
 public class ReservationResultSetParser {
 
-    public Boolean existsRow(ResultSet resultSet) throws SQLException {
-        return getRows(resultSet) > 0;
-    }
-
-    private int getRows(ResultSet resultSet) throws SQLException {
-        resultSet.last();
-
-        return resultSet.getRow();
-    }
-
     public Reservation parseReservation(ResultSet resultSet) throws SQLException {
-        if (getRows(resultSet) == 0) {
+        if (!resultSet.next()) {
             return null;
         }
 
@@ -41,6 +31,7 @@ public class ReservationResultSetParser {
 
     private Theme parseTheme(ResultSet resultSet) throws SQLException {
         return new Theme(
+                resultSet.getLong("theme_id"),
                 resultSet.getString("theme_name"),
                 resultSet.getString("theme_desc"),
                 resultSet.getInt("theme_price")

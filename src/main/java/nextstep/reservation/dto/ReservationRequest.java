@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @RequiredArgsConstructor
@@ -28,7 +29,10 @@ public class ReservationRequest {
     @NotBlank
     private final String name;
 
+    @NotNull
+    private final Long themeId;
+
     public ReservationRequest() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 }
