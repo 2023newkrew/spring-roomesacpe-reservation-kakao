@@ -15,8 +15,8 @@ public interface ThemeRepository {
     String findByThemeSql = "select * from theme where name = ? and desc = ? and price = ?";
     String findAllSql = "select * from theme";
     String deleteByIdSql = "delete from theme where id = ?";
-    String saveSql = "INSERT INTO theme (name, desc, price)" +
-            "VALUES (?, ?, ?);";
+    String saveSql = "insert into theme (name, desc, price) " +
+            "values (?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from theme where name = ?";
 
     String createTableSql = "CREATE TABLE theme\n" +

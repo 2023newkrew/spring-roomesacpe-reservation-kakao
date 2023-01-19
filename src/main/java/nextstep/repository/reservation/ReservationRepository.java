@@ -17,8 +17,8 @@ public interface ReservationRepository {
             "where reservation.theme_id = theme.id";
     String deleteByIdSql = "delete from reservation where id = ?";
     String deleteByThemeIdSql = "delete from reservation where theme_id = ?";
-    String saveSql = "INSERT INTO reservation (date, time, name, theme_id)" +
-            "VALUES (?, ?, ?, ?);";
+    String saveSql = "insert into reservation (date, time, name, theme_id) " +
+            "values (?, ?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from reservation where date = ? and time = ?";
 
     String createTableSql = "create table reservation (\n" +
