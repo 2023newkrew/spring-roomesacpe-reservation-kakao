@@ -7,20 +7,20 @@ import roomescape.dto.Theme;
 
 public interface ThemeDAO {
 
-    String ID_TABLE = "id";
-    String NAME_TABLE = "name";
-    String DESC_TABLE = "desc";
-    String PRICE_TABLE = "price";
+    String ID_COLUMN = "id";
+    String NAME_COLUMN = "name";
+    String DESC_COLUMN = "desc";
+    String PRICE_COLUMN = "price";
 
     ResultSetExtractor<Theme> themeResultSetExtractor = rs -> {
         if (!rs.next()) {
             return null;
         }
         return new Theme(
-            rs.getLong(ID_TABLE),
-            rs.getString(NAME_TABLE),
-            rs.getString(DESC_TABLE),
-            rs.getInt(PRICE_TABLE));
+            rs.getLong(ID_COLUMN),
+            rs.getString(NAME_COLUMN),
+            rs.getString(DESC_COLUMN),
+            rs.getInt(PRICE_COLUMN));
     };
     ResultSetExtractor<Boolean> existResultSetExtractor = rs -> {
         if (!rs.next()) {
@@ -29,10 +29,10 @@ public interface ThemeDAO {
         return rs.getBoolean("result");
     };
     RowMapper<Theme> themeRowMapper = (rs, rowNum) -> new Theme(
-            rs.getLong(ID_TABLE),
-            rs.getString(NAME_TABLE),
-            rs.getString(DESC_TABLE),
-            rs.getInt(PRICE_TABLE));
+            rs.getLong(ID_COLUMN),
+            rs.getString(NAME_COLUMN),
+            rs.getString(DESC_COLUMN),
+            rs.getInt(PRICE_COLUMN));
 
     Boolean exist(Theme theme);
     Boolean existId(long id);

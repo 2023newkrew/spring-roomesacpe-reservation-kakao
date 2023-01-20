@@ -6,20 +6,20 @@ import roomescape.dto.Reservation;
 
 public interface ReservationDAO {
 
-    String ID_TABLE = "id";
-    String DATE_TABLE = "date";
-    String TIME_TABLE = "time";
-    String NAME_TABLE = "name";
-    String THEME_ID_TABLE = "theme_id";
+    String ID_COLUMN = "id";
+    String DATE_COLUMN = "date";
+    String TIME_COLUMN = "time";
+    String NAME_COLUMN = "name";
+    String THEME_ID_COLUMN = "theme_id";
 
     ResultSetExtractor<Reservation> reservationResultSetExtractor = rs -> {
         if (!rs.next()) {
             return null;
         }
         return new Reservation(
-                rs.getLong(ID_TABLE), rs.getDate(DATE_TABLE).toLocalDate(),
-                rs.getTime(TIME_TABLE).toLocalTime(), rs.getString(NAME_TABLE),
-                rs.getLong(THEME_ID_TABLE));
+                rs.getLong(ID_COLUMN), rs.getDate(DATE_COLUMN).toLocalDate(),
+                rs.getTime(TIME_COLUMN).toLocalTime(), rs.getString(NAME_COLUMN),
+                rs.getLong(THEME_ID_COLUMN));
     };
     ResultSetExtractor<Boolean> existResultSetExtractor = rs -> {
         if (!rs.next()) {
