@@ -28,7 +28,7 @@ public enum Messages {
     CREATE_NOT_FOUND_THEME("NotFound Theme Id: "),
     DELETE_THEME_ERROR("Reservation Exists in Theme"),
     DELETE_NOT_FOUND_ERROR("Delete NotFound Error Id: "),
-    DELETE_SUCCESS("Delete Success"),
+    DELETE_SUCCESS("Delete Success, deleteId: "),
     RESERVATION_CREATE_ERROR("요청한 날짜/시간에 이미 예약이 존재"),
     THEME_CREATE_ERROR("요청한 이름/가격의 테마가 이미 등록되어 있음"),
     THEME_EXISTS_RESERVATION("요청한 테마에 예약정보가 들어있음. Delete Theme ID: "),
