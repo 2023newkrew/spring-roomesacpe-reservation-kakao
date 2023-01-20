@@ -20,26 +20,32 @@ public class ConsoleControllerMapper {
     public void executeCommand(String input) {
         if (input.startsWith(RESERVATION_ADD)) {
             consoleController.createReservation(input);
+            return;
         }
 
         if (input.startsWith(RESERVATION_FIND)) {
             consoleController.findReservation(input);
+            return;
         }
 
         if (input.startsWith(RESERVATION_DELETE)) {
             consoleController.removeReservation(input);
+            return;
         }
 
         if(input.startsWith(THEME_ADD)) {
             consoleController.createTheme(input);
+            return;
         }
 
         if(input.startsWith(THEME_FIND)) {
             consoleController.findTheme(input);
+            return;
         }
 
         if(input.startsWith(THEME_LIST)) {
             consoleController.listTheme();
+            return;
         }
 
         if(input.startsWith(THEME_DELETE)) {
