@@ -11,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 import roomescape.dao.reservation.ConsoleReservationDAO;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dto.Reservation;
@@ -31,7 +34,13 @@ public class ConsoleReservationDAONoTableExceptionTest {
     private static final String NAME_DATA = "test";
     private static final Long THEME_ID_DATA = 2L;
 
-    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(URL, USER, PASSWORD);
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
+    private final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
+    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(connectionManager);
 
     @DisplayName("예약 생성) 테이블이 존재하지 않을 경우 null 리턴")
     @Test

@@ -15,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 import roomescape.dto.Theme;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
@@ -27,6 +30,9 @@ public class ConsoleThemeDAOTest {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
     private static final String NAME_DATA1 = "워너고홈";
     private static final String NAME_DATA2 = "테스트";
     private static final String NAME_DATA3 = "테스트 이름";
@@ -35,7 +41,10 @@ public class ConsoleThemeDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM THEME";
 
-    private final ThemeDAO themeDAO = new ConsoleThemeDAO(URL, USER, PASSWORD);
+    private final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
+    private final ThemeDAO themeDAO = new ConsoleThemeDAO(connectionManager);
     private Connection con;
 
     @BeforeEach

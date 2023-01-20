@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.DAOResult;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemeIdPreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.FindThemePreparedStatementCreator;
@@ -26,9 +25,9 @@ public class SpringThemeDAO implements ThemeDAO {
     @Override
     public Boolean exist(Theme theme) {
         try {
-            List<Boolean> result = jdbcTemplate.query(
-                    new ExistThemePreparedStatementCreator(theme), existRowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new ExistThemePreparedStatementCreator(theme),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -37,9 +36,9 @@ public class SpringThemeDAO implements ThemeDAO {
     @Override
     public Boolean existId(long id) {
         try {
-            List<Boolean> result = jdbcTemplate.query(
-                    new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new ExistThemeIdPreparedStatementCreator(id),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -61,7 +60,7 @@ public class SpringThemeDAO implements ThemeDAO {
     public List<Theme> list() {
         try {
             return jdbcTemplate.query(
-                    new ListThemePreparedStatementCreator(), rowMapper);
+                    new ListThemePreparedStatementCreator(), themeRowMapper);
         } catch (Exception e) {
             return null;
         }
@@ -80,9 +79,9 @@ public class SpringThemeDAO implements ThemeDAO {
     @Override
     public Theme find(long id) {
         try {
-            List<Theme> result = jdbcTemplate.query(
-                    new FindThemePreparedStatementCreator(id), rowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new FindThemePreparedStatementCreator(id),
+                    themeResultSetExtractor);
         } catch (Exception e) {
             return null;
         }

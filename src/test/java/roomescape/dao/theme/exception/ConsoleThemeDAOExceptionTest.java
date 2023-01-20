@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 import roomescape.dao.theme.ConsoleThemeDAO;
 import roomescape.dao.theme.ThemeDAO;
 
@@ -23,7 +26,14 @@ public class ConsoleThemeDAOExceptionTest {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
-    private final ThemeDAO themeDAO = new ConsoleThemeDAO(URL, USER, PASSWORD);
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
+    private final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
+
+    private final ThemeDAO themeDAO = new ConsoleThemeDAO(connectionManager);
 
     @DisplayName("테마 조회) 아이디가 존재하지 않는 경우 null")
     @Test

@@ -1,12 +1,10 @@
 package roomescape.dao.reservation;
 
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.DAOResult;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationThemeIdPreparedStatementCreator;
@@ -27,9 +25,9 @@ public class SpringReservationDAO implements ReservationDAO {
     @Override
     public Boolean exist(Reservation reservation) {
         try {
-            List<Boolean> result = jdbcTemplate.query(
-                    new ExistReservationPreparedStatementCreator(reservation), existRowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new ExistReservationPreparedStatementCreator(reservation),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -38,9 +36,9 @@ public class SpringReservationDAO implements ReservationDAO {
     @Override
     public Boolean existId(long id) {
         try {
-            List<Boolean> result = jdbcTemplate.query(
-                    new ExistReservationIdPreparedStatementCreator(id), existRowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new ExistReservationIdPreparedStatementCreator(id),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -48,9 +46,9 @@ public class SpringReservationDAO implements ReservationDAO {
     @Override
     public Boolean existThemeId(long id) {
         try {
-            List<Boolean> result = jdbcTemplate.query(
-                    new ExistReservationThemeIdPreparedStatementCreator(id), existRowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new ExistReservationThemeIdPreparedStatementCreator(id),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -71,9 +69,8 @@ public class SpringReservationDAO implements ReservationDAO {
     @Override
     public Reservation find(long id) {
         try {
-            List<Reservation> result = jdbcTemplate.query(
-                    new FindReservationPreparedStatementCreator(id), rowMapper);
-            return DAOResult.getResult(result);
+            return jdbcTemplate.query(
+                    new FindReservationPreparedStatementCreator(id), reservationResultSetExtractor);
         } catch (Exception e) {
             return null;
         }

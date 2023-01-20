@@ -1,6 +1,7 @@
 package roomescape.dao.theme;
 
 import java.util.List;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.dto.Theme;
 
@@ -11,13 +12,27 @@ public interface ThemeDAO {
     String DESC_TABLE = "desc";
     String PRICE_TABLE = "price";
 
-    RowMapper<Theme> rowMapper = (resultSet, rowNum) -> new Theme(
-            resultSet.getLong(ID_TABLE),
-            resultSet.getString(NAME_TABLE),
-            resultSet.getString(DESC_TABLE),
-            resultSet.getInt(PRICE_TABLE));
-    RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
-            "result");
+    ResultSetExtractor<Theme> themeResultSetExtractor = rs -> {
+        if (!rs.next()) {
+            return null;
+        }
+        return new Theme(
+            rs.getLong(ID_TABLE),
+            rs.getString(NAME_TABLE),
+            rs.getString(DESC_TABLE),
+            rs.getInt(PRICE_TABLE));
+    };
+    ResultSetExtractor<Boolean> existResultSetExtractor = rs -> {
+        if (!rs.next()) {
+            return null;
+        }
+        return rs.getBoolean("result");
+    };
+    RowMapper<Theme> themeRowMapper = (rs, rowNum) -> new Theme(
+            rs.getLong(ID_TABLE),
+            rs.getString(NAME_TABLE),
+            rs.getString(DESC_TABLE),
+            rs.getInt(PRICE_TABLE));
 
     Boolean exist(Theme theme);
     Boolean existId(long id);

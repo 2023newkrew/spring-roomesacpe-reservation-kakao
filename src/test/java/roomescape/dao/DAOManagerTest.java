@@ -15,9 +15,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
@@ -45,6 +48,9 @@ public class DAOManagerTest {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
     private static final LocalDate RESERVATION_DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate RESERVATION_DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime RESERVATION_TIME_DATA = LocalTime.parse("13:00");
@@ -71,83 +77,86 @@ public class DAOManagerTest {
     private static final Theme THEME2 = new Theme(
             THEME_ID_DATA, THEME_NAME_DATA2, THEME_DESC_DATA, THEME_PRICE_DATA);
 
-    private final DAOManager daoManager = new DAOManager(URL, USER, PASSWORD);
+    private final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
 
     @DisplayName("쿼리 테스트")
     @ParameterizedTest
     @MethodSource("getQueryData")
-    <T> void query(PreparedStatementCreator psc, RowMapper<T> rowMapper, List<T> expected) {
-        assertThat(daoManager.query(psc, rowMapper)).isEqualTo(expected);
+    <T> void query(PreparedStatementCreator psc, ResultSetExtractor<T> rse, T expected) {
+        assertThat(connectionManager.query(psc, rse)).isEqualTo(expected);
     }
 
     private static Stream<Arguments> getQueryData() {
         return Stream.of(
                 Arguments.arguments(
                         new ExistReservationIdPreparedStatementCreator(1L),
-                        ReservationDAO.existRowMapper, List.of(true)),
+                        ReservationDAO.existResultSetExtractor, true),
                 Arguments.arguments(
                         new ExistReservationIdPreparedStatementCreator(2L),
-                        ReservationDAO.existRowMapper, List.of(false)),
+                        ReservationDAO.existResultSetExtractor, false),
                 Arguments.arguments(
                         new ExistReservationPreparedStatementCreator(RESERVATION1),
-                        ReservationDAO.existRowMapper, List.of(true)),
+                        ReservationDAO.existResultSetExtractor, true),
                 Arguments.arguments(
                         new ExistReservationPreparedStatementCreator(RESERVATION2),
-                        ReservationDAO.existRowMapper, List.of(false)),
+                        ReservationDAO.existResultSetExtractor, false),
                 Arguments.arguments(
                         new ExistReservationThemeIdPreparedStatementCreator(1L),
-                        ReservationDAO.existRowMapper, List.of(false)),
+                        ReservationDAO.existResultSetExtractor, false),
                 Arguments.arguments(
                         new ExistReservationThemeIdPreparedStatementCreator(2L),
-                        ReservationDAO.existRowMapper, List.of(true)),
+                        ReservationDAO.existResultSetExtractor, true),
                 Arguments.arguments(
                         new ExistThemeIdPreparedStatementCreator(1L),
-                        ReservationDAO.existRowMapper, List.of(true)),
+                        ReservationDAO.existResultSetExtractor, true),
                 Arguments.arguments(
                         new ExistThemeIdPreparedStatementCreator(2L),
-                        ReservationDAO.existRowMapper, List.of(true)),
+                        ReservationDAO.existResultSetExtractor, true),
                 Arguments.arguments(
                         new ExistThemeIdPreparedStatementCreator(3L),
-                        ReservationDAO.existRowMapper, List.of(false)),
+                        ReservationDAO.existResultSetExtractor, false),
                 Arguments.arguments(
                         new ExistThemePreparedStatementCreator(THEME1),
-                        ReservationDAO.existRowMapper, List.of(true)),
+                        ReservationDAO.existResultSetExtractor, true),
                 Arguments.arguments(
                         new ExistThemePreparedStatementCreator(THEME2),
-                        ReservationDAO.existRowMapper, List.of(false))
+                        ReservationDAO.existResultSetExtractor, false)
         );
     }
 
     @DisplayName("예약 조회 쿼리 테스트")
     @Test
     void queryFindReservation() {
-        List<Reservation> reservationList = daoManager.query(
-                new FindReservationPreparedStatementCreator(1L), ReservationDAO.rowMapper);
+        Reservation reservation = connectionManager.query(
+                new FindReservationPreparedStatementCreator(1L),
+                ReservationDAO.reservationResultSetExtractor);
 
-        assertThat(reservationList.size()).isEqualTo(1);
-        assertThat(reservationList.get(0).getDate()).isEqualTo(RESERVATION_DATE_DATA1);
-        assertThat(reservationList.get(0).getTime()).isEqualTo(RESERVATION_TIME_DATA);
-        assertThat(reservationList.get(0).getName()).isEqualTo(RESERVATION_NAME_DATA);
-        assertThat(reservationList.get(0).getThemeId()).isEqualTo(RESERVATION_THEME_ID_DATA);
+        assertThat(reservation.getDate()).isEqualTo(RESERVATION_DATE_DATA1);
+        assertThat(reservation.getTime()).isEqualTo(RESERVATION_TIME_DATA);
+        assertThat(reservation.getName()).isEqualTo(RESERVATION_NAME_DATA);
+        assertThat(reservation.getThemeId()).isEqualTo(RESERVATION_THEME_ID_DATA);
     }
 
     @DisplayName("테마 조회 쿼리 테스트")
     @Test
     void queryFindTheme() {
-        List<Theme> themeList = daoManager.query(
-                new FindThemePreparedStatementCreator(1L), ThemeDAO.rowMapper);
+        Theme theme = connectionManager.query(
+                new FindThemePreparedStatementCreator(1L),
+                ThemeDAO.themeResultSetExtractor);
 
-        assertThat(themeList.size()).isEqualTo(1);
-        assertThat(themeList.get(0).getName()).isEqualTo(THEME_NAME_DATA1);
-        assertThat(themeList.get(0).getDesc()).isEqualTo(THEME_DESC_DATA);
-        assertThat(themeList.get(0).getPrice()).isEqualTo(THEME_PRICE_DATA);
+        assertThat(theme.getName()).isEqualTo(THEME_NAME_DATA1);
+        assertThat(theme.getDesc()).isEqualTo(THEME_DESC_DATA);
+        assertThat(theme.getPrice()).isEqualTo(THEME_PRICE_DATA);
     }
 
     @DisplayName("테마 목록 조회 쿼리 테스트")
     @Test
     void queryListTheme() {
-        List<Theme> themeList = daoManager.query(
-                new ListThemePreparedStatementCreator(), ThemeDAO.rowMapper);
+        List<Theme> themeList = connectionManager.query(
+                new ListThemePreparedStatementCreator(),
+                ThemeDAO.themeRowMapper);
 
         assertThat(themeList.size()).isEqualTo(2);
         assertThat(themeList.get(0).getName()).isEqualTo(THEME_NAME_DATA1);
@@ -159,7 +168,7 @@ public class DAOManagerTest {
     @ParameterizedTest
     @MethodSource("getUpdateData")
     void update(PreparedStatementCreator psc) {
-        assertThatCode(() -> daoManager.update(psc)).doesNotThrowAnyException();
+        assertThatCode(() -> connectionManager.update(psc)).doesNotThrowAnyException();
     }
 
     private static Stream<Arguments> getUpdateData() {
@@ -175,9 +184,9 @@ public class DAOManagerTest {
     @ParameterizedTest
     @MethodSource("getUpdateAndGetKeyData")
     void updateAndGetKey(PreparedStatementCreator psc, Long expected) {
-        List<Long> id =  daoManager.updateAndGetKey(psc, "id", Long.class);
+        Long id =  connectionManager.updateAndGetKey(psc, "id", Long.class);
 
-        assertThat(id).isEqualTo(List.of(expected));
+        assertThat(id).isEqualTo(expected);
     }
 
     private static Stream<Arguments> getUpdateAndGetKeyData() {

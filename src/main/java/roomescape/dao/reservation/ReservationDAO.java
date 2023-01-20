@@ -1,6 +1,6 @@
 package roomescape.dao.reservation;
 
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.lang.NonNull;
 import roomescape.dto.Reservation;
 
@@ -12,12 +12,21 @@ public interface ReservationDAO {
     String NAME_TABLE = "name";
     String THEME_ID_TABLE = "theme_id";
 
-    RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong(ID_TABLE), resultSet.getDate(DATE_TABLE).toLocalDate(),
-            resultSet.getTime(TIME_TABLE).toLocalTime(), resultSet.getString(NAME_TABLE),
-            resultSet.getLong(THEME_ID_TABLE));
-    RowMapper<Boolean> existRowMapper = (resultSet, rowNum) -> resultSet.getBoolean(
-            "result");
+    ResultSetExtractor<Reservation> reservationResultSetExtractor = rs -> {
+        if (!rs.next()) {
+            return null;
+        }
+        return new Reservation(
+                rs.getLong(ID_TABLE), rs.getDate(DATE_TABLE).toLocalDate(),
+                rs.getTime(TIME_TABLE).toLocalTime(), rs.getString(NAME_TABLE),
+                rs.getLong(THEME_ID_TABLE));
+    };
+    ResultSetExtractor<Boolean> existResultSetExtractor = rs -> {
+        if (!rs.next()) {
+            return null;
+        }
+        return rs.getBoolean("result");
+    };
 
     Boolean exist(@NonNull Reservation reservation);
     Boolean existId(long id);

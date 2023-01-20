@@ -16,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 import roomescape.dto.Reservation;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
@@ -28,6 +31,9 @@ public class ConsoleReservationDAOTest {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
     private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
     private static final LocalTime TIME_DATA = LocalTime.parse("13:00");
@@ -36,7 +42,10 @@ public class ConsoleReservationDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
 
-    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(URL, USER, PASSWORD);
+    private final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
+    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(connectionManager);
     private Connection con;
 
     @BeforeEach

@@ -11,37 +11,43 @@ public class ConsoleControllerMapper {
     private static final String THEME_DELETE = "the_delete";
     private static final String QUIT = "quit";
 
-    public static void executeCommand(String input) {
+    private final ConsoleController consoleController;
+
+    public ConsoleControllerMapper(ConsoleController consoleController) {
+        this.consoleController = consoleController;
+    }
+
+    public void executeCommand(String input) {
         if (input.startsWith(RESERVATION_ADD)) {
-            ConsoleController.createReservation(input);
+            consoleController.createReservation(input);
         }
 
         if (input.startsWith(RESERVATION_FIND)) {
-            ConsoleController.findReservation(input);
+            consoleController.findReservation(input);
         }
 
         if (input.startsWith(RESERVATION_DELETE)) {
-            ConsoleController.removeReservation(input);
+            consoleController.removeReservation(input);
         }
 
         if(input.startsWith(THEME_ADD)) {
-            ConsoleController.createTheme(input);
+            consoleController.createTheme(input);
         }
 
         if(input.startsWith(THEME_FIND)) {
-            ConsoleController.findTheme(input);
+            consoleController.findTheme(input);
         }
 
         if(input.startsWith(THEME_LIST)) {
-            ConsoleController.listTheme();
+            consoleController.listTheme();
         }
 
         if(input.startsWith(THEME_DELETE)) {
-            ConsoleController.removeTheme(input);
+            consoleController.removeTheme(input);
         }
     }
 
-    public static boolean isRepeat(String input) {
+    public boolean isRepeat(String input) {
         return !input.equals(QUIT);
     }
 }

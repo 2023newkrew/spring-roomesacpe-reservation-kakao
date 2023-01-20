@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 import roomescape.dao.theme.ConsoleThemeDAO;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
@@ -24,11 +27,18 @@ public class ConsoleThemeDAONoTableExceptionTest {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
     private static final String NAME_DATA = "워너고홈";
     private static final String DESC_DATA = "병맛 어드벤처 회사 코믹물";
     private static final int PRICE_DATA = 29000;
 
-    private final ThemeDAO themeDAO = new ConsoleThemeDAO(URL, USER, PASSWORD);
+    private final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
+
+    private final ThemeDAO themeDAO = new ConsoleThemeDAO(connectionManager);
 
     @DisplayName("테마 생성) 테이블이 존재하지 않을 경우 null 리턴")
     @Test

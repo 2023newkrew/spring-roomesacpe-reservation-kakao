@@ -1,8 +1,7 @@
 package roomescape.dao.theme;
 
 import java.util.List;
-import roomescape.dao.DAOManager;
-import roomescape.dao.DAOResult;
+import roomescape.connection.ConnectionManager;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemeIdPreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.ExistThemePreparedStatementCreator;
 import roomescape.dao.theme.preparedstatementcreator.FindThemePreparedStatementCreator;
@@ -13,18 +12,18 @@ import roomescape.dto.Theme;
 
 public class ConsoleThemeDAO implements ThemeDAO {
 
-    private final DAOManager daoManager;
+    private final ConnectionManager connectionManager;
 
-    public ConsoleThemeDAO(String url, String user, String password) {
-        daoManager = new DAOManager(url, user, password);
+    public ConsoleThemeDAO(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
     public Boolean exist(Theme theme) {
         try {
-            List<Boolean> result = daoManager.query(
-                    new ExistThemePreparedStatementCreator(theme), existRowMapper);
-            return DAOResult.getResult(result);
+            return connectionManager.query(
+                    new ExistThemePreparedStatementCreator(theme),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -33,9 +32,9 @@ public class ConsoleThemeDAO implements ThemeDAO {
     @Override
     public Boolean existId(long id) {
         try {
-            List<Boolean> result = daoManager.query(
-                    new ExistThemeIdPreparedStatementCreator(id), existRowMapper);
-            return DAOResult.getResult(result);
+            return connectionManager.query(
+                    new ExistThemeIdPreparedStatementCreator(id),
+                    existResultSetExtractor);
         } catch (Exception e) {
             return null;
         }
@@ -44,9 +43,9 @@ public class ConsoleThemeDAO implements ThemeDAO {
     @Override
     public Long create(Theme theme) {
         try {
-            List<Long> result = daoManager.updateAndGetKey(
-                    new InsertThemePreparedStatementCreator(theme), "id", Long.class);
-            return DAOResult.getResult(result);
+            return connectionManager.updateAndGetKey(
+                    new InsertThemePreparedStatementCreator(theme),
+                    "id", Long.class);
         } catch (Exception e) {
             return null;
         }
@@ -55,8 +54,8 @@ public class ConsoleThemeDAO implements ThemeDAO {
     @Override
     public List<Theme> list() {
         try {
-            return daoManager.query(
-                    new ListThemePreparedStatementCreator(), rowMapper);
+            return connectionManager.query(
+                    new ListThemePreparedStatementCreator(), themeRowMapper);
         } catch (Exception e) {
             return null;
         }
@@ -65,7 +64,7 @@ public class ConsoleThemeDAO implements ThemeDAO {
     @Override
     public void remove(long id) {
         try {
-            daoManager.update(
+            connectionManager.update(
                     new RemoveThemePreparedStatementCreator(id));
         } catch (Exception ignored) {
 
@@ -75,9 +74,9 @@ public class ConsoleThemeDAO implements ThemeDAO {
     @Override
     public Theme find(long id) {
         try {
-            List<Theme> result = daoManager.query(
-                    new FindThemePreparedStatementCreator(id), rowMapper);
-            return DAOResult.getResult(result);
+            return connectionManager.query(
+                    new FindThemePreparedStatementCreator(id),
+                    themeResultSetExtractor);
         } catch (Exception e) {
             return null;
         }

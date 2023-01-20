@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import roomescape.connection.ConnectionManager;
+import roomescape.connection.ConnectionSetting;
+import roomescape.connection.PoolSetting;
 
 @DisplayName("연결 매니저 예외처리 테스트")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -20,7 +23,12 @@ public class DAOManagerExceptionTest {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
-    private final DAOManager daoManager = new DAOManager(URL, USER, PASSWORD);
+    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
+    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
+
+    private static final ConnectionManager connectionManager = new ConnectionManager(
+            CONNECTION_SETTING,
+            CONNECTION_POOL_SETTING);
 
     private static PreparedStatementCreator getInvalidPreparedStatementCreator() {
         return con -> con.prepareStatement("CREATE TABLE ?");
@@ -30,8 +38,8 @@ public class DAOManagerExceptionTest {
     @Test
     void failToQuery() {
         assertThatThrownBy(
-                () -> daoManager
-                        .query(getInvalidPreparedStatementCreator(), null))
+                () -> connectionManager
+                        .query(getInvalidPreparedStatementCreator(), rs -> null))
                 .isInstanceOf(RuntimeException.class);
     }
 
@@ -39,7 +47,7 @@ public class DAOManagerExceptionTest {
     @Test
     void failToUpdate() {
         assertThatThrownBy(
-                () -> daoManager
+                () -> connectionManager
                         .update(getInvalidPreparedStatementCreator()))
                 .isInstanceOf(RuntimeException.class);
     }
@@ -48,7 +56,7 @@ public class DAOManagerExceptionTest {
     @Test
     void failToUpdateAndGetKey() {
         assertThatThrownBy(
-                () -> daoManager
+                () -> connectionManager
                         .updateAndGetKey(getInvalidPreparedStatementCreator(), "id", Long.class))
                 .isInstanceOf(RuntimeException.class);
     }
@@ -57,8 +65,12 @@ public class DAOManagerExceptionTest {
     @Test
     void failToConnection() {
         assertThatThrownBy(
-                () -> new DAOManager("", "", "")
-                        .updateAndGetKey(getInvalidPreparedStatementCreator(), "id", Long.class))
+                () -> new ConnectionManager(
+                        new ConnectionSetting("", "", ""),
+                        CONNECTION_POOL_SETTING)
+                        .updateAndGetKey(
+                                getInvalidPreparedStatementCreator(),
+                                "id", Long.class))
                 .isInstanceOf(RuntimeException.class);
     }
 }
