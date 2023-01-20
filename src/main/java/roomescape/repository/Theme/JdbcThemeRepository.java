@@ -53,6 +53,12 @@ public class JdbcThemeRepository implements ThemeRepository{
         return jdbcTemplate.update(sql, deleteId);
     }
 
+    @Override
+    public Boolean isThemeExists(long themeId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM THEME where id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, themeId);
+    }
+
     private PreparedStatementCreator autoIncrementKeyStatement(String sql, Theme theme) {
         return (connection) -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
@@ -63,12 +69,5 @@ public class JdbcThemeRepository implements ThemeRepository{
         };
     }
 
-    public Boolean isReservation(Long deleteId) {
-        // ReservationRepository?
-        String sql = "SELECT EXISTS(SELECT 1 FROM RESERVATION WHERE theme_id = ?)";
-//        String sql = "SELECT EXISTS(SELECT 1 FROM THEME t " +
-//                          "INNER JOIN RESERVATION r WHERE r.theme_id = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, deleteId);
-    }
 
 }

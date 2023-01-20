@@ -1,8 +1,11 @@
 package roomescape.console;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.config.AppConfig;
 import roomescape.controller.ConsoleReservationController;
 import roomescape.domain.Reservation;
 import roomescape.repository.Reservation.JdbcReservationRepository;
+import roomescape.repository.Theme.JdbcThemeRepository;
 import roomescape.service.Reservation.WebReservationService;
 
 import java.util.Scanner;
@@ -16,7 +19,9 @@ public class ConsoleApplication {
     private static final String QUIT = "quit";
     public static void main(String[] args) throws ClassNotFoundException {
         ConsoleReservationController consoleReservationController = new ConsoleReservationController(
-                new WebReservationService(new JdbcReservationRepository())
+                new WebReservationService(
+                        new JdbcReservationRepository(),
+                        new JdbcThemeRepository(new JdbcTemplate(AppConfig.getDataSource())))
         );
         InputParsing inputParsing = new InputParsing();
         Scanner scanner = new Scanner(System.in);

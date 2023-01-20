@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Theme;
+import roomescape.repository.Reservation.JdbcReservationRepository;
 import roomescape.repository.Theme.JdbcThemeRepository;
 
 import java.util.NoSuchElementException;
@@ -16,12 +17,14 @@ import static roomescape.utils.Messages.*;
 @Service
 @Qualifier("WebTheme")
 public class WebThemeService implements ThemeService {
-    JdbcThemeRepository jdbcThemeRepository;
+    private final JdbcThemeRepository jdbcThemeRepository;
+    private final JdbcReservationRepository jdbcReservationRepository;
     private static final Logger logger =
             LoggerFactory.getLogger(WebThemeService.class);
 
-    public WebThemeService(JdbcThemeRepository jdbcThemeRepository) {
+    public WebThemeService(JdbcThemeRepository jdbcThemeRepository, JdbcReservationRepository jdbcReservationRepository) {
         this.jdbcThemeRepository = jdbcThemeRepository;
+        this.jdbcReservationRepository = jdbcReservationRepository;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class WebThemeService implements ThemeService {
 
     @Override
     public void deleteTheme(Long deleteId) {
-        Boolean isReserved = jdbcThemeRepository.isReservation(deleteId);
+        Boolean isReserved = jdbcReservationRepository.isReservation(deleteId);
         if (isReserved) {
             logger.error(DELETE_THEME_ERROR.getMessage() + deleteId);
             throw new IllegalArgumentException(THEME_EXISTS_RESERVATION.getMessage() + deleteId);
@@ -61,6 +64,6 @@ public class WebThemeService implements ThemeService {
             logger.error(DELETE_NOT_FOUND_ERROR.getMessage() + deleteId);
             throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + deleteId);
         }
-        logger.info(DELETE_SUCCESS.getMessage() + deleteResult);
+        logger.info(DELETE_SUCCESS.getMessage() + deleteId);
     }
 }

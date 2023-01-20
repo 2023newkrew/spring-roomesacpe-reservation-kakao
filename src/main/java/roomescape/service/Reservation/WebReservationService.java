@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.repository.Reservation.JdbcReservationRepository;
+import roomescape.repository.Theme.JdbcThemeRepository;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,13 +18,16 @@ import static roomescape.utils.Messages.*;
 @Service
 @Qualifier("WebReservation")
 public class WebReservationService implements ReservationService{
-    final JdbcReservationRepository jdbcReservationRepository;
+    private final JdbcReservationRepository jdbcReservationRepository;
+    private final JdbcThemeRepository jdbcThemeRepository;
     private static final Logger logger =
             LoggerFactory.getLogger(WebReservationService.class);
 
     @Autowired
-    public WebReservationService(JdbcReservationRepository jdbcReservationRepository) {
+    public WebReservationService(JdbcReservationRepository jdbcReservationRepository,
+                                 JdbcThemeRepository jdbcThemeRepository) {
         this.jdbcReservationRepository = jdbcReservationRepository;
+        this.jdbcThemeRepository = jdbcThemeRepository;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class WebReservationService implements ReservationService{
                     RESERVATION_TIME.getMessage() + reservation.getTime());
             throw new DuplicateRequestException(RESERVATION_CREATE_ERROR.getMessage());
         }
-        Boolean themeExists = jdbcReservationRepository.isThemeExists(reservation.getThemeId());
+        Boolean themeExists = jdbcThemeRepository.isThemeExists(reservation.getThemeId());
         if (!themeExists) {
             logger.error(CREATE_NOT_FOUND_THEME.getMessage() + reservation.getThemeId());
             throw new NoSuchElementException(THEME_NOT_EXISTS.getMessage());

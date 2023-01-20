@@ -21,8 +21,7 @@ public class JdbcReservationRepository implements ReservationRepository{
 
     @Autowired
     public JdbcReservationRepository() throws ClassNotFoundException {
-        AppConfig appConfig = new AppConfig();
-        this.jdbcTemplate = new JdbcTemplate(appConfig.getDataSource());
+        this.jdbcTemplate = new JdbcTemplate(AppConfig.getDataSource());
         this.databaseMapper = new H2Mapper();
     }
 
@@ -57,12 +56,12 @@ public class JdbcReservationRepository implements ReservationRepository{
         return jdbcTemplate.update(sql, deleteId);
     }
 
-    @Override
-    public Boolean isThemeExists(long themeId) {
-        // ThemeRepository ?
-        String sql = "SELECT EXISTS(SELECT 1 FROM THEME where id = ?)";
+
+    public Boolean isReservation(Long themeId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM RESERVATION WHERE theme_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, themeId);
     }
+
 
     private PreparedStatementCreator autoIncrementKeyStatement(String sql, Reservation reservation) {
         return (connection) -> {

@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 public class AppConfig {
-    public DataSource getDataSource() throws ClassNotFoundException {
+    public static DataSource getDataSource() throws ClassNotFoundException {
         YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
         yamlFactory.setResources(new ClassPathResource("application.yml"));
         Properties props = yamlFactory.getObject();

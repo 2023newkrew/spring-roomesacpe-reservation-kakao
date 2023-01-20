@@ -13,5 +13,6 @@ public interface ReservationRepository {
 
     Integer deleteReservation(long deleteId);
 
-    Boolean isThemeExists(long themeId);
+    Boolean isReservation(Long themeId);
+
 }

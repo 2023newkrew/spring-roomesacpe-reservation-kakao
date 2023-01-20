@@ -8,10 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestExecutionListeners;
+import roomescape.config.AppConfig;
 import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
 import roomescape.repository.Reservation.JdbcReservationRepository;
+import roomescape.repository.Theme.JdbcThemeRepository;
 import roomescape.service.Reservation.WebReservationService;
 
 import java.time.LocalDate;
@@ -34,7 +37,9 @@ public class ConsoleReservationControllerTest {
     @Autowired
     public ConsoleReservationControllerTest() throws ClassNotFoundException {
         this.consoleReservationController = new ConsoleReservationController(
-                new WebReservationService(new JdbcReservationRepository())
+                new WebReservationService
+                        (new JdbcReservationRepository(),
+                         new JdbcThemeRepository(new JdbcTemplate(AppConfig.getDataSource())))
         );
     }
 
