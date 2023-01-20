@@ -1,23 +1,29 @@
 package roomescape.controller;
 
-import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.Theme;
 
 @DisplayName("테마 웹 요청 / 응답 처리")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@Transactional
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class ThemeControllerTest {
 
     private static final String NAME_DATA1 = "워너고홈";
@@ -28,61 +34,55 @@ public class ThemeControllerTest {
     private static final String THEME_PATH = "/theme";
     private static final String FIRST_THEME_PATH = THEME_PATH + "/1";
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @DisplayName("테마 생성")
     @Test
-    void postTheme() {
+    void postTheme() throws Exception {
         Theme theme = new Theme(NAME_DATA2, DESC_DATA, PRICE_DATA);
 
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(theme)
-                .when().post(THEME_PATH)
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        mockMvc.perform(post(THEME_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(theme)))
+                .andExpect(status().isCreated())
+                .andDo(print());
     }
 
     @DisplayName("테마 목록 조회")
     @Test
-    void getThemeList() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get(THEME_PATH)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2))
-                .body("[0].name", is( NAME_DATA1))
-                .body("[0].desc", is(DESC_DATA))
-                .body("[0].price", is(PRICE_DATA));
+    void getThemeList() throws Exception {
+        mockMvc.perform(get(THEME_PATH)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].name").value(NAME_DATA1))
+                .andExpect(jsonPath("$[0].desc").value(DESC_DATA))
+                .andExpect(jsonPath("$[0].price").value(PRICE_DATA))
+                .andDo(print());
     }
 
     @DisplayName("테마 조회")
     @Test
-    void getTheme() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get(FIRST_THEME_PATH)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("name", is( NAME_DATA1))
-                .body("desc", is(DESC_DATA))
-                .body("price", is(PRICE_DATA));
+    void getTheme() throws Exception {
+        mockMvc.perform(get(FIRST_THEME_PATH)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(NAME_DATA1))
+                .andExpect(jsonPath("$.desc").value(DESC_DATA))
+                .andExpect(jsonPath("$.price").value(PRICE_DATA))
+                .andDo(print());
     }
 
     @DisplayName("테마 취소")
     @Test
-    void deleteTheme() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete(FIRST_THEME_PATH)
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+    void deleteTheme() throws Exception {
+        mockMvc.perform(delete(FIRST_THEME_PATH)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
     }
 }

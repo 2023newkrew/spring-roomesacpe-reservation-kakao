@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.Theme;
 
 @DisplayName("JDBC 데이터베이스 접근 테스트")
 @JdbcTest
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class SpringThemeDAOTest {
 
     private static final String NAME_DATA1 = "워너고홈";

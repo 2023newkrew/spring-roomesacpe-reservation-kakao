@@ -10,16 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dao.reservation.SpringReservationDAO;
 import roomescape.dto.Reservation;
 
 @DisplayName("JDBC 데이터베이스 접근 - 예약 테이블이 존재하지 않을 경우 null 리턴")
 @JdbcTest
+@Rollback(false)
 @ActiveProfiles("test")
-@Sql(value = "classpath:/drop.sql")
+@Sql(value = {"classpath:/drop.sql"})
+@Sql(value = {"classpath:/drop.sql", "classpath:/schema.sql", "classpath:/data.sql"}, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 public class SpringReservationDAONoTableExceptionTest {
 
     private static final LocalDate DATE_DATA = LocalDate.parse("2022-08-01");

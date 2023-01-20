@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dao.reservation.SpringReservationDAO;
 import roomescape.dto.Reservation;
@@ -17,7 +16,6 @@ import roomescape.dto.Reservation;
 @DisplayName("JDBC 데이터베이스 접근 예외처리")
 @JdbcTest
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class SpringReservationDAOExceptionTest {
     private ReservationDAO reservationDAO;
 

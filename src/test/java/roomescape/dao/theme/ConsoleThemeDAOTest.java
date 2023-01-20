@@ -3,35 +3,24 @@ package roomescape.dao.theme;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.connection.ConnectionManager;
-import roomescape.connection.ConnectionSetting;
-import roomescape.connection.PoolSetting;
 import roomescape.dto.Theme;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@JdbcTest
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class ConsoleThemeDAOTest {
-
-    private static final String URL = "jdbc:h2:mem:test";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
-
-    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
-    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
 
     private static final String NAME_DATA1 = "워너고홈";
     private static final String NAME_DATA2 = "테스트";
@@ -41,28 +30,27 @@ public class ConsoleThemeDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM THEME";
 
-    private final ConnectionManager connectionManager = new ConnectionManager(
-            CONNECTION_SETTING,
-            CONNECTION_POOL_SETTING);
-    private final ThemeDAO themeDAO = new ConsoleThemeDAO(connectionManager);
-    private Connection con;
+    @Autowired
+    private DataSource dataSource;
+
+    private ThemeDAO themeDAO;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        con = DriverManager.getConnection(URL, USER, PASSWORD);
-    }
-
-    @AfterEach
-    void setDown() throws SQLException {
-        if (con != null) {
-            con.close();
-        }
+    void setUp() {
+        ConnectionManager connectionManager = new ConnectionManager(dataSource);
+        themeDAO = new ConsoleThemeDAO(connectionManager);
     }
 
     private <T> T getCount(Class<T> tClass) throws SQLException {
-        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
-        assertThat(resultSet.next()).isTrue();
-        return resultSet.getObject(1, tClass);
+        Connection con = null;
+        try {
+            con = DataSourceUtils.getConnection(dataSource);
+            ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
+            assertThat(resultSet.next()).isTrue();
+            return resultSet.getObject(1, tClass);
+        } finally {
+            DataSourceUtils.releaseConnection(con, dataSource);
+        }
     }
 
     @DisplayName("테마 생성")

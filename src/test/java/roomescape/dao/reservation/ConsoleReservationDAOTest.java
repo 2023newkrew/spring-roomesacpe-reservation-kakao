@@ -3,36 +3,25 @@ package roomescape.dao.reservation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.junit.jupiter.api.AfterEach;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.connection.ConnectionManager;
-import roomescape.connection.ConnectionSetting;
-import roomescape.connection.PoolSetting;
 import roomescape.dto.Reservation;
 
 @DisplayName("콘솔용 데이터베이스 접근 테스트")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@JdbcTest
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class ConsoleReservationDAOTest {
-
-    private static final String URL = "jdbc:h2:mem:test";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
-
-    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
-    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
 
     private static final LocalDate DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate DATE_DATA2 = LocalDate.parse("2022-08-02");
@@ -42,28 +31,27 @@ public class ConsoleReservationDAOTest {
 
     private static final String COUNT_SQL = "SELECT count(*) FROM RESERVATION";
 
-    private final ConnectionManager connectionManager = new ConnectionManager(
-            CONNECTION_SETTING,
-            CONNECTION_POOL_SETTING);
-    private final ReservationDAO reservationDAO = new ConsoleReservationDAO(connectionManager);
-    private Connection con;
+    @Autowired
+    private DataSource dataSource;
 
-    @BeforeEach
-    void setUp() throws SQLException {
-        con = DriverManager.getConnection(URL, USER, PASSWORD);
-    }
+    private ReservationDAO reservationDAO;
 
-    @AfterEach
-    void setDown() throws SQLException {
-        if (con != null) {
-            con.close();
+    private Long getCount() throws SQLException {
+        Connection con = null;
+        try {
+            con = DataSourceUtils.getConnection(dataSource);
+            ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
+            assertThat(resultSet.next()).isTrue();
+            return resultSet.getLong(1);
+        } finally {
+            DataSourceUtils.releaseConnection(con, dataSource);
         }
     }
 
-    private Long getCount() throws SQLException {
-        ResultSet resultSet = con.createStatement().executeQuery(COUNT_SQL);
-        assertThat(resultSet.next()).isTrue();
-        return resultSet.getLong(1);
+    @BeforeEach
+    void setUp() {
+        ConnectionManager connectionManager = new ConnectionManager(dataSource);
+        reservationDAO = new ConsoleReservationDAO(connectionManager);
     }
 
     @DisplayName("예약 생성")

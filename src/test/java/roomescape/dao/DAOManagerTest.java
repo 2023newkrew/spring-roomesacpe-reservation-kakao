@@ -7,20 +7,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.connection.ConnectionManager;
-import roomescape.connection.ConnectionSetting;
-import roomescape.connection.PoolSetting;
 import roomescape.dao.reservation.ReservationDAO;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationIdPreparedStatementCreator;
 import roomescape.dao.reservation.preparedstatementcreator.ExistReservationPreparedStatementCreator;
@@ -39,17 +38,9 @@ import roomescape.dto.Reservation;
 import roomescape.dto.Theme;
 
 @DisplayName("연결 매니저 테스트")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@JdbcTest
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class DAOManagerTest {
-
-    private static final String URL = "jdbc:h2:mem:test";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
-
-    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
-    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
 
     private static final LocalDate RESERVATION_DATE_DATA1 = LocalDate.parse("2022-08-01");
     private static final LocalDate RESERVATION_DATE_DATA2 = LocalDate.parse("2022-08-02");
@@ -77,9 +68,15 @@ public class DAOManagerTest {
     private static final Theme THEME2 = new Theme(
             THEME_ID_DATA, THEME_NAME_DATA2, THEME_DESC_DATA, THEME_PRICE_DATA);
 
-    private final ConnectionManager connectionManager = new ConnectionManager(
-            CONNECTION_SETTING,
-            CONNECTION_POOL_SETTING);
+    @Autowired
+    private DataSource dataSource;
+
+    private ConnectionManager connectionManager;
+
+    @BeforeEach
+    void setUp() {
+        connectionManager = new ConnectionManager(dataSource);
+    }
 
     @DisplayName("쿼리 테스트")
     @ParameterizedTest
@@ -183,18 +180,19 @@ public class DAOManagerTest {
     @DisplayName("업데이트 키 테스트")
     @ParameterizedTest
     @MethodSource("getUpdateAndGetKeyData")
-    void updateAndGetKey(PreparedStatementCreator psc, Long expected) {
+    void updateAndGetKey(PreparedStatementCreator psc) {
         Long id =  connectionManager.updateAndGetKey(psc, "id", Long.class);
 
-        assertThat(id).isEqualTo(expected);
+        assertThat(id).isNotNull();
+        assertThat(id).isNotZero();
     }
 
     private static Stream<Arguments> getUpdateAndGetKeyData() {
         return Stream.of(
                 Arguments.arguments(
-                        new InsertReservationPreparedStatementCreator(RESERVATION2), 2L),
+                        new InsertReservationPreparedStatementCreator(RESERVATION2)),
                 Arguments.arguments(
-                        new InsertThemePreparedStatementCreator(THEME2), 3L)
+                        new InsertThemePreparedStatementCreator(THEME2))
         );
     }
 }

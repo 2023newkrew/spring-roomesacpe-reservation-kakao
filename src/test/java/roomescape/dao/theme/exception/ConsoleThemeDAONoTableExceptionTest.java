@@ -2,43 +2,43 @@ package roomescape.dao.theme.exception;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.connection.ConnectionManager;
-import roomescape.connection.ConnectionSetting;
-import roomescape.connection.PoolSetting;
 import roomescape.dao.theme.ConsoleThemeDAO;
 import roomescape.dao.theme.ThemeDAO;
 import roomescape.dto.Theme;
 
 @DisplayName("콘솔용 데이터베이스 접근 - 테마 테이블이 존재하지 않을 경우 null 리턴")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Transactional
+@JdbcTest
+@Rollback(false)
 @ActiveProfiles("test")
-@Sql(value = "classpath:/drop.sql")
+@Sql(value = {"classpath:/drop.sql"})
+@Sql(value = {"classpath:/drop.sql", "classpath:/schema.sql", "classpath:/data.sql"}, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 public class ConsoleThemeDAONoTableExceptionTest {
-
-    private static final String URL = "jdbc:h2:mem:test";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
-
-    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
-    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
 
     private static final String NAME_DATA = "워너고홈";
     private static final String DESC_DATA = "병맛 어드벤처 회사 코믹물";
     private static final int PRICE_DATA = 29000;
 
-    private final ConnectionManager connectionManager = new ConnectionManager(
-            CONNECTION_SETTING,
-            CONNECTION_POOL_SETTING);
+    @Autowired
+    private DataSource dataSource;
 
-    private final ThemeDAO themeDAO = new ConsoleThemeDAO(connectionManager);
+    private ThemeDAO themeDAO;
+
+    @BeforeEach
+    void setUp() {
+        ConnectionManager connectionManager = new ConnectionManager(dataSource);
+        themeDAO = new ConsoleThemeDAO(connectionManager);
+    }
 
     @DisplayName("테마 생성) 테이블이 존재하지 않을 경우 null 리턴")
     @Test

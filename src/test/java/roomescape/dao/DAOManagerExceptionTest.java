@@ -2,36 +2,33 @@ package roomescape.dao;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.connection.ConnectionManager;
-import roomescape.connection.ConnectionSetting;
-import roomescape.connection.PoolSetting;
 
 @DisplayName("연결 매니저 예외처리 테스트")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@JdbcTest
 @ActiveProfiles("test")
-@Sql("classpath:/test.sql")
 public class DAOManagerExceptionTest {
 
-    private static final String URL = "jdbc:h2:mem:test";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
+    @Autowired
+    private DataSource dataSource;
 
-    private static final ConnectionSetting CONNECTION_SETTING = new ConnectionSetting(URL, USER, PASSWORD);
-    private static final PoolSetting CONNECTION_POOL_SETTING = new PoolSetting(10);
-
-    private static final ConnectionManager connectionManager = new ConnectionManager(
-            CONNECTION_SETTING,
-            CONNECTION_POOL_SETTING);
+    private ConnectionManager connectionManager;
 
     private static PreparedStatementCreator getInvalidPreparedStatementCreator() {
         return con -> con.prepareStatement("CREATE TABLE ?");
+    }
+
+    @BeforeEach
+    void setUp() {
+        connectionManager = new ConnectionManager(dataSource);
     }
 
     @DisplayName("잘못된 쿼리")
@@ -65,9 +62,7 @@ public class DAOManagerExceptionTest {
     @Test
     void failToConnection() {
         assertThatThrownBy(
-                () -> new ConnectionManager(
-                        new ConnectionSetting("", "", ""),
-                        CONNECTION_POOL_SETTING)
+                () -> new ConnectionManager(null)
                         .updateAndGetKey(
                                 getInvalidPreparedStatementCreator(),
                                 "id", Long.class))
