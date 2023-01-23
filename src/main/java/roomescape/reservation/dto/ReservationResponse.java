@@ -21,13 +21,13 @@ public class ReservationResponse {
         this.themeId = themeId;
     }
 
-    public static ReservationResponse of(long id, Reservation reservation, long themeId) {
+    public static ReservationResponse of(Reservation reservation){
         return new ReservationResponse(
-                id,
-                reservation.getDate(),
-                reservation.getTime(),
-                reservation.getName(),
-                themeId
+          reservation.getId(),
+          reservation.getDate(),
+          reservation.getTime(),
+          reservation.getName(),
+          reservation.getThemeId()
         );
     }
 

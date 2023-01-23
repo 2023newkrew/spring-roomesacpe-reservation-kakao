@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
+import roomescape.reservation.dto.ReservationRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,12 +33,12 @@ public class ReservationControllerTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    final static Reservation DUMMY_RESERVATION = new Reservation(
-            1L,
-            LocalDate.of(2022, 8, 11),
-            LocalTime.of(13, 0, 0),
-            "name22",
-            1L);
+    final static ReservationRequest DUMMY_RESERVATION_REQUEST =
+            new ReservationRequest(
+                    LocalDate.of(2022, 8, 11),
+                    LocalTime.of(13, 0, 0),
+                    "name22",
+                    1L);
 
     @BeforeEach
     void setUp() {
@@ -52,7 +53,7 @@ public class ReservationControllerTest {
     void createReservation() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_RESERVATION)
+                .body(DUMMY_RESERVATION_REQUEST)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -68,7 +69,7 @@ public class ReservationControllerTest {
         createReservation();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_RESERVATION)
+                .body(DUMMY_RESERVATION_REQUEST)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

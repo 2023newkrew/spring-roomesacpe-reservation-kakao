@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
 
 import javax.validation.Valid;
@@ -18,14 +20,14 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<String> createReservation(@RequestBody @Valid Reservation reservation) {
+    public ResponseEntity<String> createReservation(@RequestBody @Valid ReservationRequest reservation) {
         Long reservationId = reservationService.createReservation(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<Reservation> findReservationById(@PathVariable("id") String reservationId) {
-        Reservation reservation = reservationService.findById(reservationId);
+    public ResponseEntity<ReservationResponse> findReservationById(@PathVariable("id") String reservationId) {
+        ReservationResponse reservation = reservationService.findById(reservationId);
         return ResponseEntity.ok().body(reservation);
     }
 

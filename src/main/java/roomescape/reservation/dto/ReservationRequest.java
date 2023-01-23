@@ -12,6 +12,13 @@ public class ReservationRequest {
     private String name;
     private long themeId;
 
+    public ReservationRequest(LocalDate date, LocalTime time, String name, long themeId){
+        this.date = date;
+        this.time = time;
+        this.name = name;
+        this.themeId = themeId;
+    }
+
     public LocalDate getDate() {
         return date;
     }
@@ -26,9 +33,5 @@ public class ReservationRequest {
 
     public Long getThemeId() {
         return themeId;
-    }
-
-    public Reservation toEntity() {
-        return Reservation.of(0L, date, time, name, themeId);
     }
 }
