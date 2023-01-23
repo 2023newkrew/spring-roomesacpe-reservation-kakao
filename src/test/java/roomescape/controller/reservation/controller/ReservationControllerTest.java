@@ -24,7 +24,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-public class RoomEscapeControllerTest {
+public class ReservationControllerTest {
 
     @LocalServerPort
     int port;

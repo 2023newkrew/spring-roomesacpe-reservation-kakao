@@ -18,6 +18,10 @@ public class Reservation {
         this.themeId = themeId;
     }
 
+    public static Reservation of(Long id, LocalDate date, LocalTime time, String name, long themeId) {
+        return new Reservation(id, date, time, name, themeId);
+    }
+
     public Long getId() {
         return id;
     }

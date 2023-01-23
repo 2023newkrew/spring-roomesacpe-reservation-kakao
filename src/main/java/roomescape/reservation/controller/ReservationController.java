@@ -10,10 +10,10 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-public class RoomEscapeController {
+public class ReservationController {
     private final ReservationService reservationService;
 
-    public RoomEscapeController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
