@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Theme;
 import roomescape.theme.repository.ThemeRepository;
 
+import java.util.List;
+
 @Service
 public class ThemeService {
 
@@ -18,8 +20,8 @@ public class ThemeService {
         return themeRepository.save(theme);
     }
 
-    public Theme findById(String themeId){
-        return themeRepository.findById(themeId);
+    public List<Theme> viewAll(){
+        return themeRepository.viewAll();
     }
 
     public void deleteById(String themeId){

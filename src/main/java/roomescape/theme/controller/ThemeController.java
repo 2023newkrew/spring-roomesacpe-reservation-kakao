@@ -8,6 +8,7 @@ import roomescape.theme.service.ThemeService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ThemeController {
@@ -23,10 +24,10 @@ public class ThemeController {
         return ResponseEntity.created(URI.create("/themes/" + themeId)).build();
     }
 
-    @GetMapping("/themes/{id}")
-    public ResponseEntity<Theme> findThemeById(@PathVariable("id") String themeId) {
-        Theme theme = themeService.findById(themeId);
-        return ResponseEntity.ok().body(theme);
+    @GetMapping("/themes")
+    public ResponseEntity<List<Theme>> viewAllThemes() {
+        List<Theme> themeList = themeService.viewAll();
+        return ResponseEntity.ok().body(themeList);
     }
 
     @DeleteMapping("/themes/{id}")

@@ -36,6 +36,13 @@ public class ThemeControllerTest {
             22000
     );
 
+    final static Theme DUMMY_THEME_2 = new Theme(
+            2L,
+            "테마이름",
+            "테마설명",
+            22000
+    );
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -59,16 +66,20 @@ public class ThemeControllerTest {
     /**
      * RoomEscapeController > lookUpReservation 메서드
      */
-    @DisplayName("id에 해당하는 theme 객체를 잘 가져오는지 확인한다")
+    @DisplayName("theme 객체들을 잘 가져오는지 확인한다")
     @Test
     void findThemeById() {
         createTheme();
         RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(DUMMY_THEME_2)
+                .when().post("/themes");
+
+        RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/themes/1")
+                .when().get("/themes")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", is(1));
+                .statusCode(HttpStatus.OK.value());
     }
 
     /**

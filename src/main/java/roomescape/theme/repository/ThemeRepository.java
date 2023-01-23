@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Theme;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
 public class ThemeRepository {
@@ -36,9 +37,9 @@ public class ThemeRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public Theme findById(String themeId) {
-        String sql = "SELECT * FROM THEME WHERE id = ?;";
-        return jdbcTemplate.queryForObject(sql, themeRowMapper, Long.parseLong(themeId));
+    public List<Theme> viewAll() {
+        String sql = "SELECT * FROM THEME;";
+        return jdbcTemplate.query(sql, themeRowMapper);
     }
 
     public void deleteById(String themeId) {
