@@ -122,4 +122,18 @@ public class ThemeControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
+    /**
+     * RoomEscapeController > deleteTheme 메서드
+     */
+    @DisplayName("id에 해당하는 theme 객체가 없는 경우, 예외가 발생한다.")
+    @Test
+    void deleteNotExistenceTheme() {
+        createTheme();
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/themes/2")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }

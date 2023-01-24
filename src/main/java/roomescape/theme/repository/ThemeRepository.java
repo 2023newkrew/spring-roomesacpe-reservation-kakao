@@ -59,7 +59,7 @@ public class ThemeRepository {
         return jdbcTemplate.query(sql, themeRowMapper);
     }
 
-    public void deleteById(String themeId) {
+    public void deleteById(Long themeId) {
         String sql = "DELETE FROM THEME WHERE id = ?";
         jdbcTemplate.update(sql, themeId);
     }
