@@ -4,7 +4,9 @@ public class EscapeException extends RuntimeException {
     private ErrorCode errorCode;
     private String errorMessage;
 
+    // 에러코드를 명시하지 않은 경우 '서버 내부 오류'를 기본값으로 한다
     public EscapeException() {
+        this(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 
     public EscapeException(ErrorCode errorCode) {
