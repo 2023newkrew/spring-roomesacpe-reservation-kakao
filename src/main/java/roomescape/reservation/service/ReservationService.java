@@ -1,9 +1,10 @@
 package roomescape.reservation.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.TimeTable;
 import roomescape.exception.DuplicatedReservationException;
+import roomescape.exception.InvalidTimeReservationException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
@@ -23,7 +24,23 @@ public class ReservationService {
 
     public Long createReservation(ReservationRequest reservation){
         checkDuplicatedDateAndTime(reservation.getDate(), reservation.getTime());
+        checkInvalidTime(reservation.getTime());
         return reservationRepository.save(reservation);
+    }
+
+    private void checkInvalidTime(LocalTime time) {
+        if(!isInTimeTable(time)){
+            throw new InvalidTimeReservationException("유효하지 않은 시간입니다.");
+        }
+    }
+
+    public boolean isInTimeTable(LocalTime time) {
+        for (TimeTable validTime : TimeTable.values()) {
+            if (validTime.getTime().equals(time)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void checkDuplicatedDateAndTime(LocalDate date, LocalTime time) {

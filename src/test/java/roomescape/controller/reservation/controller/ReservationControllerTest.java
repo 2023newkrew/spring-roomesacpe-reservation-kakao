@@ -76,6 +76,26 @@ public class ReservationControllerTest {
     }
 
     /**
+     * RoomEscapeController > createReservation 메서드
+     */
+    @DisplayName("타임테이블에 해당하지 않는 시간에 예약을 할 경우, 예외가 발생한다")
+    @Test
+    void invalidTimeReservation() {
+        ReservationRequest invalidReservationRequest =
+                new ReservationRequest(
+                        LocalDate.of(2022, 8, 11),
+                        LocalTime.of(13, 2, 0),
+                        "name22",
+                        1L);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(invalidReservationRequest)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
      * RoomEscapeController > lookUpReservation 메서드
      */
     @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")
