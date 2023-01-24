@@ -1,7 +1,7 @@
 package nextstep.repository.theme;
 
 import nextstep.domain.Theme;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ class JdbcThemeRepositoryTest {
     @Test
     void 중복된_이름으로_테마를_만들_수_없다() {
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> {
                     jdbcThemeRepository.save(theme);
                     jdbcThemeRepository.save(theme);
@@ -79,7 +79,7 @@ class JdbcThemeRepositoryTest {
 
     @Test
     void 테마가_없을_때_모든_테마들을_조회할_수_없다() {
-        ReservationException e = assertThrows(ReservationException.class, () -> jdbcThemeRepository.findAll());
+        EscapeException e = assertThrows(EscapeException.class, () -> jdbcThemeRepository.findAll());
         assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }
 
@@ -89,7 +89,7 @@ class JdbcThemeRepositoryTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> jdbcThemeRepository.findById(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }
@@ -102,7 +102,7 @@ class JdbcThemeRepositoryTest {
         //when, then
         assertDoesNotThrow(() -> jdbcThemeRepository.deleteById(saveId));
         assertThatThrownBy(() -> jdbcThemeRepository.findById(saveId))
-                .isInstanceOf(ReservationException.class);
+                .isInstanceOf(EscapeException.class);
     }
 
     @Test
@@ -111,7 +111,7 @@ class JdbcThemeRepositoryTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> jdbcThemeRepository.deleteById(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }

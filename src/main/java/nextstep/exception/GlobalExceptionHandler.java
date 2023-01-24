@@ -12,8 +12,8 @@ import static nextstep.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = ReservationException.class)
-    public ResponseEntity<ErrorResponse> reservationExceptionHandler(ReservationException e) {
+    @ExceptionHandler(value = EscapeException.class)
+    public ResponseEntity<ErrorResponse> escapeExceptionHandler(EscapeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

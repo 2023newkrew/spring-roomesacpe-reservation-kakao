@@ -1,7 +1,7 @@
 package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -45,7 +45,7 @@ public class JdbcReservationRepository extends ReservationRepository {
         String sql = CHECK_DUPLICATION_SQL;
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, time);
         if (count > 0) {
-            throw new ReservationException(DUPLICATED_RESERVATION_EXISTS);
+            throw new EscapeException(DUPLICATED_RESERVATION_EXISTS);
         }
     }
 
@@ -61,7 +61,7 @@ public class JdbcReservationRepository extends ReservationRepository {
             Reservation reservation = jdbcTemplate.queryForObject(FIND_BY_ID_SQL, actorRowMapper, id);
             return reservation;
         } catch (DataAccessException e) {
-            throw new ReservationException(RESERVATION_NOT_FOUND);
+            throw new EscapeException(RESERVATION_NOT_FOUND);
         }
     }
 
@@ -75,7 +75,7 @@ public class JdbcReservationRepository extends ReservationRepository {
     public void deleteById(Long id) {
         int updatedRows = jdbcTemplate.update(DELETE_BY_ID_SQL, id);
         if (updatedRows == 0) {
-            throw new ReservationException(RESERVATION_NOT_FOUND);
+            throw new EscapeException(RESERVATION_NOT_FOUND);
         }
     }
 

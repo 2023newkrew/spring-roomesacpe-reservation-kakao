@@ -1,13 +1,13 @@
 package nextstep.exception;
 
-public class ReservationException extends RuntimeException {
+public class EscapeException extends RuntimeException {
     private ErrorCode errorCode;
     private String errorMessage;
 
-    public ReservationException() {
+    public EscapeException() {
     }
 
-    public ReservationException(ErrorCode errorCode) {
+    public EscapeException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.errorMessage = errorCode.getDescription();
     }

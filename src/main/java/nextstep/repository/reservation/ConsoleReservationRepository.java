@@ -1,7 +1,7 @@
 package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
             con = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PASSWORD);
             System.out.println(CONNECTION_SUCCESS_MESSAGE);
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -46,7 +46,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
             generatedKeys.next();
             return generatedKeys.getLong("id");
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -61,10 +61,10 @@ public class ConsoleReservationRepository extends ReservationRepository {
 
             int row = resultSet.getInt("total_rows");
             if (row > 0) {
-                throw new ReservationException(DUPLICATED_RESERVATION_EXISTS);
+                throw new EscapeException(DUPLICATED_RESERVATION_EXISTS);
             }
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -83,7 +83,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
             resultSet.next();
             return Reservation.from(resultSet);
         } catch (SQLException e) {
-            throw new ReservationException(RESERVATION_NOT_FOUND);
+            throw new EscapeException(RESERVATION_NOT_FOUND);
         }
     }
 
@@ -101,7 +101,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
 
             return reservations;
         } catch (SQLException e) {
-            throw new ReservationException(RESERVATION_NOT_FOUND);
+            throw new EscapeException(RESERVATION_NOT_FOUND);
         }
     }
 
@@ -112,10 +112,10 @@ public class ConsoleReservationRepository extends ReservationRepository {
             ps.setLong(1, id);
             int updatedRows = ps.executeUpdate();
             if (updatedRows == 0) {
-                throw new ReservationException(RESERVATION_NOT_FOUND);
+                throw new EscapeException(RESERVATION_NOT_FOUND);
             }
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -125,7 +125,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
             Statement statement = con.createStatement();
             statement.execute(CREATE_TABLE_SQL);
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -135,7 +135,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
             Statement statement = con.createStatement();
             statement.execute(DROP_TABLE_SQL);
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 }

@@ -1,7 +1,7 @@
 package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,7 @@ class ConsoleReservationRepositoryTest {
 
     @Test
     void 중복된_일시에_예약할_수_없다() {
-        ReservationException e = assertThrows(ReservationException.class, () -> {
+        EscapeException e = assertThrows(EscapeException.class, () -> {
             consoleReservationRepository.save(reservation);
             consoleReservationRepository.save(reservation);
         });
@@ -76,7 +76,7 @@ class ConsoleReservationRepositoryTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> consoleReservationRepository.findById(fakeId));
 
         assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
@@ -91,7 +91,7 @@ class ConsoleReservationRepositoryTest {
         consoleReservationRepository.deleteById(savedId);
 
         //then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> consoleReservationRepository.findById(savedId));
         assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
     }
@@ -102,7 +102,7 @@ class ConsoleReservationRepositoryTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> consoleReservationRepository.deleteById(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
     }

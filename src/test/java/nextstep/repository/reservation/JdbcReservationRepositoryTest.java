@@ -2,7 +2,7 @@ package nextstep.repository.reservation;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ class JdbcReservationRepositoryTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> jdbcReservationRepository.findById(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
     }
@@ -106,7 +106,7 @@ class JdbcReservationRepositoryTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> jdbcReservationRepository.deleteById(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(RESERVATION_NOT_FOUND);
     }

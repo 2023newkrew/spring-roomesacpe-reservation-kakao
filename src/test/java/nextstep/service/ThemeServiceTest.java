@@ -1,7 +1,7 @@
 package nextstep.service;
 
 import nextstep.domain.Theme;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +29,7 @@ class ThemeServiceTest {
     @Test
     void 중복된_이름으로_테마를_만들_수_없다() {
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> {
                     themeService.createTheme(theme);
                     themeService.createTheme(theme);
@@ -58,7 +58,7 @@ class ThemeServiceTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> themeService.findById(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }
@@ -70,7 +70,7 @@ class ThemeServiceTest {
 
         //when, then
         assertDoesNotThrow(() -> themeService.deleteTheme(saveId));
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> themeService.findById(saveId));
         assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }
@@ -81,7 +81,7 @@ class ThemeServiceTest {
         Long fakeId = 1L;
 
         //when, then
-        ReservationException e = assertThrows(ReservationException.class,
+        EscapeException e = assertThrows(EscapeException.class,
                 () -> themeService.deleteTheme(fakeId));
         assertThat(e.getErrorCode()).isEqualTo(THEME_NOT_FOUND);
     }

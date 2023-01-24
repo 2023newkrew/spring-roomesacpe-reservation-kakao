@@ -1,7 +1,7 @@
 package nextstep.repository.theme;
 
 import nextstep.domain.Theme;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -39,7 +39,7 @@ public class JdbcThemeRepository extends ThemeRepository {
     private void validateTheme(String name) {
         Integer count = jdbcTemplate.queryForObject(CHECK_DUPLICATION_SQL, Integer.class, name);
         if (count > 0) {
-            throw new ReservationException(DUPLICATED_THEME_EXISTS);
+            throw new EscapeException(DUPLICATED_THEME_EXISTS);
         }
     }
 
@@ -52,7 +52,7 @@ public class JdbcThemeRepository extends ThemeRepository {
     public List<Theme> findAll() {
         List<Theme> themes = jdbcTemplate.query(FIND_ALL_SQL, actorRowMapper);
         if (themes.size() == 0) {
-            throw new ReservationException(THEME_NOT_FOUND);
+            throw new EscapeException(THEME_NOT_FOUND);
         }
         return themes;
     }
@@ -62,7 +62,7 @@ public class JdbcThemeRepository extends ThemeRepository {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, actorRowMapper, id);
         } catch (DataAccessException e) {
-            throw new ReservationException(THEME_NOT_FOUND);
+            throw new EscapeException(THEME_NOT_FOUND);
         }
     }
 
@@ -70,7 +70,7 @@ public class JdbcThemeRepository extends ThemeRepository {
     public void deleteById(Long id) {
         int updatedRows = jdbcTemplate.update(DELETE_BY_ID_SQL, id);
         if (updatedRows == 0) {
-            throw new ReservationException(THEME_NOT_FOUND);
+            throw new EscapeException(THEME_NOT_FOUND);
         }
     }
 

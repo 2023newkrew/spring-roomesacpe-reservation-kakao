@@ -2,7 +2,7 @@ package nextstep;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 import nextstep.repository.reservation.ConsoleReservationRepository;
 import nextstep.repository.theme.ConsoleThemeRepository;
 import nextstep.service.ReservationService;
@@ -68,7 +68,7 @@ public class ConsoleEscapeApplication {
                 if (input.equals(QUIT)) {
                     break;
                 }
-            } catch (ReservationException e) {
+            } catch (EscapeException e) {
                 System.err.println(e.getErrorMessage());
             } catch (Exception e) {
                 e.printStackTrace();

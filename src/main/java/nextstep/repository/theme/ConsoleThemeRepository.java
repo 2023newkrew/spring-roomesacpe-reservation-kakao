@@ -1,7 +1,7 @@
 package nextstep.repository.theme;
 
 import nextstep.domain.Theme;
-import nextstep.exception.ReservationException;
+import nextstep.exception.EscapeException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             con = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PASSWORD);
             System.out.println(CONNECTION_SUCCESS_MESSAGE);
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -45,7 +45,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             generatedKeys.next();
             return generatedKeys.getLong("id");
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -59,10 +59,10 @@ public class ConsoleThemeRepository extends ThemeRepository {
 
             int row = resultSet.getInt("total_rows");
             if (row > 0) {
-                throw new ReservationException(DUPLICATED_THEME_EXISTS);
+                throw new EscapeException(DUPLICATED_THEME_EXISTS);
             }
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -84,12 +84,12 @@ public class ConsoleThemeRepository extends ThemeRepository {
             }
 
             if (themes.size() == 0) {
-                throw new ReservationException(THEME_NOT_FOUND);
+                throw new EscapeException(THEME_NOT_FOUND);
             }
 
             return themes;
         } catch (SQLException e) {
-            throw new ReservationException(THEME_NOT_FOUND);
+            throw new EscapeException(THEME_NOT_FOUND);
         }
     }
 
@@ -102,7 +102,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             resultSet.next();
             return Theme.from(resultSet);
         } catch (SQLException e) {
-            throw new ReservationException(THEME_NOT_FOUND);
+            throw new EscapeException(THEME_NOT_FOUND);
         }
     }
 
@@ -113,10 +113,10 @@ public class ConsoleThemeRepository extends ThemeRepository {
             ps.setLong(1, id);
             int updatedRows = ps.executeUpdate();
             if (updatedRows == 0) {
-                throw new ReservationException(THEME_NOT_FOUND);
+                throw new EscapeException(THEME_NOT_FOUND);
             }
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -126,7 +126,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             Statement statement = con.createStatement();
             statement.execute(CREATE_TABLE_SQL);
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 
@@ -136,7 +136,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             Statement statement = con.createStatement();
             statement.execute(DROP_TABLE_SQL);
         } catch (SQLException e) {
-            throw new ReservationException(SQL_ERROR);
+            throw new EscapeException(SQL_ERROR);
         }
     }
 }
