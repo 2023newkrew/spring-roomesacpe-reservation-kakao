@@ -18,7 +18,7 @@ public class ReservationDAO {
     private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private static final String DATABASE_USERNAME = "sa";
     private static final String DATABASE_PASSWORD = "";
-    private static final String CHECK_NUMBER_QUERY = "SELECT MAX(id) FROM RESERVATION";
+    private static final String CHECK_NUMBER_QUERY = "SELECT * FROM RESERVATION ORDER BY id DESC LIMIT 1";
     private static final String INSERT_QUERY = "INSERT INTO RESERVATION (id, date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_QUERY = "SELECT * FROM RESERVATION WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
@@ -36,17 +36,17 @@ public class ReservationDAO {
         }
     }
 
-    public int getNumberOfExistReservation() {
+    public Long getNumberOfExistReservation() {
         try (Connection con = makeConnection()) {
             PreparedStatement getNumberPS = con.prepareStatement(CHECK_NUMBER_QUERY);
             ResultSet getNumberRs = getNumberPS.executeQuery();
             if (getNumberRs.next()) {
-                return getNumberRs.getInt(INDEX_COUNT);
+                return getNumberRs.getLong(INDEX_ID);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return 0;
+        return 0L;
     }
 
     public void addReservation(Reservation reservation) {

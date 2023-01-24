@@ -16,7 +16,7 @@ public class RoomEscapeApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationDAO reservationDAO = new ReservationDAO();
-        long reservationIdIndex = reservationDAO.getNumberOfExistReservation();
+        Long reservationIdIndex = reservationDAO.getNumberOfExistReservation();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -38,7 +38,7 @@ public class RoomEscapeApplication {
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        1L // TODO
+                        1L
                 );
 
                 reservationDAO.addReservation(reservation);
@@ -66,9 +66,6 @@ public class RoomEscapeApplication {
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
                 System.out.println("테마 ID: " + reservation.getThemeId());
-                //System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                //System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                //System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
             }
 
             if (input.startsWith(DELETE)) {
