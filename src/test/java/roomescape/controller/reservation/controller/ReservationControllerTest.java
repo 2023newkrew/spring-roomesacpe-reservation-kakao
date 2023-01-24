@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.theme.dto.ThemeRequest;
 
@@ -56,7 +55,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > createReservation 메서드
+     * ReservationController > createReservation 메서드
      */
     @DisplayName("reservation이 잘 생성되는지 확인한다")
     @Test
@@ -71,7 +70,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > createReservation 메서드
+     * ReservationController > createReservation 메서드
      */
     @DisplayName("동일한 날짜/시간대에 예약을 하는 경우, 예외가 발생한다")
     @Test
@@ -86,7 +85,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > createReservation 메서드
+     * ReservationController > createReservation 메서드
      */
     @DisplayName("타임테이블에 해당하지 않는 시간에 예약을 할 경우, 예외가 발생한다")
     @Test
@@ -106,7 +105,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > createReservation 메서드
+     * ReservationController > createReservation 메서드
      */
     @DisplayName("없는 테마에 대해 예약할 경우, 예외가 발생한다")
     @Test
@@ -126,7 +125,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > findReservationById 메서드
+     * ReservationController > findReservationById 메서드
      */
     @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")
     @Test
@@ -141,7 +140,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > findReservationById 메서드
+     * ReservationController > findReservationById 메서드
      */
     @DisplayName("id에 해당하는 reservation 객체가 없는 경우, 예외가 발생한다")
     @Test
@@ -155,7 +154,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > deleteReservation 메서드
+     * ReservationController > deleteReservation 메서드
      */
     @DisplayName("id에 해당하는 reservation 객체를 잘 삭제하는지 확인한다")
     @Test
@@ -169,7 +168,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > deleteReservation 메서드
+     * ReservationController > deleteReservation 메서드
      */
     @DisplayName("없는 예약을 삭제하는 경우, 예외가 발생한다")
     @Test

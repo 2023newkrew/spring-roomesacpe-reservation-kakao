@@ -48,7 +48,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > createTheme 메서드
+     * ThemeController > createTheme 메서드
      */
     @DisplayName("theme이 잘 생성되는지 확인한다")
     @Test
@@ -63,7 +63,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > createTheme 메서드
+     * ThemeController > createTheme 메서드
      */
     @DisplayName("중복되는 이름의 테마를 추가하려는 경우, 예외가 발생한다")
     @Test
@@ -78,7 +78,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > viewAllThemes 메서드
+     * ThemeController > viewAllThemes 메서드
      */
     @DisplayName("theme 객체들을 잘 가져오는지 확인한다")
     @Test
@@ -97,7 +97,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > viewAllThemes 메서드
+     * ThemeController > viewAllThemes 메서드
      */
     @DisplayName("테마가 없는데 조회하는 경우, 예외가 발생한다")
     @Test
@@ -110,7 +110,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > deleteTheme 메서드
+     * ThemeController > deleteTheme 메서드
      */
     @DisplayName("id에 해당하는 theme 객체를 잘 삭제하는지 확인한다")
     @Test
@@ -124,7 +124,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > deleteTheme 메서드
+     * ThemeController > deleteTheme 메서드
      */
     @DisplayName("id에 해당하는 theme 객체가 없는 경우, 예외가 발생한다.")
     @Test

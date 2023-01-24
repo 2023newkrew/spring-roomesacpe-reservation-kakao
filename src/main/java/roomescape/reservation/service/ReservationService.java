@@ -62,7 +62,7 @@ public class ReservationService {
         }
     }
 
-    public ReservationResponse findById(String reservationId) {
+    public ReservationResponse findById(Long reservationId) {
         Optional<Reservation> reservation = reservationRepository.findById(reservationId);
         checkExistenceOfReservation(reservation);
         return ReservationResponse.of(reservation.get());
@@ -74,7 +74,7 @@ public class ReservationService {
         }
     }
 
-    public void deleteById(String reservationId) {
+    public void deleteById(Long reservationId) {
         checkExistenceOfReservation(reservationRepository.findById(reservationId));
         reservationRepository.deleteById(reservationId);
     }

@@ -25,13 +25,13 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations/{id}")
-    public ResponseEntity<ReservationResponse> findReservationById(@PathVariable("id") String reservationId) {
+    public ResponseEntity<ReservationResponse> findReservationById(@PathVariable("id") Long reservationId) {
         ReservationResponse reservation = reservationService.findById(reservationId);
         return ResponseEntity.ok().body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable("id") String reservationId) {
+    public ResponseEntity<String> deleteReservation(@PathVariable("id") Long reservationId) {
         reservationService.deleteById(reservationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
