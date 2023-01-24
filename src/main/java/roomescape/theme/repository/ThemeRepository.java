@@ -66,10 +66,10 @@ public class ThemeRepository {
 
     public Optional<Theme> findById(Long themeId) {
         String sql = "SELECT * FROM THEME WHERE id = ?;";
-        try{
+        try {
             Theme theme = jdbcTemplate.queryForObject(sql, themeRowMapper, themeId);
             return Optional.ofNullable(theme);
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }

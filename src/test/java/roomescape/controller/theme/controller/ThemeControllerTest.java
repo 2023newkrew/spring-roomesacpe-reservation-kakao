@@ -48,7 +48,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > createReservation 메서드
+     * RoomEscapeController > createTheme 메서드
      */
     @DisplayName("theme이 잘 생성되는지 확인한다")
     @Test
@@ -63,7 +63,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > createReservation 메서드
+     * RoomEscapeController > createTheme 메서드
      */
     @DisplayName("중복되는 이름의 테마를 추가하려는 경우, 예외가 발생한다")
     @Test
@@ -78,7 +78,7 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > lookUpReservation 메서드
+     * RoomEscapeController > viewAllThemes 메서드
      */
     @DisplayName("theme 객체들을 잘 가져오는지 확인한다")
     @Test
@@ -97,7 +97,20 @@ public class ThemeControllerTest {
     }
 
     /**
-     * RoomEscapeController > deleteReservation 메서드
+     * RoomEscapeController > viewAllThemes 메서드
+     */
+    @DisplayName("테마가 없는데 조회하는 경우, 예외가 발생한다")
+    @Test
+    void noThemes() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
+     * RoomEscapeController > deleteTheme 메서드
      */
     @DisplayName("id에 해당하는 theme 객체를 잘 삭제하는지 확인한다")
     @Test
