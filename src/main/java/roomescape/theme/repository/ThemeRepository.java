@@ -6,10 +6,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Reservation;
 import roomescape.domain.Theme;
+import roomescape.reservation.exception.DuplicatedReservationException;
 import roomescape.theme.dto.ThemeRequest;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +42,16 @@ public class ThemeRepository {
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public Optional<Theme> findByName(String name) {
+        String sql = "SELECT * FROM THEME WHERE name = ?;";
+        try {
+            Theme duplicatedTheme = jdbcTemplate.queryForObject(sql, themeRowMapper, name);
+            return Optional.ofNullable(duplicatedTheme);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Theme> viewAll() {

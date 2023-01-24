@@ -163,7 +163,7 @@ public class ReservationControllerTest {
         createReservation();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/4")
+                .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

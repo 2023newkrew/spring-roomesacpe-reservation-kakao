@@ -31,13 +31,13 @@ public class ThemeControllerTest {
     JdbcTemplate jdbcTemplate;
 
     final static ThemeRequest DUMMY_THEME_REQUEST = new ThemeRequest(
-            "테마이름",
+            "테마이름1",
             "테마설명",
             22000
     );
 
-    final static ThemeRequest DUMMY_THEME__REQUEST_2 = new ThemeRequest(
-            "테마이름",
+    final static ThemeRequest DUMMY_THEME_REQUEST_2 = new ThemeRequest(
+            "테마이름2",
             "테마설명",
             22000
     );
@@ -63,6 +63,21 @@ public class ThemeControllerTest {
     }
 
     /**
+     * RoomEscapeController > createReservation 메서드
+     */
+    @DisplayName("중복되는 이름의 테마를 추가하려는 경우, 예외가 발생한다")
+    @Test
+    void duplicatedTheme() {
+        createTheme();
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(DUMMY_THEME_REQUEST)
+                .when().post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
      * RoomEscapeController > lookUpReservation 메서드
      */
     @DisplayName("theme 객체들을 잘 가져오는지 확인한다")
@@ -71,7 +86,7 @@ public class ThemeControllerTest {
         createTheme();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_THEME__REQUEST_2)
+                .body(DUMMY_THEME_REQUEST_2)
                 .when().post("/themes");
 
         RestAssured.given().log().all()
