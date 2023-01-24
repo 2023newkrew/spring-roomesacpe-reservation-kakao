@@ -61,3 +61,4 @@
 ![theme_search.png](./theme_search.png)
 * 테마삭제
 ![theme_delete.png](./theme_delete.png)
+
