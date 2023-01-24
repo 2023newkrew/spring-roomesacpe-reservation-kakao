@@ -3,16 +3,15 @@ package roomescape.reservation.service;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.TimeTable;
-import roomescape.exception.DuplicatedReservationException;
-import roomescape.exception.InvalidTimeReservationException;
-import roomescape.exception.NoSuchReservationException;
-import roomescape.exception.NoSuchThemeException;
+import roomescape.reservation.exception.DuplicatedReservationException;
+import roomescape.reservation.exception.InvalidTimeReservationException;
+import roomescape.reservation.exception.NoSuchReservationException;
+import roomescape.reservation.exception.NoSuchThemeException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.theme.repository.ThemeRepository;
 
-import java.rmi.NoSuchObjectException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -70,12 +69,13 @@ public class ReservationService {
     }
 
     private void checkExistenceOfReservation(Optional<Reservation> reservation) {
-        if(reservation.isEmpty()){
+        if (reservation.isEmpty()) {
             throw new NoSuchReservationException("id에 해당하는 예약이 존재하지 않습니다.");
         }
     }
 
     public void deleteById(String reservationId) {
+        checkExistenceOfReservation(reservationRepository.findById(reservationId));
         reservationRepository.deleteById(reservationId);
     }
 }

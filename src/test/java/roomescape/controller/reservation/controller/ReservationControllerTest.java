@@ -163,8 +163,22 @@ public class ReservationControllerTest {
         createReservation();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/4")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    /**
+     * RoomEscapeController > deleteReservation 메서드
+     */
+    @DisplayName("없는 예약을 삭제하는 경우, 예외가 발생한다")
+    @Test
+    void deleteNotExistenceReservation() {
+        createReservation();
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/reservations/2")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

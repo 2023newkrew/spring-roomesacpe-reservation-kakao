@@ -47,20 +47,20 @@ public class ReservationRepository {
 
     public Optional<Reservation> findDuplicatedDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT * FROM RESERVATION WHERE date = ? AND time = ?;";
-        try{
+        try {
             Reservation duplicatedReservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, date, time);
             return Optional.ofNullable(duplicatedReservation);
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
 
     public Optional<Reservation> findById(String reservationId) {
         String sql = "SELECT * FROM RESERVATION WHERE id = ?;";
-        try{
+        try {
             Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, Long.parseLong(reservationId));
             return Optional.ofNullable(reservation);
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
