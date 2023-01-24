@@ -41,10 +41,10 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    @Transactional
-    public void deleteReservationByTheme(Long themeId){
-        reservationRepository.deleteByThemeId(themeId);
-    }
+//    @Transactional
+//    public void deleteReservationByTheme(Long themeId){
+//        reservationRepository.deleteByThemeId(themeId);
+//    }
 
     public Long createReservation(Reservation reservation) {
         Theme theme = themeRepository.findByThemeId(reservation.getThemeId());

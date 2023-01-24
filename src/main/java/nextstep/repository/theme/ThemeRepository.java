@@ -19,16 +19,6 @@ public interface ThemeRepository {
             "values (?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from theme where name = ?";
 
-    String createTableSql = "CREATE TABLE theme\n" +
-            "(\n" +
-            "    id    bigint not null auto_increment,\n" +
-            "    name  varchar(20),\n" +
-            "    desc  varchar(255),\n" +
-            "    price int,\n" +
-            "    primary key (id)\n" +
-            ");";
-    String dropTableSql = "drop table theme";
-
     default PreparedStatement getReservationPreparedStatement(Connection con, Theme theme) throws SQLException {
         PreparedStatement ps = con.prepareStatement(saveSql, new String[]{"id"});
         ps.setString(1, theme.getName());

@@ -7,7 +7,6 @@ public class Theme {
     private Integer price;
 
     public Theme(String name, String desc, Integer price) {
-
         this.id = null;
         this.name = name;
         this.desc = desc;

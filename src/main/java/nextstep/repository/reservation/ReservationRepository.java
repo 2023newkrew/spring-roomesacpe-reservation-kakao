@@ -21,15 +21,6 @@ public interface ReservationRepository {
             "values (?, ?, ?, ?);";
     String checkDuplicationSql = "select count(*) as total_rows from reservation where date = ? and time = ?";
 
-    String createTableSql = "create table reservation (\n" +
-            "  id bigint not null auto_increment,\n" +
-            "  date date,\n" +
-            "  time time,\n" +
-            "  name varchar(20),\n" +
-            "  theme_id bigint,\n" +
-            "  primary key (id)\n" +
-            ");";
-    String dropTableSql = "drop table reservation if exists";
 
     default PreparedStatement getReservationPreparedStatement(Connection con, LocalDate date, LocalTime time,
                                                               String name, Theme theme) throws SQLException {

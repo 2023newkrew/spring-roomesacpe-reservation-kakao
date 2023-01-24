@@ -38,7 +38,6 @@ public class ConsoleApplication {
             System.out.println("- 테마 관리: theme");
             System.out.println("- 종료: quit");
 
-
             String input = scanner.nextLine();
             if (input.startsWith(ADD)) {
                 try {
