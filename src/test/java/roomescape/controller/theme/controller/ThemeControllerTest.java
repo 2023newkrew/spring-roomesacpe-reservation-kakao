@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
+import roomescape.theme.dto.ThemeRequest;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
@@ -29,15 +30,13 @@ public class ThemeControllerTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    final static Theme DUMMY_THEME = new Theme(
-            1L,
+    final static ThemeRequest DUMMY_THEME_REQUEST = new ThemeRequest(
             "테마이름",
             "테마설명",
             22000
     );
 
-    final static Theme DUMMY_THEME_2 = new Theme(
-            2L,
+    final static ThemeRequest DUMMY_THEME__REQUEST_2 = new ThemeRequest(
             "테마이름",
             "테마설명",
             22000
@@ -56,7 +55,7 @@ public class ThemeControllerTest {
     void createTheme() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_THEME)
+                .body(DUMMY_THEME_REQUEST)
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -68,11 +67,11 @@ public class ThemeControllerTest {
      */
     @DisplayName("theme 객체들을 잘 가져오는지 확인한다")
     @Test
-    void findThemeById() {
+    void viewAllThemes() {
         createTheme();
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(DUMMY_THEME_2)
+                .body(DUMMY_THEME__REQUEST_2)
                 .when().post("/themes");
 
         RestAssured.given().log().all()

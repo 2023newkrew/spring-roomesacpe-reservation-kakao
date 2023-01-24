@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Theme;
+import roomescape.theme.dto.ThemeRequest;
+import roomescape.theme.dto.ThemeResponse;
 import roomescape.theme.service.ThemeService;
 
 import javax.validation.Valid;
@@ -19,14 +21,14 @@ public class ThemeController {
     }
 
     @PostMapping("/themes")
-    public ResponseEntity<String> createTheme(@RequestBody @Valid Theme theme) {
-        Long themeId = themeService.createTheme(theme);
+    public ResponseEntity<String> createTheme(@RequestBody @Valid ThemeRequest themeRequest) {
+        Long themeId = themeService.createTheme(themeRequest);
         return ResponseEntity.created(URI.create("/themes/" + themeId)).build();
     }
 
     @GetMapping("/themes")
-    public ResponseEntity<List<Theme>> viewAllThemes() {
-        List<Theme> themeList = themeService.viewAll();
+    public ResponseEntity<List<ThemeResponse>> viewAllThemes() {
+        List<ThemeResponse> themeList = themeService.viewAll();
         return ResponseEntity.ok().body(themeList);
     }
 

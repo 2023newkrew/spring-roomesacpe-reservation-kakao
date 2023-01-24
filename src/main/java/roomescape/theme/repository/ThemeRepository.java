@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Theme;
+import roomescape.theme.dto.ThemeRequest;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -24,14 +25,14 @@ public class ThemeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Theme theme) {
+    public Long save(ThemeRequest themeRequest) {
         String sql = "INSERT INTO THEME (name, desc, price) VALUES (?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(INDEX_NAME, theme.getName());
-            ps.setString(INDEX_DESC, theme.getDesc());
-            ps.setInt(INDEX_THEME_NAME, theme.getPrice());
+            ps.setString(INDEX_NAME, themeRequest.getName());
+            ps.setString(INDEX_DESC, themeRequest.getDesc());
+            ps.setInt(INDEX_THEME_NAME, themeRequest.getPrice());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
