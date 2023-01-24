@@ -15,6 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
+import roomescape.theme.dto.ThemeRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,10 +40,19 @@ public class ReservationControllerTest {
                     LocalTime.of(13, 0, 0),
                     "name22",
                     1L);
+    final static ThemeRequest DUMMY_THEME_REQUEST = new ThemeRequest(
+            "테마이름",
+            "테마설명",
+            22000
+    );
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(DUMMY_THEME_REQUEST)
+                .when().post("/themes");
     }
 
     /**
@@ -87,6 +97,26 @@ public class ReservationControllerTest {
                         LocalTime.of(13, 2, 0),
                         "name22",
                         1L);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(invalidReservationRequest)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
+     * RoomEscapeController > createReservation 메서드
+     */
+    @DisplayName("없는 테마에 대해 예약할 경우, 예외가 발생한다")
+    @Test
+    void noSuchThemeReservation() {
+        ReservationRequest invalidReservationRequest =
+                new ReservationRequest(
+                        LocalDate.of(2022, 8, 11),
+                        LocalTime.of(13, 0, 0),
+                        "name22",
+                        2L);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(invalidReservationRequest)

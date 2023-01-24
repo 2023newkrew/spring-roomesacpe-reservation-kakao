@@ -1,5 +1,6 @@
 package roomescape.theme.repository;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +11,7 @@ import roomescape.theme.dto.ThemeRequest;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ThemeRepository {
@@ -46,5 +48,15 @@ public class ThemeRepository {
     public void deleteById(String themeId) {
         String sql = "DELETE FROM THEME WHERE id = ?";
         jdbcTemplate.update(sql, themeId);
+    }
+
+    public Optional<Theme> findById(Long themeId) {
+        String sql = "SELECT * FROM THEME WHERE id = ?;";
+        try{
+            Theme theme = jdbcTemplate.queryForObject(sql, themeRowMapper, themeId);
+            return Optional.ofNullable(theme);
+        } catch (DataAccessException e){
+            return Optional.empty();
+        }
     }
 }
