@@ -126,7 +126,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * RoomEscapeController > lookUpReservation 메서드
+     * RoomEscapeController > findReservationById 메서드
      */
     @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")
     @Test
@@ -138,6 +138,20 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(1));
+    }
+
+    /**
+     * RoomEscapeController > findReservationById 메서드
+     */
+    @DisplayName("id에 해당하는 reservation 객체가 없는 경우, 예외가 발생한다")
+    @Test
+    void noSuchReservation() {
+        createReservation();
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/reservations/2")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     /**

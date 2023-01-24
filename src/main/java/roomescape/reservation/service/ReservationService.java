@@ -5,6 +5,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.TimeTable;
 import roomescape.exception.DuplicatedReservationException;
 import roomescape.exception.InvalidTimeReservationException;
+import roomescape.exception.NoSuchReservationException;
 import roomescape.exception.NoSuchThemeException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
@@ -63,7 +64,15 @@ public class ReservationService {
     }
 
     public ReservationResponse findById(String reservationId) {
-        return ReservationResponse.of(reservationRepository.findById(reservationId));
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        checkExistenceOfReservation(reservation);
+        return ReservationResponse.of(reservation.get());
+    }
+
+    private void checkExistenceOfReservation(Optional<Reservation> reservation) {
+        if(reservation.isEmpty()){
+            throw new NoSuchReservationException("id에 해당하는 예약이 존재하지 않습니다.");
+        }
     }
 
     public void deleteById(String reservationId) {

@@ -55,9 +55,14 @@ public class ReservationRepository {
         }
     }
 
-    public Reservation findById(String reservationId) {
+    public Optional<Reservation> findById(String reservationId) {
         String sql = "SELECT * FROM RESERVATION WHERE id = ?;";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, Long.parseLong(reservationId));
+        try{
+            Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, Long.parseLong(reservationId));
+            return Optional.ofNullable(reservation);
+        } catch (DataAccessException e){
+            return Optional.empty();
+        }
     }
 
     public void deleteById(String reservationId) {
