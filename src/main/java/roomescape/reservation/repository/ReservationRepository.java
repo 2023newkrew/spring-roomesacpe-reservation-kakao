@@ -1,5 +1,6 @@
 package roomescape.reservation.repository;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -46,7 +47,12 @@ public class ReservationRepository {
 
     public Optional<Reservation> findDuplicatedDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT * FROM RESERVATION WHERE date = ? AND time = ?;";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, reservationRowMapper, date, time));
+        try{
+            Reservation duplicatedReservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, date, time);
+            return Optional.ofNullable(duplicatedReservation);
+        } catch (DataAccessException e){
+            return Optional.empty();
+        }
     }
 
     public Reservation findById(String reservationId) {
