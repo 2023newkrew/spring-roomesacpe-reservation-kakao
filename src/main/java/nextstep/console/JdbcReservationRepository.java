@@ -15,6 +15,12 @@ import java.util.Optional;
 
 public class JdbcReservationRepository implements ReservationRepository {
 
+    public void checkRecordExists(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            throw new RuntimeException("레코드가 존재하지 않습니다.");
+        }
+    }
+
     @Override
     public Reservation save(Reservation reservation) {
         String sql = ReservationSQL.INSERT.toString();
@@ -24,9 +30,10 @@ public class JdbcReservationRepository implements ReservationRepository {
             JdbcRemoveDuplicateUtils.setReservationToStatement(ps, reservation);
             ps.executeUpdate();
 
-            ResultSet resultSet = ps.getGeneratedKeys();
-            resultSet.next();
-            Long id = resultSet.getLong("id");
+            ResultSet rs = ps.getGeneratedKeys();
+            checkRecordExists(rs);
+
+            Long id = rs.getLong("id");
             return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -41,15 +48,13 @@ public class JdbcReservationRepository implements ReservationRepository {
             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
+            checkRecordExists(rs);
 
-            if (rs.next()) {
-                Reservation reservation = JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id);
-                return Optional.of(reservation);
-            }
+            Reservation reservation = JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id);
+            return Optional.of(reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.empty();
     }
 
     @Override
@@ -61,11 +66,10 @@ public class JdbcReservationRepository implements ReservationRepository {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, themeId);
             ResultSet rs = ps.executeQuery();
+            checkRecordExists(rs);
 
-            if (rs.next()) {
-                Long id = rs.getLong("id");
-                reservations.add(JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id));
-            }
+            Long id = rs.getLong("id");
+            reservations.add(JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
