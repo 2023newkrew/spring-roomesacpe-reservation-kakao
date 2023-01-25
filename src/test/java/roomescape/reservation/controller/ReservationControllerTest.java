@@ -125,6 +125,26 @@ public class ReservationControllerTest {
     }
 
     /**
+     * ReservationController > createReservation 메서드
+     */
+    @DisplayName("잘못된 테마 id로 예약할 경우, 예외가 발생한다")
+    @Test
+    void invalidThemeReservation() {
+        ReservationRequest invalidReservationRequest =
+                new ReservationRequest(
+                        LocalDate.of(2022, 8, 11),
+                        LocalTime.of(13, 0, 0),
+                        "name22",
+                        0L);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(invalidReservationRequest)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
      * ReservationController > findReservationById 메서드
      */
     @DisplayName("id에 해당하는 reservation 객체를 잘 가져오는지 확인한다")

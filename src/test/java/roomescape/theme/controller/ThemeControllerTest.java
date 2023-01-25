@@ -78,6 +78,26 @@ public class ThemeControllerTest {
     }
 
     /**
+     * ThemeController > createTheme 메서드
+     */
+    @DisplayName("음수 가격 테마를 추가하는 경우, 예외가 발생한다")
+    @Test
+    void negativePriceTheme() {
+        ThemeRequest invalidThemeRequest = new ThemeRequest(
+                "테마이름2",
+                "테마설명",
+                -10000
+        );
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(invalidThemeRequest)
+                .when().post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    /**
      * ThemeController > viewAllThemes 메서드
      */
     @DisplayName("theme 객체들을 잘 가져오는지 확인한다")
