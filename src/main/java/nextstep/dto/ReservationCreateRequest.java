@@ -23,6 +23,13 @@ public class ReservationCreateRequest {
         this.themeId = themeId;
     }
 
+    public ReservationCreateRequest(String params) {
+        this.date = params.split(",")[0];
+        this.time = params.split(",")[1];
+        this.name = params.split(",")[2];
+        this.themeId = Long.parseLong(params.split(",")[3]);
+    }
+
     public Reservation toReservation(Theme theme) {
         validateInput(date, time, name, themeId);
         try {

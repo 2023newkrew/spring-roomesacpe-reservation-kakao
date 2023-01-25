@@ -94,7 +94,7 @@ public class ThemeH2Repository implements ThemeRepository {
         Connection con = getConnection();
 
         try {
-            String sql = "UPDATE theme SET name = ?, SET desc = ?, SET price = ? WHERE id = ?;";
+            String sql = "UPDATE theme SET name = ?, desc = ?, price = ? WHERE id = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, theme.getName());
             ps.setString(2, theme.getDesc());

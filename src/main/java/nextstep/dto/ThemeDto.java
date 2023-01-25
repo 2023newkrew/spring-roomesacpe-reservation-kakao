@@ -17,6 +17,12 @@ public class ThemeDto {
         this.price = price;
     }
 
+    public ThemeDto(String params) {
+        this.name = params.split(",")[0];
+        this.desc = params.split(",")[1];
+        this.price = Integer.parseInt(params.split(",")[2]);
+    }
+
     public Theme toTheme() {
         validateInput(name, desc, price);
         return new Theme(name, desc, price);
