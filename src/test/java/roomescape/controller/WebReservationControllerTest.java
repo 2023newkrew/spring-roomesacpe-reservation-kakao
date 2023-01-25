@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,37 +8,45 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestExecutionListeners;
 import roomescape.domain.Reservation;
+import roomescape.domain.Theme;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
-@DisplayName("Http Method")
+@DisplayName("Reservation Test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestExecutionListeners(value = {AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-public class RoomEscapeControllerTest {
-
+public class WebReservationControllerTest {
     @LocalServerPort
     int port;
 
+    Theme theme;
     Reservation reservation;
     @Autowired
-    RoomEscapeController roomEscapeController;
-
+    ThemeController themeController;
+    @Autowired
+    WebReservationController roomEscapeController;
     @BeforeEach
     void setUp() {
+        theme = new Theme(0L,
+                "testTheme",
+                "description",
+                10000);
         RestAssured.port = port;
-        reservation = new Reservation(13131L,
+        ResponseEntity<String> themeUrl = themeController.createTheme(theme);
+        reservation = new Reservation(0L,
                 LocalDate.of(2013,1,12),
                 LocalTime.of(14,0,0),
                 "name23",
-                "Theme2", "desc", 30000);
+                Long.valueOf(Objects.requireNonNull(themeUrl.getBody()).split("/")[2]));
     }
 
     @DisplayName("방탈출 예약이 가능함")
     @Test
-//    @Transactional
     void createReservationTest() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +60,7 @@ public class RoomEscapeControllerTest {
     @Test
     void showReservationTest() {
         String createBody = roomEscapeController.createReservation(reservation).getBody();
-        String reserveId = createBody.split("/")[2];
+        String reserveId = Objects.requireNonNull(createBody).split("/")[2];
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/reservations/" + reserveId)
@@ -65,7 +72,7 @@ public class RoomEscapeControllerTest {
     @Test
     void deleteReservationTest() {
         String createBody = roomEscapeController.createReservation(reservation).getBody();
-        String deleteId = createBody.split("/")[2];
+        String deleteId = Objects.requireNonNull(createBody).split("/")[2];
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/reservations/" + deleteId)
@@ -77,9 +84,23 @@ public class RoomEscapeControllerTest {
     @Test
     void duplicatedReservationTest(){
         roomEscapeController.createReservation(reservation);
-        Assertions.assertThrows(DuplicateRequestException.class, () ->
-            roomEscapeController.createReservation(reservation)
-        );
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("등록되지 않은 ID를 조회할 경우, 예외가 발생")
+    @Test
+    void notFoundReservationTest(){
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(reservation)
+                .when().get("/reservations/"+ 12121L)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
 

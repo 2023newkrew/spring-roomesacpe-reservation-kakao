@@ -1,0 +1,73 @@
+package roomescape.service.Reservation;
+
+import com.sun.jdi.request.DuplicateRequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import roomescape.domain.Reservation;
+import roomescape.repository.Reservation.JdbcReservationRepository;
+import roomescape.repository.Theme.JdbcThemeRepository;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static roomescape.utils.Messages.*;
+
+@Service
+@Qualifier("WebReservation")
+public class WebReservationService implements ReservationService{
+    private final JdbcReservationRepository jdbcReservationRepository;
+    private final JdbcThemeRepository jdbcThemeRepository;
+    private static final Logger logger =
+            LoggerFactory.getLogger(WebReservationService.class);
+
+    @Autowired
+    public WebReservationService(JdbcReservationRepository jdbcReservationRepository,
+                                 JdbcThemeRepository jdbcThemeRepository) {
+        this.jdbcReservationRepository = jdbcReservationRepository;
+        this.jdbcThemeRepository = jdbcThemeRepository;
+    }
+
+    @Override
+    public Reservation createReservation(Reservation reservation) {
+        if (jdbcReservationRepository.isExistsByDateAndTime(reservation)) {
+            logger.error(CREATE_DUPLICATED.getMessage() + RESERVATION_DATE.getMessage() + reservation.getDate() +
+                    RESERVATION_TIME.getMessage() + reservation.getTime());
+            throw new DuplicateRequestException(RESERVATION_CREATE_ERROR.getMessage());
+        }
+        Boolean themeExists = jdbcThemeRepository.isThemeExists(reservation.getThemeId());
+        if (!themeExists) {
+            logger.error(CREATE_NOT_FOUND_THEME.getMessage() + reservation.getThemeId());
+            throw new NoSuchElementException(THEME_NOT_EXISTS.getMessage());
+        }
+        Long reserveId = jdbcReservationRepository.createReservation(reservation);
+        logger.info(CREATE_SUCCESS.getMessage() + reserveId);
+        return new Reservation(reserveId, reservation.getDate(), reservation.getTime(),
+                reservation.getName(), reservation.getThemeId());
+    }
+
+    @Override
+    public Reservation lookUpReservation(Long reserveId) {
+        try {
+            Optional<Reservation> reservation = jdbcReservationRepository.findReservationById(reserveId);
+            if (reservation.isPresent()) {
+                return reservation.get();
+            }
+        } catch (Exception e) {
+            logger.error(NOT_FOUND_ERROR.getMessage() + reserveId + ", " + e);
+        }
+        throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + reserveId);
+    }
+
+    @Override
+    public void deleteReservation(Long deleteId) {
+        Integer deleteResult = jdbcReservationRepository.deleteReservation(deleteId);
+        if (deleteResult == 0){
+            logger.error(DELETE_NOT_FOUND_ERROR.getMessage() + deleteId);
+            throw new NoSuchElementException(ID_NOT_FOUND_ERROR.getMessage() + deleteId);
+        }
+        logger.info(DELETE_SUCCESS.getMessage());
+    }
+}

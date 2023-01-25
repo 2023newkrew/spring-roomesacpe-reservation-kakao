@@ -3,28 +3,27 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static roomescape.utils.Messages.*;
+
 public class Reservation {
     private Long id;
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private String themeName;
-    private String themeDesc;
-    private Integer themePrice;
+    private Long themeId;
 
     public Reservation(){
 
     }
 
-    public Reservation(Long id, LocalDate date, LocalTime time, String name,
-                       String themeName, String themeDesc, Integer themePrice ) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
+        checkNegativeId(themeId);
+        checkEmptyName(name);
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.themeName = themeName;
-        this.themeDesc = themeDesc;
-        this.themePrice = themePrice;
+        this.themeId = themeId;
     }
 
     public Long getId() {
@@ -42,15 +41,31 @@ public class Reservation {
         return time;
     }
 
-    public String getThemeName() {
-        return themeName;
+    public Long getThemeId() {
+        return themeId;
     }
 
-    public String getThemeDesc() {
-        return themeDesc;
+    public String createMessage(long reserveId){
+        return "Location: /reservation/" + reserveId;
     }
 
-    public Integer getThemePrice() {
-        return themePrice;
+    public String toMessage(){
+        return RESERVATION_ID.getMessage() + id + ", " +
+                RESERVATION_DATE.getMessage() + date + ", " +
+                RESERVATION_TIME.getMessage() + time + ", " +
+                RESERVATION_NAME.getMessage() + name + ", " +
+                THEME_ID.getMessage() + themeId;
+    }
+
+    private void checkNegativeId(Long themeId){
+        if (themeId < 0) {
+            throw new ArithmeticException(ID_BIGGER_THAN_ZERO.getMessage());
+        }
+    }
+
+    private void checkEmptyName(String name){
+        if (name.length() == 0) {
+            throw new NullPointerException(NAME_NOT_EMPTY_STRING.getMessage());
+        }
     }
 }
