@@ -1,5 +1,6 @@
 package nextstep.repository.reservation;
 
+import nextstep.config.DbConfig;
 import nextstep.domain.Reservation;
 import nextstep.exception.EscapeException;
 
@@ -13,12 +14,8 @@ import static nextstep.exception.ErrorCode.*;
 
 public class ConsoleReservationRepository extends ReservationRepository {
 
-    private static final String CONNECTION_SUCCESS_MESSAGE = "정상적으로 연결되었습니다.";
-    private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
-    private static final String DATABASE_USER_ID = "sa";
-    private static final String DATABASE_USER_PASSWORD = "";
-
     private Connection con = null;
+    private DbConfig dbConfig = new DbConfig();
 
     public ConsoleReservationRepository() {
         connect();
@@ -27,8 +24,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
     private void connect() {
         // 드라이버 연결
         try {
-            con = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PASSWORD);
-            System.out.println(CONNECTION_SUCCESS_MESSAGE);
+            con = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
         } catch (SQLException e) {
             throw new EscapeException(SQL_ERROR);
         }
