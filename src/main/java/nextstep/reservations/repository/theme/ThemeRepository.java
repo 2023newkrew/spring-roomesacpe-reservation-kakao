@@ -1,8 +1,6 @@
 package nextstep.reservations.repository.theme;
 
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.exceptions.theme.exception.DuplicateThemeException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,18 +25,13 @@ public class ThemeRepository {
     public Long add(Theme theme) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        try {
-            jdbcTemplate.update(con -> {
-                PreparedStatement pstmt = con.prepareStatement(INSERT_ONE_QUERY, new String[]{"id"});
-                pstmt.setString(1, theme.getName());
-                pstmt.setString(2, theme.getDesc());
-                pstmt.setLong(3, theme.getPrice());
-                return pstmt;
-            }, keyHolder);
-        }
-        catch (DuplicateKeyException e) {
-            throw new DuplicateThemeException();
-        }
+        jdbcTemplate.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(INSERT_ONE_QUERY, new String[]{"id"});
+            pstmt.setString(1, theme.getName());
+            pstmt.setString(2, theme.getDesc());
+            pstmt.setLong(3, theme.getPrice());
+            return pstmt;
+        }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }

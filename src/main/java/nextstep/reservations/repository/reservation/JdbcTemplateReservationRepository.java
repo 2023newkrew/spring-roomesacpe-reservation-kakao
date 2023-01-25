@@ -2,13 +2,7 @@ package nextstep.reservations.repository.reservation;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
-import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
-import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -30,28 +24,14 @@ public class JdbcTemplateReservationRepository extends ReservationSqlRepository{
     public Long add(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        try {
-            jdbcTemplate.update(connection -> getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY), keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        }
-        catch (DuplicateKeyException e) {
-            throw new DuplicateReservationException();
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new NoSuchThemeException();
-        }
+        jdbcTemplate.update(connection -> getInsertOnePstmt(connection, reservation, INSERT_ONE_QUERY), keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Override
     public Reservation findById(Long id) {
         RowMapper<Reservation> rowMapper = getReservationRowMapper();
-
-        try {
-            return Objects.requireNonNull(jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rowMapper, id));
-        }
-        catch (EmptyResultDataAccessException e) {
-            throw new NoSuchReservationException();
-        }
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rowMapper, id));
     }
 
     @Override

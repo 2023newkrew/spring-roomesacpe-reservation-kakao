@@ -5,6 +5,7 @@ public class ThemeRequestDto {
     private String desc;
     private Integer price;
 
+    @SuppressWarnings("unused")
     public ThemeRequestDto() {}
 
     public ThemeRequestDto(final String name, final String desc, final Integer price) {

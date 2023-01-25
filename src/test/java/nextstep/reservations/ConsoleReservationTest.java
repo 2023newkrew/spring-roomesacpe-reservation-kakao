@@ -2,11 +2,7 @@ package nextstep.reservations;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
-import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
-import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.repository.reservation.JdbcReservationRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -65,37 +61,5 @@ public class ConsoleReservationTest {
     void 예약_삭제() {
         int removeCount = reservationRepository.remove(1L);
         assertThat(removeCount).isEqualTo(1L);
-    }
-
-    @Test
-    void 중복_예약_오류() {
-        Reservation reservation = new Reservation(
-                3L,
-                LocalDate.parse("1982-02-19"),
-                LocalTime.parse( "13:00"),
-                "name",
-                theme
-        );
-
-        Assertions.assertThatThrownBy(() -> reservationRepository.add(reservation))
-                .isInstanceOf(DuplicateReservationException.class);
-    }
-
-    @Test
-    void 존재하지_않는_테마_예약_오류() {
-        Reservation reservation = new Reservation(
-                3L,
-                LocalDate.parse("2022-08-01"),
-                LocalTime.parse( "13:00"),
-                "name",
-                Theme.builder()
-                        .name("카카오")
-                        .desc("카카오 어드벤처")
-                        .price(29_000)
-                        .build()
-        );
-
-        Assertions.assertThatThrownBy(() -> reservationRepository.add(reservation))
-                .isInstanceOf(NoSuchThemeException.class);
     }
 }

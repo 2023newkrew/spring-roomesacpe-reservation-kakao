@@ -2,11 +2,10 @@ package nextstep.reservations.repository.reservation;
 
 import nextstep.reservations.domain.entity.reservation.Reservation;
 import nextstep.reservations.domain.entity.theme.Theme;
-import nextstep.reservations.exceptions.reservation.exception.DuplicateReservationException;
-import nextstep.reservations.exceptions.reservation.exception.NoSuchReservationException;
-import nextstep.reservations.exceptions.theme.exception.NoSuchThemeException;
 import nextstep.reservations.util.jdbc.JdbcUtil;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.stereotype.Repository;
@@ -20,13 +19,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static nextstep.reservations.repository.reservation.ReservationSqlRepository.*;
-
 @Repository
-//@Primary
 public class JdbcReservationRepository extends ReservationSqlRepository{
     public static final int DuplicateReservationError = 23505;
     public static final int NoSuchThemeError = 23506;
+
+    public static final String DuplicateReservationErrorMessage = "duplicateKey";
+    public static final String NoSuchThemeErrorMessage = "dataIntegrityViolation";
 
     public static final String SCHEMA_FILE = "src/main/resources/schema/schema.sql";
     public static final String DATA_FILE = "src/main/resources/data/init.sql";
@@ -42,9 +41,9 @@ public class JdbcReservationRepository extends ReservationSqlRepository{
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(SCHEMA_FILE)); Connection connection = JdbcUtil.getConnection()){
 
-            String line = "";
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
-                dropAndCreateQuery.append(line + "\n");
+                dropAndCreateQuery.append(line).append("\n");
             }
             PreparedStatement pstmt = connection.prepareStatement(dropAndCreateQuery.toString());
             pstmt.execute();
@@ -61,9 +60,9 @@ public class JdbcReservationRepository extends ReservationSqlRepository{
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(DATA_FILE)); Connection connection = JdbcUtil.getConnection()){
 
-            String line = "";
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
-                initDataQuery.append(line + "\n");
+                initDataQuery.append(line).append("\n");
             }
             PreparedStatement pstmt = connection.prepareStatement(initDataQuery.toString());
             pstmt.execute();
@@ -87,10 +86,10 @@ public class JdbcReservationRepository extends ReservationSqlRepository{
         }
         catch (SQLException e) {
             if (e.getErrorCode() == DuplicateReservationError) {
-                throw new DuplicateReservationException();
+                throw new DuplicateKeyException(DuplicateReservationErrorMessage);
             }
             else if (e.getErrorCode() == NoSuchThemeError) {
-                throw new NoSuchThemeException();
+                throw new DataIntegrityViolationException(NoSuchThemeErrorMessage);
             }
         }
 

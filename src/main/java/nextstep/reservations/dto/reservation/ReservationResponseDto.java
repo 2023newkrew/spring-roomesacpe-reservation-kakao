@@ -6,17 +6,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationResponseDto {
-    private Long id;
+    private final Long id;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private final LocalDate date;
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime time;
-    private String name;
-    private String themeName;
-    private String themeDesc;
-    private Integer themePrice;
-
-    public ReservationResponseDto() {}
+    private final LocalTime time;
+    private final String name;
+    private final String themeName;
+    private final String themeDesc;
+    private final Integer themePrice;
 
     public ReservationResponseDto(final Long id, final LocalDate date, final LocalTime time, final String name, final String themeName, final String themeDesc, final Integer themePrice) {
         this.id = id;
@@ -44,14 +42,17 @@ public class ReservationResponseDto {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public String getThemeName() {
         return themeName;
     }
 
+    @SuppressWarnings("unused")
     public String getThemeDesc() {
         return themeDesc;
     }
 
+    @SuppressWarnings("unused")
     public Integer getThemePrice() {
         return themePrice;
     }

@@ -1,12 +1,10 @@
 package nextstep.reservations.dto.theme;
 
 public class ThemeResponseDto {
-    private Long id;
-    private String name;
-    private String desc;
-    private Integer price;
-
-    public ThemeResponseDto() {}
+    private final Long id;
+    private final String name;
+    private final String desc;
+    private final Integer price;
 
     public ThemeResponseDto(final Long id, final String name, final String desc, final Integer price) {
         this.id = id;
