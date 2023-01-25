@@ -10,7 +10,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         Long id = null;
 
         try {
@@ -43,7 +43,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
 
-        String sql = "DELETE FROM reservation WHERE id = ?;";
+        String sql = "DELETE FROM reservation WHERE id = ?";
         int result = 0;
 
         try {
@@ -68,7 +68,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM reservation WHERE id = ?;";
+        String sql = "SELECT * FROM reservation WHERE id = ?";
         Reservation reservation = null;
 
         try {

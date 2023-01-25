@@ -3,6 +3,8 @@ package nextstep.repository;
 import nextstep.domain.theme.Theme;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConsoleThemeRepo implements ThemeRepo {
     public long save(Theme theme) {
@@ -10,7 +12,7 @@ public class ConsoleThemeRepo implements ThemeRepo {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?)";
         Long id = null;
 
         try {
@@ -42,7 +44,7 @@ public class ConsoleThemeRepo implements ThemeRepo {
         Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
 
-        String sql = "DELETE FROM theme WHERE id = ?;";
+        String sql = "DELETE FROM theme WHERE id = ?";
         int result = 0;
 
         try {
@@ -67,7 +69,7 @@ public class ConsoleThemeRepo implements ThemeRepo {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM theme WHERE id = ?;";
+        String sql = "SELECT * FROM theme WHERE id = ?";
         Theme theme = null;
 
         try {
@@ -94,5 +96,38 @@ public class ConsoleThemeRepo implements ThemeRepo {
             }
         }
         return theme;
+    }
+
+    public List<Theme> findAll() {
+        Connection con = ConsoleConnection.connect();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM theme";
+        List<Theme> themes = new ArrayList<>();
+
+        try {
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                themes.add(new Theme(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return themes;
     }
 }

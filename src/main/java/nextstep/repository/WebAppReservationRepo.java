@@ -21,7 +21,7 @@ public class WebAppReservationRepo implements ReservationRepo {
     }
 
     public Reservation findById(long id) {
-        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE id = ?;";
+        String sql = "SELECT id, date, time, name, theme_id FROM reservation WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Reservation(
                     rs.getLong("id"),
@@ -36,7 +36,7 @@ public class WebAppReservationRepo implements ReservationRepo {
     }
 
     public long save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});

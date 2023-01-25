@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
 public class WebAppThemeRepo implements ThemeRepo {
@@ -18,7 +19,7 @@ public class WebAppThemeRepo implements ThemeRepo {
     }
 
     public long save(Theme theme) {
-        String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
@@ -31,12 +32,12 @@ public class WebAppThemeRepo implements ThemeRepo {
     }
 
     public int delete(long id) {
-        String sql = "DELETE FROM theme WHERE id = ?;";
+        String sql = "DELETE FROM theme WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
     public Theme findById(long id) {
-        String sql = "SELECT * FROM theme WHERE id = ?;";
+        String sql = "SELECT * FROM theme WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Theme(
                     rs.getLong("id"),
@@ -44,6 +45,20 @@ public class WebAppThemeRepo implements ThemeRepo {
                     rs.getString("desc"),
                     rs.getInt("price")
             ), id);
+        } catch (IncorrectResultSizeDataAccessException ex) {
+            return null;
+        }
+    }
+
+    public List<Theme> findAll() {
+        String sql = "SELECT * FROM theme";
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> new Theme(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("desc"),
+                    rs.getInt("price")
+            ));
         } catch (IncorrectResultSizeDataAccessException ex) {
             return null;
         }
