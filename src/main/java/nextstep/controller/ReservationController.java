@@ -29,7 +29,7 @@ public class ReservationController {
                 LocalDate.parse(dto.getLocalDate()),
                 LocalTime.parse(dto.getLocalTime()),
                 dto.getName(),
-                1L);
+                dto.getThemeId());
         long id = reservationService.save(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }

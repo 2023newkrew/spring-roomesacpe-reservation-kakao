@@ -28,7 +28,8 @@ public class ReservationControllerTest {
         PostReservationDTO reservationDTO = new PostReservationDTO(
                 "2000-01-01",
                 "00:00",
-                "name");
+                "name",
+                1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -47,7 +48,8 @@ public class ReservationControllerTest {
         PostReservationDTO duplicatedReservationDTO = new PostReservationDTO(
                 "2000-01-01",
                 "00:00",
-                "different name");
+                "different name",
+                1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -72,9 +74,7 @@ public class ReservationControllerTest {
                 .body("date", is("2000-01-01"))
                 .body("time", is("00:00"))
                 .body("name", is("name"))
-                .body("themeName", is("워너고홈"))
-                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
-                .body("themePrice", is(29_000));
+                .body("themeId", is(1));
     }
 
     @DisplayName("can reject GET of nonexistent id")
