@@ -19,7 +19,7 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationService.add(reservationCreateRequest);
+        Reservation reservation = reservationService.save(reservationCreateRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", "/reservations/" + reservation.getId())

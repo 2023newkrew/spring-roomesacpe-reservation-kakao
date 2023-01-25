@@ -6,6 +6,8 @@ import nextstep.exception.ReservationNotFoundException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
@@ -14,7 +16,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
 
     @Override
-    public Reservation add(Reservation newReservation) {
+    public Reservation save(Reservation newReservation) {
         newReservation.setId(reservationIdIndex++);
         reservations.put(newReservation.getId(), newReservation);
         return newReservation;
@@ -27,18 +29,22 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id)  throws ReservationNotFoundException {
+    public boolean existsByThemeId(Long themeId) {
+        return reservations.values().stream()
+                .anyMatch(reservation -> Objects.equals(reservation.getTheme().getId(), themeId));
+    }
+
+    @Override
+    public Optional<Reservation> findById(Long id)  throws ReservationNotFoundException {
         Reservation reservation = reservations.get(id);
-
-        if (reservation == null) {
-            throw new ReservationNotFoundException();
-        }
-
-        return reservation;
+        return Optional.ofNullable(reservation);
     }
 
     @Override
     public void deleteById(Long id) {
-        reservations.remove(id);
+            Reservation remove = reservations.remove(id);
+            if (Objects.isNull(remove)) {
+                throw new ReservationNotFoundException();
+        }
     }
 }

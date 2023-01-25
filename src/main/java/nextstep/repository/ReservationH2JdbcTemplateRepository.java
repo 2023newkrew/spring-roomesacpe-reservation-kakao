@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public class ReservationH2JdbcTemplateRepository implements ReservationRepository {
@@ -26,17 +27,15 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
 
 
     @Override
-    public Reservation add(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+    public Reservation save(Reservation reservation) {
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             return ps;
         }, keyHolder);
 
@@ -45,10 +44,10 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
     }
 
     @Override
-    public Reservation findById(Long id)  throws ReservationNotFoundException {
-        String sql = "SELECT * FROM reservation where id = ?";
+    public Optional<Reservation> findById(Long id) {
+        String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
         try {
-            return jdbcTemplate.queryForObject(
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) -> new Reservation(
                                 resultSet.getLong("id"),
@@ -56,27 +55,37 @@ public class ReservationH2JdbcTemplateRepository implements ReservationRepositor
                                 resultSet.getTime(3).toLocalTime(),
                                 resultSet.getString(4),
                                 new Theme(
-                                        resultSet.getString(5),
-                                        resultSet.getString(6),
-                                        resultSet.getInt(7)
+                                        resultSet.getLong(6),
+                                        resultSet.getString(7),
+                                        resultSet.getString(8),
+                                        resultSet.getInt(9)
                                 )
                         ),
-                    id);
+                    id));
         } catch (EmptyResultDataAccessException e) {
-            throw new ReservationNotFoundException();
+            return Optional.empty();
         }
     }
 
     @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        int updateCount = jdbcTemplate.update(sql, id);
+        if (updateCount == 0) {
+            throw new ReservationNotFoundException();
+        }
     }
 
     @Override
     public boolean hasReservationAt(LocalDate date, int hour) {
         String sql = "SELECT count(*) AS cnt FROM reservation WHERE date = ? AND HOUR(time) = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, Date.valueOf(date), hour);
+        return count >= 1;
+    }
+
+    public boolean existsByThemeId(Long themeId) {
+        String sql = "SELECT count(*) AS cnt FROM reservation WHERE theme_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, themeId);
         return count >= 1;
     }
 }

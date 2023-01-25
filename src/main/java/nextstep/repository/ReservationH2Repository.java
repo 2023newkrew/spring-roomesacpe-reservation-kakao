@@ -7,22 +7,24 @@ import nextstep.exception.ReservationNotFoundException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
+
+import static nextstep.repository.ConnectionHandler.closeConnection;
+import static nextstep.repository.ConnectionHandler.getConnection;
 
 public class ReservationH2Repository implements ReservationRepository{
 
     @Override
-    public Reservation add(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Connection con = getConnection();
 
         try {
-            String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+            String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getTheme().getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
 
@@ -40,12 +42,12 @@ public class ReservationH2Repository implements ReservationRepository{
     }
 
     @Override
-    public Reservation findById(Long id) throws ReservationNotFoundException {
+    public Optional<Reservation> findById(Long id) throws ReservationNotFoundException {
         Connection con = getConnection();
-        Reservation result = null;
+        Reservation result;
 
         try {
-            String sql = "SELECT * FROM reservation WHERE id = ?";
+            String sql = "SELECT r.*, t.* FROM reservation r JOIN theme t ON r.theme_id = t.id where r.id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -55,14 +57,15 @@ public class ReservationH2Repository implements ReservationRepository{
                 LocalDate reservationDate = rs.getDate(2).toLocalDate();
                 LocalTime reservationTime = rs.getTime(3).toLocalTime();
                 String reservationName = rs.getString(4);
-                String themeName = rs.getString(5);
-                String themeDesc = rs.getString(6);
-                Integer themePrice = rs.getInt(7);
-                Theme reservationTheme = new Theme(themeName, themeDesc, themePrice);
+                Long themeId = rs.getLong(6);
+                String themeName = rs.getString(7);
+                String themeDesc = rs.getString(8);
+                Integer themePrice = rs.getInt(9);
+                Theme reservationTheme = new Theme(themeId, themeName, themeDesc, themePrice);
 
                 result = new Reservation(reservationId, reservationDate, reservationTime, reservationName, reservationTheme);
             } else {
-                throw new ReservationNotFoundException();
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -70,7 +73,7 @@ public class ReservationH2Repository implements ReservationRepository{
             closeConnection(con);
         }
 
-        return result;
+        return Optional.of(result);
     }
 
     @Override
@@ -81,7 +84,10 @@ public class ReservationH2Repository implements ReservationRepository{
             String sql = "DELETE FROM reservation WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            ps.executeUpdate();
+            int deleteCount = ps.executeUpdate();
+            if (deleteCount == 0) {
+                throw new ReservationNotFoundException();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -110,26 +116,23 @@ public class ReservationH2Repository implements ReservationRepository{
         }
     }
 
-    private Connection getConnection() {
-        Connection con = null;
+    public boolean existsByThemeId(Long themeId) {
+        Connection con = getConnection();
 
-        // 드라이버 연결
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-        return con;
-    }
+            String sql = "SELECT count(*) AS cnt FROM reservation WHERE theme_id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
 
-    private void closeConnection(Connection con) {
-        try {
-            if (con != null)
-                con.close();
+            rs.next();
+            int cnt = rs.getInt("cnt");
+            return cnt >= 1;
         } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection(con);
         }
     }
+
 }
