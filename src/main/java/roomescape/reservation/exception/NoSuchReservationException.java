@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class NoSuchReservationException extends RuntimeException {
     public NoSuchReservationException() {
-    }
-
-    public NoSuchReservationException(String message) {
-        super(message);
+        super("id에 해당하는 예약이 존재하지 않습니다.");
     }
 }

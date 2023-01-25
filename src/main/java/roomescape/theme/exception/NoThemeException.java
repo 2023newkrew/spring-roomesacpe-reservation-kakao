@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class NoThemeException extends RuntimeException {
     public NoThemeException() {
-    }
-
-    public NoThemeException(String message) {
-        super(message);
+        super("테마 목록이 비어있습니다.");
     }
 }

@@ -6,7 +6,7 @@ import roomescape.domain.TimeTable;
 import roomescape.reservation.exception.DuplicatedReservationException;
 import roomescape.reservation.exception.InvalidTimeReservationException;
 import roomescape.reservation.exception.NoSuchReservationException;
-import roomescape.reservation.exception.NoSuchThemeException;
+import roomescape.globalexception.NoSuchThemeException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
@@ -37,13 +37,13 @@ public class ReservationService {
     private void checkDuplicatedDateAndTime(LocalDate date, LocalTime time) {
         Optional<Reservation> reservation = reservationRepository.findDuplicatedDateAndTime(date, time);
         if (reservation.isPresent()) {
-            throw new DuplicatedReservationException("같은 날짜/시간에 이미 예약이 있습니다.");
+            throw new DuplicatedReservationException();
         }
     }
 
     private void checkInvalidTime(LocalTime time) {
         if (!isInTimeTable(time)) {
-            throw new InvalidTimeReservationException("유효하지 않은 시간입니다.");
+            throw new InvalidTimeReservationException();
         }
     }
 
@@ -70,7 +70,7 @@ public class ReservationService {
 
     private void checkExistenceOfReservation(Optional<Reservation> reservation) {
         if (reservation.isEmpty()) {
-            throw new NoSuchReservationException("id에 해당하는 예약이 존재하지 않습니다.");
+            throw new NoSuchReservationException();
         }
     }
 
