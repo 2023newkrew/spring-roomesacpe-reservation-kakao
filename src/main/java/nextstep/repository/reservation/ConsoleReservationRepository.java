@@ -39,8 +39,10 @@ public class ConsoleReservationRepository extends ReservationRepository {
             ps.executeUpdate();
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
-            generatedKeys.next();
-            return generatedKeys.getLong("id");
+            if (generatedKeys.next()) {
+                return generatedKeys.getLong("id");
+            }
+            throw new EscapeException(RESERVATION_CREATE_FAILED);
         } catch (SQLException e) {
             throw new EscapeException(SQL_ERROR);
         }
@@ -53,11 +55,12 @@ public class ConsoleReservationRepository extends ReservationRepository {
             ps.setTime(2, Time.valueOf(time));
 
             ResultSet resultSet = ps.executeQuery();
-            resultSet.next();
-
-            int row = resultSet.getInt("total_rows");
-            if (row > 0) {
-                throw new EscapeException(DUPLICATED_RESERVATION_EXISTS);
+            if (resultSet.next()) {
+                // 동일한 예약이 이미 존재한다면 예외 던짐
+                int row = resultSet.getInt("total_rows");
+                if (row > 0) {
+                    throw new EscapeException(DUPLICATED_RESERVATION_EXISTS);
+                }
             }
         } catch (SQLException e) {
             throw new EscapeException(SQL_ERROR);
@@ -76,8 +79,11 @@ public class ConsoleReservationRepository extends ReservationRepository {
             PreparedStatement ps = con.prepareStatement(FIND_BY_ID_SQL, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
-            resultSet.next();
-            return Reservation.from(resultSet);
+            // 해당하는 데이터가 있으면 파싱 후 리턴, 없으면 예외 던짐
+            if (resultSet.next()) {
+                return Reservation.from(resultSet);
+            }
+            throw new EscapeException(RESERVATION_NOT_FOUND);
         } catch (SQLException e) {
             throw new EscapeException(RESERVATION_NOT_FOUND);
         }

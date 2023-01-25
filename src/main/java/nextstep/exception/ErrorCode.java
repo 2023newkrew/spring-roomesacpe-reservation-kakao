@@ -6,6 +6,8 @@ public enum ErrorCode {
     DUPLICATED_RESERVATION_EXISTS("이미 예약된 일시에는 예약이 불가능합니다."),
     DUPLICATED_THEME_EXISTS("이미 해당 이름을 가진 테마가 존재합니다."),
     SQL_ERROR("SQLException이 발생했습니다."),
+    THEME_CREATE_FAILED("테마 생성에 실패하였습니다."),
+    RESERVATION_CREATE_FAILED("예약 생성에 실패하였습니다."),
     INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다."),
     ;
 

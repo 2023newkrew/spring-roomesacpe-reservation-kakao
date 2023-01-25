@@ -37,8 +37,10 @@ public class ConsoleThemeRepository extends ThemeRepository {
             ps.executeUpdate();
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
-            generatedKeys.next();
-            return generatedKeys.getLong("id");
+            if (generatedKeys.next()) {
+                return generatedKeys.getLong("id");
+            }
+            throw new EscapeException(THEME_CREATE_FAILED);
         } catch (SQLException e) {
             throw new EscapeException(SQL_ERROR);
         }
@@ -50,11 +52,12 @@ public class ConsoleThemeRepository extends ThemeRepository {
             ps.setString(1, name);
 
             ResultSet resultSet = ps.executeQuery();
-            resultSet.next();
-
-            int row = resultSet.getInt("total_rows");
-            if (row > 0) {
-                throw new EscapeException(DUPLICATED_THEME_EXISTS);
+            if (resultSet.next()) {
+                // 동일한 테마가 이미 존재한다면 예외 던짐
+                int row = resultSet.getInt("total_rows");
+                if (row > 0) {
+                    throw new EscapeException(DUPLICATED_THEME_EXISTS);
+                }
             }
         } catch (SQLException e) {
             throw new EscapeException(SQL_ERROR);
@@ -94,8 +97,11 @@ public class ConsoleThemeRepository extends ThemeRepository {
             PreparedStatement ps = con.prepareStatement(FIND_BY_ID_SQL, new String[]{"id"});
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
-            resultSet.next();
-            return Theme.from(resultSet);
+            // 해당하는 데이터가 있으면 파싱 후 리턴, 없으면 예외 던짐
+            if (resultSet.next()) {
+                return Theme.from(resultSet);
+            }
+            throw new EscapeException(THEME_NOT_FOUND);
         } catch (SQLException e) {
             throw new EscapeException(THEME_NOT_FOUND);
         }
