@@ -4,7 +4,6 @@ import nextstep.domain.reservation.Reservation;
 import nextstep.domain.service.ReservationService;
 import nextstep.domain.dto.GetReservationDTO;
 import nextstep.domain.dto.PostReservationDTO;
-import nextstep.domain.theme.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ public class ReservationController {
                 LocalDate.parse(dto.getLocalDate()),
                 LocalTime.parse(dto.getLocalTime()),
                 dto.getName(),
-                new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000));
+                1L);
         long id = reservationService.save(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }

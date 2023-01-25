@@ -7,18 +7,14 @@ public class GetReservationDTO {
     private final String date;
     private final String time;
     private final String name;
-    private final String themeName;
-    private final String themeDesc;
-    private final Integer themePrice;
+    private final Long themeId;
 
     public GetReservationDTO(Reservation reservation) {
         this.id = reservation.getId();
         this.date = reservation.getDate().toString();
         this.time = reservation.getTime().toString();
         this.name = reservation.getName();
-        this.themeName = reservation.getTheme().getName();
-        this.themeDesc = reservation.getTheme().getDesc();
-        this.themePrice = reservation.getTheme().getPrice();
+        this.themeId = reservation.getThemeId();
     }
 
     public Long getId() {
@@ -37,15 +33,7 @@ public class GetReservationDTO {
         return name;
     }
 
-    public String getThemeName() {
-        return themeName;
-    }
-
-    public String getThemeDesc() {
-        return themeDesc;
-    }
-
-    public Integer getThemePrice() {
-        return themePrice;
+    public Long getThemeId() {
+        return themeId;
     }
 }

@@ -1,6 +1,5 @@
 package nextstep;
 
-import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import nextstep.repository.ConsoleReservationRepo;
 
@@ -19,8 +18,6 @@ public class ConsoleMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -37,7 +34,7 @@ public class ConsoleMain {
                 String time = params.split(",")[1];
                 String name = params.split(",")[2];
 
-                Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, theme);
+                Reservation newReservation = new Reservation(LocalDate.parse(date), LocalTime.parse(time + ":00"), name, 1L);
                 long id = consoleReservationRepo.save(newReservation);
 
                 System.out.println("예약이 등록되었습니다.");
@@ -62,9 +59,7 @@ public class ConsoleMain {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("예약 테마: " + reservation.getThemeId());
             }
 
             if (input.startsWith(DELETE)) {

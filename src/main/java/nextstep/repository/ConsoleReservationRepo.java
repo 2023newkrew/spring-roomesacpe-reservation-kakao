@@ -1,6 +1,5 @@
 package nextstep.repository;
 
-import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 
 import java.sql.*;
@@ -15,7 +14,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?);";
         Long id = null;
 
         try {
@@ -24,9 +23,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setLong(4, reservation.getThemeId());
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
 
@@ -92,10 +89,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
                         rs.getDate(2).toLocalDate(),
                         rs.getTime(3).toLocalTime(),
                         rs.getString(4),
-                        new Theme(
-                                rs.getString(5),
-                                rs.getString(6),
-                                rs.getInt(7)));
+                        rs.getLong(5));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -111,12 +105,12 @@ public class ConsoleReservationRepo implements ReservationRepo {
         return reservation;
     }
 
-    public int findByDateAndTime(Date date, Time time) {
+    public int findByDateAndTimeAndTheme(Date date, Time time, long themeId) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ? AND theme_id = ?";
         int count = 0;
 
         try {
@@ -124,6 +118,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
             ps = con.prepareStatement(sql);
             ps.setDate(1, date);
             ps.setTime(2, time);
+            ps.setLong(3, themeId);
             rs = ps.executeQuery();
 
             if (rs.next()) {

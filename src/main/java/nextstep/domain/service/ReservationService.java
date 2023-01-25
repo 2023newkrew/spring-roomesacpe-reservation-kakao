@@ -41,6 +41,9 @@ public class ReservationService {
     }
 
     private boolean isDuplicate(Reservation reservation) {
-        return repo.findByDateAndTime(Date.valueOf(reservation.getDate()), Time.valueOf(reservation.getTime())) > 0;
+        return repo.findByDateAndTimeAndTheme(
+                Date.valueOf(reservation.getDate()),
+                Time.valueOf(reservation.getTime()),
+                reservation.getThemeId()) > 0;
     }
 }
