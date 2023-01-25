@@ -1,4 +1,4 @@
-package roomescape.controller.theme.controller;
+package roomescape.theme.controller;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
