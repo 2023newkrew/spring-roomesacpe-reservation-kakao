@@ -35,10 +35,10 @@ public class ReservationService {
     }
 
     private void checkDuplicatedDateAndTime(LocalDate date, LocalTime time) {
-        Optional<Reservation> reservation = reservationRepository.findDuplicatedDateAndTime(date, time);
-        if (reservation.isPresent()) {
-            throw new DuplicatedReservationException();
-        }
+        reservationRepository.findDuplicatedDateAndTime(date, time)
+                .ifPresent(s -> {
+                    throw new DuplicatedReservationException();
+                });
     }
 
     private void checkInvalidTime(LocalTime time) {
@@ -57,9 +57,9 @@ public class ReservationService {
     }
 
     private void checkExistenceOfTheme(Long themeId) {
-        if (themeRepository.findById(themeId).isEmpty()) {
-            throw new NoSuchThemeException("해당 테마는 존재하지 않습니다.");
-        }
+        themeRepository.findById(themeId).orElseThrow(
+                () -> new NoSuchThemeException("해당 테마는 존재하지 않습니다.")
+        );
     }
 
     public ReservationResponse findById(Long reservationId) {
@@ -69,9 +69,9 @@ public class ReservationService {
     }
 
     private void checkExistenceOfReservation(Optional<Reservation> reservation) {
-        if (reservation.isEmpty()) {
-            throw new NoSuchReservationException();
-        }
+        reservation.orElseThrow(
+                NoSuchReservationException::new
+        );
     }
 
     public void deleteById(Long reservationId) {

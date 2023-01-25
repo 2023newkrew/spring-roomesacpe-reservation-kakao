@@ -3,6 +3,8 @@ package roomescape.theme.service;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Theme;
 import roomescape.globalexception.NoSuchThemeException;
+import roomescape.reservation.exception.DuplicatedReservationException;
+import roomescape.reservation.exception.NoSuchReservationException;
 import roomescape.theme.dto.ThemeRequest;
 import roomescape.theme.dto.ThemeResponse;
 import roomescape.theme.exception.DuplicatedThemeException;
@@ -26,10 +28,10 @@ public class ThemeService {
     }
 
     private void checkDuplicatedTheme(String name) {
-        Optional<Theme> duplicatedTheme = themeRepository.findByName(name);
-        if (duplicatedTheme.isPresent()) {
-            throw new DuplicatedThemeException();
-        }
+        themeRepository.findByName(name)
+                .ifPresent(s -> {
+                    throw new DuplicatedThemeException();
+                });
     }
 
     public List<ThemeResponse> viewAll() {
@@ -59,8 +61,8 @@ public class ThemeService {
     }
 
     private void checkExistenceOfTheme(Optional<Theme> theme) {
-        if (theme.isEmpty()) {
-            throw new NoSuchThemeException("해당 id를 가진 테마가 존재하지 않습니다.");
-        }
+        theme.orElseThrow(
+                () -> new NoSuchThemeException("해당 id를 가진 테마가 존재하지 않습니다.")
+        );
     }
 }
