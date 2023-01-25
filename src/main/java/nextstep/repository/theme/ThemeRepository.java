@@ -4,6 +4,7 @@ import nextstep.domain.Theme;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -47,4 +48,11 @@ public abstract class ThemeRepository {
     public abstract void createTable();
 
     public abstract void dropTable();
+
+    public Theme extractTheme(ResultSet resultSet) throws SQLException {
+        return new Theme(resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("desc"),
+                resultSet.getInt("price"));
+    }
 }

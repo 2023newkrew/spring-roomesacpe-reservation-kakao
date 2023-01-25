@@ -1,7 +1,5 @@
 package nextstep.domain;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -38,15 +36,6 @@ public class Reservation {
 
     public Long getThemeId() {
         return themeId;
-    }
-
-    public static Reservation from(ResultSet resultSet) throws SQLException {
-        return new Reservation(resultSet.getLong("ID"),
-                resultSet.getDate("DATE").toLocalDate(),
-                resultSet.getTime("TIME").toLocalTime(),
-                resultSet.getString("NAME"),
-                resultSet.getLong("THEME_ID")
-        );
     }
 
     @Override

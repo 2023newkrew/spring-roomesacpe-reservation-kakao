@@ -81,7 +81,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
             ResultSet resultSet = ps.executeQuery();
             // 해당하는 데이터가 있으면 파싱 후 리턴, 없으면 예외 던짐
             if (resultSet.next()) {
-                return Reservation.from(resultSet);
+                return extractReservation(resultSet);
             }
             throw new EscapeException(RESERVATION_NOT_FOUND);
         } catch (SQLException e) {
@@ -98,7 +98,7 @@ public class ConsoleReservationRepository extends ReservationRepository {
 
             List<Reservation> reservations = new ArrayList<>();
             while (resultSet.next()) {
-                reservations.add(Reservation.from(resultSet));
+                reservations.add(extractReservation(resultSet));
             }
 
             return reservations;

@@ -48,4 +48,13 @@ public abstract class ReservationRepository {
     public abstract void createTable();
 
     public abstract void dropTable();
+
+    public Reservation extractReservation(ResultSet resultSet) throws SQLException {
+        return new Reservation(resultSet.getLong("ID"),
+                resultSet.getDate("DATE").toLocalDate(),
+                resultSet.getTime("TIME").toLocalTime(),
+                resultSet.getString("NAME"),
+                resultSet.getLong("THEME_ID")
+        );
+    }
 }

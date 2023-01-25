@@ -78,7 +78,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             List<Theme> themes = new ArrayList<>();
 
             while (resultSet.next()) {
-                themes.add(Theme.from(resultSet));
+                themes.add(extractTheme(resultSet));
             }
 
             if (themes.size() == 0) {
@@ -99,7 +99,7 @@ public class ConsoleThemeRepository extends ThemeRepository {
             ResultSet resultSet = ps.executeQuery();
             // 해당하는 데이터가 있으면 파싱 후 리턴, 없으면 예외 던짐
             if (resultSet.next()) {
-                return Theme.from(resultSet);
+                return extractTheme(resultSet);
             }
             throw new EscapeException(THEME_NOT_FOUND);
         } catch (SQLException e) {

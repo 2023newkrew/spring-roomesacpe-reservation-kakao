@@ -20,7 +20,7 @@ public class JdbcThemeRepository extends ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Theme> actorRowMapper = (resultSet, rowNum) -> Theme.from(resultSet);
+    private final RowMapper<Theme> actorRowMapper = (resultSet, rowNum) -> extractTheme(resultSet);
 
     public JdbcThemeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

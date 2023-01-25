@@ -27,7 +27,7 @@ public class JdbcReservationRepository extends ReservationRepository {
     }
 
     private final RowMapper<Reservation> actorRowMapper =
-            (resultSet, rowNum) -> Reservation.from(resultSet);
+            (resultSet, rowNum) -> extractReservation(resultSet);
 
     @Override
     public Long save(LocalDate date, LocalTime time, String name, Long themeId) {
