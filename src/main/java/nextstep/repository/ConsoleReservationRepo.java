@@ -5,12 +5,8 @@ import nextstep.domain.reservation.Reservation;
 import java.sql.*;
 
 public class ConsoleReservationRepo implements ReservationRepo {
-    private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=true";
-    private static final String USER = "sa";
-    private static final String PW = "";
-
     public long save(Reservation reservation) {
-        Connection con = null;
+        Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -18,7 +14,6 @@ public class ConsoleReservationRepo implements ReservationRepo {
         Long id = null;
 
         try {
-            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
@@ -45,14 +40,13 @@ public class ConsoleReservationRepo implements ReservationRepo {
     }
 
     public int delete(long id) {
-        Connection con = null;
+        Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
 
         String sql = "DELETE FROM reservation WHERE id = ?;";
         int result = 0;
 
         try {
-            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             result = ps.executeUpdate();
@@ -70,7 +64,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
     }
 
     public Reservation findById(long id) {
-        Connection con = null;
+        Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -78,7 +72,6 @@ public class ConsoleReservationRepo implements ReservationRepo {
         Reservation reservation = null;
 
         try {
-            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -106,7 +99,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
     }
 
     public int findByDateAndTimeAndTheme(Date date, Time time, long themeId) {
-        Connection con = null;
+        Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -114,7 +107,6 @@ public class ConsoleReservationRepo implements ReservationRepo {
         int count = 0;
 
         try {
-            con = DriverManager.getConnection(URL, USER, PW);
             ps = con.prepareStatement(sql);
             ps.setDate(1, date);
             ps.setTime(2, time);
