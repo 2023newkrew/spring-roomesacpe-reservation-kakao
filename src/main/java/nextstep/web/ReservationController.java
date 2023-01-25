@@ -25,7 +25,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest request) {
-        themeService.getTheme(request.getThemeId());
+        themeService.validateThemeExists(request.getThemeId());
         Reservation reservation = reservationService.createReservation(request);
         return ResponseEntity.created(URI.create("/reservations/"+ reservation.getId())).build();
     }

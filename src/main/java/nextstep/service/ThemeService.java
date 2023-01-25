@@ -44,4 +44,8 @@ public class ThemeService {
         }
         themeRepository.deleteById(id);
     }
+
+    public void validateThemeExists(Long themeId) {
+        getTheme(themeId);
+    }
 }
