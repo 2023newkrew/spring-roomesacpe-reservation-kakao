@@ -1,138 +1,156 @@
 package nextstep.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import nextstep.exception.ReservationDuplicateException;
+import nextstep.exception.ReservationNotFoundException;
+import nextstep.exception.ThemeNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
+import nextstep.repository.ReservationRepository;
 import nextstep.web.dto.ReservationRequest;
 import nextstep.web.dto.ReservationResponse;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import nextstep.web.dto.ThemeRequest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RoomEscapeControllerTest {
-    @LocalServerPort
-    private int port;
+public class RoomEscapeControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private JdbcTemplateReservationRepository repository;
-
-    Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
-    @AfterEach
-    void tearDown() {
-        repository.deleteAll();
-    }
+    private ReservationRepository repository;
 
     @DisplayName("예약을 생성한다")
     @Test
     void createReservation() {
+        // arrange
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
+
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 12, 14);
         LocalTime time = LocalTime.of(15, 5);
-        ReservationRequest request = new ReservationRequest(name, date, time);
 
-        ExtractableResponse<Response> response = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/reservations")
-                .then()
-                .extract();
+        // act
+        Long id = 예약을_생성한다(themeId, name, date, time);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-
-        Long id = 생성된_예약_번호를_반환한다(response);
+        // assert
         Reservation reservation = repository.findById(id).orElseThrow();
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
         assertThat(reservation.getName()).isEqualTo(name);
-        assertThat(reservation.getTheme()).isEqualTo(theme);
+        assertThat(reservation.getTheme().getId()).isEqualTo(themeId);
     }
 
     @DisplayName("예약을 조회한다")
     @Test
     void getReservation() {
+        // arrange
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
+
         String name = "예약_이름";
         LocalDate date = LocalDate.of(2022, 4, 3);
         LocalTime time = LocalTime.of(12, 15);
-        Long id = 예약_생성_후_번호를_반환한다(name, date, time);
+        Long id = 예약을_생성한다(themeId, name, date, time);
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/reservations/" + id)
-                .then()
-                .extract();
+        // act
+        ReservationResponse reservation = 예약을_조회한다(id);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-
-        ReservationResponse reservation = response.as(ReservationResponse.class);
+        // assert
         assertThat(reservation.getDate()).isEqualTo(date);
         assertThat(reservation.getTime()).isEqualTo(time);
         assertThat(reservation.getName()).isEqualTo(name);
-        assertThat(reservation.getThemeName()).isEqualTo(theme.getName());
-        assertThat(reservation.getThemeDesc()).isEqualTo(theme.getDesc());
-        assertThat(reservation.getThemePrice()).isEqualTo(theme.getPrice());
+        assertThat(reservation.getThemeName()).isEqualTo("베루스홈");
+        assertThat(reservation.getThemeDesc()).isEqualTo("베루스의 집");
+        assertThat(reservation.getThemePrice()).isEqualTo(50_000);
     }
 
     @DisplayName("에약을 삭제한다")
     @Test
     void deleteReservation() {
-        String name = "취소될 예약";
-        LocalDate date = LocalDate.of(2023, 5, 29);
-        LocalTime time = LocalTime.of(8, 30);
-        Long id = 예약_생성_후_번호를_반환한다(name, date, time);
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
+        Long id = 예약을_생성한다(themeId, "취소될 예약", LocalDate.of(2023, 5, 29), LocalTime.of(8, 30));
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .delete("/reservations/" + id)
-                .then()
-                .extract();
+        예약을_삭제한다(id);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(repository.findById(id)).isEmpty();
     }
 
-    private Long 생성된_예약_번호를_반환한다(ExtractableResponse<Response> response) {
-        String id = response
-                .header(HttpHeaders.LOCATION)
-                .split("/")[2];
-        return Long.parseLong(id);
-    }
+    @ParameterizedTest
+    @MethodSource
+    void createReservationByInvalidFormatRequest(String name) {
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
 
-    private Long 예약_생성_후_번호를_반환한다(String name, LocalDate date, LocalTime time) {
-        ReservationRequest request = new ReservationRequest(name, date, time);
+        ReservationRequest request = new ReservationRequest(name, LocalDate.now(), LocalTime.now(), themeId);
 
-        String id = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when()
+                .when().log().all()
                 .post("/reservations")
-                .then()
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/")[2];
-        return Long.parseLong(id);
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private static List<Arguments> createReservationByInvalidFormatRequest() {
+        return List.of(
+                Arguments.of("n".repeat(256)),
+                Arguments.of("  "),
+                Arguments.of("\t\n")
+        );
+    }
+
+    @DisplayName("존재하지 않는 예약을 조회할 경우 예외가 발생한다")
+    @Test
+    void getNotFoundReservation() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().log().all()
+                .get("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("예약 생성시 같은 날짜와 시간의 예약이 존재할 경우 예외가 발생한다")
+    @Test
+    void createDuplicateReservation() {
+        long themeId = 테마를_생성한다("베루스홈", "베루스의 집", 50_000);
+        LocalDate date = LocalDate.of(2023, 1, 23);
+        LocalTime time = LocalTime.of(13, 0);
+        예약을_생성한다(themeId, "name", date, time);
+
+        ReservationRequest request = new ReservationRequest("name", date, time, themeId);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("존재하지 않는 테마로 예약을 생성할 수 없다.")
+    @Test
+    void createReservationByNotExistTheme() {
+        ReservationRequest request = new ReservationRequest("name", LocalDate.now(), LocalTime.now(), 1L);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().log().all()
+                .post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

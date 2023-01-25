@@ -1,10 +1,12 @@
-package nextstep.web;
+package nextstep.service;
 
 import nextstep.exception.ReservationDuplicateException;
 import nextstep.exception.ReservationNotFoundException;
+import nextstep.exception.ThemeNotFoundException;
 import nextstep.model.Reservation;
 import nextstep.model.Theme;
 import nextstep.repository.ReservationRepository;
+import nextstep.repository.ThemeRepository;
 import nextstep.web.dto.ReservationRequest;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +14,22 @@ import org.springframework.stereotype.Service;
 public class RoomEscapeService {
 
     private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
 
-    public RoomEscapeService(JdbcTemplateReservationRepository reservationRepository) {
+    public RoomEscapeService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
     public Reservation createReservation(ReservationRequest request) {
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-        if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
+        Theme theme = themeRepository.findById(request.getThemeId())
+                .orElseThrow(() -> new ThemeNotFoundException(request.getThemeId()));
+
+        if (reservationRepository.existsByDateAndTimeAndThemeId(request.getDate(), request.getTime(), theme.getId())) {
             throw new ReservationDuplicateException();
         }
         return reservationRepository.save(
-                new Reservation(0L, request.getDate(), request.getTime(), request.getName(), theme));
+                new Reservation(null, request.getDate(), request.getTime(), request.getName(), theme));
     }
 
     public Reservation getReservation(Long id) {
