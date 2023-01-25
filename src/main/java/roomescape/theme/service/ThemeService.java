@@ -12,6 +12,7 @@ import roomescape.theme.exception.NoThemeException;
 import roomescape.theme.repository.ThemeRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ThemeService {
@@ -48,11 +49,9 @@ public class ThemeService {
     }
 
     private List<ThemeResponse> themeToThemeResponse(List<Theme> themes) {
-        List<ThemeResponse> themeResponses = new ArrayList<>();
-        for (Theme theme : themes) {
-            themeResponses.add(ThemeResponse.of(theme));
-        }
-        return themeResponses;
+        return themes.stream()
+                .map(ThemeResponse::of)
+                .collect(Collectors.toList());
     }
 
     public void deleteById(Long themeId) {
