@@ -5,30 +5,31 @@ import nextstep.domain.Theme;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservation;
 import nextstep.service.ReservationService;
+import nextstep.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ThemeService themeService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ThemeService themeService) {
         this.reservationService = reservationService;
+        this.themeService = themeService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
-        // 현재는 테마 커스터마이징 관련 기능이 필요 없으므로 하드코딩
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Long id = reservationService.createReservation(request.getDate(),
-                request.getTime(), request.getName(), theme);
+        // request 내의 themeId로 findById 메서드를 호출함으로서 존재하지 않는 theme에 대한 reservation 생성을 요청한 것은 아닌지 확인
+        themeService.findById(request.getThemeId());
+        Long id = reservationService.createReservation(request);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
@@ -36,7 +37,9 @@ public class ReservationController {
     public FindReservation findReservationById(@PathVariable Long id) {
 
         Reservation reservation = reservationService.findById(id);
-        return FindReservation.from(reservation);
+        Theme theme = themeService.findById(reservation.getThemeId());
+
+        return FindReservation.from(reservation, theme);
     }
 
     @DeleteMapping("/{id}")
