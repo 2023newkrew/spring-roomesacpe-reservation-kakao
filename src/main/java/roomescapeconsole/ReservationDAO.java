@@ -1,7 +1,6 @@
 package roomescapeconsole;
 
 import roomescape.domain.Reservation;
-import roomescape.domain.Theme;
 
 import java.rmi.NoSuchObjectException;
 import java.sql.*;
@@ -15,13 +14,11 @@ public class ReservationDAO {
     private static final int INDEX_DATE = 2;
     private static final int INDEX_TIME = 3;
     private static final int INDEX_NAME = 4;
-    private static final int INDEX_THEME_NAME = 5;
-    private static final int INDEX_THEME_DESC = 6;
-    private static final int INDEX_THEME_PRICE = 7;
+    private static final int INDEX_THEME_ID = 5;
     private static final String DATABASE_URL = "jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true";
     private static final String DATABASE_USERNAME = "sa";
     private static final String DATABASE_PASSWORD = "";
-    private static final String CHECK_NUMBER_QUERY = "SELECT MAX(id) FROM RESERVATION";
+    private static final String CHECK_NUMBER_QUERY = "SELECT * FROM RESERVATION ORDER BY id DESC LIMIT 1";
     private static final String INSERT_QUERY = "INSERT INTO RESERVATION (id, date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_QUERY = "SELECT * FROM RESERVATION WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM RESERVATION WHERE id=?";
@@ -39,17 +36,17 @@ public class ReservationDAO {
         }
     }
 
-    public int getNumberOfExistReservation() {
+    public Long getNumberOfExistReservation() {
         try (Connection con = makeConnection()) {
             PreparedStatement getNumberPS = con.prepareStatement(CHECK_NUMBER_QUERY);
             ResultSet getNumberRs = getNumberPS.executeQuery();
             if (getNumberRs.next()) {
-                return getNumberRs.getInt(INDEX_COUNT);
+                return getNumberRs.getLong(INDEX_ID);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return 0;
+        return 0L;
     }
 
     public void addReservation(Reservation reservation) {
@@ -59,9 +56,7 @@ public class ReservationDAO {
             addPs.setDate(INDEX_DATE, Date.valueOf(reservation.getDate()));
             addPs.setTime(INDEX_TIME, Time.valueOf(reservation.getTime()));
             addPs.setString(INDEX_NAME, reservation.getName());
-            addPs.setString(INDEX_THEME_NAME, reservation.getTheme().getName());
-            addPs.setString(INDEX_THEME_DESC, reservation.getTheme().getDesc());
-            addPs.setInt(INDEX_THEME_PRICE, reservation.getTheme().getPrice());
+            addPs.setLong(INDEX_THEME_ID, reservation.getThemeId());
             addPs.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -78,11 +73,8 @@ public class ReservationDAO {
                 LocalDate date = LocalDate.parse(lookUpRs.getString(INDEX_DATE));
                 LocalTime time = LocalTime.parse(lookUpRs.getString(INDEX_TIME));
                 String name = lookUpRs.getString(INDEX_NAME);
-                String themeName = lookUpRs.getString(INDEX_THEME_NAME);
-                String themeDesc = lookUpRs.getString(INDEX_THEME_DESC);
-                Integer themePrice = lookUpRs.getInt(INDEX_THEME_PRICE);
-                Theme theme = new Theme(themeName, themeDesc, themePrice);
-                return new Reservation(id, date, time, name, theme);
+                Long themeId = lookUpRs.getLong(INDEX_THEME_ID);
+                return new Reservation(id, date, time, name, themeId);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

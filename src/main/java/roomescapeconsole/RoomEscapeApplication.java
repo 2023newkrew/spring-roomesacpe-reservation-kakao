@@ -13,12 +13,10 @@ public class RoomEscapeApplication {
     private static final String FIND = "find";
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
-    private static final Theme DUMMY_THEME = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReservationDAO reservationDAO = new ReservationDAO();
-        Long reservationIdIndex = (long) reservationDAO.getNumberOfExistReservation();
+        Long reservationIdIndex = reservationDAO.getNumberOfExistReservation();
         while (true) {
             System.out.println();
             System.out.println("### 명령어를 입력하세요. ###");
@@ -40,7 +38,7 @@ public class RoomEscapeApplication {
                         LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name,
-                        DUMMY_THEME
+                        1L
                 );
 
                 reservationDAO.addReservation(reservation);
@@ -67,9 +65,7 @@ public class RoomEscapeApplication {
                 System.out.println("예약 날짜: " + reservation.getDate());
                 System.out.println("예약 시간: " + reservation.getTime());
                 System.out.println("예약자 이름: " + reservation.getName());
-                System.out.println("예약 테마 이름: " + reservation.getTheme().getName());
-                System.out.println("예약 테마 설명: " + reservation.getTheme().getDesc());
-                System.out.println("예약 테마 가격: " + reservation.getTheme().getPrice());
+                System.out.println("테마 ID: " + reservation.getThemeId());
             }
 
             if (input.startsWith(DELETE)) {
