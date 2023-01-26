@@ -1,6 +1,7 @@
 package nextstep.web;
 
 import nextstep.model.Reservation;
+import nextstep.repository.ReservationSQL;
 import nextstep.util.JdbcRemoveDuplicateUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,7 +26,7 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = ReservationSQL.INSERT.toString();
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -32,15 +34,15 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
             JdbcRemoveDuplicateUtils.setReservationToStatement(ps, reservation);
             return ps;
         }, keyHolder);
-        Long id = keyHolder.getKey().longValue();
+        Long id = keyHolder.getKeyAs(Long.class);
 
-        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+        return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
         try {
-            String sql = "SELECT id, date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+            String sql = ReservationSQL.SELECT_BY_ID.toString();
             RowMapper<Reservation> rowMapper = (rs, rowNum) -> JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, rs.getLong("id"));
             return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {
@@ -49,20 +51,22 @@ public class JdbcTemplateReservationRepository implements nextstep.repository.Re
     }
 
     @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        String sql = ReservationSQL.SELECT_BY_THEME_ID.toString();
+        RowMapper<Reservation> rowMapper = (rs, rowNum) -> JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, rs.getLong("id"));
+        return jdbcTemplate.query(sql, rowMapper, themeId);
+    }
+
+    @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = ReservationSQL.DELETE_BY_ID.toString();
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT count(*) FROM reservation WHERE date=? AND time=?";
+        String sql = ReservationSQL.COUNT_BY_DATE_AND_TIME.toString();
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, time);
         return  count > 0;
-    }
-
-    public void deleteAll() {
-        String sql = "DELETE FROM reservation";
-        jdbcTemplate.update(sql);
     }
 }

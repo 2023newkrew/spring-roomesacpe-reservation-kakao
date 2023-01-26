@@ -1,30 +1,40 @@
 package nextstep.console;
 
 import nextstep.model.Reservation;
+import nextstep.repository.ReservationSQL;
 import nextstep.util.JdbcRemoveDuplicateUtils;
 import nextstep.repository.ReservationRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
 public class JdbcReservationRepository implements ReservationRepository {
 
+    public void checkRecordExists(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            throw new RuntimeException("레코드가 존재하지 않습니다.");
+        }
+    }
+
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = ReservationSQL.INSERT.toString();
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"})) {
             JdbcRemoveDuplicateUtils.setReservationToStatement(ps, reservation);
             ps.executeUpdate();
 
-            ResultSet resultSet = ps.getGeneratedKeys();
-            resultSet.next();
-            Long id = resultSet.getLong("id");
-            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getTheme());
+            ResultSet rs = ps.getGeneratedKeys();
+            checkRecordExists(rs);
+
+            Long id = rs.getLong("id");
+            return new Reservation(id, reservation.getDate(), reservation.getTime(), reservation.getName(), reservation.getThemeId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -32,26 +42,43 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT date, time, name, theme_name, theme_desc, theme_price FROM reservation WHERE id = ?";
+        String sql = ReservationSQL.SELECT_BY_ID.toString();
 
         try (Connection con = createConnection();
             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
+            checkRecordExists(rs);
 
-            if (rs.next()) {
-                Reservation reservation = JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id);
-                return Optional.of(reservation);
-            }
+            Reservation reservation = JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id);
+            return Optional.of(reservation);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.empty();
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        String sql = ReservationSQL.SELECT_BY_THEME_ID.toString();
+
+        List<Reservation> reservations = new ArrayList<>();
+        try (Connection con = createConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
+            checkRecordExists(rs);
+
+            Long id = rs.getLong("id");
+            reservations.add(JdbcRemoveDuplicateUtils.getReservationFromResultSet(rs, id));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return reservations;
     }
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        String sql = "SELECT count(*) as count FROM reservation WHERE date=? AND time=?";
+        String sql = ReservationSQL.COUNT_BY_DATE_AND_TIME.toString();
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -67,7 +94,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = ReservationSQL.DELETE_BY_ID.toString();
 
         try (Connection con = createConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

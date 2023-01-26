@@ -8,6 +8,8 @@ import nextstep.repository.ReservationRepository;
 import nextstep.dto.ReservationRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReservationService {
 
@@ -18,16 +20,19 @@ public class ReservationService {
     }
 
     public Reservation createReservation(ReservationRequest request) {
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000);
         if (reservationRepository.existsByDateAndTime(request.getDate(), request.getTime())) {
             throw new ReservationDuplicateException();
         }
-        return reservationRepository.save(new Reservation(0L, request.getDate(), request.getTime(), request.getName(), theme));
+        return reservationRepository.save(new Reservation(0L, request.getDate(), request.getTime(), request.getName(), request.getThemeId()));
     }
 
     public Reservation getReservation(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
+    }
+
+    public List<Reservation> getReservationByThemeId(Long themeId) {
+        return reservationRepository.findByThemeId(themeId);
     }
 
     public void deleteReservation(Long id) {
