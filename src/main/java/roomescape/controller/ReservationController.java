@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationControllerGetResponse;
 import roomescape.dto.ReservationsControllerPostBody;
-import roomescape.entity.Reservation;
-import roomescape.entity.Theme;
 import roomescape.exception.AlreadyExistReservationException;
+import roomescape.exception.AuthorizationException;
 import roomescape.exception.NotExistReservationException;
 import roomescape.repository.ReservationRepository;
+import roomescape.resolver.JWTBearerTokenSubject;
 
 import javax.validation.Valid;
 
@@ -18,31 +18,27 @@ import javax.validation.Valid;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationDAO;
+    private final ReservationRepository repository;
 
-    public ReservationController(ReservationRepository reservationDAO) {
-        this.reservationDAO = reservationDAO;
+    public ReservationController(ReservationRepository repository) {
+        this.repository = repository;
     }
 
     @PostMapping(value = "", produces = "application/json;charset=utf-8")
-    public ResponseEntity<Object> createReservation(@Valid @RequestBody ReservationsControllerPostBody body) {
-        var id = reservationDAO.addReservation(
-                new Reservation(
-                        null, body.getDate(), body.getTime(), body.getName(),
-                        new Theme(body.getThemeName(), body.getThemeDesc(), body.getThemePrice())
-                )
-        );
+    public ResponseEntity<Object> createReservation(@JWTBearerTokenSubject String subject, @Valid @RequestBody ReservationsControllerPostBody body) {
+        var id = repository.insert(body.getName(), body.getDate(), body.getTime(), body.getThemeId(), Long.parseLong(subject));
         if (id.isEmpty()) {
             throw new AlreadyExistReservationException(body.getDate(), body.getTime());
         }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                              .header("Location", String.format("/reservations/%d", id.get()))
                              .build();
     }
 
     @GetMapping(value = "/{id}", produces = "application/json;charset=utf-8")
-    public ResponseEntity<ReservationControllerGetResponse> showReservation(@PathVariable Long id) {
-        var reservation = reservationDAO.findReservation(id);
+    public ResponseEntity<ReservationControllerGetResponse> findReservation(@PathVariable Long id) {
+        var reservation = repository.selectById(id);
         if (reservation.isEmpty()) {
             throw new NotExistReservationException(id);
         }
@@ -53,6 +49,7 @@ public class ReservationController {
                                      getReservation.getDate(),
                                      getReservation.getTime(),
                                      getReservation.getName(),
+                                     getReservation.getTheme().getId(),
                                      getReservation.getTheme().getName(),
                                      getReservation.getTheme().getDesc(),
                                      getReservation.getTheme().getPrice()
@@ -60,11 +57,15 @@ public class ReservationController {
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json;charset=utf-8")
-    public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
-        var affectedRow = reservationDAO.deleteReservation(id);
-        if (affectedRow == 0) {
+    public ResponseEntity<Object> deleteReservation(@JWTBearerTokenSubject String subject, @PathVariable Long id) {
+        var reservation = repository.selectById(id);
+        if (reservation.isEmpty()) {
             throw new NotExistReservationException(id);
         }
+        if (reservation.get().getMemberId() != Long.parseLong(subject)) {
+            throw new AuthorizationException();
+        }
+        repository.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                              .build();
     }

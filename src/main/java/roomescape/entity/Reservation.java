@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -29,19 +27,8 @@ public class Reservation {
     private String name;
 
     @NotNull
-    private Theme theme;
+    private Long memberId;
 
-    public static Reservation fromRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Reservation(
-                rs.getLong("id"),
-                rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime(),
-                rs.getString("name"),
-                new Theme(
-                        rs.getString("theme_name"),
-                        rs.getString("theme_desc"),
-                        rs.getInt("theme_price")
-                )
-        );
-    }
+    @NotNull
+    private Theme theme;
 }
