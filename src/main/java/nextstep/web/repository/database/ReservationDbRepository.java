@@ -1,22 +1,28 @@
-package nextstep.console.dao;
+package nextstep.web.repository.database;
 
 import nextstep.domain.Reservation;
 import nextstep.web.exception.BusinessException;
 import nextstep.web.exception.CommonErrorCode;
 import nextstep.web.repository.ReservationRepository;
+import nextstep.web.repository.database.mappingstrategy.ReservationMappingStrategy;
+import nextstep.web.repository.database.mappingstrategy.RowMappingStrategy;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
-public class ReservationDao implements ReservationRepository {
+public class ReservationDbRepository implements ReservationRepository {
 
     public static final String JDBC_URL = "jdbc:h2:~/test;AUTO_SERVER=true";
     public static final String JDBC_USER = "sa";
     public static final String JDBC_PASSWORD = "";
 
-    public ReservationDao() {
+    private final RowMappingStrategy<Reservation> reservationRowMappingStrategy = new ReservationMappingStrategy();
+
+    public ReservationDbRepository() {
     }
 
+    @Override
     public Long save(Reservation reservation) {
         String sql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
@@ -25,9 +31,12 @@ public class ReservationDao implements ReservationRepository {
             ps.setDate(1, Date.valueOf(reservation.getDate()));
             ps.setTime(2, Time.valueOf(reservation.getTime()));
             ps.setString(3, reservation.getName());
-            ps.setString(4, reservation.getTheme().getName());
-            ps.setString(5, reservation.getTheme().getDesc());
-            ps.setInt(6, reservation.getTheme().getPrice());
+            ps.setString(4, reservation.getTheme()
+                    .getName());
+            ps.setString(5, reservation.getTheme()
+                    .getDesc());
+            ps.setInt(6, reservation.getTheme()
+                    .getPrice());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
@@ -37,19 +46,37 @@ public class ReservationDao implements ReservationRepository {
         }
     }
 
+    @Override
     public Reservation findById(Long id) {
         try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String sql = "SELECT * FROM reservation WHERE ID = ?;";
+            String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id = ?;";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, id);
-            ResultSet resultSet = ps.executeQuery();
-            validateFindResult(resultSet);
-            return Reservation.from(resultSet);
+            ResultSet rs = ps.executeQuery();
+            validateFindResult(rs);
+            return reservationRowMappingStrategy.map(rs);
         } catch (SQLException e) {
             throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
         }
     }
 
+    @Override
+    public Optional<Reservation> findByThemeId(Long themeId) {
+        try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String sql = "SELECT * FROM reservation join theme on (reservation.theme_id = theme.id) WHERE reservation.id = ?;";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setLong(1, themeId);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+            return Optional.of(reservationRowMappingStrategy.map(rs));
+        } catch (SQLException e) {
+            throw new BusinessException(CommonErrorCode.SQL_CONNECTION_ERROR);
+        }
+    }
+
+    @Override
     public void deleteById(Long id) {
         try (Connection con = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             String sql = "DELETE FROM reservation WHERE ID = ?;";
@@ -62,7 +89,7 @@ public class ReservationDao implements ReservationRepository {
     }
 
     private void validateFindResult(ResultSet resultSet) throws SQLException {
-        if(!resultSet.next()) {
+        if (!resultSet.next()) {
             throw new NoSuchElementException();
         }
     }

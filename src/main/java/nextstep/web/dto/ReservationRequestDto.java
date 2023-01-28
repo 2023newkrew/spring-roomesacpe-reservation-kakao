@@ -1,21 +1,29 @@
 package nextstep.web.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ReservationRequestDto {
 
     @DateTimeFormat(pattern = "YYYY-MM-dd")
-    private final LocalDate date;
+    private LocalDate date;
 
     @DateTimeFormat(pattern = "HH:mm")
-    private final LocalTime time;
+    private LocalTime time;
 
-    private final String name;
+    private String name;
+
+
+    private Long themeId;
 }
