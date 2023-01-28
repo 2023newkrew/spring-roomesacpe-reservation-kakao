@@ -4,9 +4,9 @@ import kakao.controller.request.ReservationRequest;
 import kakao.controller.response.ReservationResponse;
 
 public interface ReservationService {
-    public Long book(ReservationRequest reservationRequest);
+    Long book(ReservationRequest reservationRequest);
 
-    public ReservationResponse lookUp(Long id);
+    ReservationResponse lookUp(Long id);
 
-    public void cancel(Long id);
+    void cancel(Long id);
 }

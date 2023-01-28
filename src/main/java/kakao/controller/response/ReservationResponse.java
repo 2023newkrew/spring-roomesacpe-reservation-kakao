@@ -17,15 +17,14 @@ public class ReservationResponse {
     private final String themeDesc;
     private final Integer themePrice;
 
-    public ReservationResponse(Reservation reservation) {
+    public ReservationResponse(Reservation reservation, Theme theme) {
         id = reservation.getId();
         date = reservation.getDate();
         time = reservation.getTime();
         name = reservation.getName();
 
-        Theme reservationTheme = reservation.getTheme();
-        themeName = reservationTheme.getName();
-        themeDesc = reservationTheme.getDesc();
-        themePrice = reservationTheme.getPrice();
+        themeName = theme.getName();
+        themeDesc = theme.getDesc();
+        themePrice = theme.getPrice();
     }
 }

@@ -3,8 +3,6 @@ package kakao.repository;
 import kakao.exception.ReservationNotFoundException;
 import kakao.model.Reservation;
 import kakao.controller.request.ReservationRequest;
-import kakao.controller.response.ReservationResponse;
-import kakao.model.Theme;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
@@ -30,7 +27,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public Long create(ReservationRequest reservationRequest, Theme theme) {
+    public Long create(ReservationRequest reservationRequest) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
@@ -39,27 +36,26 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 .addValue(Reservation.Column.DATE, Date.valueOf(reservationRequest.getDate()))
                 .addValue(Reservation.Column.TIME, Time.valueOf(reservationRequest.getTime()))
                 .addValue(Reservation.Column.NAME, reservationRequest.getName())
-                .addValue(Reservation.Column.THEME_NAME, theme.getName())
-                .addValue(Reservation.Column.THEME_DESC, theme.getDesc())
-                .addValue(Reservation.Column.THEME_PRICE, theme.getPrice());
+                .addValue(Reservation.Column.THEME_ID, reservationRequest.getThemeId());
 
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     @Override
-    public Optional<ReservationResponse> findById(Long id) {
-        return jdbcTemplate.query("SELECT * FROM reservation WHERE id=?", reservationResponseRowMapper(), id)
-                .stream()
-                .map(ReservationResponse::new)
-                .findAny();
+    public Optional<Reservation> findById(Long id) {
+        return jdbcTemplate.query("SELECT * FROM reservation WHERE id=?", reservationResponseRowMapper(), id).stream().findAny();
     }
 
     @Override
-    public List<ReservationResponse> findByDateAndTime(LocalDate date, LocalTime time) {
+    public Optional<Reservation> findByDateAndTimeAndThemeId(LocalDate date, LocalTime time, Long themeId) {
         return jdbcTemplate
-                .query("SELECT * FROM reservation WHERE date=? AND time=?", reservationResponseRowMapper(), date, time).stream()
-                .map(ReservationResponse::new)
-                .collect(Collectors.toList());
+                .query("SELECT * FROM reservation WHERE date=? AND time=? AND theme_id=?", reservationResponseRowMapper(), date, time, themeId)
+                .stream().findAny();
+    }
+
+    @Override
+    public List<Reservation> findByThemeId(Long themeId) {
+        return jdbcTemplate.query("SELECT * FROM reservation WHERE theme_id=?", reservationResponseRowMapper(), themeId);
     }
 
     @Override
@@ -77,14 +73,9 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
             LocalDate date = resultSet.getDate(Reservation.Column.DATE).toLocalDate();
             LocalTime time = resultSet.getTime(Reservation.Column.TIME).toLocalTime();
             String name = resultSet.getString(Reservation.Column.NAME);
+            Long themeId = resultSet.getLong(Reservation.Column.THEME_ID);
 
-            String themeName = resultSet.getString(Reservation.Column.THEME_NAME);
-            String themeDesc = resultSet.getString(Reservation.Column.THEME_DESC);
-            Integer themePrice = resultSet.getInt(Reservation.Column.THEME_PRICE);
-
-            Theme theme = new Theme(themeName, themeDesc, themePrice);
-
-            return new Reservation(id, date, time, name, theme);
+            return new Reservation(id, date, time, name, themeId);
         };
     }
 }
