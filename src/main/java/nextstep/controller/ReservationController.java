@@ -4,6 +4,7 @@ import nextstep.domain.reservation.Reservation;
 import nextstep.domain.service.ReservationService;
 import nextstep.domain.dto.ReservationResponse;
 import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,12 @@ import java.time.LocalTime;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final ThemeService themeService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ThemeService themeService) {
         this.reservationService = reservationService;
+        this.themeService = themeService;
     }
 
     @PostMapping()
@@ -36,7 +39,8 @@ public class ReservationController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable("id") Long id) {
-        ReservationResponse dto = new ReservationResponse(reservationService.find(id));
+        Reservation reservation = reservationService.find(id);
+        ReservationResponse dto = new ReservationResponse(reservation, themeService.find(reservation.getThemeId()));
         return ResponseEntity.ok().body(dto);
     }
 

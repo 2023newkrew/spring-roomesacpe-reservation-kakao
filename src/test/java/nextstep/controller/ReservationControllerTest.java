@@ -2,6 +2,7 @@ package nextstep.controller;
 
 import io.restassured.RestAssured;
 import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.dto.ThemeRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -20,6 +21,19 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        ThemeRequest dto = new ThemeRequest(
+                "test name",
+                "test desc",
+                10000);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(dto)
+                .when().post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/themes/1");
     }
 
     @DisplayName("can POST reservation")
@@ -74,7 +88,9 @@ public class ReservationControllerTest {
                 .body("date", is("2000-01-01"))
                 .body("time", is("00:00"))
                 .body("name", is("name"))
-                .body("themeId", is(1));
+                .body("themeName", is("test name"))
+                .body("themeDesc", is("test desc"))
+                .body("themePrice", is(10000));
     }
 
     @DisplayName("can reject GET of nonexistent id")
