@@ -21,14 +21,13 @@ public class ConsoleReservationRepoTest {
 
     @BeforeEach
     void setUp() {
-        Connection con = null;
+        Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
 
-        String sql = "TRUNCATE TABLE reservation;";
+        String sql = "TRUNCATE TABLE reservation";
         int result = 0;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
             ps = con.prepareStatement(sql);
             result = ps.executeUpdate();
 

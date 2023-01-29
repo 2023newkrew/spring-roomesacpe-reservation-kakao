@@ -25,7 +25,7 @@ public class ReservationControllerTest {
     @DisplayName("can POST reservation")
     @Test
     void can_POST_reservation() {
-        ReservationRequest reservationDTO = new ReservationRequest(
+        ReservationRequest dto = new ReservationRequest(
                 "2000-01-01",
                 "00:00",
                 "name",
@@ -33,7 +33,7 @@ public class ReservationControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationDTO)
+                .body(dto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -45,7 +45,7 @@ public class ReservationControllerTest {
     void can_reject_POST_of_duplicate_date_and_time() {
         this.can_POST_reservation();
 
-        ReservationRequest duplicatedReservationDTO = new ReservationRequest(
+        ReservationRequest duplicatedDto = new ReservationRequest(
                 "2000-01-01",
                 "00:00",
                 "different name",
@@ -53,7 +53,7 @@ public class ReservationControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(duplicatedReservationDTO)
+                .body(duplicatedDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
