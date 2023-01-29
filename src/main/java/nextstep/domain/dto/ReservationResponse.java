@@ -2,14 +2,14 @@ package nextstep.domain.dto;
 
 import nextstep.domain.reservation.Reservation;
 
-public class GetReservationDTO {
+public class ReservationResponse {
     private final Long id;
     private final String date;
     private final String time;
     private final String name;
     private final Long themeId;
 
-    public GetReservationDTO(Reservation reservation) {
+    public ReservationResponse(Reservation reservation) {
         this.id = reservation.getId();
         this.date = reservation.getDate().toString();
         this.time = reservation.getTime().toString();

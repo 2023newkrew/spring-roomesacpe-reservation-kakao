@@ -2,8 +2,8 @@ package nextstep.controller;
 
 import nextstep.domain.reservation.Reservation;
 import nextstep.domain.service.ReservationService;
-import nextstep.domain.dto.GetReservationDTO;
-import nextstep.domain.dto.PostReservationDTO;
+import nextstep.domain.dto.ReservationResponse;
+import nextstep.domain.dto.ReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public ResponseEntity postReservation(@RequestBody PostReservationDTO dto) {
+    public ResponseEntity postReservation(@RequestBody ReservationRequest dto) {
         Reservation reservation = new Reservation(
                 LocalDate.parse(dto.getLocalDate()),
                 LocalTime.parse(dto.getLocalTime()),
@@ -35,9 +35,9 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
-        GetReservationDTO getReservationDTO = new GetReservationDTO(reservationService.find(id));
-        return ResponseEntity.ok().body(getReservationDTO);
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable("id") Long id) {
+        ReservationResponse dto = new ReservationResponse(reservationService.find(id));
+        return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")

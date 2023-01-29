@@ -1,7 +1,7 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.domain.dto.PostReservationDTO;
+import nextstep.domain.dto.ReservationRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -25,7 +25,7 @@ public class ReservationControllerTest {
     @DisplayName("can POST reservation")
     @Test
     void can_POST_reservation() {
-        PostReservationDTO reservationDTO = new PostReservationDTO(
+        ReservationRequest reservationDTO = new ReservationRequest(
                 "2000-01-01",
                 "00:00",
                 "name",
@@ -45,7 +45,7 @@ public class ReservationControllerTest {
     void can_reject_POST_of_duplicate_date_and_time() {
         this.can_POST_reservation();
 
-        PostReservationDTO duplicatedReservationDTO = new PostReservationDTO(
+        ReservationRequest duplicatedReservationDTO = new ReservationRequest(
                 "2000-01-01",
                 "00:00",
                 "different name",
