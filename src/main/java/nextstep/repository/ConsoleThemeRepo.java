@@ -1,24 +1,25 @@
 package nextstep.repository;
 
-import nextstep.domain.reservation.Reservation;
+import nextstep.domain.theme.Theme;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ConsoleReservationRepo implements ReservationRepo {
-    public long save(Reservation reservation) {
+public class ConsoleThemeRepo implements ThemeRepo {
+    public long save(Theme theme) {
         Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "INSERT INTO reservation (date, time, name, theme_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO theme (name, desc, price) VALUES (?, ?, ?)";
         Long id = null;
 
         try {
             ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setDate(1, Date.valueOf(reservation.getDate()));
-            ps.setTime(2, Time.valueOf(reservation.getTime()));
-            ps.setString(3, reservation.getName());
-            ps.setLong(4, reservation.getThemeId());
+            ps.setString(1, theme.getName());
+            ps.setString(2, theme.getDesc());
+            ps.setInt(3, theme.getPrice());
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
 
@@ -43,7 +44,7 @@ public class ConsoleReservationRepo implements ReservationRepo {
         Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
 
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = "DELETE FROM theme WHERE id = ?";
         int result = 0;
 
         try {
@@ -63,13 +64,13 @@ public class ConsoleReservationRepo implements ReservationRepo {
         return result;
     }
 
-    public Reservation findById(long id) {
+    public Theme findById(long id) {
         Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM reservation WHERE id = ?";
-        Reservation reservation = null;
+        String sql = "SELECT * FROM theme WHERE id = ?";
+        Theme theme = null;
 
         try {
             ps = con.prepareStatement(sql);
@@ -77,12 +78,11 @@ public class ConsoleReservationRepo implements ReservationRepo {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                reservation = new Reservation(
+                theme = new Theme(
                         rs.getLong(1),
-                        rs.getDate(2).toLocalDate(),
-                        rs.getTime(3).toLocalTime(),
-                        rs.getString(4),
-                        rs.getLong(5));
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -95,37 +95,39 @@ public class ConsoleReservationRepo implements ReservationRepo {
                 throw new RuntimeException(e);
             }
         }
-        return reservation;
+        return theme;
     }
 
-    public int findByDateAndTimeAndTheme(Date date, Time time, long themeId) {
+    public List<Theme> findAll() {
         Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ? AND theme_id = ?";
-        int count = 0;
+        String sql = "SELECT * FROM theme";
+        List<Theme> themes = new ArrayList<>();
 
         try {
             ps = con.prepareStatement(sql);
-            ps.setDate(1, date);
-            ps.setTime(2, time);
-            ps.setLong(3, themeId);
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                count = rs.getInt(1);
+            while (rs.next()) {
+                themes.add(new Theme(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             try {
+                rs.close();
                 ps.close();
                 con.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
-        return count;
+        return themes;
     }
 }

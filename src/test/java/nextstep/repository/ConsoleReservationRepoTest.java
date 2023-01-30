@@ -1,6 +1,5 @@
 package nextstep.repository;
 
-import nextstep.domain.theme.Theme;
 import nextstep.domain.reservation.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,19 +17,17 @@ public class ConsoleReservationRepoTest {
             LocalDate.parse("2000-01-01"),
             LocalTime.parse("00:00"),
             "name",
-            new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29_000)
-    );
+            1L);
 
     @BeforeEach
     void setUp() {
-        Connection con = null;
+        Connection con = ConsoleConnection.connect();
         PreparedStatement ps = null;
 
-        String sql = "TRUNCATE TABLE reservation;";
+        String sql = "TRUNCATE TABLE reservation";
         int result = 0;
 
         try {
-            con = DriverManager.getConnection("jdbc:h2:~/test;AUTO_SERVER=true", "sa", "");
             ps = con.prepareStatement(sql);
             result = ps.executeUpdate();
 
@@ -69,16 +66,17 @@ public class ConsoleReservationRepoTest {
         assertNull(nonexistent);
     }
 
-    @DisplayName("can find by date and time")
+    @DisplayName("can find by date and time and theme id")
     @Test
-    void can_find_by_date_and_time() {
+    void can_find_by_date_and_time_and_theme_id() {
         int CYCLE = 17;
         for (int i = 0; i < CYCLE; i++) {
             this.consoleReservationRepo.save(this.testReservation);
         }
-        int count = this.consoleReservationRepo.findByDateAndTime(
+        int count = this.consoleReservationRepo.findByDateAndTimeAndTheme(
                 Date.valueOf(this.testReservation.getDate()),
-                Time.valueOf(this.testReservation.getTime()));
+                Time.valueOf(this.testReservation.getTime()),
+                this.testReservation.getThemeId());
         assertEquals(CYCLE, count);
     }
 

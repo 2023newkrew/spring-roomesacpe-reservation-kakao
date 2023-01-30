@@ -1,7 +1,8 @@
 package nextstep.controller;
 
 import io.restassured.RestAssured;
-import nextstep.domain.dto.PostReservationDTO;
+import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.dto.ThemeRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -20,19 +21,33 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        ThemeRequest dto = new ThemeRequest(
+                "test name",
+                "test desc",
+                10000);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(dto)
+                .when().post("/themes")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/themes/1");
     }
 
     @DisplayName("can POST reservation")
     @Test
     void can_POST_reservation() {
-        PostReservationDTO reservationDTO = new PostReservationDTO(
+        ReservationRequest dto = new ReservationRequest(
                 "2000-01-01",
                 "00:00",
-                "name");
+                "name",
+                1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reservationDTO)
+                .body(dto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -44,14 +59,15 @@ public class ReservationControllerTest {
     void can_reject_POST_of_duplicate_date_and_time() {
         this.can_POST_reservation();
 
-        PostReservationDTO duplicatedReservationDTO = new PostReservationDTO(
+        ReservationRequest duplicatedDto = new ReservationRequest(
                 "2000-01-01",
                 "00:00",
-                "different name");
+                "different name",
+                1L);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(duplicatedReservationDTO)
+                .body(duplicatedDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -72,9 +88,9 @@ public class ReservationControllerTest {
                 .body("date", is("2000-01-01"))
                 .body("time", is("00:00"))
                 .body("name", is("name"))
-                .body("themeName", is("워너고홈"))
-                .body("themeDesc", is("병맛 어드벤처 회사 코믹물"))
-                .body("themePrice", is(29_000));
+                .body("themeName", is("test name"))
+                .body("themeDesc", is("test desc"))
+                .body("themePrice", is(10000));
     }
 
     @DisplayName("can reject GET of nonexistent id")

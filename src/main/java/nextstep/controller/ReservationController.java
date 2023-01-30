@@ -1,61 +1,52 @@
 package nextstep.controller;
 
+import nextstep.domain.reservation.Reservation;
 import nextstep.domain.service.ReservationService;
-import nextstep.domain.service.exception.DuplicateSaveException;
-import nextstep.domain.service.exception.ResourceNotFoundException;
-import nextstep.domain.dto.GetReservationDTO;
-import nextstep.domain.dto.PostReservationDTO;
+import nextstep.domain.dto.ReservationResponse;
+import nextstep.domain.dto.ReservationRequest;
+import nextstep.domain.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final ThemeService themeService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ThemeService themeService) {
         this.reservationService = reservationService;
+        this.themeService = themeService;
     }
 
     @PostMapping()
-    public ResponseEntity postReservation(@RequestBody PostReservationDTO reservationDto) {
-        try {
-            long id = reservationService.saveReservation(reservationDto);
-            return ResponseEntity.created(URI.create("/reservations/" + id)).build();
-        } catch (DuplicateSaveException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity postReservation(@RequestBody ReservationRequest dto) {
+        Reservation reservation = new Reservation(
+                LocalDate.parse(dto.getLocalDate()),
+                LocalTime.parse(dto.getLocalTime()),
+                dto.getName(),
+                dto.getThemeId());
+        long id = reservationService.save(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetReservationDTO> getReservation(@PathVariable("id") Long id) {
-        try {
-            GetReservationDTO getReservationDTO = new GetReservationDTO(reservationService.findReservation(id));
-            return ResponseEntity.ok().body(getReservationDTO);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable("id") Long id) {
+        Reservation reservation = reservationService.find(id);
+        ReservationResponse dto = new ReservationResponse(reservation, themeService.find(reservation.getThemeId()));
+        return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
-        try {
-            reservationService.deleteReservation(id);
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        reservationService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -12,6 +12,6 @@ public interface ReservationRepo {
 
     public int delete(long id);
 
-    public int findByDateAndTime(Date date, Time time);
+    public int findByDateAndTimeAndTheme(Date date, Time time, long themeId);
 
 }

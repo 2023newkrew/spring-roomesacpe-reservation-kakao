@@ -1,8 +1,9 @@
 package nextstep.domain.dto;
 
 import nextstep.domain.reservation.Reservation;
+import nextstep.domain.theme.Theme;
 
-public class GetReservationDTO {
+public class ReservationResponse {
     private final Long id;
     private final String date;
     private final String time;
@@ -11,14 +12,14 @@ public class GetReservationDTO {
     private final String themeDesc;
     private final Integer themePrice;
 
-    public GetReservationDTO(Reservation reservation) {
+    public ReservationResponse(Reservation reservation, Theme theme) {
         this.id = reservation.getId();
         this.date = reservation.getDate().toString();
         this.time = reservation.getTime().toString();
         this.name = reservation.getName();
-        this.themeName = reservation.getTheme().getName();
-        this.themeDesc = reservation.getTheme().getDesc();
-        this.themePrice = reservation.getTheme().getPrice();
+        this.themeName = theme.getName();
+        this.themeDesc = theme.getDesc();
+        this.themePrice = theme.getPrice();
     }
 
     public Long getId() {
