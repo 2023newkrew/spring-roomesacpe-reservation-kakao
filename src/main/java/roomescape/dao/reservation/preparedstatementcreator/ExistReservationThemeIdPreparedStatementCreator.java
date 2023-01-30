@@ -1,18 +1,18 @@
-package roomescape.dao.preparedstatement;
+package roomescape.dao.reservation.preparedstatementcreator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
-public class FindReservationPreparedStatementCreator implements PreparedStatementCreator {
+public class ExistReservationThemeIdPreparedStatementCreator implements PreparedStatementCreator {
 
-    private static final String SQL =
-            "SELECT * FROM reservation WHERE id=?;";
+    String SQL =
+            "SELECT EXISTS ( SELECT * FROM reservation WHERE theme_id = ?) as result;";
 
     private final Long id;
 
-    public FindReservationPreparedStatementCreator(Long id) {
+    public ExistReservationThemeIdPreparedStatementCreator(Long id) {
         this.id = id;
     }
 

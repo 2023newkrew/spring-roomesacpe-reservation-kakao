@@ -9,21 +9,20 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
     private String name;
-    private Theme theme;
+    private Long themeId;
 
-    public Reservation() {
+    public Reservation() {}
+
+    public Reservation(LocalDate date, LocalTime time, String name, Long themeId) {
+        this(null, date, time, name, themeId);
     }
 
-    public Reservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        this(null, date, time, name, theme);
-    }
-
-    public Reservation(Long id, LocalDate date, LocalTime time, String name, Theme theme) {
+    public Reservation(Long id, LocalDate date, LocalTime time, String name, Long themeId) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.name = name;
-        this.theme = theme;
+        this.themeId = themeId;
     }
 
     public Long getId() {
@@ -42,11 +41,7 @@ public class Reservation {
         return name;
     }
 
-    public Theme getTheme() {
-        return theme;
-    }
-
-    public boolean isValid() {
-        return date != null && time != null && name != null;
+    public Long getThemeId() {
+        return themeId;
     }
 }

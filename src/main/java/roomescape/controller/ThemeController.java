@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,39 +11,47 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.Reservation;
-import roomescape.service.reservation.ReservationServiceInterface;
-
+import roomescape.dto.Theme;
+import roomescape.service.theme.ThemeServiceInterface;
 
 @RestController
-@RequestMapping("/reservations")
-public class ReservationController {
+@RequestMapping("/theme")
+public class ThemeController {
 
     @Autowired
-    private ReservationServiceInterface reservationService;
+    private ThemeServiceInterface themeService;
 
     @PostMapping
-    public ResponseEntity<Object> createReservation(@RequestBody Reservation reservation) {
-        long id = reservationService.create(reservation);
+    public ResponseEntity<Object> createTheme(@RequestBody Theme theme) {
+        long id = themeService.create(theme);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header("Location", String.format("/reservations/%d", id))
+                .header("Location", String.format("/theme/%d", id))
                 .build();
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Reservation> findReservation(@PathVariable Long id) {
-        Reservation reservation = reservationService.find(id);
+    @GetMapping
+    public ResponseEntity<List<Theme>> listTheme() {
+        List<Theme> themeList = themeService.list();
         return ResponseEntity
-                .status(HttpStatus.OK).
-                        body(reservation);
+                .status(HttpStatus.OK)
+                .body(themeList);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Theme> findTheme(@PathVariable Long id) {
+        Theme theme = themeService.find(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(theme);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> removeReservation(@PathVariable Long id) {
-        reservationService.remove(id);
+    public ResponseEntity<Object> removeTheme(@PathVariable Long id) {
+        themeService.remove(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
+
 }
