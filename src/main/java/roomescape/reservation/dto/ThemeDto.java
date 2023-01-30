@@ -1,11 +1,14 @@
-package roomescape.domain;
+package roomescape.reservation.dto;
 
-public class Theme {
+public class ThemeDto {
     private String name;
     private String desc;
     private Integer price;
 
-    public Theme(String name, String desc, Integer price) {
+    public ThemeDto() {
+    }
+
+    public ThemeDto(String name, String desc, Integer price) {
         this.name = name;
         this.desc = desc;
         this.price = price;
