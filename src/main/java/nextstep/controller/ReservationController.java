@@ -1,46 +1,73 @@
 package nextstep.controller;
 
-import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
 import nextstep.dto.CreateReservationRequest;
 import nextstep.dto.FindReservation;
 import nextstep.service.ReservationService;
+import nextstep.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ThemeService themeService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ThemeService themeService) {
         this.reservationService = reservationService;
+        this.themeService = themeService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity createReservation(@RequestBody CreateReservationRequest request) {
-        Theme theme = new Theme("워너고홈", "병맛 어드벤처 회사 코믹물", 29000);
-        Long id = reservationService.createReservation(request.getDate(),
-                request.getTime(), request.getName(), theme);
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        try {
+            Theme theme = themeService.findById(request.themeId);
+            Long id = reservationService.createReservation(request.toReservation());
+            return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .build();
+        }
     }
 
     @GetMapping("/{id}")
-    public FindReservation findReservationById(@PathVariable Long id) {
+    public ResponseEntity findReservationById(@PathVariable Long id) {
+        try {
+            FindReservation reservation = reservationService.findById(id);
+            return new ResponseEntity(reservation, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .build();
+        }
+    }
 
-        Reservation reservation = reservationService.findById(id);
-        return FindReservation.from(reservation);
+    @GetMapping
+    public ResponseEntity findAllReservation() {
+        try {
+            List<FindReservation> reservation = reservationService.findAll();
+            return new ResponseEntity(reservation, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReservation(@PathVariable("id") Long id) throws SQLException {
-        reservationService.deleteReservation(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity deleteReservation(@PathVariable("id") Long id) {
+        try {
+            reservationService.deleteReservation(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .build();
+        }
     }
 }

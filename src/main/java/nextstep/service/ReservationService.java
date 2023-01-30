@@ -2,33 +2,52 @@ package nextstep.service;
 
 import nextstep.domain.Reservation;
 import nextstep.domain.Theme;
-import nextstep.repository.ReservationRepository;
+import nextstep.dto.FindReservation;
+import nextstep.repository.reservation.ReservationRepository;
+import nextstep.repository.theme.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ThemeRepository themeRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ThemeRepository themeRepository) {
         this.reservationRepository = reservationRepository;
+        this.themeRepository = themeRepository;
     }
 
-    public Reservation findById(Long id) {
-        return reservationRepository.findById(id);
+    public FindReservation findById(Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        Theme theme = themeRepository.findByThemeId(reservation.getThemeId());
+
+        return FindReservation.from(reservation, theme);
     }
 
-    public void deleteReservation(Long id) throws SQLException {
+    public List<FindReservation> findAll(){
+        return reservationRepository.findAll();
+    }
+
+    public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
     }
 
-    public Long createReservation(LocalDate date, LocalTime time, String name, Theme theme) {
-        return reservationRepository.save(date, time, name, theme);
+//    @Transactional
+//    public void deleteReservationByTheme(Long themeId){
+//        reservationRepository.deleteByThemeId(themeId);
+//    }
+
+    public Long createReservation(Reservation reservation) {
+        Theme theme = themeRepository.findByThemeId(reservation.getThemeId());
+        return reservationRepository.save(reservation.getDate(), reservation.getTime(), reservation.getName(), theme);
     }
 }
