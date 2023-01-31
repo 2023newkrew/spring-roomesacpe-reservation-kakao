@@ -16,6 +16,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
     private Map<Long, Reservation> reservations = new HashMap<>();
     private final AtomicLong reservationId = new AtomicLong(0L);
 
+    @Override
     public Long save(Reservation reservation) {
         reservation.setId(reservationId.incrementAndGet());
         reservations.put(reservationId.get(), reservation);
@@ -23,6 +24,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
         return reservationId.get();
     }
 
+    @Override
     public int countByDateAndTime(LocalDate date, LocalTime time) {
         return (int) reservations.values().stream()
                 .filter(reservation ->
@@ -30,6 +32,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
                 .count();
     }
 
+    @Override
     public Optional<Reservation> findById(Long id) {
         if (!reservations.containsKey(id)) {
             return Optional.empty();
@@ -37,6 +40,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
         return Optional.ofNullable(reservations.get(id));
     }
 
+    @Override
     public void delete(Long id) {
         reservations.remove(id);
     }

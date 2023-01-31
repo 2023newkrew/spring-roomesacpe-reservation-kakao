@@ -42,6 +42,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Long save(Reservation reservation) {
         String insertSql = "INSERT INTO reservation (date, time, name, theme_name, theme_desc, theme_price) VALUES (?, ?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -59,11 +60,13 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         return keyHolder.getKey().longValue();
     }
 
+    @Override
     public int countByDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT count(*) FROM reservation WHERE date = ? and time = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, date, time);
     }
 
+    @Override
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
         try {
@@ -84,6 +87,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         jdbcTemplate.execute(sql);
     }
 
+    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);

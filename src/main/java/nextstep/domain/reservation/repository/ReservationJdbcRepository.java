@@ -50,6 +50,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         }
     }
 
+    @Override
     public Long save(Reservation reservation) {
         Connection con = null;
 
@@ -91,6 +92,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return id;
     }
 
+    @Override
     public int countByDateAndTime(LocalDate date, LocalTime time) {
         Connection con = null;
 
@@ -128,6 +130,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return count;
     }
 
+    @Override
     public Optional<Reservation> findById(Long id) {
         Connection con = null;
         ResultSet rs;
@@ -178,6 +181,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         );
     }
 
+    @Override
     public void delete(Long id) {
         Connection con = null;
 
