@@ -1,11 +1,13 @@
 package nextstep;
 
-import nextstep.dto.ReservationRequestDto;
-import nextstep.dto.ReservationResponseDto;
-import nextstep.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.exceptions.exception.ReservationNotFoundException;
-import nextstep.repository.ReservationJdbcRepository;
-import nextstep.service.ReservationService;
+import nextstep.domain.reservation.dto.ReservationRequestDto;
+import nextstep.domain.reservation.dto.ReservationResponseDto;
+import nextstep.domain.reservation.repository.ReservationJdbcTemplateRepository;
+import nextstep.domain.theme.repository.ThemeJdbcTemplateRepository;
+import nextstep.domain.reservation.exception.DuplicatedDateAndTimeException;
+import nextstep.domain.reservation.exception.ReservationNotFoundException;
+import nextstep.domain.reservation.service.ReservationService;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +20,8 @@ public class ReservationConsole {
     private static final String QUIT = "quit";
 
     public static void main(String[] args) {
-        final ReservationService reservationService = new ReservationService(new ReservationJdbcRepository());
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        ReservationService reservationService = new ReservationService(new ReservationJdbcTemplateRepository(jdbcTemplate), new ThemeJdbcTemplateRepository(jdbcTemplate));
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -37,7 +40,7 @@ public class ReservationConsole {
                 String name = params.split(",")[2];
 
                 ReservationRequestDto reservationRequestDto = new ReservationRequestDto(
-                        LocalDate.parse(date),
+                        1L, LocalDate.parse(date),
                         LocalTime.parse(time + ":00"),
                         name
                 );

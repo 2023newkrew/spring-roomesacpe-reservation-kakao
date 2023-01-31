@@ -1,4 +1,4 @@
-package nextstep.exceptions.exception;
+package nextstep.domain.reservation.exception;
 
 public class DuplicatedDateAndTimeException extends RuntimeException {
 }

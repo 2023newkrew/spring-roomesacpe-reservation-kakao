@@ -1,13 +1,14 @@
-package nextstep.repository;
+package nextstep.domain.reservation.repository;
 
-import nextstep.domain.Reservation;
-import nextstep.domain.Theme;
-import nextstep.exceptions.exception.ReservationNotFoundException;
+import nextstep.domain.reservation.domain.Reservation;
+import nextstep.domain.theme.domain.Theme;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -49,6 +50,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         }
     }
 
+    @Override
     public Long save(Reservation reservation) {
         Connection con = null;
 
@@ -90,6 +92,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return id;
     }
 
+    @Override
     public int countByDateAndTime(LocalDate date, LocalTime time) {
         Connection con = null;
 
@@ -127,7 +130,8 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return count;
     }
 
-    public Reservation findById(Long id) {
+    @Override
+    public Optional<Reservation> findById(Long id) {
         Connection con = null;
         ResultSet rs;
         Reservation reservation;
@@ -158,15 +162,15 @@ public class ReservationJdbcRepository implements ReservationRepository {
             System.err.println("con 오류:" + e.getMessage());
         }
 
-        return reservation;
+        return Optional.ofNullable(reservation);
     }
 
-    private static Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
+    private Reservation getResultFromResultSet(ResultSet rs) throws SQLException {
         if (!rs.next()) {
-            throw new ReservationNotFoundException();
+            return null;
         }
 
-        Reservation reservation = new Reservation(
+        return new Reservation(
                 rs.getLong("id"),
                 rs.getDate("date").toLocalDate(),
                 rs.getTime("time").toLocalTime(),
@@ -175,10 +179,9 @@ public class ReservationJdbcRepository implements ReservationRepository {
                         rs.getString("theme_desc"),
                         rs.getInt("theme_price"))
         );
-
-        return reservation;
     }
 
+    @Override
     public void delete(Long id) {
         Connection con = null;
 
@@ -206,5 +209,10 @@ public class ReservationJdbcRepository implements ReservationRepository {
         } catch (SQLException e) {
             System.err.println("con 오류:" + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Reservation> findByTheme(String name) {
+        return null;
     }
 }

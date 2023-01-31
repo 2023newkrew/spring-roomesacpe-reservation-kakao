@@ -1,55 +1,59 @@
-package nextstep.controller;
+package nextstep.domains.reservation.controller;
 
 import io.restassured.RestAssured;
-import nextstep.dto.ReservationRequestDto;
-import nextstep.repository.ReservationJdbcTemplateRepository;
-import nextstep.service.ReservationService;
-import org.junit.jupiter.api.*;
+import nextstep.domain.reservation.dto.ReservationRequestDto;
+import nextstep.domain.reservation.repository.ReservationJdbcTemplateRepository;
+import nextstep.domain.reservation.service.ReservationService;
+import nextstep.domain.theme.dto.ThemeRequestDto;
+import nextstep.domain.theme.service.ThemeService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
-
 @DisplayName("Reservation Test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ReservationControllerTest {
-
-    @LocalServerPort
-    int port;
 
     @Autowired
     ReservationService reservationService;
     @Autowired
-    ReservationJdbcTemplateRepository reservationJdbcTemplateDao;
+    ReservationJdbcTemplateRepository reservationJdbcTemplateRepository;
+    @Autowired
+    ThemeService themeService;
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
-        ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.parse("2023-01-10"),
+        ThemeRequestDto themeRequestDto = new ThemeRequestDto(
+                "워너고홈",
+                "병맛 어드벤처 회사 코믹물",
+                29_000
+        );
+        themeService.add(themeRequestDto);
+
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(
+                1L, LocalDate.parse("2023-01-10"),
                 LocalTime.parse("13:00"),
                 "jay"
         );
-        reservationService.reserve(requestDto);
-    }
-
-    @AfterEach
-    void afterEach() {
-        reservationJdbcTemplateDao.clear();
+        reservationService.reserve(reservationRequestDto);
     }
 
     @DisplayName("Reservation - 예약하기")
     @Test
     void reserve() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.parse("2023-01-11"),
+                1L, LocalDate.parse("2023-01-11"),
                 LocalTime.parse("13:00:00"),
                 "jay"
         );
@@ -67,7 +71,7 @@ public class ReservationControllerTest {
     @Test
     void reserveException() {
         ReservationRequestDto requestDto = new ReservationRequestDto(
-                LocalDate.parse("2023-01-10"),
+                1L, LocalDate.parse("2023-01-10"),
                 LocalTime.parse("13:00:00"),
                 "jay"
         );
