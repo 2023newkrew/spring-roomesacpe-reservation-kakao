@@ -76,17 +76,6 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         }
     }
 
-    public void clear() {
-        String sql = "DELETE FROM reservation";
-        jdbcTemplate.update(sql);
-        resetId();
-    }
-
-    private void resetId() {
-        String sql = "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1";
-        jdbcTemplate.execute(sql);
-    }
-
     @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
