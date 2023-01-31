@@ -6,9 +6,9 @@ import nextstep.domain.reservation.dto.ReservationResponseDto;
 import nextstep.domain.reservation.repository.ReservationRepository;
 import nextstep.domain.theme.domain.Theme;
 import nextstep.domain.theme.repository.ThemeRepository;
-import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.global.exceptions.exception.ReservationNotFoundException;
-import nextstep.global.exceptions.exception.ThemeNotFoundException;
+import nextstep.domain.reservation.exception.DuplicatedDateAndTimeException;
+import nextstep.domain.reservation.exception.ReservationNotFoundException;
+import nextstep.domain.theme.exception.ThemeNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 

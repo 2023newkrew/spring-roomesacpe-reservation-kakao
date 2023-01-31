@@ -1,19 +1,11 @@
-package nextstep.global.exceptions;
+package nextstep.domain.theme.exception;
 
-import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.global.exceptions.exception.DuplicatedNameThemeException;
-import nextstep.global.exceptions.exception.ReservedThemeModifyException;
-import nextstep.global.exceptions.exception.ThemeNotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ExceptionAdvice {
-
-    @ExceptionHandler(DuplicatedDateAndTimeException.class)
-    public ResponseEntity<String> handleDuplicatedDateAndTimeException() {
-        return ResponseEntity.badRequest().body("이미 예약된 날짜와 시간입니다.");
-    }
+public class ThemeExceptionAdvice {
 
     @ExceptionHandler(DuplicatedNameThemeException.class)
     public ResponseEntity<String> handleDuplicatedNameThemeException() {

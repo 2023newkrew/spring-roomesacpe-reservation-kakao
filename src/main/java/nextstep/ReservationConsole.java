@@ -4,8 +4,8 @@ import nextstep.domain.reservation.dto.ReservationRequestDto;
 import nextstep.domain.reservation.dto.ReservationResponseDto;
 import nextstep.domain.reservation.repository.ReservationJdbcTemplateRepository;
 import nextstep.domain.theme.repository.ThemeJdbcTemplateRepository;
-import nextstep.global.exceptions.exception.DuplicatedDateAndTimeException;
-import nextstep.global.exceptions.exception.ReservationNotFoundException;
+import nextstep.domain.reservation.exception.DuplicatedDateAndTimeException;
+import nextstep.domain.reservation.exception.ReservationNotFoundException;
 import nextstep.domain.reservation.service.ReservationService;
 import org.springframework.jdbc.core.JdbcTemplate;
 

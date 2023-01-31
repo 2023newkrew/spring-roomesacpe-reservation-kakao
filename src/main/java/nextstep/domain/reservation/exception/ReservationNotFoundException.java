@@ -1,4 +1,4 @@
-package nextstep.global.exceptions.exception;
+package nextstep.domain.reservation.exception;
 
 public class ReservationNotFoundException extends RuntimeException {
 }

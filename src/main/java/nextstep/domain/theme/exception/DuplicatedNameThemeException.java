@@ -1,4 +1,4 @@
-package nextstep.global.exceptions.exception;
+package nextstep.domain.theme.exception;
 
 public class DuplicatedNameThemeException extends RuntimeException {
 }
