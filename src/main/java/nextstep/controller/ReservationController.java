@@ -19,7 +19,7 @@ public class ReservationController {
     private final ReservationService service;
 
     @PostMapping
-    public ResponseEntity<?> createReservation(@RequestBody ReservationRequestDTO request) {
+    public ResponseEntity<Exception> createReservation(@RequestBody ReservationRequestDTO request) {
         try {
             URI location = URI.create(RESERVATION_PATH + "/" + service.create(request));
 
@@ -37,7 +37,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{reservation_id}")
-    public ResponseEntity<?> deleteReservation(@PathVariable("reservation_id") Long reservationId) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("reservation_id") Long reservationId) {
         service.deleteById(reservationId);
 
         return ResponseEntity.noContent()
