@@ -1,7 +1,7 @@
 package nextstep.repository;
 
 import lombok.AllArgsConstructor;
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.dao.ReservationDAO;
 import nextstep.dto.ReservationDTO;
 import nextstep.mapper.ReservationMapper;

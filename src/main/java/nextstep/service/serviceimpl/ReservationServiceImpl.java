@@ -1,7 +1,7 @@
 package nextstep.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.repository.ReservationRepository;
 import nextstep.service.ReservationService;

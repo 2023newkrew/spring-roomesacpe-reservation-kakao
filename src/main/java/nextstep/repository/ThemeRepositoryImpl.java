@@ -1,7 +1,7 @@
 package nextstep.repository;
 
 import lombok.AllArgsConstructor;
-import nextstep.Theme;
+import nextstep.domain.Theme;
 import nextstep.dao.ThemeDAO;
 import nextstep.dto.ThemeDTO;
 import nextstep.mapper.ThemeMapper;

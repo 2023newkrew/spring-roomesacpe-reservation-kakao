@@ -1,6 +1,6 @@
 package nextstep.mapper;
 
-import nextstep.Theme;
+import nextstep.domain.Theme;
 import nextstep.dto.ThemeDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

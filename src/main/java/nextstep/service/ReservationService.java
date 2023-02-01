@@ -1,6 +1,6 @@
 package nextstep.service;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.dto.ReservationRequestDTO;
 
 public interface ReservationService {

@@ -2,6 +2,8 @@ package nextstep;
 
 import nextstep.dao.ReservationDAO;
 import nextstep.dao.SimpleReservationDAO;
+import nextstep.domain.Reservation;
+import nextstep.domain.Theme;
 import nextstep.repository.ReservationRepository;
 import nextstep.repository.ReservationRepositoryImpl;
 

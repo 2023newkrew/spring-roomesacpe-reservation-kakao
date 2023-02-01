@@ -1,7 +1,7 @@
 package nextstep.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.Theme;
+import nextstep.domain.Theme;
 import nextstep.dto.ThemeRequestDTO;
 import nextstep.service.ThemeService;
 import org.springframework.http.ResponseEntity;

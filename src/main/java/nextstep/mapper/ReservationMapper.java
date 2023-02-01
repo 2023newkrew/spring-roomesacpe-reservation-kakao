@@ -1,6 +1,6 @@
 package nextstep.mapper;
 
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.dto.ReservationDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

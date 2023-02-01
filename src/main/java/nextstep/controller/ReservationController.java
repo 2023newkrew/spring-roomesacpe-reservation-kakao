@@ -1,7 +1,7 @@
 package nextstep.controller;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.Reservation;
+import nextstep.domain.Reservation;
 import nextstep.dto.ReservationRequestDTO;
 import nextstep.service.ReservationService;
 import org.springframework.http.ResponseEntity;

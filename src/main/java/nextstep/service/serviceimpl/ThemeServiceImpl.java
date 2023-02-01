@@ -1,7 +1,7 @@
 package nextstep.service.serviceimpl;
 
 import lombok.RequiredArgsConstructor;
-import nextstep.Theme;
+import nextstep.domain.Theme;
 import nextstep.dto.ThemeRequestDTO;
 import nextstep.repository.ThemeRepository;
 import nextstep.service.ThemeService;
