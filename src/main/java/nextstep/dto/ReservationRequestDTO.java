@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ReservationRequestDTO {
-
     private String date;
 
     private String time;
