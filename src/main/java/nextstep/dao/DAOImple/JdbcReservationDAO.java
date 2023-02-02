@@ -1,6 +1,8 @@
-package nextstep.dao;
+package nextstep.dao.DAOImple;
 
 import lombok.AllArgsConstructor;
+import nextstep.dao.ReservationDAO;
+import nextstep.domain.Reservation;
 import nextstep.dto.ReservationDTO;
 import nextstep.dto.ThemeDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +18,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @Component
 public class JdbcReservationDAO implements ReservationDAO {
-
-    private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER =
             (resultSet, rowNum) -> {
-                return new ReservationDTO(
+                return new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getDate("date")
                                 .toLocalDate(),
@@ -33,42 +34,33 @@ public class JdbcReservationDAO implements ReservationDAO {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException {
+    public Boolean existsByDateTime(Date date, Time time) throws RuntimeException {
         return jdbcTemplate.queryForObject(SELECT_BY_DATE_AND_TIME_SQL, (r, ignore) -> r.getInt(1) > 0, date, time);
     }
 
     @Override
-    public Long insert(ReservationDTO dto) {
+    public Long insert(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(getPreparedStatementCreator(dto), keyHolder);
-        Number key = keyHolder.getKey();
 
-        return Objects.requireNonNull(key)
-                .longValue();
-    }
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
+            ps.setDate(1, Date.valueOf(reservation.getDate()));
+            ps.setTime(2, Time.valueOf(reservation.getTime()));
+            ps.setString(3, reservation.getName());
+            ps.setLong(4, reservation.getTheme_id());
+            return ps;
 
-    private PreparedStatementCreator getPreparedStatementCreator(ReservationDTO dto) {
-        return connection -> getPrepareStatement(connection, dto);
-    }
+        }, keyHolder);
 
-    private PreparedStatement getPrepareStatement(Connection connection, ReservationDTO dto) throws SQLException {
-        var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
-        Date date = Date.valueOf(dto.getDate());
-        Time time = Time.valueOf(dto.getTime());
-
-        ps.setDate(1, date);
-        ps.setTime(2, time);
-        ps.setString(3, dto.getName());
-        ps.setLong(4, dto.getTheme_id());
-        return ps;
+        return keyHolder.getKey().longValue();
     }
 
     @Override
-    public ReservationDTO getById(Long id) {
+    public Reservation getById(Long id) {
         try {
-            return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, RESERVATION_DTO_ROW_MAPPER, id);
+            return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, RESERVATION_ROW_MAPPER, id);
         }
-        catch (Exception ignore) {
+        catch (Exception e) {
             return null;
         }
     }
