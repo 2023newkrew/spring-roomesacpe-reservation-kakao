@@ -9,5 +9,7 @@ public interface ThemeRepository {
 
     List<Theme> getList();
 
+    Theme getById(Long id);
+
     boolean deleteById(Long id);
 }
