@@ -1,5 +1,6 @@
 package nextstep.dao;
 
+import nextstep.domain.Reservation;
 import nextstep.dto.ReservationDTO;
 
 import java.sql.Time;
@@ -14,11 +15,11 @@ public interface ReservationDAO {
 
      String DELETE_BY_ID_SQL = "DELETE FROM reservation WHERE id = ?";
 
-    Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException;
+    Boolean existsByDateTime(Date date, Time time) throws RuntimeException;
 
-    Long insert(ReservationDTO dto);
+    Long insert(Reservation reservation);
 
-    ReservationDTO getById(Long id);
+    Reservation getById(Long id);
 
     Boolean deleteById(Long id);
 }
