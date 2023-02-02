@@ -1,19 +1,18 @@
-package nextstep.dao;
+package nextstep.dao.DAOImple;
 
-import nextstep.dto.ReservationDTO;
-import nextstep.dto.ThemeDTO;
+import nextstep.dao.ReservationDAO;
+import nextstep.domain.Reservation;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.*;
 
 public class SimpleReservationDAO implements ReservationDAO {
-
-    private static final RowMapper<ReservationDTO> RESERVATION_DTO_ROW_MAPPER =
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER =
             (resultSet, rowNum) -> {
                 if (!resultSet.next()) {
                     return null;
                 }
-                return new ReservationDTO(
+                return new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getDate("date").toLocalDate(),
                         resultSet.getTime("time").toLocalTime(),
@@ -23,7 +22,7 @@ public class SimpleReservationDAO implements ReservationDAO {
             };
 
     @Override
-    public Boolean existsByDateAndTime(Date date, Time time) throws RuntimeException {
+    public Boolean existsByDateTime(Date date, Time time) throws RuntimeException {
         try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(SELECT_BY_DATE_AND_TIME_SQL);
             ps.setDate(1, date);
@@ -40,15 +39,15 @@ public class SimpleReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public Long insert(ReservationDTO dto) {
+    public Long insert(Reservation reservation) {
         try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
-            Date date = Date.valueOf(dto.getDate());
-            Time time = Time.valueOf(dto.getTime());
+            Date date = Date.valueOf(reservation.getDate());
+            Time time = Time.valueOf(reservation.getTime());
             ps.setDate(1, date);
             ps.setTime(2, time);
-            ps.setString(3, dto.getName());
-            ps.setLong(4, dto.getTheme_id());
+            ps.setString(3, reservation.getName());
+            ps.setLong(4, reservation.getTheme_id());
             ps.executeUpdate();
             var rs = ps.getGeneratedKeys();
             rs.next();
@@ -62,12 +61,12 @@ public class SimpleReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public ReservationDTO getById(Long id) {
+    public Reservation getById(Long id) {
         try (Connection connection = getConnection()) {
             var ps = connection.prepareStatement(SELECT_BY_ID_SQL);
             ps.setLong(1, id);
             var rs = ps.executeQuery();
-            return RESERVATION_DTO_ROW_MAPPER.mapRow(rs, 0);
+            return RESERVATION_ROW_MAPPER.mapRow(rs, 0);
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -89,12 +88,11 @@ public class SimpleReservationDAO implements ReservationDAO {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
     }
 
     private Connection getConnection() throws SQLException {
         try {
-            return DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=true", "sa", "");
+            return DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());
