@@ -35,7 +35,7 @@ public class ThemeController {
     @GetMapping("/")
     public ResponseEntity<List<Theme>> getThemeList() {
 
-        return ResponseEntity.ok(service.getList());
+        return ResponseEntity.ok().body(service.getList());
     }
 
     @DeleteMapping("/{theme_id}")
