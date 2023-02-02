@@ -20,7 +20,7 @@ public class ThemeServiceImpl implements ThemeService {
         String desc = request.getDesc();
         int price = request.getPrice();
 
-        Theme theme = new Theme(null, name, desc, price);
+        Theme theme = new Theme(name, desc, price);
         Long id = repository.insert(theme);
 
         return id;
