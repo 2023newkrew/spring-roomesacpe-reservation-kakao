@@ -2,11 +2,15 @@ package nextstep.repository;
 
 import nextstep.domain.Reservation;
 
-public interface ReservationRepository {
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-    Long insertIfNotExistsDateTime(Reservation reservation);
+public interface ReservationRepository {
+    Boolean existsByDateTime(LocalDate date, LocalTime time);
+
+    Long insert(Reservation reservation);
 
     Reservation getById(Long id);
 
-    boolean deleteById(Long id);
+    Boolean deleteById(Long id);
 }
