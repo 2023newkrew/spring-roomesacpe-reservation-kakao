@@ -1,22 +1,22 @@
 package nextstep.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @AllArgsConstructor
-@Data
+@Getter
 public class ReservationDTO {
 
-    private Long id;
+    private final Long id;
 
-    private LocalDate date;
+    private final LocalDate date;
 
-    private LocalTime time;
+    private final LocalTime time;
 
-    private String name;
+    private final String name;
 
-    private ThemeDTO theme;
+    private final Long theme_id;
 }
